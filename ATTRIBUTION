@@ -34,7 +34,7 @@ MIT License https://github.com/lawnjelly/smoothing-addon/blob/master/LICENSE
 The core Godot engine is licensed under the following terms:
 
 Copyright (c) 2007-2022 Juan Linietsky, Ariel Manzur.
-Copyright (c) 2014-2020 Godot Engine contributors.
+Copyright (c) 2014-2022 Godot Engine contributors.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -56,7 +56,3 @@ SOFTWARE.
 
 -- Godot Engine <https://godotengine.org>
 
-===
-
-All other code and assets are owned and copyrighted to Saracen (SaracenOne@gmail.com) and are currently only
-available for private testing and distribution amongst selected parties.
