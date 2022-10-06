@@ -1,0 +1,201 @@
+[gd_scene load_steps=3 format=3 uid="uid://de7nu7nu2k10u"]
+
+[ext_resource type="Script" path="res://addons/vsk_menu/register_screen.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://qrrk0xuopfpw" path="res://addons/vsk_menu/password_input.tscn" id="2"]
+
+[node name="RegisterScreen" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( "1" )
+default_focus = NodePath("Panel/CenterContainer/Control/ButtonsContainer/UsernameContainer/UsernameLineEdit")
+username_input_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/UsernameContainer/UsernameLineEdit")
+email_input_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/EmailContainer/EmailLineEdit")
+password_input_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/PasswordContainer/PasswordInput")
+password_confirmation_input_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/PasswordConfirmationContainer/PasswordConfirmationInput")
+email_notifications_input_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/ReceiveEmailContainer/ReceiveEmailCheckbox")
+register_cancel_button_input_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/ButtonsContainer/RegisterCancelButton")
+status_label_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/StatusContainer/StatusLabel")
+
+[node name="Panel" type="Panel" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="CenterContainer" type="VBoxContainer" parent="Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+alignment = 1
+
+[node name="Control" type="HBoxContainer" parent="Panel/CenterContainer"]
+offset_right = 1004.0
+offset_bottom = 542.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="BlankSpaceLeft" type="Control" parent="Panel/CenterContainer/Control"]
+offset_right = 268.0
+offset_bottom = 542.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ButtonsContainer" type="VBoxContainer" parent="Panel/CenterContainer/Control"]
+offset_left = 274.0
+offset_right = 730.0
+offset_bottom = 542.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+
+[node name="UsernameContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer"]
+offset_top = 135.0
+offset_right = 456.0
+offset_bottom = 168.0
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="UsernameLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/UsernameContainer"]
+offset_right = 394.0
+offset_bottom = 33.0
+size_flags_horizontal = 3
+text = "TR_MENU_LOGIN_USERNAME"
+
+[node name="UsernameLineEdit" type="LineEdit" parent="Panel/CenterContainer/Control/ButtonsContainer/UsernameContainer"]
+offset_left = 400.0
+offset_right = 456.0
+offset_bottom = 33.0
+max_length = 4096
+
+[node name="EmailContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer"]
+offset_top = 174.0
+offset_right = 456.0
+offset_bottom = 207.0
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="EmailLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/EmailContainer"]
+offset_right = 394.0
+offset_bottom = 33.0
+size_flags_horizontal = 3
+text = "TR_MENU_LOGIN_EMAIL"
+
+[node name="EmailLineEdit" type="LineEdit" parent="Panel/CenterContainer/Control/ButtonsContainer/EmailContainer"]
+offset_left = 400.0
+offset_right = 456.0
+offset_bottom = 33.0
+max_length = 4096
+
+[node name="PasswordContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer"]
+offset_top = 213.0
+offset_right = 456.0
+offset_bottom = 246.0
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="PasswordLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/PasswordContainer"]
+offset_right = 354.0
+offset_bottom = 33.0
+size_flags_horizontal = 3
+text = "TR_MENU_LOGIN_PASSWORD"
+
+[node name="PasswordInput" parent="Panel/CenterContainer/Control/ButtonsContainer/PasswordContainer" instance=ExtResource( "2" )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 360.0
+offset_right = 456.0
+offset_bottom = 33.0
+
+[node name="PasswordConfirmationContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer"]
+offset_top = 252.0
+offset_right = 456.0
+offset_bottom = 285.0
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="PasswordConfirmationLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/PasswordConfirmationContainer"]
+offset_right = 354.0
+offset_bottom = 33.0
+size_flags_horizontal = 3
+text = "TR_MENU_LOGIN_PASSWORD_CONFIRMATION"
+
+[node name="PasswordConfirmationInput" parent="Panel/CenterContainer/Control/ButtonsContainer/PasswordConfirmationContainer" instance=ExtResource( "2" )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 360.0
+offset_right = 456.0
+offset_bottom = 33.0
+
+[node name="ReceiveEmailContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer"]
+offset_top = 291.0
+offset_right = 456.0
+offset_bottom = 335.0
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="ReceiveEmailLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/ReceiveEmailContainer"]
+offset_top = 5.0
+offset_right = 406.0
+offset_bottom = 38.0
+size_flags_horizontal = 3
+text = "TR_MENU_RECEIVE_EMAIL_NOTIFICATIONS"
+
+[node name="ReceiveEmailCheckbox" type="CheckBox" parent="Panel/CenterContainer/Control/ButtonsContainer/ReceiveEmailContainer"]
+offset_left = 412.0
+offset_right = 456.0
+offset_bottom = 44.0
+
+[node name="StatusContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer"]
+offset_top = 341.0
+offset_right = 456.0
+offset_bottom = 368.0
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="StatusLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/StatusContainer"]
+offset_left = 221.0
+offset_right = 234.0
+offset_bottom = 27.0
+
+[node name="ButtonsContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer"]
+offset_top = 374.0
+offset_right = 456.0
+offset_bottom = 406.0
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="RegisterCancelButton" type="Button" parent="Panel/CenterContainer/Control/ButtonsContainer/ButtonsContainer"]
+offset_right = 230.0
+offset_bottom = 32.0
+text = "TR_MENU_LOGIN_REGISTER"
+
+[node name="SignInButton" type="Button" parent="Panel/CenterContainer/Control/ButtonsContainer/ButtonsContainer"]
+offset_left = 236.0
+offset_right = 456.0
+offset_bottom = 32.0
+text = "TR_MENU_LOGIN_SIGN_IN"
+
+[node name="BlankSpaceRight" type="Control" parent="Panel/CenterContainer/Control"]
+offset_left = 736.0
+offset_right = 1004.0
+offset_bottom = 542.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="BottomContainer" type="HBoxContainer" parent="Panel/CenterContainer"]
+offset_top = 548.0
+offset_right = 1004.0
+offset_bottom = 580.0
+
+[node name="BackButton" type="Button" parent="Panel/CenterContainer/BottomContainer"]
+offset_right = 134.0
+offset_bottom = 32.0
+text = "TR_MENU_BACK"
+
+[connection signal="text_changed" from="Panel/CenterContainer/Control/ButtonsContainer/UsernameContainer/UsernameLineEdit" to="." method="_on_UsernameLineEdit_text_changed"]
+[connection signal="text_changed" from="Panel/CenterContainer/Control/ButtonsContainer/EmailContainer/EmailLineEdit" to="." method="_on_EmailLineEdit_text_changed"]
+[connection signal="text_changed" from="Panel/CenterContainer/Control/ButtonsContainer/PasswordContainer/PasswordInput" to="." method="_on_PasswordInput_text_changed"]
+[connection signal="text_changed" from="Panel/CenterContainer/Control/ButtonsContainer/PasswordConfirmationContainer/PasswordConfirmationInput" to="." method="_on_PasswordConfirmationInput_text_changed"]
+[connection signal="pressed" from="Panel/CenterContainer/Control/ButtonsContainer/ButtonsContainer/RegisterCancelButton" to="." method="_on_RegisterCancelButton_pressed"]
+[connection signal="pressed" from="Panel/CenterContainer/BottomContainer/BackButton" to="." method="_on_BackButton_pressed"]

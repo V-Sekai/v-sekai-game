@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://dxnmrnfpqqqts"]
+
+[ext_resource type="Texture2D" uid="uid://ysho4io5jku" path="res://vsk_default/textures/test_texture.png" id="1"]
+
+[sub_resource type="StandardMaterial3D" id="1"]
+albedo_texture = ExtResource( "1" )
+roughness = 0.0
+uv1_scale = Vector3(500, 500, 1)
+uv1_triplanar_sharpness = 0.0544095
+
+[sub_resource type="PlaneMesh" id="2"]
+material = SubResource( "1" )
+size = Vector2(500, 500)
+
+[node name="VRBackground" type="Node3D"]
+
+[node name="GroundPlane" type="MeshInstance3D" parent="."]
+mesh = SubResource( "2" )
+skeleton = NodePath("")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]

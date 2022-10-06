@@ -1,0 +1,162 @@
+[gd_scene load_steps=4 format=3 uid="uid://ijqbmdiaih2w"]
+
+[ext_resource type="Environment" uid="uid://cp0t8jp2ellve" path="res://vsk_default/environments/default_env.tres" id="1"]
+[ext_resource type="Script" path="res://vsk_default/scenes/test/vr_test.gd" id="2"]
+
+[sub_resource type="SphereMesh" id="1"]
+
+[node name="VRTest" type="Node3D"]
+script = ExtResource( "2" )
+
+[node name="ARVROrigin" type="XROrigin3D" parent="."]
+process_priority = 1
+
+[node name="MeshInstance" type="MeshInstance3D" parent="ARVROrigin"]
+transform = Transform3D(-1.09278e-08, 0, -0.25, 0, 0.25, 0, 0.25, 0, -1.09278e-08, -2.25, 0, -0.05)
+mesh = SubResource( "1" )
+skeleton = NodePath("")
+
+[node name="MeshInstance2" type="MeshInstance3D" parent="ARVROrigin"]
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, 0, -2.5)
+mesh = SubResource( "1" )
+skeleton = NodePath("")
+
+[node name="MeshInstance3" type="MeshInstance3D" parent="ARVROrigin"]
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, -0.8, 0, -2.5)
+mesh = SubResource( "1" )
+skeleton = NodePath("")
+
+[node name="MeshInstance4" type="MeshInstance3D" parent="ARVROrigin"]
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0.9, 0.010911, -2.5)
+mesh = SubResource( "1" )
+skeleton = NodePath("")
+
+[node name="MeshInstance10" type="MeshInstance3D" parent="ARVROrigin"]
+transform = Transform3D(-1.09278e-08, 0, -0.25, 0, 0.25, 0, 0.25, 0, -1.09278e-08, -2.25, 0, -0.85)
+mesh = SubResource( "1" )
+skeleton = NodePath("")
+
+[node name="MeshInstance11" type="MeshInstance3D" parent="ARVROrigin"]
+transform = Transform3D(-1.09278e-08, 0, -0.25, 0, 0.25, 0, 0.25, 0, -1.09278e-08, -2.25, 0.010911, 0.85)
+mesh = SubResource( "1" )
+skeleton = NodePath("")
+
+[node name="MeshInstance12" type="MeshInstance3D" parent="ARVROrigin"]
+transform = Transform3D(-1.09278e-08, 0, -0.25, 0, 0.25, 0, 0.25, 0, -1.09278e-08, 2.65, 0, -0.05)
+mesh = SubResource( "1" )
+skeleton = NodePath("")
+
+[node name="MeshInstance13" type="MeshInstance3D" parent="ARVROrigin"]
+transform = Transform3D(-1.09278e-08, 0, -0.25, 0, 0.25, 0, 0.25, 0, -1.09278e-08, 2.65, 0, -0.85)
+mesh = SubResource( "1" )
+skeleton = NodePath("")
+
+[node name="MeshInstance14" type="MeshInstance3D" parent="ARVROrigin"]
+transform = Transform3D(-1.09278e-08, 0, -0.25, 0, 0.25, 0, 0.25, 0, -1.09278e-08, 2.65, 0.010911, 0.85)
+mesh = SubResource( "1" )
+skeleton = NodePath("")
+
+[node name="MeshInstance5" type="MeshInstance3D" parent="ARVROrigin"]
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0.9, 0, -2.5)
+mesh = SubResource( "1" )
+skeleton = NodePath("")
+
+[node name="MeshInstance6" type="MeshInstance3D" parent="ARVROrigin"]
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, 0, 2.1)
+mesh = SubResource( "1" )
+skeleton = NodePath("")
+
+[node name="MeshInstance7" type="MeshInstance3D" parent="ARVROrigin"]
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, -0.8, 0, 2.1)
+mesh = SubResource( "1" )
+skeleton = NodePath("")
+
+[node name="MeshInstance8" type="MeshInstance3D" parent="ARVROrigin"]
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0.9, 0, 2.1)
+mesh = SubResource( "1" )
+skeleton = NodePath("")
+
+[node name="MeshInstance9" type="MeshInstance3D" parent="ARVROrigin"]
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0.9, 0, 2.1)
+mesh = SubResource( "1" )
+skeleton = NodePath("")
+
+[node name="MeshInstance15" type="MeshInstance3D" parent="ARVROrigin"]
+transform = Transform3D(-1.09278e-08, 0, -0.25, 0, 0.25, 0, 0.25, 0, -1.09278e-08, -2.25, 0, -0.05)
+mesh = SubResource( "1" )
+skeleton = NodePath("")
+
+[node name="MeshInstance16" type="MeshInstance3D" parent="ARVROrigin"]
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, 0, -2.5)
+mesh = SubResource( "1" )
+skeleton = NodePath("")
+
+[node name="MeshInstance17" type="MeshInstance3D" parent="ARVROrigin"]
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, -0.8, 0, -2.5)
+mesh = SubResource( "1" )
+skeleton = NodePath("")
+
+[node name="MeshInstance18" type="MeshInstance3D" parent="ARVROrigin"]
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0.9, 0.010911, -2.5)
+mesh = SubResource( "1" )
+skeleton = NodePath("")
+
+[node name="MeshInstance19" type="MeshInstance3D" parent="ARVROrigin"]
+transform = Transform3D(-1.09278e-08, 0, -0.25, 0, 0.25, 0, 0.25, 0, -1.09278e-08, -2.25, 0, -0.85)
+mesh = SubResource( "1" )
+skeleton = NodePath("")
+
+[node name="MeshInstance20" type="MeshInstance3D" parent="ARVROrigin"]
+transform = Transform3D(-1.09278e-08, 0, -0.25, 0, 0.25, 0, 0.25, 0, -1.09278e-08, -2.25, 0.010911, 0.85)
+mesh = SubResource( "1" )
+skeleton = NodePath("")
+
+[node name="MeshInstance21" type="MeshInstance3D" parent="ARVROrigin"]
+transform = Transform3D(-1.09278e-08, 0, -0.25, 0, 0.25, 0, 0.25, 0, -1.09278e-08, 2.65, 0, -0.05)
+mesh = SubResource( "1" )
+skeleton = NodePath("")
+
+[node name="MeshInstance22" type="MeshInstance3D" parent="ARVROrigin"]
+transform = Transform3D(-1.09278e-08, 0, -0.25, 0, 0.25, 0, 0.25, 0, -1.09278e-08, 2.65, 0, -0.85)
+mesh = SubResource( "1" )
+skeleton = NodePath("")
+
+[node name="MeshInstance23" type="MeshInstance3D" parent="ARVROrigin"]
+transform = Transform3D(-1.09278e-08, 0, -0.25, 0, 0.25, 0, 0.25, 0, -1.09278e-08, 2.65, 0.010911, 0.85)
+mesh = SubResource( "1" )
+skeleton = NodePath("")
+
+[node name="MeshInstance24" type="MeshInstance3D" parent="ARVROrigin"]
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0.9, 0, -2.5)
+mesh = SubResource( "1" )
+skeleton = NodePath("")
+
+[node name="MeshInstance25" type="MeshInstance3D" parent="ARVROrigin"]
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, 0, 2.1)
+mesh = SubResource( "1" )
+skeleton = NodePath("")
+
+[node name="MeshInstance26" type="MeshInstance3D" parent="ARVROrigin"]
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, -0.8, 0, 2.1)
+mesh = SubResource( "1" )
+skeleton = NodePath("")
+
+[node name="MeshInstance27" type="MeshInstance3D" parent="ARVROrigin"]
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0.9, 0, 2.1)
+mesh = SubResource( "1" )
+skeleton = NodePath("")
+
+[node name="MeshInstance28" type="MeshInstance3D" parent="ARVROrigin"]
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0.9, 0, 2.1)
+mesh = SubResource( "1" )
+skeleton = NodePath("")
+
+[node name="ARVRCamera" type="XRCamera3D" parent="ARVROrigin"]
+
+[node name="MeshInstance" type="MeshInstance3D" parent="ARVROrigin/ARVRCamera"]
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, 0, -1.7)
+mesh = SubResource( "1" )
+skeleton = NodePath("")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource( "1" )

@@ -1,0 +1,38 @@
+[remap]
+
+importer="scene"
+importer_version=1
+type="PackedScene"
+uid="uid://bulk00syapy7d"
+path="res://.godot/imported/main_room.gltf-6896802c47202e0aeee3338a5738a3d3.scn"
+
+[deps]
+
+source_file="res://vsk_default/import/sky_celebration/main_room.gltf"
+dest_files=["res://.godot/imported/main_room.gltf-6896802c47202e0aeee3338a5738a3d3.scn"]
+
+[params]
+
+nodes/root_type="Spatial"
+nodes/root_name="MainRoom"
+nodes/apply_root_scale=true
+nodes/root_scale=1.0
+meshes/ensure_tangents=true
+meshes/generate_lods=true
+meshes/create_shadow_meshes=true
+meshes/light_baking=1
+meshes/lightmap_texel_size=0.1
+skins/use_named_skins=true
+animation/import=true
+animation/fps=15
+import_script/path=""
+_subresources={
+"nodes": {
+"PATH:MainRoomBaked": {
+"decomposition/precision": 10,
+"generate/navmesh": 1,
+"generate/physics": true,
+"physics/shape_type": 2
+}
+}
+}

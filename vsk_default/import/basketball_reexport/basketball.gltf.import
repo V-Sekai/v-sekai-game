@@ -1,0 +1,43 @@
+[remap]
+
+importer="scene"
+importer_version=1
+type="PackedScene"
+uid="uid://t83gvfjjmupb"
+path="res://.godot/imported/basketball.gltf-89149f3a0d83d2a57961dfde0aa968e6.scn"
+
+[deps]
+
+source_file="res://vsk_default/import/basketball_reexport/basketball.gltf"
+dest_files=["res://.godot/imported/basketball.gltf-89149f3a0d83d2a57961dfde0aa968e6.scn"]
+
+[params]
+
+nodes/root_type="Spatial"
+nodes/root_name="Basketball"
+nodes/apply_root_scale=true
+nodes/root_scale=0.001
+meshes/ensure_tangents=true
+meshes/generate_lods=true
+meshes/create_shadow_meshes=true
+meshes/light_baking=0
+meshes/lightmap_texel_size=0.1
+skins/use_named_skins=true
+animation/import=true
+animation/fps=15
+import_script/path=""
+_subresources={
+"materials": {
+"Scene_-_Root": {
+"use_external/enabled": true,
+"use_external/path": "res://vsk_default/import/basketball_reexport/Scene_-_Root.tres"
+}
+},
+"nodes": {
+"PATH:RootNode (gltf orientation matrix)/RootNode (model correction matrix)/17b590cce40b46b089bc3041c1774279fbx/RootNode/Cube/Cube__0": {
+"decomposition/precision": 10,
+"generate/navmesh": 1,
+"generate/physics": true
+}
+}
+}

@@ -1,0 +1,120 @@
+{
+    "asset" : {
+        "generator" : "Khronos glTF Blender I/O v1.6.16",
+        "version" : "2.0"
+    },
+    "scene" : 0,
+    "scenes" : [
+        {
+            "name" : "Scene",
+            "nodes" : [
+                0
+            ]
+        }
+    ],
+    "nodes" : [
+        {
+            "mesh" : 0,
+            "name" : "MainRoomBaked"
+        }
+    ],
+    "materials" : [
+        {
+            "doubleSided" : true,
+            "name" : "Concrete",
+            "pbrMetallicRoughness" : {}
+        }
+    ],
+    "meshes" : [
+        {
+            "name" : "MainRoomBaked",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "POSITION" : 0,
+                        "NORMAL" : 1,
+                        "TEXCOORD_0" : 2,
+                        "TEXCOORD_1" : 3
+                    },
+                    "indices" : 4,
+                    "material" : 0
+                }
+            ]
+        }
+    ],
+    "accessors" : [
+        {
+            "bufferView" : 0,
+            "componentType" : 5126,
+            "count" : 7373,
+            "max" : [
+                22,
+                11,
+                11.000000953674316
+            ],
+            "min" : [
+                -22.000001907348633,
+                0,
+                -11.000001907348633
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 1,
+            "componentType" : 5126,
+            "count" : 7373,
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 2,
+            "componentType" : 5126,
+            "count" : 7373,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 3,
+            "componentType" : 5126,
+            "count" : 7373,
+            "type" : "VEC2"
+        },
+        {
+            "bufferView" : 4,
+            "componentType" : 5123,
+            "count" : 26649,
+            "type" : "SCALAR"
+        }
+    ],
+    "bufferViews" : [
+        {
+            "buffer" : 0,
+            "byteLength" : 88476,
+            "byteOffset" : 0
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 88476,
+            "byteOffset" : 88476
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 58984,
+            "byteOffset" : 176952
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 58984,
+            "byteOffset" : 235936
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 53298,
+            "byteOffset" : 294920
+        }
+    ],
+    "buffers" : [
+        {
+            "byteLength" : 348220,
+            "uri" : "main_room.bin"
+        }
+    ]
+}

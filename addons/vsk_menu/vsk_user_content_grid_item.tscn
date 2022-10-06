@@ -1,0 +1,61 @@
+[gd_scene load_steps=4 format=3 uid="uid://d4ciww4a7houm"]
+
+[ext_resource type="Script" path="res://addons/textureRectUrl/node_textureRectUrl.gd" id="1"]
+[ext_resource type="Script" path="res://addons/vsk_menu/vsk_user_content_grid_item.gd" id="2"]
+[ext_resource type="Texture2D" uid="uid://cqaruhjo1pgb5" path="res://addons/godot_uro/uro_logo_64.png" id="3"]
+
+[node name="VSKUserContentItem" type="Button"]
+custom_minimum_size = Vector2(0, 128)
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -512.0
+offset_bottom = -344.0
+scale = Vector2(0.333, 0.333)
+size_flags_horizontal = 3
+script = ExtResource("2")
+name_label_path = NodePath("VBoxContainer/ItemName")
+texture_rect_url_path = NodePath("VBoxContainer/ItemImageContainer/ItemImage")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+
+[node name="ItemImageContainer" type="Control" parent="VBoxContainer"]
+offset_right = 512.0
+offset_bottom = 217.0
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="ItemImage" type="TextureRect" parent="VBoxContainer/ItemImageContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+texture = ExtResource("3")
+ignore_texture_size = true
+stretch_mode = 5
+script = ExtResource("1")
+everCache = true
+metadata/_edit_layout_mode = 1
+metadata/_edit_use_custom_anchors = true
+
+[node name="ItemName" type="Label" parent="VBoxContainer"]
+clip_contents = true
+offset_top = 223.0
+offset_right = 512.0
+offset_bottom = 256.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 16
+text = "???"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+
+[connection signal="pressed" from="." to="." method="_on_pressed"]

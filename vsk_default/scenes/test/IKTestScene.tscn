@@ -1,0 +1,255 @@
+[gd_scene load_steps=13 format=3 uid="uid://bj562ewbkkrnj"]
+
+[ext_resource type="PackedScene" uid="uid://du080bsui8t3b" path="res://vsk_default/scenes/avatars/exported/xbot/xbot.scn" id="1"]
+[ext_resource type="Script" path="res://addons/vsk_avatar/humanoid_data.gd" id="2"]
+
+[sub_resource type="Resource" id="1"]
+resource_local_to_scene = true
+script = ExtResource( "2" )
+head_bone_name = "head"
+neck_bone_name = "neck"
+shoulder_left_bone_name = "shoulder_left"
+upper_arm_left_bone_name = "upper_arm_left"
+forearm_left_bone_name = "forearm_left"
+hand_left_bone_name = "hand_left"
+shoulder_right_bone_name = "shoulder_right"
+upper_arm_right_bone_name = "upper_arm_right"
+forearm_right_bone_name = "forearm_right"
+hand_right_bone_name = "hand_right"
+spine_bone_name = "spine"
+chest_bone_name = "chest"
+upper_chest_bone_name = "upper_chest"
+hips_bone_name = "hips"
+thigh_left_bone_name = "thigh_left"
+shin_left_bone_name = "shin_left"
+foot_left_bone_name = "foot_left"
+toe_left_bone_name = "toe_left"
+thigh_right_bone_name = "thigh_right"
+shin_right_bone_name = "shin_right"
+foot_right_bone_name = "foot_right"
+toe_right_bone_name = "toe_right"
+thumb_proximal_left_bone_name = "thumb_proximal_left"
+thumb_intermediate_left_bone_name = "thumb_intermediate_left"
+thumb_distal_left_bone_name = "thumb_distal_left"
+index_proximal_left_bone_name = "index_proximal_left"
+index_intermediate_left_bone_name = "index_intermediate_left"
+index_distal_left_bone_name = "index_distal_left"
+middle_proximal_left_bone_name = "middle_proximal_left"
+middle_intermediate_left_bone_name = "middle_intermediate_left"
+middle_distal_left_bone_name = "middle_distal_left"
+ring_proximal_left_bone_name = "ring_proximal_left"
+ring_intermediate_left_bone_name = "ring_intermediate_left"
+ring_distal_left_bone_name = "ring_distal_left"
+little_proximal_left_bone_name = "little_proximal_left"
+little_intermediate_left_bone_name = "little_intermediate_left"
+little_distal_left_bone_name = "little_distal_left"
+thumb_proximal_right_bone_name = "thumb_proximal_right"
+thumb_intermediate_right_bone_name = "thumb_intermediate_right"
+thumb_distal_right_bone_name = "thumb_distal_right"
+index_proximal_right_bone_name = "index_proximal_right"
+index_intermediate_right_bone_name = "index_intermediate_right"
+index_distal_right_bone_name = "index_distal_right"
+middle_proximal_right_bone_name = "middle_proximal_right"
+middle_intermediate_right_bone_name = "middle_intermediate_right"
+middle_distal_right_bone_name = "middle_distal_right"
+ring_proximal_right_bone_name = "ring_proximal_right"
+ring_intermediate_right_bone_name = "ring_intermediate_right"
+ring_distal_right_bone_name = "ring_distal_right"
+little_proximal_right_bone_name = "little_proximal_right"
+little_intermediate_right_bone_name = "little_intermediate_right"
+little_distal_right_bone_name = "little_distal_right"
+eye_left_bone_name = "eye_left"
+eye_right_bone_name = "eye_right"
+jaw_bone_name = "jaw"
+
+[sub_resource type="Animation" id="Animation_x7ecy"]
+tracks/0/type = "scale_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Skeleton3D:head")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 1e-05, 1e-05, 1e-05)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Skeleton3D:eye_right")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+tracks/2/type = "rotation_3d"
+tracks/2/imported = true
+tracks/2/enabled = true
+tracks/2/path = NodePath("Skeleton3D:eye_left")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+
+[sub_resource type="Animation" id="Animation_xxv2w"]
+tracks/0/type = "rotation_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Skeleton3D:eye_right")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 1, 1, 0, 0.0871557, 0, 0.996195)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Skeleton3D:eye_left")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 1, 1, 0, 0.0871557, 0, 0.996195)
+tracks/2/type = "scale_3d"
+tracks/2/imported = true
+tracks/2/enabled = true
+tracks/2/path = NodePath("Skeleton3D:head")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = PackedFloat32Array(0, 1, 1, 1, 1)
+
+[sub_resource type="Animation" id="Animation_7dg4d"]
+tracks/0/type = "rotation_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Skeleton3D:eye_right")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 1, 1, 0, -0.0871557, 0, 0.996195)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Skeleton3D:eye_left")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 1, 1, 0, -0.0871557, 0, 0.996195)
+tracks/2/type = "scale_3d"
+tracks/2/imported = true
+tracks/2/enabled = true
+tracks/2/path = NodePath("Skeleton3D:head")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = PackedFloat32Array(0, 1, 1, 1, 1)
+
+[sub_resource type="Animation" id="Animation_xoufg"]
+tracks/0/type = "rotation_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Skeleton3D:eye_right")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 1, 1, 0.0871557, 0, 0, 0.996195)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Skeleton3D:eye_left")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 1, 1, 0.0871557, 0, 0, 0.996195)
+tracks/2/type = "scale_3d"
+tracks/2/imported = true
+tracks/2/enabled = true
+tracks/2/path = NodePath("Skeleton3D:head")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = PackedFloat32Array(0, 1, 1, 1, 1)
+
+[sub_resource type="Animation" id="Animation_x5a0n"]
+tracks/0/type = "scale_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Skeleton3D:head")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 1, 1, 1)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = true
+tracks/1/enabled = true
+tracks/1/path = NodePath("Skeleton3D:eye_right")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+tracks/2/type = "rotation_3d"
+tracks/2/imported = true
+tracks/2/enabled = true
+tracks/2/path = NodePath("Skeleton3D:eye_left")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+
+[sub_resource type="Animation" id="Animation_2qv13"]
+tracks/0/type = "rotation_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Skeleton3D:eye_right")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 1, 1, -0.0871557, 0, 0, 0.996195)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Skeleton3D:eye_left")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 1, 1, -0.0871557, 0, 0, 0.996195)
+tracks/2/type = "scale_3d"
+tracks/2/imported = true
+tracks/2/enabled = true
+tracks/2/path = NodePath("Skeleton3D:head")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = PackedFloat32Array(0, 1, 1, 1, 1)
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_fd6ki"]
+_data = {
+"FirstPerson": SubResource( "Animation_x7ecy" ),
+"LOOKDOWN": SubResource( "Animation_2qv13" ),
+"LOOKLEFT": SubResource( "Animation_xxv2w" ),
+"LOOKRIGHT": SubResource( "Animation_7dg4d" ),
+"LOOKUP": SubResource( "Animation_xoufg" ),
+"ThirdPerson": SubResource( "Animation_x5a0n" )
+}
+
+[sub_resource type="BoxMesh" id="8"]
+
+[sub_resource type="BoxShape3D" id="9"]
+
+[node name="IKTestScene" type="Node3D"]
+
+[node name="Avatar" parent="." instance=ExtResource( "1" )]
+humanoid_data = SubResource( "1" )
+
+[node name="anim" parent="Avatar/x_bot" index="2"]
+libraries = {
+"": SubResource( "AnimationLibrary_fd6ki" )
+}
+
+[node name="RenIK" type="Node" parent="."]
+
+[node name="Head" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.975045, -0.222008, 0, 0.222008, 0.975045, -0.11029, 2.05647, 0.456158)
+
+[node name="Hips" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.975045, -0.222008, 0, 0.222008, 0.975045, -0.11029, 1.52135, 0.31677)
+
+[node name="RightHand" type="Marker3D" parent="."]
+transform = Transform3D(0.0293607, 0.977901, 0.206986, 0.444757, 0.172666, -0.878849, -0.895168, 0.117862, -0.42986, -0.362898, 1.8793, 0.726589)
+
+[node name="LeftHand" type="Marker3D" parent="."]
+transform = Transform3D(0.879462, -0.2859, 0.380534, 0.152735, 0.926732, 0.343275, -0.450796, -0.243777, 0.858694, 0.286059, 1.92083, 0.44063)
+
+[node name="RightFoot" type="Marker3D" parent="."]
+transform = Transform3D(-0.925974, 0.275516, -0.25819, -0.344698, -0.895926, 0.280179, -0.154125, 0.348436, 0.924574, -0.261245, 1.12219, 0.339587)
+
+[node name="LeftFoot" type="Marker3D" parent="."]
+transform = Transform3D(-0.722791, 0.660336, -0.203785, -0.687317, -0.717578, 0.112592, -0.0718831, 0.221446, 0.972519, 0.0527569, 1.23907, 0.391851)
+
+[node name="MeshInstance" type="MeshInstance3D" parent="."]
+mesh = SubResource( "8" )
+
+[node name="StaticBody" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape" type="CollisionShape3D" parent="StaticBody"]
+shape = SubResource( "9" )
+
+[editable path="Avatar"]

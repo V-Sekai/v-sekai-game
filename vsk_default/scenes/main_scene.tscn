@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://pgdvuebnyfor"]
+
+[ext_resource type="Script" path="res://vsk_default/scripts/main_scene.gd" id="1_nqnkj"]
+
+[node name="MainScene" type="Node"]
+script = ExtResource("1_nqnkj")

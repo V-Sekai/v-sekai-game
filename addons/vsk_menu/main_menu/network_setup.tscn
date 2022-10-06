@@ -1,0 +1,147 @@
+[gd_scene load_steps=4 format=3 uid="uid://cmievbc2n414f"]
+
+[ext_resource type="Script" path="res://addons/vsk_menu/network_setup.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://cogvc7mlmr810" path="res://addons/vsk_menu/vsk_button.tscn" id="2"]
+[ext_resource type="PackedScene" uid="uid://rgidoa3biuq8" path="res://addons/vsk_menu/main_menu/vsk_avatar_selector_popup.tscn" id="3"]
+
+[node name="NetworkSetup" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( "1" )
+name_input_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/NameContainer/NameLineEdit")
+avatar_input_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/AvatarContainer/AvatarContainer/AvatarLineEdit")
+
+[node name="Panel" type="Panel" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="CenterContainer" type="VBoxContainer" parent="Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+alignment = 1
+
+[node name="Control" type="HBoxContainer" parent="Panel/CenterContainer"]
+offset_right = 1004.0
+offset_bottom = 542.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="BlankSpaceLeft" type="Control" parent="Panel/CenterContainer/Control"]
+offset_right = 165.0
+offset_bottom = 542.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.25
+
+[node name="ButtonsContainer" type="VBoxContainer" parent="Panel/CenterContainer/Control"]
+offset_left = 171.0
+offset_right = 832.0
+offset_bottom = 542.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+
+[node name="NameContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer"]
+offset_top = 196.0
+offset_right = 661.0
+offset_bottom = 229.0
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="NameLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/NameContainer"]
+offset_right = 327.0
+offset_bottom = 33.0
+size_flags_horizontal = 3
+text = "TR_MENU_PLAYER_DISPLAY_NAME"
+
+[node name="NameLineEdit" type="LineEdit" parent="Panel/CenterContainer/Control/ButtonsContainer/NameContainer"]
+offset_left = 333.0
+offset_right = 661.0
+offset_bottom = 33.0
+size_flags_horizontal = 3
+placeholder_text = "Player"
+max_length = 16
+
+[node name="AvatarContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer"]
+offset_top = 235.0
+offset_right = 661.0
+offset_bottom = 268.0
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="AvatarLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/AvatarContainer"]
+offset_right = 327.0
+offset_bottom = 33.0
+size_flags_horizontal = 3
+text = "TR_MENU_PLAYER_AVATAR_PATH"
+
+[node name="AvatarContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer/AvatarContainer"]
+offset_left = 333.0
+offset_right = 661.0
+offset_bottom = 33.0
+size_flags_horizontal = 3
+
+[node name="AvatarLineEdit" type="LineEdit" parent="Panel/CenterContainer/Control/ButtonsContainer/AvatarContainer/AvatarContainer"]
+offset_right = 275.0
+offset_bottom = 33.0
+size_flags_horizontal = 3
+placeholder_text = "res://vsk_default/scenes/avatars/exported/xbot/xbot.scn"
+max_length = 512
+
+[node name="AvatarBrowseButton" type="Button" parent="Panel/CenterContainer/Control/ButtonsContainer/AvatarContainer/AvatarContainer"]
+offset_left = 281.0
+offset_right = 328.0
+offset_bottom = 33.0
+text = "..."
+
+[node name="Break" type="Control" parent="Panel/CenterContainer/Control/ButtonsContainer"]
+offset_top = 274.0
+offset_right = 661.0
+offset_bottom = 274.0
+
+[node name="ClearCacheButton" type="Button" parent="Panel/CenterContainer/Control/ButtonsContainer"]
+offset_top = 280.0
+offset_right = 661.0
+offset_bottom = 312.0
+text = "TR_MENU_CLEAR_CACHE"
+
+[node name="StatusContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer"]
+offset_top = 318.0
+offset_right = 661.0
+offset_bottom = 345.0
+alignment = 1
+
+[node name="StatusLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/StatusContainer"]
+offset_left = 324.0
+offset_right = 337.0
+offset_bottom = 27.0
+
+[node name="BlankSpaceRight" type="Control" parent="Panel/CenterContainer/Control"]
+offset_left = 838.0
+offset_right = 1004.0
+offset_bottom = 542.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.25
+
+[node name="BottomContainer" type="HBoxContainer" parent="Panel/CenterContainer"]
+offset_top = 548.0
+offset_right = 1004.0
+offset_bottom = 580.0
+
+[node name="BackButton" parent="Panel/CenterContainer/BottomContainer" instance=ExtResource( "2" )]
+offset_right = 134.0
+offset_bottom = 32.0
+text = "TR_MENU_BACK"
+
+[node name="AvatarSelectorPopup" parent="." instance=ExtResource( "3" )]
+
+[connection signal="text_changed" from="Panel/CenterContainer/Control/ButtonsContainer/NameContainer/NameLineEdit" to="." method="_on_NameLineEdit_text_changed"]
+[connection signal="text_changed" from="Panel/CenterContainer/Control/ButtonsContainer/AvatarContainer/AvatarContainer/AvatarLineEdit" to="." method="_on_AvatarLineEdit_text_changed"]
+[connection signal="pressed" from="Panel/CenterContainer/Control/ButtonsContainer/AvatarContainer/AvatarContainer/AvatarBrowseButton" to="." method="_on_avatar_browse_button_pressed"]
+[connection signal="pressed" from="Panel/CenterContainer/Control/ButtonsContainer/ClearCacheButton" to="." method="_on_clear_cache_button_pressed"]
+[connection signal="pressed" from="Panel/CenterContainer/BottomContainer/BackButton" to="." method="_on_BackButton_pressed"]
