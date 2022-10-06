@@ -19,7 +19,7 @@ evaluated for security. Use at your own risk.
 ## How do I build it?
 
 V-Sekai requires our [custom Godot Engine fork](https://github.com/v-sekai/godot) found under the `groups-4.x` branch, as well 
-our [custom engine modules](https://github.com/V-Sekai/godot-modules-groups). For information about building the Godot Engine, see the
+our [custom engine modules](https://github.com/V-Sekai/godot-modules-groups) under the `main`. For information about building the Godot Engine, see the
 [official documentation](https://docs.godotengine.org/en/latest/development/compiling/). You must also add the `custom_modules` path when
 invoking scons. More information about custom modules can be found [here](https://docs.godotengine.org/en/stable/development/cpp/custom_modules_in_cpp.html)
 
