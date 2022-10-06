@@ -13,7 +13,7 @@ V-Sekai is an open source project aiming to bring social VR/VRSNS/metaverse comp
 ## How do I get it?
 
 V-Sekai is still currently in a pre-release state. We do not currently offer pre-packaged downloads as of yet.
-It is also highly experimental and due to its focus on providing native user-generated content support, and is still being
+It is also highly experimental and due to its focus on providing native user-generated content support, is still being
 evaluated for security. Use at your own risk.
 
 ## How do I build it?
