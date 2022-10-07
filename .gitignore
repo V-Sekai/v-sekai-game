@@ -13,3 +13,5 @@ temp_*
 _temp_*
 _sentinel_file.png*
 *asset_database.tres
+
+.github/dagger/cue.mod/
