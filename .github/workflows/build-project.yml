@@ -31,6 +31,9 @@ on:
 
 env:
   REPO_NAME: ${{ github.event.repository.name }}
+  VSEKAI_BASE_BRANCH: main
+  CACHE_NAME: ${{github.job}}
+  SCONS_CACHE: ${{github.workspace}}/build/.scons_cache/
 
 concurrency:
   group: ci-${{github.actor}}-${{github.head_ref || github.run_number}}-${{github.ref}}
@@ -45,7 +48,17 @@ jobs:
         uses: actions/checkout@v2
         with:
           submodules: recursive
-          
+
+      - name: Load .scons_cache directory
+        uses: actions/cache@v3
+        with:
+          path: ${{env.SCONS_CACHE}}
+          key: ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}-${{github.sha}}
+          restore-keys: |
+            ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}-${{github.sha}}
+            ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}
+            ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}
+
       - name: "Run Dagger"
         uses: dagger/dagger-for-github@v3
         with:
@@ -58,6 +71,14 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: "Godot Build"
-          path: build
+          name: "vsekai_linux_release_x86_64"
+          path: build/linux_release_x86_64 
           retention-days: 14
+          
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: "vsekai_windows_release_x86_64"
+          path: build/windows_release_x86_64
+          retention-days: 14
+
