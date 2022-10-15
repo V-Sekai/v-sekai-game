@@ -1,0 +1,36 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://dg0p3dklc6nre"
+path.s3tc="res://.godot/imported/Thumbnail.png-5934cc42793426e6a9fee9dee863a3aa.s3tc.ctex"
+path.etc2="res://.godot/imported/Thumbnail.png-5934cc42793426e6a9fee9dee863a3aa.etc2.ctex"
+metadata={
+"imported_formats": ["bptc", "s3tc", "etc2"],
+"vram_texture": true
+}
+
+[deps]
+
+source_file="res://textures/Thumbnail.png"
+dest_files=["res://.godot/imported/Thumbnail.png-5934cc42793426e6a9fee9dee863a3aa.s3tc.ctex", "res://.godot/imported/Thumbnail.png-5934cc42793426e6a9fee9dee863a3aa.etc2.ctex"]
+
+[params]
+
+compress/mode=2
+compress/lossy_quality=0.7
+compress/hdr_compression=1
+compress/bptc_ldr=1
+compress/normal_map=0
+compress/channel_pack=0
+mipmaps/generate=true
+mipmaps/limit=-1
+roughness/mode=0
+roughness/src_normal=""
+process/fix_alpha_border=true
+process/premult_alpha=false
+process/normal_map_invert_y=false
+process/hdr_as_srgb=false
+process/hdr_clamp_exposure=false
+process/size_limit=2048
+detect_3d/compress_to=1
