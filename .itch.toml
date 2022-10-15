@@ -6,7 +6,7 @@ args = ["--xr-mode on"]
 
 [[actions]]
 name = "Play V-Sekai Game on the desktop."
-path = "v_sekai_windows.exe
+path = "v_sekai_windows.exe"
 platform = "windows"
 args = ["--xr-mode off"]
 
