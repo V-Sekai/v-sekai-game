@@ -6,7 +6,7 @@ args = ["--xr-mode on"]
 
 [[actions]]
 name = "editor"
-path = "v_sekai_windows"
+path = "v_sekai_windows.exe"
 platform = "windows"
 args = ["--project-manager"]
 
