@@ -3,37 +3,31 @@ name = "play"
 path = "v_sekai_windows.exe"
 platform = "windows"
 args = ["--xr-mode on"]
-
 [[actions]]
 name = "editor"
 path = "v_sekai_windows.exe"
 platform = "windows"
 args = ["--project-manager"]
-
 [[actions]]
 name = "desktop"
 path = "v_sekai_windows.exe"
 platform = "windows"
 args = ["--xr-mode off"]
-
 [[actions]]
 name = "play"
 path = "v_sekai_linux"
 platform = "linux"
 args = ["--xr-mode on"]
-
 [[actions]]
 name = "editor"
 path = "v_sekai_linux"
 platform = "linux"
 args = ["--project-manager"]
-
 [[actions]]
 name = "desktop"
 path = "v_sekai_linux"
 platform = "linux"
 args = ["--xr-mode off"]
-
 [[actions]]
 name = "V-Sekai Github project"
 path = "https://github.com/V-Sekai/v-sekai-game"
