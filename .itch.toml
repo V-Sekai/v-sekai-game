@@ -1,5 +1,5 @@
 [[actions]]
-name = "Play"
+name = "play"
 path = "v_sekai_windows.exe"
 platform = "windows"
 args = ["--xr-mode on"]
@@ -11,13 +11,13 @@ platform = "windows"
 args = ["--project-manager"]
 
 [[actions]]
-name = "Play V-Sekai Game on the desktop."
+name = "desktop"
 path = "v_sekai_windows.exe"
 platform = "windows"
 args = ["--xr-mode off"]
 
 [[actions]]
-name = "Play"
+name = "play"
 path = "v_sekai_linux"
 platform = "linux"
 args = ["--xr-mode on"]
@@ -29,7 +29,7 @@ platform = "linux"
 args = ["--project-manager"]
 
 [[actions]]
-name = "Play V-Sekai Game on the desktop."
+name = "desktop"
 path = "v_sekai_linux"
 platform = "linux"
 args = ["--xr-mode off"]
