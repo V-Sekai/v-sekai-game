@@ -1,0 +1,27 @@
+[[actions]]
+name = "Play"
+path = "v_sekai_windows.exe"
+platform = "windows"
+args = ["--xr-mode on"]
+
+[[actions]]
+name = "Play V-Sekai Game on the desktop."
+path = "v_sekai_windows.exe
+platform = "windows"
+args = ["--xr-mode off"]
+
+[[actions]]
+name = "Play"
+path = "v_sekai_linux"
+platform = "linux"
+args = ["--xr-mode on"]
+
+[[actions]]
+name = "Play V-Sekai Game on the desktop."
+path = "v_sekai_linux"
+platform = "linux"
+args = ["--xr-mode off"]
+
+[[actions]]
+name = "V-Sekai Github project"
+path = "https://github.com/V-Sekai/v-sekai-game"
