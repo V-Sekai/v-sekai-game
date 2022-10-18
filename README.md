@@ -31,4 +31,6 @@ Website: <https://v-sekai.org/><br>
 Twitter: <https://twitter.com/vsekaiofficial><br>
 Discord: <https://discord.gg/7BQDHesck8><br>
 
-You can find our issues and suggestions at the [V-Sekai.github.io repository.](https://github.com/V-Sekai/V-Sekai.github.io)
+You can find our issues and suggestions at the [V-Sekai.github.io repository.](https://github.com/V-Sekai/V-Sekai.github.io).
+
+See our [documentation website](https://v-sekai.github.io/).
