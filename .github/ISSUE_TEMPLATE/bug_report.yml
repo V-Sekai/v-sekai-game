@@ -6,25 +6,6 @@ body:
   attributes:
     value: |
       - Write a descriptive issue title above.
-- type: input
-  attributes:
-    label: V-Sekai version
-    description: >
-      Specify the Git commit hash if using a development or non-official build.
-      If you use a custom build, please test if your issue is reproducible in official builds too.
-    placeholder: groups-4.0.groups-4.0.0.ca34356e.247.281-2022-03-08T04:26:30+00:00
-  validations:
-    required: false
-
-- type: input
-  attributes:
-    label: System information
-    description: |
-      Specify the OS version, and when relevant hardware information.
-      For graphics-related issues, specify the GPU model, driver version, and the rendering backend (GLES2, GLES3, Vulkan).
-    placeholder: Windows 10, GLES3, Intel HD Graphics 620 (27.20.100.9616)
-  validations:
-    required: false
 
 - type: textarea
   attributes:
@@ -51,3 +32,26 @@ body:
       Drag and drop a ZIP archive to upload it.
   validations:
     required: false
+
+- type: input
+  attributes:
+    label: Using a released version?
+    description: |
+      "Yes" if you have downloaded an official build, or if you exported the project yourself.
+      "No" if you are running the project folder or running directly from the editor.
+      "Both" if you have tested and it happens both when export and when run from project.
+      This is important because some bugs only happen on released builds, and cannot be reproduced from the editor.
+  validations:
+    required: true
+
+- type: input
+  attributes:
+    label: What OS? Any other relevant information? (V-Sekai version, Godot revision, System information)
+    description: >
+      At a minimum, specify the OS and/or headset (Windows, Linux, Quest).
+      Please make sure you are reasonably up to date before reporting issues.
+      If you are not on the latest, include the last set of numbers on the bottom corner of the main screen. (or git commit hash)
+      For graphics-related issues, specify the GPU model, driver version, and the rendering backend (GLES2, GLES3, Vulkan).
+    placeholder: Windows, 65.78, NVidia
+  validations:
+    required: true
