@@ -14,7 +14,7 @@ body:
       If you use a custom build, please test if your issue is reproducible in official builds too.
     placeholder: groups-4.0.groups-4.0.0.ca34356e.247.281-2022-03-08T04:26:30+00:00
   validations:
-    required: true
+    required: false
 
 - type: input
   attributes:
@@ -24,7 +24,7 @@ body:
       For graphics-related issues, specify the GPU model, driver version, and the rendering backend (GLES2, GLES3, Vulkan).
     placeholder: Windows 10, GLES3, Intel HD Graphics 620 (27.20.100.9616)
   validations:
-    required: true
+    required: false
 
 - type: textarea
   attributes:
@@ -45,7 +45,9 @@ body:
 
 - type: textarea
   attributes:
-    label: Minimal reproduction project
+    label: Minimal reproduction project (For SDK or engine issues)
     description: |
       A small V-Sekai project which reproduces the issue. Highly recommended to speed up troubleshooting.
       Drag and drop a ZIP archive to upload it.
+  validations:
+    required: false
