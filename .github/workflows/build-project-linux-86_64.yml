@@ -52,12 +52,12 @@ jobs:
       - name: Load .scons_cache directory
         uses: actions/cache@v3
         with:
-          path: ${{env.SCONS_CACHE}}
-          key: ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}-${{github.sha}}
+          path: godot/.scons_cache
+          key: ${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}-${{github.sha}}
           restore-keys: |
-            ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}-${{github.sha}}
-            ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}
-            ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}
+            ${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}-${{github.sha}}
+            ${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}
+            ${{env.VSEKAI_BASE_BRANCH}}
 
       - name: "Run Dagger"
         uses: dagger/dagger-for-github@v3
