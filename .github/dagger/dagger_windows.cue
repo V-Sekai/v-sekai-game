@@ -142,7 +142,7 @@ build_godot_windows:
 		workdir: "/v-sekai-game/godot"
 		script: contents: #"""
 			mkdir -p /v-sekai-game/build/.scons_cache
-			SCONS_CACHE=/v-sekai-game/build/.scons_cache PATH=/opt/llvm-mingw/bin:$PATH scons float=64 werror=no platform=windows target=editor use_lto=no deprecated=no use_mingw=yes use_llvm=yes use_thinlto=no warnings=no LINKFLAGS=-Wl,-pdb= CCFLAGS='-Wall -Wno-tautological-compare -g -gcodeview' debug_symbols=no custom_modules=../godot_groups_modules
+			SCONS_CACHE=/v-sekai-game/build/.scons_cache PATH=/opt/llvm-mingw/bin:$PATH scons werror=no platform=windows target=editor use_lto=no deprecated=no use_mingw=yes use_llvm=yes use_thinlto=no warnings=no LINKFLAGS=-Wl,-pdb= CCFLAGS='-Wall -Wno-tautological-compare -g -gcodeview' debug_symbols=no custom_modules=../godot_groups_modules
 			"""#
 		export:
 			files:
@@ -157,7 +157,7 @@ build_godot_linux:
 		workdir: "/v-sekai-game/godot"
 		script: contents: #"""
 			mkdir -p /v-sekai-game/build/.scons_cache
-			SCONS_CACHE=/v-sekai-game/build/.scons_cache PATH=/opt/llvm-mingw/bin:$PATH scons float=64 LINKFLAGS=-L/opt/rh/gcc-toolset-9/root/usr/lib/gcc/x86_64-redhat-linux/9/ werror=no platform=linuxbsd target=editor use_lto=no deprecated=no use_static_cpp=yes use_llvm=yes builtin_freetype=yes custom_modules=../godot_groups_modules
+			SCONS_CACHE=/v-sekai-game/build/.scons_cache PATH=/opt/llvm-mingw/bin:$PATH scons LINKFLAGS=-L/opt/rh/gcc-toolset-9/root/usr/lib/gcc/x86_64-redhat-linux/9/ werror=no platform=linuxbsd target=editor use_lto=no deprecated=no use_static_cpp=yes use_llvm=yes builtin_freetype=yes custom_modules=../godot_groups_modules
 			"""#
 		export:
 			files:
@@ -203,13 +203,13 @@ dagger.#Plan & {
 				script: contents: #"""
 					mkdir -p /v-sekai-game/build/.scons_cache /v-sekai-game/project/build/.scons_cache
 					cd /v-sekai-game/godot
-					cp bin/godot.windows.editor.double.x86_64.llvm.exe bin/windows_release_x86_64.exe 
+					cp bin/godot.windows.editor.x86_64.llvm.exe bin/windows_release_x86_64.exe 
 					mingw-strip --strip-debug bin/windows_release_x86_64.exe
-					cp bin/godot.windows.editor.double.x86_64.llvm.pdb bin/windows_release_x86_64.pdb
-					cp bin/godot.linuxbsd.editor.double.x86_64.llvm bin/linux_debug.x86_64.llvm
-					cp bin/godot.linuxbsd.editor.double.x86_64.llvm bin/linux_editor.x86_64
-					cp bin/godot.linuxbsd.editor.double.x86_64.llvm bin/linux_release.x86_64.llvm && cp bin/godot.linuxbsd.editor.double.x86_64.llvm bin/linux_release.x86_64 && strip --strip-debug bin/linux_release.x86_64
-					cp bin/godot.linuxbsd.editor.double.x86_64.llvm bin/linux_debug.x86_64.llvm && cp bin/godot.linuxbsd.editor.double.x86_64.llvm bin/linux_debug.x86_64 && strip --strip-debug bin/linux_debug.x86_64	
+					cp bin/godot.windows.editor.x86_64.llvm.pdb bin/windows_release_x86_64.pdb
+					cp bin/godot.linuxbsd.editor.x86_64.llvm bin/linux_debug.x86_64.llvm
+					cp bin/godot.linuxbsd.editor.x86_64.llvm bin/linux_editor.x86_64
+					cp bin/godot.linuxbsd.editor.x86_64.llvm bin/linux_release.x86_64.llvm && cp bin/godot.linuxbsd.editor.x86_64.llvm bin/linux_release.x86_64 && strip --strip-debug bin/linux_release.x86_64
+					cp bin/godot.linuxbsd.editor.x86_64.llvm bin/linux_debug.x86_64.llvm && cp bin/godot.linuxbsd.editor.x86_64.llvm bin/linux_debug.x86_64 && strip --strip-debug bin/linux_debug.x86_64	
 					mkdir -p /v-sekai-game/build/
 					rm -rf /v-sekai-game/.local/share/godot/export_templates/
 					mkdir -p /v-sekai-game/.local/share/godot/export_templates/
