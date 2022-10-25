@@ -84,6 +84,7 @@ jobs:
 
       - name: v-sekai-linux-x86_64
         uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
         with:
           prerelease: true
           files: |
@@ -93,6 +94,7 @@ jobs:
      
       - name: v-sekai-windows-x86_64
         uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
         with:
           prerelease: true
           files: |

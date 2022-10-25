@@ -119,6 +119,7 @@ jobs:
 
       - name: v-sekai-macos-arm64
         uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
         with:
           prerelease: true
           files: |

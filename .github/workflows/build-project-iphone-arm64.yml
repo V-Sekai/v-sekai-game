@@ -114,6 +114,7 @@ jobs:
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
+        if: startsWith(github.ref, 'refs/tags/')
         with:
           name: "vsekai_ios_xcode"
           path: godot/ios_xcode
@@ -121,6 +122,7 @@ jobs:
      
       - name: v-sekai-iphone-arm64
         uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
         with:
           prerelease: true
           files: |
