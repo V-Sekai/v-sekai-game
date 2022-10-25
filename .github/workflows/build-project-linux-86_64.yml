@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-name: "Dagger Export"
+name: "Dagger Export Windows and Linux 86_64"
 
 on:
   push:
@@ -36,7 +36,7 @@ env:
   SCONS_CACHE: ${{github.workspace}}/build/.scons_cache/
 
 concurrency:
-  group: ci-${{github.actor}}-${{github.head_ref || github.run_number}}-${{github.ref}}
+  group: ci-dagger-${{github.actor}}-${{github.head_ref || github.run_number}}-${{github.ref}}
   cancel-in-progress: true
 
 jobs:
