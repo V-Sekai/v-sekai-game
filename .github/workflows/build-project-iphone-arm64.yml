@@ -119,7 +119,7 @@ jobs:
           path: godot/ios_xcode
           retention-days: 14
      
-      - name: Release
+      - name: v-sekai-iphone-arm64
         uses: softprops/action-gh-release@v1
         with:
           prerelease: true

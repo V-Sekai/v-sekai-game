@@ -82,8 +82,16 @@ jobs:
           path: build/windows_release_x86_64
           retention-days: 14
 
+      - name: v-sekai-linux-x86_64
+        uses: softprops/action-gh-release@v1
+        with:
+          prerelease: true
+          files: |
+            LICENSE
+            README.md
+            build/linux_release_x86_64
      
-      - name: Release
+      - name: v-sekai-windows-x86_64
         uses: softprops/action-gh-release@v1
         with:
           prerelease: true
