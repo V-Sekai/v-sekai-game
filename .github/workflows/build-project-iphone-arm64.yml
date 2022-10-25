@@ -118,3 +118,12 @@ jobs:
           name: "vsekai_ios_xcode"
           path: godot/ios_xcode
           retention-days: 14
+     
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          prerelease: true
+          files: |
+            LICENSE
+            README.md
+            godot/ios_xcode

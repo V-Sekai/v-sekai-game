@@ -82,3 +82,12 @@ jobs:
           path: build/windows_release_x86_64
           retention-days: 14
 
+     
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          prerelease: true
+          files: |
+            LICENSE
+            README.md
+            build/windows_release_x86_64
