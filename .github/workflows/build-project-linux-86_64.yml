@@ -31,7 +31,6 @@ on:
 
 env:
   REPO_NAME: ${{ github.event.repository.name }}
-  VSEKAI_BASE_BRANCH: main
   CACHE_NAME: ${{github.job}}
   SCONS_CACHE: ${{github.workspace}}/build/.scons_cache/
 
@@ -53,13 +52,11 @@ jobs:
         uses: actions/cache@v3
         with:
           path: build/.scons_cache
-          key: ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}-${{github.sha}}
+          key: ${{env.CACHE_NAME}}-${{github.ref}}-${{github.sha}}
           restore-keys: |
-            ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}-${{github.sha}}
-            ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}
-            ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}
+            ${{env.CACHE_NAME}}-${{github.ref}}-${{github.sha}}
+            ${{env.CACHE_NAME}}-${{github.ref}}
             ${{env.CACHE_NAME}}
-            ${{env.VSEKAI_BASE_BRANCH}}
 
       - name: "Run Dagger"
         uses: dagger/dagger-for-github@v3
