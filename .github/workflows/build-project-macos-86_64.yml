@@ -40,7 +40,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  build-macos:
     name: "Build V-Sekai Macos"
     runs-on: macos-12
     steps:
@@ -78,11 +78,12 @@ jobs:
         uses: actions/cache@v3
         with:
           path: godot/.scons_cache
-          key: ${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}-${{github.sha}}
+          key: ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}-${{github.sha}}
           restore-keys: |
-            ${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}-${{github.sha}}
-            ${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}
-            ${{env.VSEKAI_BASE_BRANCH}}
+            ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}-${{github.sha}}
+            ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}
+            ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}
+            ${{env.CACHE_NAME}}
 
       - run: brew install scons
 
@@ -90,7 +91,10 @@ jobs:
         run: |
           cd godot
           SCONS_CACHE=.scons_cache scons werror=no platform=macos target=editor use_lto=no deprecated=no builtin_freetype=yes custom_modules=../godot-modules-groups
-          cp bin/godot.macos.editor.x86_64 bin/macos_release_x86_64
+          cp -r misc/dist/macos_tools.app ./vsekai_macos_release_x86_64.app
+          mkdir -p vsekai_macos_release_x86_64.app/Contents/MacOS
+          cp bin/godot.macos.editor.x86_64  vsekai_macos_release_x86_64.app/Contents/MacOS/Godot
+          chmod +x vsekai_macos_release_x86_64.app/Contents/MacOS/Godot
 
       # mkdir -p build/
       # rm -rf .local/share/godot/export_templates/
@@ -113,8 +117,8 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: "vsekai_macos_release_x86_64"
-          path: godot/bin/macos_release_x86_64
+          name: "vsekai_macos_release_x86_64.app"
+          path: godot/vsekai_macos_release_x86_64.app
           retention-days: 14
 
       - name: v-sekai-macos-arm64
@@ -125,4 +129,4 @@ jobs:
           files: |
             LICENSE
             README.md
-            build/windows_release_x86_64
+            godot/vsekai_macos_release_x86_64.app

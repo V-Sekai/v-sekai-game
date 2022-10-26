@@ -40,7 +40,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  build-linux-windows:
     name: "Build"
     runs-on: ubuntu-latest
     steps:
@@ -52,12 +52,13 @@ jobs:
       - name: Load .scons_cache directory
         uses: actions/cache@v3
         with:
-          path: godot/.scons_cache
-          key: ${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}-${{github.sha}}
+          path: build/.scons_cache
+          key: ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}-${{github.sha}}
           restore-keys: |
-            ${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}-${{github.sha}}
-            ${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}
-            ${{env.VSEKAI_BASE_BRANCH}}
+            ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}-${{github.sha}}
+            ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}
+            ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}
+            ${{env.CACHE_NAME}}
 
       - name: "Run Dagger"
         uses: dagger/dagger-for-github@v3
