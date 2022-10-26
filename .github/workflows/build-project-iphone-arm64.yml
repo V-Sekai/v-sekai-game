@@ -84,6 +84,7 @@ jobs:
             ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}
             ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}
             ${{env.CACHE_NAME}}
+            ${{env.VSEKAI_BASE_BRANCH}}
 
       - run: brew install scons
 
