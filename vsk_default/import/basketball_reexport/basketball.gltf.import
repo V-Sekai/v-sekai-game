@@ -13,12 +13,12 @@ dest_files=["res://.godot/imported/basketball.gltf-89149f3a0d83d2a57961dfde0aa96
 
 [params]
 
-nodes/root_type="Spatial"
+nodes/root_type="Node3D"
 nodes/root_name="Basketball"
 nodes/apply_root_scale=true
-nodes/root_scale=0.001
+nodes/root_scale=0.1
 meshes/ensure_tangents=true
-meshes/generate_lods=true
+meshes/generate_lods=false
 meshes/create_shadow_meshes=true
 meshes/light_baking=0
 meshes/lightmap_texel_size=0.1

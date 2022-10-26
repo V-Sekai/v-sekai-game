@@ -8,7 +8,7 @@
         {
             "name" : "Scene",
             "nodes" : [
-                5
+                0
             ]
         }
     ],
@@ -16,59 +16,6 @@
         {
             "mesh" : 0,
             "name" : "Cube__0"
-        },
-        {
-            "children" : [
-                0
-            ],
-            "name" : "Cube",
-            "rotation" : [
-                -0.7071068286895752,
-                0,
-                0,
-                0.7071067094802856
-            ],
-            "scale" : [
-                100,
-                100,
-                100
-            ]
-        },
-        {
-            "children" : [
-                1
-            ],
-            "name" : "RootNode"
-        },
-        {
-            "children" : [
-                2
-            ],
-            "name" : "17b590cce40b46b089bc3041c1774279.fbx",
-            "rotation" : [
-                0.7071068286895752,
-                0,
-                0,
-                0.7071068286895752
-            ]
-        },
-        {
-            "children" : [
-                3
-            ],
-            "name" : "RootNode (model correction matrix)"
-        },
-        {
-            "children" : [
-                4
-            ],
-            "name" : "RootNode (gltf orientation matrix)",
-            "rotation" : [
-                -0.7071067690849304,
-                0,
-                0,
-                0.7071067690849304
-            ]
         }
     ],
     "materials" : [

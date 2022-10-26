@@ -3,7 +3,7 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://bulk00syapy7d"
+uid="uid://c3w288cgphqlm"
 path="res://.godot/imported/main_room.gltf-6896802c47202e0aeee3338a5738a3d3.scn"
 
 [deps]
@@ -13,20 +13,26 @@ dest_files=["res://.godot/imported/main_room.gltf-6896802c47202e0aeee3338a5738a3
 
 [params]
 
-nodes/root_type="Spatial"
+nodes/root_type="Node3D"
 nodes/root_name="MainRoom"
 nodes/apply_root_scale=true
 nodes/root_scale=1.0
 meshes/ensure_tangents=true
-meshes/generate_lods=true
+meshes/generate_lods=false
 meshes/create_shadow_meshes=true
-meshes/light_baking=1
+meshes/light_baking=2
 meshes/lightmap_texel_size=0.1
 skins/use_named_skins=true
 animation/import=true
 animation/fps=15
 import_script/path=""
 _subresources={
+"materials": {
+"Concrete": {
+"use_external/enabled": true,
+"use_external/path": "res://vsk_default/import/sky_celebration/main_room_mat.tres"
+}
+},
 "nodes": {
 "PATH:MainRoomBaked": {
 "decomposition/precision": 10,

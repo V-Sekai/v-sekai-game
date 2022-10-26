@@ -190,36 +190,6 @@
   ],
   "nodes": [
     {
-      "children": [
-        1
-      ],
-      "name": "RootNode (gltf orientation matrix)",
-      "rotation": [
-        -0.70710678118654746,
-        -0,
-        -0,
-        0.70710678118654757
-      ]
-    },
-    {
-      "children": [
-        2
-      ],
-      "name": "RootNode (model correction matrix)"
-    },
-    {
-      "children": [
-        3
-      ],
-      "name": "Root"
-    },
-    {
-      "children": [
-        4
-      ],
-      "name": "Sphere"
-    },
-    {
       "mesh": 0,
       "name": "Sphere_0"
     }
