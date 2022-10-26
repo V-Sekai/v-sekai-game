@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://degn7w6ty8afv"]
+[gd_scene load_steps=15 format=3 uid="uid://butcvlel8eodv"]
 
 [ext_resource type="PackedScene" uid="uid://d0xavoy61xjau" path="res://vsk_default/scenes/prefabs/beachball.tscn" id="2"]
 [ext_resource type="PackedScene" uid="uid://c3w288cgphqlm" path="res://vsk_default/import/sky_celebration/main_room.gltf" id="2_7em6w"]
@@ -7,7 +7,7 @@
 [ext_resource type="Script" path="res://addons/vsk_map/vsk_map_definition.gd" id="5"]
 [ext_resource type="Script" path="res://addons/canvas_plane/canvas_3d.gd" id="6"]
 [ext_resource type="Environment" uid="uid://cp0t8jp2ellve" path="res://vsk_default/environments/default_env.tres" id="7"]
-[ext_resource type="PackedScene" uid="uid://dcpllpeq4crcq" path="res://addons/vsk_entities/vsk_test_entity.tscn" id="11"]
+[ext_resource type="PackedScene" uid="uid://dl5k2luf68157" path="res://addons/vsk_entities/vsk_test_entity.tscn" id="11"]
 [ext_resource type="Script" path="res://addons/vsk_importer_exporter/vsk_uro_pipeline.gd" id="12"]
 
 [sub_resource type="StyleBoxEmpty" id="1"]
@@ -28,6 +28,7 @@ map_resources = []
 entity_instance_list = []
 entity_instance_properties_list = []
 vskeditor_preview_type = 0
+vskeditor_preview_camera_path = NodePath("Camera")
 vskeditor_pipeline_paths = [NodePath("UroPipeline")]
 
 [node name="DirectionalLight" type="DirectionalLight3D" parent="."]
@@ -53,8 +54,59 @@ script = ExtResource("3")
 [node name="Beachball" parent="." instance=ExtResource("2")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.46238, 0.539357, -0.0401002)
 
+[node name="Beachball2" parent="." instance=ExtResource("2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.46238, 0.539357, 2.4163)
+
+[node name="Beachball3" parent="." instance=ExtResource("2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.46238, 0.539357, 5.23109)
+
+[node name="Beachball4" parent="." instance=ExtResource("2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.46238, 2.70984, 5.23109)
+
 [node name="Basketball" parent="." instance=ExtResource("4")]
 transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 4.47624, 0.206347, 0)
+
+[node name="Basketball2" parent="." instance=ExtResource("4")]
+transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 4.47624, 0.2931, 0.889367)
+
+[node name="Basketball3" parent="." instance=ExtResource("4")]
+transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 4.47624, 0.365204, 1.87365)
+
+[node name="Basketball4" parent="." instance=ExtResource("4")]
+transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 4.47624, 0.435034, 2.95683)
+
+[node name="Basketball5" parent="." instance=ExtResource("4")]
+transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 4.47624, 0.532151, 4.26031)
+
+[node name="Basketball6" parent="." instance=ExtResource("4")]
+transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 3.55238, 0.571684, 0)
+
+[node name="Basketball7" parent="." instance=ExtResource("4")]
+transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 3.55238, 0.668518, 0.889367)
+
+[node name="Basketball8" parent="." instance=ExtResource("4")]
+transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 3.55238, 0.722889, 1.87365)
+
+[node name="Basketball9" parent="." instance=ExtResource("4")]
+transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 3.55238, 0.802638, 2.95683)
+
+[node name="Basketball10" parent="." instance=ExtResource("4")]
+transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 3.55238, 0.905647, 4.26031)
+
+[node name="Basketball11" parent="." instance=ExtResource("4")]
+transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 2.47422, 0.965321, 0)
+
+[node name="Basketball12" parent="." instance=ExtResource("4")]
+transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 2.47422, 1.22506, 0.889367)
+
+[node name="Basketball13" parent="." instance=ExtResource("4")]
+transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 2.47422, 1.64281, 1.87365)
+
+[node name="Basketball14" parent="." instance=ExtResource("4")]
+transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 2.47422, 2.30858, 2.95683)
+
+[node name="Basketball15" parent="." instance=ExtResource("4")]
+transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 2.47422, 6.23294, 4.26031)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = ExtResource("7")
@@ -86,7 +138,6 @@ fit_content_height = true
 
 [node name="TestEntity" parent="." instance=ExtResource("11")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
-simulation_logic_node/rpc_table = NodePath("")
 
 [node name="Camera" type="Camera3D" parent="."]
 transform = Transform3D(-0.200069, 0, -0.979782, 0, 1, 0, 0.979782, 0, -0.200069, 0, 3.10846, -2)
@@ -108,6 +159,7 @@ mesh = SubResource("5")
 
 [node name="UroPipeline" type="Node" parent="."]
 script = ExtResource("12")
-database_id = "22df7ffd-759a-4170-82f6-aeefbf50a4f4"
+database_id = "908aea41-c724-4d8e-b866-82645df88965"
 
 [editable path="SkyCelebrationMainRoom/MainRoomBaked"]
+[editable path="TestEntity"]
