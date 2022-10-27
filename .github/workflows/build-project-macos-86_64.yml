@@ -88,7 +88,7 @@ jobs:
       - name: Run build
         run: |
           cd godot
-          SCONS_CACHE=.scons_cache scons werror=no platform=macos target=editor use_lto=no deprecated=no builtin_freetype=yes custom_modules=../godot-modules-groups
+          SCONS_CACHE=.scons_cache scons optimize=speed werror=no platform=macos target=editor use_lto=no deprecated=no builtin_freetype=yes custom_modules=../godot-modules-groups
           cp -r misc/dist/macos_tools.app ./vsekai_macos_release_x86_64.app
           mkdir -p vsekai_macos_release_x86_64.app/Contents/MacOS
           cp bin/godot.macos.editor.x86_64  vsekai_macos_release_x86_64.app/Contents/MacOS/Godot

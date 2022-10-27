@@ -89,7 +89,7 @@ jobs:
       - name: Run build
         run: |
           cd godot
-          SCONS_CACHE=.scons_cache scons arch=arm64 werror=no platform=ios target=editor use_lto=no deprecated=no builtin_freetype=yes custom_modules=../godot-modules-groups
+          SCONS_CACHE=.scons_cache scons optimize=speed arch=arm64 werror=no platform=ios target=editor use_lto=no deprecated=no builtin_freetype=yes custom_modules=../godot-modules-groups
           cp -r misc/dist/ios_xcode vsekai_ios_xcode
           cp bin/libgodot.ios.editor.arm64.a vsekai_ios_xcode/libgodot.ios.release.xcframework/ios-arm64/libgodot.a
 
