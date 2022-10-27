@@ -39,14 +39,14 @@ godot: {
 	core.#GitPull & {
 		keepGitDir: true
 		remote: "https://github.com/V-Sekai/godot.git"
-		ref:    "groups-4.x.2022-10-15T135003Z" // Use tags and not floating branches.
+		ref:    "groups-4.x"
 	}
 }
 godot_groups_modules: {
 	core.#GitPull & {
 		keepGitDir: true
 		remote: "https://github.com/V-Sekai/godot-modules-groups"
-		ref:    "592f11e984d0de5ef4f12699f1f38eba416c4ce2" // Use tags and not floating branches.
+		ref:    "main"
 	}
 }
 

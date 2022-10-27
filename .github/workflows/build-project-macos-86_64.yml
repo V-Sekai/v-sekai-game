@@ -58,13 +58,13 @@ jobs:
         with:
           path: 'godot'
           repository: 'v-sekai/godot'
-          ref: 'groups-4.x.2022-10-15T135003Z' # Use tags and not floating branches.
+          ref: 'groups-4.x'
 
       - uses: actions/checkout@v3
         with:
           path: 'godot-modules-groups'
           repository: 'v-sekai/godot-modules-groups'
-          ref: "592f11e984d0de5ef4f12699f1f38eba416c4ce2" # Use tags and not floating branches.
+          ref: "main"
           submodules: recursive
 
       - name: Checkout
