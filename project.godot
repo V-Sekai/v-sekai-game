@@ -311,6 +311,8 @@ settings/performance/performance_label_update_rate=0.5
 [display]
 
 window/vsync/vsync_mode=2
+window/stretch/mode="canvas_items"
+window/stretch/aspect="keep_width"
 window/vsync/vsync_via_compositor=true
 
 [editor]
