@@ -664,7 +664,6 @@ config/networked_scenes=PackedStringArray("res://addons/vsk_entities/vsk_player.
 config/max_networked_entities=4096
 config/simulate_network_conditions=false
 config/entity_root_node=NodePath("")
-config/compression_mode=0
 config/shard_heartbeat_frequency=10.0
 config/default_port=7777
 config/network_fps=60
@@ -672,6 +671,7 @@ config/default_map_path="uro://962314f0-8cf9-4191-8f08-c154971dc665"
 config/default_autohost=false
 config/use_threaded_host_state_initalisation_func=false
 config/use_threaded_received_server_state_func=false
+config/compression_mode=4
 
 [physics]
 
