@@ -50,6 +50,27 @@ func _callback_state(p_state: int, p_callback_dictionary: Dictionary) -> void:
 
 	VSKGameFlowManager.set_callback_state(VSKGameFlowManager.CALLBACK_STATE_NONE, {})
 
+func get_encompasing_theme(p_node: Node) -> Theme:
+	if p_node == null:
+		push_warning("Somehow every Control and Window has null Theme.")
+		return Theme.new()
+
+	var current_theme: Theme
+	if p_node is Control:
+		current_theme = p_node.theme
+	if p_node is Window:
+		current_theme = p_node.theme
+
+	var node_parent: Object = p_node.get_parent()
+	if current_theme:
+		return current_theme
+	elif node_parent == null and p_node.get_viewport() != p_node:
+		return get_encompasing_theme(p_node.get_viewport())
+	elif typeof(node_parent) == TYPE_OBJECT and node_parent != null:
+		return get_encompasing_theme(node_parent)
+	else:
+		return get_encompasing_theme(null)
+
 
 func _ready() -> void:
 	_callback_state(VSKGameFlowManager.callback_state, VSKGameFlowManager.callback_dictionary)
@@ -63,6 +84,8 @@ func _ready() -> void:
 
 	if exit_dialog.confirmed.connect(self.quit) != OK:
 		printerr("Could not connected exit_dialog confirmed!")
+	
+	var current_theme: Theme = get_encompasing_theme(self)
 
 
 func _on_HostButton_pressed() -> void:
