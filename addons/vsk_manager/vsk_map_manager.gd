@@ -1,12 +1,12 @@
 @tool
-extends "res://addons/vsk_manager/vsk_user_content_manager.gd" # vsk_user_content_manager.gd
+extends "res://addons/vsk_manager/vsk_user_content_manager.gd"
 
 const vsk_map_definition_const = preload("res://addons/vsk_map/vsk_map_definition.gd")
 const vsk_map_definition_runtime_const = preload("res://addons/vsk_map/vsk_map_definition_runtime.gd")
 const vsk_map_entity_instance_record_const = preload("res://addons/vsk_map/vsk_map_entity_instance_record.gd")
 const runtime_entity_const = preload("res://addons/entity_manager/runtime_entity.gd")
 
-var default_map_path: String = "res://vsk_default/scenes/maps/sky_celebration/sky_celebration.tscn"
+var default_map_path: String = ""
 
 var _loading_stage_count: int = 0
 

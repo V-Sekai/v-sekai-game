@@ -1,14 +1,11 @@
 [gd_resource type="Environment" load_steps=3 format=3 uid="uid://cp0t8jp2ellve"]
 
-[sub_resource type="PhysicalSkyMaterial" id="PhysicalSkyMaterial_pfbxw"]
+[sub_resource type="PhysicalSkyMaterial" id="PhysicalSkyMaterial_djn7a"]
 
 [sub_resource type="Sky" id="1"]
-sky_material = SubResource("PhysicalSkyMaterial_pfbxw")
+sky_material = SubResource("PhysicalSkyMaterial_djn7a")
 
 [resource]
 background_mode = 2
-background_color = Color(0.52549, 0.52549, 0.52549, 1)
 sky = SubResource("1")
-ambient_light_color = Color(1, 1, 1, 1)
 tonemap_mode = 3
-glow_enabled = true
