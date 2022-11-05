@@ -60,8 +60,7 @@ func _loadImage(p_cache_only):
 		if doFileExists:
 			var _image = Image.new()
 			if _image.load(str("user://image_cache/", file_name.sha256_text() + "." + file_ext)) == OK:
-				var _texture = ImageTexture.new()
-				_texture.create_from_image(_image)
+				var _texture = ImageTexture.create_from_image(_image)
 				
 				texture = _texture
 				
@@ -74,7 +73,7 @@ func _loadImage(p_cache_only):
 		elif storeCache:
 			# Add cache directory
 			var dir : DirAccess = DirAccess.open("user://")
-			dir.make_dir("image_cache")
+			var _err = dir.make_dir("image_cache")
 
 			http.download_file = str("user://image_cache/", file_name.sha256_text() + "." + file_ext)
 
@@ -157,8 +156,7 @@ func _on_HTTPRequest_request_completed(result: int, response_code: int, _headers
 				print("Request completed successfully for " + this_url + ": " + str(image.get_width()) + "x" + str(image.get_height()))
 				# An error did not occur while trying to display the image
 
-				var _texture = ImageTexture.new()
-				_texture.create_from_image(image)
+				var _texture = ImageTexture.create_from_image(image)
 
 				if !Engine.is_editor_hint():
 					loaded.emit(image, false)
@@ -187,13 +185,16 @@ func _process(_delta):
 		progress_texture.value = percent
 
 func _base64texture(image64):
-	var image = Image.new()
 	var tmp = image64.split(",")[1]
-
-	image.load_png_from_buffer(Marshalls.base64_to_raw(tmp))
-	var _texture = ImageTexture.new()
-	_texture.create_from_image(image)
-	texture = _texture
+	var image = Image.new()
+	var err = image.load_png_from_buffer(Marshalls.base64_to_raw(tmp))
+	if err == OK:
+		if !Engine.is_editor_hint():
+			progress_texture.hide()
+			loaded.emit(image, false)
+		return
+	var image_texture : ImageTexture = ImageTexture.create_from_image(image)
+	texture = image_texture
 
 	if !Engine.is_editor_hint():
 		progress_texture.hide()
