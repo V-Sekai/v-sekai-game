@@ -221,7 +221,7 @@ config/loading_scene="res://vsk_default/scenes/network_lobby.tscn"
 
 [assets]
 
-config/avatar_whitelist=PackedStringArray("res://vsk_default/scenes/avatars/*", "res://addons/vsk_avatar/avatars/*", "https://uro.v-sekai.cloud/storage01/vsk_content/avatars/*", "res://addons/vrm/*")
+config/avatar_whitelist=PackedStringArray("res://vsk_default/scenes/avatars/*", "res://addons/vsk_avatar/avatars/loading/*", "res://addons/vsk_avatar/avatars/*", "https://uro.v-sekai.cloud/storage01/vsk_content/avatars/*", "res://addons/vrm/*")
 config/prop_whitelist=PackedStringArray("res://vsk_default/scenes/props/*", "https://uro.v-sekai.cloud/storage01/vsk_content/props/*", "res://vsk_default/scenes/prefabs/*")
 config/map_whitelist=PackedStringArray("res://vsk_default/scenes/maps/*", "https://uro.v-sekai.cloud/storage01/vsk_content/maps/*")
 config/game_mode_whitelist=PackedStringArray("res://vsk_default/scenes/game_modes/*", "https://uro.v-sekai.cloud/storage01/vsk_content/game_modes/*")
