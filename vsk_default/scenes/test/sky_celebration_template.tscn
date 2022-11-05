@@ -1,10 +1,11 @@
-[gd_scene load_steps=16 format=3 uid="uid://butcvlel8eodv"]
+[gd_scene load_steps=17 format=3 uid="uid://butcvlel8eodv"]
 
 [ext_resource type="PackedScene" uid="uid://d0xavoy61xjau" path="res://vsk_default/scenes/prefabs/beachball.tscn" id="2"]
 [ext_resource type="Material" uid="uid://d1r0ak530xwwq" path="res://vsk_default/import/sky_celebration/main_room_mat.tres" id="2_wj3xi"]
 [ext_resource type="PackedScene" uid="uid://c4vqy00grclrx" path="res://vsk_default/scenes/prefabs/basketball.tscn" id="4"]
 [ext_resource type="Script" path="res://addons/vsk_map/vsk_map_definition.gd" id="5"]
 [ext_resource type="Script" path="res://addons/canvas_plane/canvas_3d.gd" id="6"]
+[ext_resource type="Environment" uid="uid://cp0t8jp2ellve" path="res://vsk_default/environments/default_env.tres" id="8_er26i"]
 [ext_resource type="PackedScene" uid="uid://dcpllpeq4crcq" path="res://addons/vsk_entities/vsk_test_entity.tscn" id="11"]
 [ext_resource type="Script" path="res://addons/vsk_importer_exporter/vsk_uro_pipeline.gd" id="12"]
 
@@ -35,6 +36,7 @@ data = PackedVector3Array(18.876, 0.485, -7.26, 18.2042, 1.9491, -7.26, 18.6903,
 
 [sub_resource type="CameraAttributesPhysical" id="CameraAttributesPhysical_dg1fj"]
 auto_exposure_enabled = true
+auto_exposure_min_exposure_value = 1.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4eapr"]
 metallic = 1.0
@@ -53,7 +55,6 @@ vskeditor_pipeline_paths = [NodePath("UroPipeline")]
 
 [node name="DirectionalLight" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.542277, 0.110847, -0.832856, -0.739241, 0.408171, 0.535648, 0.399323, 0.906151, -0.139399, 0, 2, 0)
-light_energy = 5.0
 light_bake_mode = 1
 shadow_enabled = true
 directional_shadow_blend_splits = true
@@ -183,5 +184,8 @@ mesh = SubResource("5")
 [node name="UroPipeline" type="Node" parent="."]
 script = ExtResource("12")
 database_id = "962314f0-8cf9-4191-8f08-c154971dc665"
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource("8_er26i")
 
 [editable path="TestEntity"]
