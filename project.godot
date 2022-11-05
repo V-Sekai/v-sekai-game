@@ -683,10 +683,14 @@ config/compression_mode=4
 
 driver/threads/thread_model=2
 textures/vram_compression/import_bptc=true
+textures/vram_compression/import_s3tc=false
 reflections/reflection_atlas/reflection_size=1024
 global_illumination/gi/use_half_resolution=true
 global_illumination/sdfgi/probe_ray_count=0
+anti_aliasing/quality/msaa_2d=1
+anti_aliasing/quality/msaa_3d=1
 occlusion_culling/use_occlusion_culling=true
+textures/canvas_textures/default_texture_filter=2
 anti_aliasing/quality/msaa=1
 batching/options/use_batching=true
 batching/options/use_batching_in_editor=true
