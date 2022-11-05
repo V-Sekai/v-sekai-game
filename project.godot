@@ -317,7 +317,6 @@ window/vsync/vsync_via_compositor=true
 
 movie_writer/mjpeg_quality=1.0
 movie_writer/movie_file="../export.avi"
-import/use_multiple_threads=false
 
 [editor_plugins]
 
@@ -676,6 +675,7 @@ config/compression_mode=4
 [physics]
 
 2d/run_on_separate_thread=true
+3d/run_on_separate_thread=true
 
 [rendering]
 
