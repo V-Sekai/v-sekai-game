@@ -102,8 +102,11 @@ func is_whitelisted(p_url: String, p_user_content_type: int) -> bool:
 		if p_url.match(string):
 			return true
 
+	if p_url.is_empty():
+		printerr("Asset is not whitelisted!")
+		return false
+		
 	printerr("Asset %s is not whitelisted!" % p_url)
-
 	return false
 
 func get_error_path(p_type: int, p_asset_err: int) -> String:
@@ -260,6 +263,9 @@ func make_http_request(p_request_object: Dictionary, p_bypass_whitelist: bool) -
 func make_local_file_request(p_request_object: Dictionary, p_bypass_whitelist: bool) -> Dictionary:
 	var request_object: Dictionary = p_request_object
 	var path: String = request_object["path"]
+	if path.is_empty():
+		_complete_request(p_request_object, ASSET_NOT_FOUND)
+		return p_request_object
 	var asset_type: int = request_object["asset_type"]
 
 	var asset_err: int = ASSET_OK

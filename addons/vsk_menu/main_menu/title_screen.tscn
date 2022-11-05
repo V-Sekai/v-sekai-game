@@ -54,7 +54,7 @@ theme_override_constants/separation = 20
 alignment = 1
 
 [node name="TextureRect" type="TextureRect" parent="Panel/Container/Control/CenterContainer"]
-modulate = Color(0.449219, 0.0585938, 0.0585938, 1)
+modulate = Color(0, 0, 0, 1)
 custom_minimum_size = Vector2(256, 256)
 layout_mode = 2
 offset_top = 89.0
