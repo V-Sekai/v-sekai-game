@@ -147,4 +147,4 @@ stream = ExtResource("2")
 transform = Transform3D(0.5, 0, 0, 0, 0.35, 0, 0, 0, 0.5, 0, 0.25, -0.75)
 
 [node name="TestBallRotation" parent="TestBall" instance=ExtResource("1")]
-transform = Transform3D(0.353553, -0.25, 0.25, -7.45057e-09, 0.353553, 0.353553, -0.353553, -0.25, 0.25, 0, 0, 0)
+transform = Transform3D(0.353553, -0.25, 0.25, 0, 0.353553, 0.353553, -0.353553, -0.25, 0.25, 0, 0, 0)

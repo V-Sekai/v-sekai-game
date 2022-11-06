@@ -1,24 +1,22 @@
 [gd_scene load_steps=5 format=3 uid="uid://c4vqy00grclrx"]
 
 [ext_resource type="PackedScene" uid="uid://ciytelwuu2qee" path="res://addons/vsk_entities/vsk_interactable_prop.tscn" id="1"]
-[ext_resource type="PackedScene" path="res://vsk_default/models/basketball/basketball.tscn" id="2"]
+[ext_resource type="PackedScene" uid="uid://dbmqfpl0udm23" path="res://vsk_default/models/basketball/basketball.tscn" id="2"]
 [ext_resource type="AudioStream" uid="uid://ceefv7idopk7q" path="res://vsk_default/audio/sfx/basketball_drop.wav" id="3"]
 
 [sub_resource type="PhysicsMaterial" id="1"]
 bounce = 0.5
 
-[node name="Basketball" instance=ExtResource( "1" )]
-simulation_logic_node/model_scene = ExtResource( "2" )
-simulation_logic_node/hit_sample = ExtResource( "3" )
+[node name="Basketball" instance=ExtResource("1")]
+simulation_logic_node/hit_sample = ExtResource("3")
 simulation_logic_node/hit_velocity = 0.005
-simulation_logic_node/physics_material = SubResource( "1" )
+simulation_logic_node/physics_material = SubResource("1")
 simulation_logic_node/mass = 0.2
-simulation_logic_node/collison_layers = 48
-simulation_logic_node/collison_mask = 17
+simulation_logic_node/model_scene = ExtResource("2")
 
 [node name="PropSimulationLogic" parent="." index="2"]
-model_scene = ExtResource( "2" )
-hit_sample = ExtResource( "3" )
+hit_sample = ExtResource("3")
 hit_velocity = 0.005
-physics_material = SubResource( "1" )
+physics_material = SubResource("1")
 mass = 0.2
+model_scene = ExtResource("2")
