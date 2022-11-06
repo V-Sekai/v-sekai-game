@@ -259,6 +259,7 @@ func play_oneshot_audio_stream_3d(p_stream : AudioStream,\
 		audio_stream_player_3d.stream = p_stream
 		audio_stream_player_3d.autoplay = true
 		audio_stream_player_3d.bus = p_bus_name
+		audio_stream_player_3d.max_polyphony = 128
 
 		assert(audio_stream_player_3d.finished.connect(self._audio_stream_3d_player_finished.bind(audio_stream_player_3d)) == OK)
 
