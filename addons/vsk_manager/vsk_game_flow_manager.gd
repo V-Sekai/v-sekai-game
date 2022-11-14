@@ -787,10 +787,7 @@ func _input(p_event: InputEvent) -> void:
 
 
 	if p_event.is_action_pressed("fullscreen"):
-		if DisplayServer.window_get_mode() != DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN:
-			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN)
-		else:
-			DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_MAXIMIZED)
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN)
 
 	# Send input events to game viewport
 	if game_viewport:
