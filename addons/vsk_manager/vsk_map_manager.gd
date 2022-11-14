@@ -158,7 +158,7 @@ static func instance_embedded_map_entities(p_map_instance: Node, p_invalid_scene
 				push_warning("Map entity id %s: invalid entity '%s' embedded in map data" % [str(i), scene_path])
 				continue
 
-			if scene_path != "":
+			if not scene_path.is_empty():
 				var packed_scene: PackedScene = NetworkManager.network_replication_manager.get_packed_scene_for_path(scene_path)
 				assert(packed_scene)
 

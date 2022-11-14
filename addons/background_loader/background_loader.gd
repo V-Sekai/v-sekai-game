@@ -173,7 +173,7 @@ func _threaded_loading_method() -> void:
 				else:
 					load_path = loading_task.load_path
 
-				if load_path != "":
+				if not load_path.is_empty():
 					if ! tasks[task_path]:
 						var err = OK
 						var r_progress: Array = [].duplicate()

@@ -47,7 +47,7 @@ func is_headless() -> bool:
 func _startup_complate() -> void:
 	var _skipped: bool = await VSKFadeManager.execute_fade(false).fade_complete
 
-	if ip != "":
+	if not ip.is_empty():
 		await VSKGameFlowManager.join_server(ip, port)
 	else:
 		if map.is_empty() and default_autohost:

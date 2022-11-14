@@ -449,7 +449,7 @@ func setup() -> void:
 
 		godot_speech = GodotSpeech.godot_speech
 
-		if test_audio != "":
+		if not test_audio.is_empty():
 			print("Using test audio at path %s..." % test_audio)
 			audio_input_stream = AudioStreamWAV.new()
 			var err: int = audio_input_stream.load(test_audio)

@@ -183,7 +183,7 @@ signal player_avatar_path_updated(p_id, p_name)
 ## If the shard is active, attempt to send a kill command to the server
 ##
 func attempt_to_kill_shard() -> void:
-	if shard_id != "":
+	if not shard_id.is_empty():
 		shard_heartbeat_timer.stop()
 
 		var shard_id_pending_deletion: String = shard_id

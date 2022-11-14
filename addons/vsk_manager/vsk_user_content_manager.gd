@@ -67,7 +67,7 @@ func _user_content_asset_request_complete(p_url: String, p_request_object: Dicti
 		if p_response_code != VSKAssetManager.ASSET_OK:
 			printerr("Asset download failed with code: %s" % str(p_response_code))
 
-		if p_request_object["path"] != "":
+		if not str(p_request_object["path"]).is_empty():
 			user_content_urls[p_url]["stage"] = VSKAssetManager.STAGE_DOWNLOADING
 			if ! make_background_load_request(p_url, p_request_object["path"], p_request_object["skip_validation"], p_request_object["external_path_whitelist"], p_request_object["resource_whitelist"]):
 				printerr("make_background_load_request failed")

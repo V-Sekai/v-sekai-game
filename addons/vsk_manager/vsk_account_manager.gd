@@ -69,7 +69,7 @@ func _update_session(
 
 		if token_changed:
 			token_refresh_in_progress = false
-			if GodotUroData.renewal_token != "":
+			if not GodotUroData.renewal_token.is_empty():
 				token_refresh_timer.start(REFRESH_TIMER)
 	else:
 		signed_in = false

@@ -45,7 +45,7 @@ func _loadImage(p_cache_only):
 	var spl = textureUrl.split("/")
 	file_name = spl[spl.size()-1]
 
-	if self.request_in_progress != "":
+	if not self.request_in_progress.is_empty():
 		push_warning("Canceling current request " + str(self.request_in_progress))
 		http.cancel_request()
 		_recreateHttp()
@@ -55,7 +55,7 @@ func _loadImage(p_cache_only):
 	var ext = file_name_stripped.split(".")
 	file_ext = ext[ext.size()-1].to_lower()
 	
-	if file_ext != "":
+	if not file_ext.is_empty():
 		var doFileExists = FileAccess.file_exists(str("user://image_cache/", file_name.sha256_text() + "." + file_ext))
 		if doFileExists:
 			var _image = Image.new()
@@ -81,7 +81,7 @@ func _loadImage(p_cache_only):
 			_downloadImage()
 
 func _downloadImage():
-	if textureUrl != "":
+	if not textureUrl.is_empty():
 		set_process(true)
 		_adjustProgress()
 		http.use_threads = true
