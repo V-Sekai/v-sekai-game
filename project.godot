@@ -665,6 +665,10 @@ locale/include_text_server_data=true
 
 translations=PackedStringArray("res://addons/vsk_menu/localisation/menu_strings.en.translation", "res://addons/sar1_vr_manager/localisation/vr_manager_strings.en.translation")
 
+[memory]
+
+limits/message_queue/max_size_kb=819200
+
 [network]
 
 config/player_scene="res://addons/vsk_entities/vsk_player.tscn"
