@@ -24,9 +24,9 @@ name: "Build V-Sekai Macos"
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
   workflow_dispatch:
 
 env:
@@ -58,21 +58,21 @@ jobs:
 
       - uses: actions/checkout@v3
         with:
-          path: 'godot'
-          repository: 'v-sekai/godot'
+          path: "godot"
+          repository: "v-sekai/godot"
           ref: ${{env.GODOT_BRANCH}}
 
       - uses: actions/checkout@v3
         with:
-          path: 'godot-modules-groups'
-          repository: 'v-sekai/godot-modules-groups'
+          path: "godot-modules-groups"
+          repository: "v-sekai/godot-modules-groups"
           ref: ${{env.GODOT_MODULES_BRANCH}}
           submodules: recursive
 
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          path: 'project'
+          path: "project"
           submodules: recursive
 
       - name: Load .scons_cache directory
@@ -102,7 +102,7 @@ jobs:
       # cd .local/share/godot/export_templates/
       # eval `sed -e "s/ = /=/" godot/version.py` && echo $major.$minor.$status > build/version.txt
       # export VERSION=`cat build/version.txt`
-      # export BASE_DIR=.local/share/godot/export_templates/ 
+      # export BASE_DIR=.local/share/godot/export_templates/
       # export TEMPLATEDIR=$BASE_DIR/$VERSION/
       # mkdir -p $TEMPLATEDIR
       # cp godot/bin/macos_release_x86_64 $TEMPLATEDIR/macos_release_x86_64
@@ -130,7 +130,7 @@ jobs:
             LICENSE
             README.md
             godot/vsekai_macos_release_x86_64.app
-            
+
   build-ios:
     name: "Build V-Sekai iPhone"
     runs-on: macos-12
@@ -148,21 +148,21 @@ jobs:
 
       - uses: actions/checkout@v3
         with:
-          path: 'godot'
-          repository: 'v-sekai/godot'
+          path: "godot"
+          repository: "v-sekai/godot"
           ref: ${{env.GODOT_BRANCH}}
 
       - uses: actions/checkout@v3
         with:
-          path: 'godot-modules-groups'
-          repository: 'v-sekai/godot-modules-groups'
+          path: "godot-modules-groups"
+          repository: "v-sekai/godot-modules-groups"
           ref: ${{env.GODOT_MODULES_BRANCH}}
           submodules: recursive
 
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          path: 'project'
+          path: "project"
           submodules: recursive
 
       - name: Load .scons_cache directory
@@ -174,7 +174,6 @@ jobs:
             ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}-${{github.sha}}
             ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}
             ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}
-
 
       - run: brew install scons
 
@@ -191,7 +190,7 @@ jobs:
       # cd .local/share/godot/export_templates/
       # eval `sed -e "s/ = /=/" godot/version.py` && echo $major.$minor.$status > build/version.txt
       # export VERSION=`cat build/version.txt`
-      # export BASE_DIR=.local/share/godot/export_templates/ 
+      # export BASE_DIR=.local/share/godot/export_templates/
       # export TEMPLATEDIR=$BASE_DIR/$VERSION/
       # mkdir -p $TEMPLATEDIR
       # cp godot/bin/macos_release_x86_64 $TEMPLATEDIR/macos_release_x86_64
@@ -209,7 +208,7 @@ jobs:
           name: "vsekai_ios_xcode"
           path: godot/vsekai_ios_xcode
           retention-days: 14
-     
+
       - name: v-sekai-iphone-arm64
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
@@ -244,17 +243,31 @@ jobs:
         with:
           workdir: ".github/dagger"
           cmds: |
-             project init
-             project update
-             do --cache-from type=gha --cache-to type=gha build
+            project init
+            project update
+            do --cache-from type=gha --cache-to type=gha build
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: "vsekai_linux_release_x86_64"
-          path: build/linux_release_x86_64 
+          name: vsekai_linux_release_x86_64
+          path: build/linux_release_x86_64
           retention-days: 14
-          
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: editor_windows_release_x86_64
+          path: build/windows_release_x86_64.exe
+          retention-days: 14
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: editor_linux_release.x86_64
+          path: build/linux_release.x86_64
+          retention-days: 14
+
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
@@ -271,7 +284,7 @@ jobs:
             LICENSE
             README.md
             build/linux_release_x86_64
-     
+
       - name: v-sekai-windows-x86_64
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
