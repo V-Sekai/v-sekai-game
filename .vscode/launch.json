@@ -5,13 +5,21 @@
     "version": "0.2.0",
     "configurations": [
       {
-        "name": "Launch editor IK Windows",
+        "name": "Launch and build the game",
         "type": "cppvsdbg",
         "request": "launch",
         "cwd": "${workspaceFolder}",
         "args": ["--path", ".", "-e"],
         "program": "${workspaceFolder}/build/windows_release_x86_64.exe",
         "preLaunchTask": "dagger do build",
+      },
+      {
+        "name": "Launch the game",
+        "type": "cppvsdbg",
+        "request": "launch",
+        "cwd": "${workspaceFolder}",
+        "args": ["--path", ".", "-e"],
+        "program": "${workspaceFolder}/build/windows_release_x86_64.exe",
       },
     ]
   }
