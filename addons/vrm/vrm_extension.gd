@@ -147,7 +147,7 @@ func rotate_scene_180(p_scene: Node3D):
 		adjust_mesh_zforward(mesh)
 	for skin in skin_set:
 		for b in range(skin.get_bind_count()):
-			skin.set_bind_pose(b, ROTATE_180_TRANSFORM * skin.get_bind_pose(b))
+			skin.set_bind_pose(b, ROTATE_180_TRANSFORM * skin.get_bind_pose(b) * ROTATE_180_TRANSFORM)
 
 func skeleton_rotate(p_base_scene: Node, src_skeleton: Skeleton3D, p_bone_map: BoneMap) -> Array[Basis]:
 	# is_renamed: was skeleton_rename already invoked?
@@ -858,7 +858,7 @@ func _parse_secondary_node(secondary_node: Node, vrm_extension: Dictionary, gsta
 		spring_bone.drag_force = float(sbone.get("drag_force", 0.4))
 		spring_bone.hit_radius = float(sbone.get("hitRadius", 0.02))
 
-		if not spring_bone.comment.is_empty():
+		if spring_bone.comment != "":
 			spring_bone.resource_name = spring_bone.comment.split("\n")[0]
 		else:
 			var tmpname: String = ""
@@ -969,6 +969,12 @@ func apply_retarget(gstate : GLTFState, root_node: Node, skeleton: Skeleton3D, b
 	var skeletonPath: NodePath = root_node.get_path_to(skeleton)
 
 	skeleton_rename(gstate, root_node, skeleton, bone_map)
+	var hips_bone_idx = skeleton.find_bone("Hips")
+	if hips_bone_idx != -1:
+		skeleton.motion_scale = abs(skeleton.get_bone_global_rest(hips_bone_idx).origin.y)
+		if skeleton.motion_scale < 0.0001:
+			skeleton.motion_scale = 1.0
+
 	var poses = skeleton_rotate(root_node, skeleton, bone_map)
 	apply_rotation(root_node, skeleton)
 	return poses
