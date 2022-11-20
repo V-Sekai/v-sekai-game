@@ -10,9 +10,15 @@
       "options": {
         "cwd": "${workspaceFolder}/.github/dagger"
       },
-      "dependsOn": ["dagger project init", "dagger project update"],
+      "dependsOn": [
+        "dagger project init",
+        "dagger project update"
+      ],
       "problemMatcher": [],
-      "group": "build"
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
     },
     {
       "label": "dagger project init",
