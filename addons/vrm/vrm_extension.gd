@@ -478,7 +478,8 @@ func _update_materials(vrm_extension: Dictionary, gstate: GLTFState) -> void:
 				newmat.render_priority = target_render_priority
 		materials[i] = newmat
 		var oldpath = oldmat.resource_path
-		oldmat.resource_path = ""
+		if oldpath.is_empty():
+			continue
 		newmat.take_over_path(oldpath)
 		ResourceSaver.save(newmat, oldpath)
 	gstate.set_materials(materials)
@@ -853,12 +854,12 @@ func _parse_secondary_node(secondary_node: Node, vrm_extension: Dictionary, gsta
 		spring_bone.comment = sbone.get("comment", "")
 		spring_bone.stiffness_force = float(sbone.get("stiffiness", 1.0))
 		spring_bone.gravity_power = float(sbone.get("gravityPower", 0.0))
-		var gravity_dir = sbone.get("gravity_dir", {"x": 0.0, "y": -1.0, "z": 0.0})
+		var gravity_dir = sbone.get("gravityDir", {"x": 0.0, "y": -1.0, "z": 0.0})
 		spring_bone.gravity_dir = Vector3(gravity_dir["x"], gravity_dir["y"], gravity_dir["z"])
-		spring_bone.drag_force = float(sbone.get("drag_force", 0.4))
+		spring_bone.drag_force = float(sbone.get("dragForce", 0.4))
 		spring_bone.hit_radius = float(sbone.get("hitRadius", 0.02))
 
-		if spring_bone.comment != "":
+		if not spring_bone.comment.is_empty():
 			spring_bone.resource_name = spring_bone.comment.split("\n")[0]
 		else:
 			var tmpname: String = ""
