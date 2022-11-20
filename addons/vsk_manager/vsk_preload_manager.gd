@@ -109,7 +109,7 @@ func _preloading_task_done(p_task: String, p_err: int, p_resource: Resource) -> 
 				_preloading_failed()
 				printerr("_preloading_task_done: no callback data for task '%s'!" % p_task)
 				return
-		preloading_tasks.erase(p_task))
+		assert(preloading_tasks.erase(p_task))
 	else:
 		_preloading_failed()
 		printerr("_preloading_task_done: invalid task '%s'!" % p_task)
