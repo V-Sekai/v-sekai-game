@@ -16,6 +16,8 @@ V-Sekai is still currently in a pre-release state. We do not currently offer pre
 It is also highly experimental and due to its focus on providing native user-generated content support, is still being
 evaluated for security. Use at your own risk.
 
+[nightly.link provided downloads](https://nightly.link/V-Sekai/v-sekai-game/workflows/build-project/main)
+
 ## How do I build it?
 
 V-Sekai requires our [custom Godot Engine fork](https://github.com/v-sekai/godot) found under the `groups-4.x` branch, as well 
