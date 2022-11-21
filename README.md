@@ -16,7 +16,7 @@ V-Sekai is still currently in a pre-release state. We do not currently offer pre
 It is also highly experimental and due to its focus on providing native user-generated content support, is still being
 evaluated for security. Use at your own risk.
 
-[nightly.link provided downloads](https://nightly.link/V-Sekai/v-sekai-game/workflows/build-project/main)
+[nightly.link provided downloads. May be missing game downloads.](https://nightly.link/V-Sekai/v-sekai-game/workflows/build-project/main)
 
 ## How do I build it?
 
