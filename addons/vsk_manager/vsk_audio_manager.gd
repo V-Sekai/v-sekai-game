@@ -1,6 +1,8 @@
 @tool
 extends Node
 
+var connection_util_const = preload("res://addons/gd_util/connection_util.gd")
+
 var audio_input_stream: AudioStream = null
 var audio_input_stream_player: AudioStreamPlayer = null
 
@@ -502,7 +504,7 @@ func setup() -> void:
 
 		mic_input_bus_index = AudioServer.get_bus_index(MIC_INPUT_BUS_NAME)
 
-		ConnectionUtil.connect_signal_table(signal_table, self)
+		connection_util_const.connect_signal_table(signal_table, self)
 
 		if !Engine.is_editor_hint():
 			assert(NetworkManager.voice_packet_compressed.connect(self.voice_packet_compressed) == OK)

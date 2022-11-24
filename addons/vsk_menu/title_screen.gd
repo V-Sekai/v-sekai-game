@@ -6,6 +6,7 @@ var join_server = load("res://addons/vsk_menu/main_menu/join_server.tscn")
 var options_screen = load("res://addons/vsk_menu/main_menu/options_screen.tscn")
 var credits_screen = load("res://addons/vsk_menu/main_menu/credits_screen.tscn")
 var login_screen = load("res://addons/vsk_menu/main_menu/login_screen.tscn")
+const vsk_version_const = preload("res://addons/vsk_version/vsk_version.gd")
 
 func _callback_state(p_state: int, p_callback_dictionary: Dictionary) -> void:
 	if p_state != VSKGameFlowManager.CALLBACK_STATE_NONE:
@@ -76,7 +77,7 @@ func _ready() -> void:
 	_callback_state(VSKGameFlowManager.callback_state, VSKGameFlowManager.callback_dictionary)
 
 	var build_label: Label = $BuildLabel
-	build_label.set_text(VSKVersion.get_build_label())
+	build_label.set_text(vsk_version_const.get_build_label())
 
 	var exit_dialog: ConfirmationDialog = $ExitDialog
 	exit_dialog.get_ok_button().set_text(tr("Yes"))

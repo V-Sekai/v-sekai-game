@@ -1,6 +1,8 @@
 @tool
 extends Node
 
+const vsk_asset_manager_const = preload("res://addons/vsk_manager/vsk_asset_manager.gd")
+
 const directory_util_const = preload("res://addons/gd_util/directory_util.gd")
 
 const data_storage_units_const = preload("res://addons/gd_util/data_storage_units.gd")
@@ -315,7 +317,7 @@ func _uro_api_request(p_request_object: Dictionary, p_id: String, p_asset_type: 
 					var user_content = data[user_content_type_string]
 					if user_content.has("user_content_data"):
 						var user_content_data = user_content["user_content_data"]
-						p_request_object["url"] = _get_full_url_for_uro_request(user_content_data)
+						p_request_object["url"] = vsk_asset_manager_const._get_full_url_for_uro_request(user_content_data)
 						data_valid = true
 						p_request_object = make_http_request(p_request_object, true)
 						return p_request_object
@@ -374,7 +376,7 @@ func make_uro_file_request(p_request_object: Dictionary, _bypass_whitelist: bool
 func make_request(p_request_path: String, p_asset_type: int, p_bypass_whitelist: bool, p_skip_validation: bool, p_external_path_whitelist: Dictionary, p_resource_whitelist: Dictionary) -> Dictionary:
 	var request_object: Dictionary = {"request_id": INVALID_REQUEST, "request_path":p_request_path, "path":"", "asset_type":p_asset_type}
 
-	var request_type: int = get_request_type(p_request_path)
+	var request_type: int = vsk_asset_manager_const.get_request_type(p_request_path)
 	request_object["object"] = {}
 	request_object["skip_validation"] = p_skip_validation
 	request_object["external_path_whitelist"] = p_external_path_whitelist

@@ -1,6 +1,8 @@
 @tool
 extends Node
 
+var connection_util_const = preload("res://addons/gd_util/connection_util.gd")
+
 ############################
 # V-Sekai Gameflow Manager #
 ############################
@@ -811,7 +813,7 @@ func setup() -> void:
 		_setup_graphics_manager()
 		_setup_vr_manager()
 		_setup_mocap_manager()
-		ConnectionUtil.connect_signal_table(signal_table, self)
+		connection_util_const.connect_signal_table(signal_table, self)
 
 		_setup_viewports()
 		_assign_gameroots()

@@ -5,6 +5,7 @@ extends Node
 # V-Sekai Player Manager #
 ##########################
 
+const connection_util_const = preload("res://addons/gd_util/connection_util.gd")
 const USER_PREFERENCES_SECTION_NAME = "player"
 
 var signal_table : Array = [
@@ -60,7 +61,7 @@ func add_commands() -> void:
 
 func setup() -> void:
 	if ! Engine.is_editor_hint():
-		ConnectionUtil.connect_signal_table(signal_table, self)
+		connection_util_const.connect_signal_table(signal_table, self)
 		get_settings_values()
 
 func _ready():

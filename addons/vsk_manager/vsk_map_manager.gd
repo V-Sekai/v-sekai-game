@@ -40,7 +40,7 @@ func _user_content_load_done(
 
 		if p_packed_scene:
 			if !p_skip_validation:
-				var result_dictionary: Dictionary = VSKImporter.sanitise_packed_scene_for_map(p_packed_scene)
+				var result_dictionary: Dictionary = vsk_importer_const.sanitise_packed_scene_for_map(p_packed_scene)
 				var validation_result: Dictionary = result_dictionary["result"]
 				validated_packed_scene = result_dictionary["packed_scene"]
 

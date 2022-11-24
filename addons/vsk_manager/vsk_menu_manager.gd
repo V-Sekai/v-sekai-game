@@ -257,8 +257,7 @@ func setup_ingame() -> void:
 
 func setup_outgame() -> void:
 	if outgame_root_vr_instance == null:
-		outgame_root_vr_instance = outgame_root_vr_const.instantiate()
-		VSKGameFlowManager.gameroot.add_child(outgame_root_vr_instance, true)
+		VSKGameFlowManager.gameroot.add_child(outgame_root_vr_const.instantiate(), true)
 
 func setup_preloading_screen() -> void:
 	if menu_root:

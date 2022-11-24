@@ -1,6 +1,9 @@
 @tool
 extends Node
 
+const vsk_importer_const = preload("res://addons/vsk_importer_exporter/vsk_importer.gd")
+const vsk_asset_manager_const = preload("res://addons/vsk_manager/vsk_asset_manager.gd")
+
 signal user_content_load_done(p_url, p_err, p_packed_scene, p_skip_validation)
 signal user_content_background_load_stage(p_url, p_stage)
 signal user_content_background_load_stage_count(p_url, p_stage_count)
@@ -87,9 +90,9 @@ func _user_content_asset_request_started(_url: String) -> void:
 func cancel_user_content(p_user_content_path: String) -> void:
 	if user_content_urls.has(p_user_content_path):
 		match user_content_urls[p_user_content_path]["stage"]:
-			VSKAssetManager.STAGE_DOWNLOADING:
+			vsk_asset_manager_const.STAGE_DOWNLOADING:
 				VSKAssetManager.cancel_request(p_user_content_path)
-			VSKAssetManager.STAGE_BACKGROUND_LOADING:
+			vsk_asset_manager_const.STAGE_BACKGROUND_LOADING:
 				BackgroundLoader.cancel_loading_task(user_content_urls[p_user_content_path]["local_path"])
 
 		user_content_urls[p_user_content_path]["stage"] = VSKAssetManager.STAGE_CANCELLING
@@ -180,7 +183,7 @@ The following information was provided:
 				{
 				"user_content_type_name":p_user_content_type_name,
 				"user_content_url":p_url,
-				"code_string":VSKImporter.get_string_for_importer_result(code),
+				"code_string": vsk_importer_const.get_string_for_importer_result(code),
 				"info":info if not info.is_empty() else "No extra information provided"
 			}
 		))

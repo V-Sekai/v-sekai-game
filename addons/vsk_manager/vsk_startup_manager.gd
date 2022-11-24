@@ -1,6 +1,7 @@
 @tool
 extends Node
 
+const vsk_version_const = preload("res://addons/vsk_version/vsk_version.gd")
 ###########################
 # V-Sekai Startup Manager #
 ###########################
@@ -101,7 +102,7 @@ func setup_vsk_singletons() -> void:
 ##
 func startup() -> void:
 	assert(VSKVersion != null) # VSKVersion must be moved up before VSKStartupManager in Autoloads
-	print("V-Sekai Build: %s" % VSKVersion.get_build_label())
+	print("V-Sekai Build: %s" % vsk_version_const.get_build_label())
 
 	setup_vsk_singletons()
 

@@ -16,6 +16,10 @@ const network_writer_const = preload("res://addons/network_manager/network_write
 const scene_tree_execution_table_const = preload("res://addons/entity_manager/scene_tree_execution_table.gd")
 const vsk_map_definition_runtime_const = preload("res://addons/vsk_map/vsk_map_definition_runtime.gd")
 const vsk_map_entity_instance_record_const = preload("res://addons/vsk_map/vsk_map_entity_instance_record.gd")
+const vsk_map_manager_const = preload("res://addons/vsk_manager/vsk_map_manager.gd")
+const vsk_network_manager_const = preload("res://addons/vsk_manager/vsk_network_manager.gd")
+const connection_util_const = preload("res://addons/gd_util/connection_util.gd")
+
 
 # Determines whether to the server should process the host state
 # in a background thread (debugging).
@@ -606,7 +610,7 @@ func _host_state_instance() -> Dictionary:
 
 	var new_player_instances: Array = []
 	if map_instance and map_instance is vsk_map_definition_runtime_const:
-		VSKMapManager.instance_embedded_map_entities(map_instance, [player_scene_path])
+		vsk_map_manager_const.instance_embedded_map_entities(map_instance, [player_scene_path])
 
 		if ! NetworkManager.server_dedicated:
 			# Create player instance for server if server is not a
@@ -683,7 +687,7 @@ func _requested_server_info(p_network_id: int) -> void:
 
 	var server_info: Dictionary = NetworkManager.get_default_server_info()
 
-	server_info["version"] = get_vsk_network_version_string() + "_" + NetworkManager.get_network_version_string()
+	server_info["version"] = vsk_network_manager_const.get_vsk_network_version_string() + "_" + vsk_network_manager_const.get_network_version_string()
 	server_info["map_path"] = VSKMapManager.get_current_map_path()
 	server_info["game_mode_path"] = VSKGameModeManager.get_current_game_mode_path()
 
@@ -796,7 +800,7 @@ func _peer_registration_complete() -> void:
 func _received_server_info(p_server_info: Dictionary) -> void:
 	if p_server_info:
 		if p_server_info.has("version"):
-			var client_server_version_string: String = get_vsk_network_version_string() + "_" + NetworkManager.get_network_version_string()
+			var client_server_version_string: String = vsk_network_manager_const.get_vsk_network_version_string() + "_" + vsk_network_manager_const.get_network_version_string()
 
 			if p_server_info["version"] == client_server_version_string:
 				NetworkManager.session_master = NetworkManager.network_constants_const.SERVER_MASTER_PEER_ID
@@ -1101,7 +1105,7 @@ func setup() -> void:
 		if use_threaded_host_state_initalisation_func:
 			state_initialization_thread = Thread.new()
 
-		ConnectionUtil.connect_signal_table(signal_table, self)
+		connection_util_const.connect_signal_table(signal_table, self)
 
 func apply_project_settings() -> void:
 	if Engine.is_editor_hint():

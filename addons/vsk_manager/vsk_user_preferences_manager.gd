@@ -5,6 +5,8 @@ extends Node
 # V-Sekai User Preferences Manager #
 ####################################
 
+const connection_util_const = preload("res://addons/gd_util/connection_util.gd")
+
 # Important note: the user preference manager must be the last class to connect
 # to is_quitting since it is ultimately responsible for serialising the result.
 
@@ -63,4 +65,4 @@ func _enter_tree() -> void:
 	load_settings()
 
 func setup() -> void:
-	ConnectionUtil.connect_signal_table(signal_table, self)
+	connection_util_const.connect_signal_table(signal_table, self)
