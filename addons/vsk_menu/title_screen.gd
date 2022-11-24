@@ -85,9 +85,6 @@ func _ready() -> void:
 
 	if exit_dialog.confirmed.connect(self.quit) != OK:
 		printerr("Could not connected exit_dialog confirmed!")
-	
-	var current_theme: Theme = get_encompasing_theme(self)
-
 
 func _on_HostButton_pressed() -> void:
 	if has_navigation_controller():
