@@ -24,8 +24,8 @@ func _finished_background_load_request(p_task_path : String) -> void:
 			BackgroundLoader.task_done.disconnect(self._background_loader_task_done)
 		if BackgroundLoader.task_set_stage.is_connected(self._background_loader_task_stage):
 			BackgroundLoader.task_set_stage.disconnect(self._background_loader_task_stage)
-		if BackgroundLoader.task_set_stage.is_connected(self._background_loader_task_stage_count):
-			BackgroundLoader.task_set_stage.disconnect(self._background_loader_task_stage_count)
+		if BackgroundLoader.task_set_stage_count.is_connected(self._background_loader_task_stage_count):
+			BackgroundLoader.task_set_stage_count.disconnect(self._background_loader_task_stage_count)
 	elif background_loading_tasks_in_progress < 0:
 		LogManager.fatal_error("Background load request underflow!")
 

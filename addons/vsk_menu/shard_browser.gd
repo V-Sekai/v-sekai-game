@@ -27,7 +27,8 @@ func _gameflow_state_changed(p_gameflow_state: int):
 
 
 func shard_button_pressed(p_button) -> void:
-	await VSKGameFlowManager.join_server(p_button.address, p_button.port)
+	print("Joining shard button: " + str(p_button.address) +":" + str(p_button.port))
+	VSKGameFlowManager.join_server(p_button.address, p_button.port)
 
 
 func _shard_list_callback(p_shard_list_callback: Dictionary) -> void:
@@ -44,7 +45,7 @@ func _shard_list_callback(p_shard_list_callback: Dictionary) -> void:
 			shard_button["current_users"] = shard.current_users
 			shard_button["max_users"] = shard.max_users
 
-			shard_button.connect("pressed", self.shard_button_pressed, [shard_button])
+			shard_button.connect("pressed", self.shard_button_pressed.bind(shard_button))
 			shard_list.add_child(shard_button, true)
 	else:
 		info_label.set_text("Failed...")

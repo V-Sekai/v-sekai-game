@@ -4,7 +4,6 @@
 [ext_resource type="Theme" uid="uid://3ehnjbt2mvio" path="res://addons/emote_theme/emote_theme.tres" id="1_isym3"]
 [ext_resource type="Script" path="res://addons/vsk_menu/title_screen.gd" id="2"]
 [ext_resource type="Texture2D" uid="uid://mwvsa6uo0xhh" path="res://vsk_default/textures/v_sekai_logo.png" id="3"]
-[ext_resource type="Script" path="res://addons/vsk_menu/theme_modulated_control.gd" id="4"]
 
 [node name="IngameMenuScreen" type="Control"]
 layout_mode = 3
@@ -51,7 +50,6 @@ offset_right = 270.0
 texture = ExtResource("3")
 ignore_texture_size = true
 flip_v = true
-script = ExtResource("4")
 
 [node name="ButtonsCenterContainer" type="HBoxContainer" parent="CenterContainer"]
 layout_mode = 2

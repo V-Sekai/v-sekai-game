@@ -687,7 +687,7 @@ func _requested_server_info(p_network_id: int) -> void:
 
 	var server_info: Dictionary = NetworkManager.get_default_server_info()
 
-	server_info["version"] = vsk_network_manager_const.get_vsk_network_version_string() + "_" + vsk_network_manager_const.get_network_version_string()
+	server_info["version"] = vsk_network_manager_const.get_vsk_network_version_string() + "_" + NetworkManager.get_network_version_string()
 	server_info["map_path"] = VSKMapManager.get_current_map_path()
 	server_info["game_mode_path"] = VSKGameModeManager.get_current_game_mode_path()
 
@@ -800,7 +800,7 @@ func _peer_registration_complete() -> void:
 func _received_server_info(p_server_info: Dictionary) -> void:
 	if p_server_info:
 		if p_server_info.has("version"):
-			var client_server_version_string: String = vsk_network_manager_const.get_vsk_network_version_string() + "_" + vsk_network_manager_const.get_network_version_string()
+			var client_server_version_string: String = vsk_network_manager_const.get_vsk_network_version_string() + "_" + NetworkManager.get_network_version_string()
 
 			if p_server_info["version"] == client_server_version_string:
 				NetworkManager.session_master = NetworkManager.network_constants_const.SERVER_MASTER_PEER_ID
