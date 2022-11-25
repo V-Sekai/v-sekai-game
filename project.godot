@@ -685,11 +685,6 @@ config/default_autohost=false
 config/use_threaded_host_state_initalisation_func=false
 config/use_threaded_received_server_state_func=false
 
-[physics]
-
-2d/run_on_separate_thread=true
-3d/run_on_separate_thread=true
-
 [rendering]
 
 driver/threads/thread_model=2
