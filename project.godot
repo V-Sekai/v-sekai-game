@@ -307,6 +307,7 @@ gdscript/warnings/integer_division=false
 gdscript/warnings/redundant_await=false
 settings/performance/show_performance_monitor=false
 settings/performance/performance_label_update_rate=0.5
+settings/enabled=true
 
 [display]
 
@@ -679,7 +680,7 @@ config/compression_mode=4
 config/shard_heartbeat_frequency=10.0
 config/default_port=7777
 config/network_fps=60
-config/default_map_path="uro://962314f0-8cf9-4191-8f08-c154971dc665"
+config/default_map_path="uro://908aea41-c724-4d8e-b866-82645df88965"
 config/default_autohost=false
 config/use_threaded_host_state_initalisation_func=false
 config/use_threaded_received_server_state_func=false

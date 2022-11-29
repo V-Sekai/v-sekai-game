@@ -59,6 +59,7 @@ func _user_content_load_done(
 					avatar_load_callback.emit(p_url, VSKAssetManager.ASSET_FORBIDDEN, validated_packed_scene)
 			else:
 				if validated_packed_scene:
+					print("Emit ok for url " + str(p_url))
 					avatar_load_callback.emit(p_url, VSKAssetManager.ASSET_OK, validated_packed_scene)
 				else:
 					avatar_load_callback.emit(p_url, VSKAssetManager.ASSET_INVALID, validated_packed_scene)
