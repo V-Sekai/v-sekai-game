@@ -317,7 +317,6 @@ window/vsync/vsync_via_compositor=true
 
 [editor]
 
-run/main_run_args="--xr-mode off"
 movie_writer/mjpeg_quality=1.0
 movie_writer/movie_file="../export.avi"
 import/use_multiple_threads=false
