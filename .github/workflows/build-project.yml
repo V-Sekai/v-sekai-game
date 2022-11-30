@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-name: "Build V-Sekai Macos"
+name: "Build V-Sekai Game"
 
 on:
   push:
@@ -42,7 +42,6 @@ concurrency:
 
 jobs:
   build-macos:
-    name: "Build V-Sekai Macos"
     runs-on: macos-12
     steps:
       - name: Install VulkanSDK
@@ -132,7 +131,6 @@ jobs:
             godot/vsekai_macos_release_x86_64.app
 
   build-ios:
-    name: "Build V-Sekai iPhone"
     runs-on: macos-12
     steps:
       - name: Install VulkanSDK
@@ -220,7 +218,6 @@ jobs:
             godot/vsekai_ios_xcode
 
   build-linux-windows:
-    name: "Build"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
