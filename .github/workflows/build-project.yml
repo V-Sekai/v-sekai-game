@@ -235,13 +235,16 @@ jobs:
             ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}
             ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}
 
+      - name: "Install Dagger"
+        run: |
+          curl -L https://dl.dagger.io/dagger-cue/install.sh | sh
+
       - name: "Run Dagger"
         run: |
           cd .github/dagger
-          curl -L https://dl.dagger.io/dagger-cue/install.sh | sh
-          ./bin/dagger-cue do init
-          ./bin/dagger-cue do update
-          ./bin/dagger-cue do --cache-from type=gha --cache-to type=gha build
+          dagger-cue do init
+          dagger-cue do update
+          dagger-cue do --cache-from type=gha --cache-to type=gha build
        
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
