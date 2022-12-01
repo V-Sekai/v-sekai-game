@@ -239,6 +239,7 @@ jobs:
         run: |
           cd .github/dagger
           curl -L https://dl.dagger.io/dagger-cue/install.sh | sh
+          ./bin/dagger-cue do init
           ./bin/dagger-cue do update
           ./bin/dagger-cue do --cache-from type=gha --cache-to type=gha build
        
