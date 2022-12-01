@@ -59,7 +59,7 @@ func _ready() -> void:
 	info_label = get_node_or_null(info_label_nodepath)
 	refresh_button = get_node_or_null(refresh_button_nodepath)
 
-	await refresh()
+	refresh()
 
 
 func will_appear() -> void:
@@ -73,19 +73,18 @@ func will_disappear() -> void:
 
 
 func refresh() -> void:
-	if !Engine.is_editor_hint():
-		info_label.set_text("Searching...")
+	info_label.set_text("Searching...")
 
-		refresh_button.disabled = true
-		shard_browser.hide()
-		info_label.show()
+	refresh_button.disabled = true
+	shard_browser.hide()
+	info_label.show()
 
-		for server_button in shard_list.get_children():
-			server_button.queue_free()
-			shard_list.remove_child(server_button)
+	for server_button in shard_list.get_children():
+		server_button.queue_free()
+		shard_list.remove_child(server_button)
 
-		assert(VSKShardManager.shard_list_callback.connect(self._shard_list_callback, CONNECT_ONE_SHOT) == OK)
-		await VSKShardManager.show_shards(shard_list_callback)
+	assert(VSKShardManager.shard_list_callback.connect(self._shard_list_callback, CONNECT_ONE_SHOT) == OK)
+	VSKShardManager.show_shards(shard_list_callback)
 
 
 func refresh_complete() -> void:
@@ -95,7 +94,7 @@ func refresh_complete() -> void:
 
 
 func _on_RefreshButton_pressed():
-	await refresh()
+	refresh()
 
 
 func _on_DirectIPButton_pressed():
