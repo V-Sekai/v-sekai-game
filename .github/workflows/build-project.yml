@@ -244,7 +244,7 @@ jobs:
           cd .github/dagger
           ../../bin/dagger-cue project init
           ../../bin/dagger-cue project update
-          ../../bin/dagger-cue do --cache-from type=gha --cache-to type=gha build
+          ../../bin/dagger-cue do build
        
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
