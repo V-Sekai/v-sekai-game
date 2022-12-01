@@ -864,7 +864,7 @@ func _parse_secondary_node(secondary_node: Node, vrm_extension: Dictionary, gsta
 		else:
 			var tmpname: String = ""
 			if sbone["bones"].size() > 1:
-				tmpname += " + " + str(sbone["bones"].size() - 1) + " roots"
+				tmpname += " + %s roots" % [str(sbone["bones"].size() - 1)]
 			tmpname = nodes[int(first_bone_node)].resource_name + tmpname
 			spring_bone.resource_name = tmpname
 
