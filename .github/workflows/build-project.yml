@@ -235,13 +235,18 @@ jobs:
             ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}
             ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}
 
-      - name: "Run Dagger"
+      - name: "Install Dagger"
         uses: dagger/dagger-for-github@v3
         with:
           workdir: ".github/dagger"
-          cmds: |
-            do --cache-from type=gha --cache-to type=gha build
-
+          install-only: true
+          
+      - name: "Run Dagger"
+        run: |
+          cd .github/dagger
+          dagger-cue do update
+          dagger-cue do --cache-from type=gha --cache-to type=gha build
+       
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
