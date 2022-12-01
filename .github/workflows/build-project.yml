@@ -240,7 +240,6 @@ jobs:
         with:
           workdir: ".github/dagger"
           cmds: |
-            project init
             project update
             do --cache-from type=gha --cache-to type=gha build
 
