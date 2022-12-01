@@ -235,15 +235,10 @@ jobs:
             ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}
             ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}
 
-      - name: "Install Dagger"
-        uses: dagger/dagger-for-github@v3
-        with:
-          workdir: ".github/dagger"
-          install-only: true
-          
       - name: "Run Dagger"
         run: |
           cd .github/dagger
+          curl -sfL https://releases.dagger.io/dagger/install.sh | sh
           dagger-cue do update
           dagger-cue do --cache-from type=gha --cache-to type=gha build
        
