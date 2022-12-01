@@ -244,7 +244,7 @@ jobs:
           cd .github/dagger
           ../../bin/dagger-cue project init
           ../../bin/dagger-cue project update
-          ../../bin/dagger-cue do build --cache-to type=local,mode=max,dest=../../build/.cicd_cache --cache-from type=local,mode=max,src=../../build/.cicd_cache
+          ../../bin/dagger-cue do build
        
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
