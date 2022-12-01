@@ -74,10 +74,10 @@ jobs:
           path: "project"
           submodules: recursive
 
-      - name: Load .scons_cache directory
+      - name: Load .cicd_cache directory
         uses: actions/cache@v3
         with:
-          path: godot/.scons_cache
+          path: godot/.cicd_cache
           key: ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}-${{github.sha}}
           restore-keys: |
             ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}-${{github.sha}}
@@ -89,7 +89,7 @@ jobs:
       - name: Run build
         run: |
           cd godot
-          SCONS_CACHE=.scons_cache scons optimize=speed werror=no platform=macos target=editor use_lto=no deprecated=no builtin_freetype=yes custom_modules=../godot-modules-groups
+          SCONS_CACHE=.cicd_cache scons optimize=speed werror=no platform=macos target=editor use_lto=no deprecated=no builtin_freetype=yes custom_modules=../godot-modules-groups
           cp -r misc/dist/macos_tools.app ./vsekai_macos_release_x86_64.app
           mkdir -p vsekai_macos_release_x86_64.app/Contents/MacOS
           cp bin/godot.macos.editor.x86_64  vsekai_macos_release_x86_64.app/Contents/MacOS/Godot
@@ -163,10 +163,10 @@ jobs:
           path: "project"
           submodules: recursive
 
-      - name: Load .scons_cache directory
+      - name: Load .cicd_cache directory
         uses: actions/cache@v3
         with:
-          path: godot/.scons_cache
+          path: godot/.cicd_cache
           key: ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}-${{github.sha}}
           restore-keys: |
             ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}-${{github.sha}}
@@ -178,7 +178,7 @@ jobs:
       - name: Run build
         run: |
           cd godot
-          SCONS_CACHE=.scons_cache scons optimize=speed arch=arm64 werror=no platform=ios target=editor use_lto=no deprecated=no builtin_freetype=yes custom_modules=../godot-modules-groups
+          SCONS_CACHE=.cicd_cache scons optimize=speed arch=arm64 werror=no platform=ios target=editor use_lto=no deprecated=no builtin_freetype=yes custom_modules=../godot-modules-groups
           cp -r misc/dist/ios_xcode vsekai_ios_xcode
           cp bin/libgodot.ios.editor.arm64.a vsekai_ios_xcode/libgodot.ios.release.xcframework/ios-arm64/libgodot.a
 
@@ -225,10 +225,10 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Load .scons_cache directory
+      - name: Load .cicd_cache directory
         uses: actions/cache@v3
         with:
-          path: build/.scons_cache
+          path: build/.cicd_cache
           key: ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}-${{github.sha}}
           restore-keys: |
             ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}-${{github.sha}}
@@ -244,7 +244,7 @@ jobs:
           cd .github/dagger
           ../../bin/dagger-cue project init
           ../../bin/dagger-cue project update
-          ../../bin/dagger-cue do build --cache-to type=local,mode=max,dest=../../build/.scons_cache --cache-from type=local,mode=max,src=../../build/.scons_cache
+          ../../bin/dagger-cue do build --cache-to type=local,mode=max,dest=../../build/.cicd_cache --cache-from type=local,mode=max,src=../../build/.cicd_cache
        
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
