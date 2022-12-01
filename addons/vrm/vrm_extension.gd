@@ -119,12 +119,12 @@ func skeleton_rename(gstate : GLTFState, p_base_scene: Node, p_skeleton: Skeleto
 func rotate_scene_180_inner(p_node: Node3D, mesh_set: Dictionary, skin_set: Dictionary):
 	if p_node is Skeleton3D:
 		for bone_idx in range(p_node.get_bone_count()):
-			var rest: Transform3D = p_node.get_bone_rest(bone_idx) * ROTATE_180_TRANSFORM
+			var rest: Transform3D = ROTATE_180_TRANSFORM * p_node.get_bone_rest(bone_idx) * ROTATE_180_TRANSFORM
 			p_node.set_bone_rest(bone_idx, rest)
-			p_node.set_bone_pose_rotation(bone_idx, p_node.get_bone_pose_rotation(bone_idx) * Quaternion(ROTATE_180_BASIS))
+			p_node.set_bone_pose_rotation(bone_idx, Quaternion(ROTATE_180_BASIS) * p_node.get_bone_pose_rotation(bone_idx) * Quaternion(ROTATE_180_BASIS))
 			p_node.set_bone_pose_scale(bone_idx, Vector3.ONE)
 			p_node.set_bone_pose_position(bone_idx, rest.origin)
-	p_node.transform = p_node.transform * ROTATE_180_TRANSFORM
+	p_node.transform = ROTATE_180_TRANSFORM * p_node.transform * ROTATE_180_TRANSFORM
 	if p_node is ImporterMeshInstance3D:
 		mesh_set[p_node.mesh] = true
 		skin_set[p_node.skin] = true
