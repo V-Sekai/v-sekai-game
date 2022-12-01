@@ -6,7 +6,7 @@
     {
       "label": "dagger do build",
       "type": "shell",
-      "command": "dagger do build  --cache-to type=local,mode=max,dest=.dagger_storage --cache-from type=local,mode=max,src=.dagger_storage",
+      "command": "dagger-cue do build  --cache-to type=local,mode=max,dest=.dagger_storage --cache-from type=local,mode=max,src=.dagger_storage",
       "options": {
         "cwd": "${workspaceFolder}/.github/dagger"
       },
@@ -23,7 +23,7 @@
     {
       "label": "dagger project init",
       "type": "shell",
-      "command": "dagger project init",
+      "command": "dagger-cue project init",
       "options": {
         "cwd": "${workspaceFolder}/.github/dagger"
       },
@@ -33,7 +33,7 @@
     {
       "label": "dagger project update",
       "type": "shell",
-      "command": "dagger project update",
+      "command": "dagger-cue project update",
       "options": {
         "cwd": "${workspaceFolder}/.github/dagger"
       },
