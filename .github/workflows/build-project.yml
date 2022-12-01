@@ -242,8 +242,8 @@ jobs:
       - name: "Run Dagger"
         run: |
           cd .github/dagger
-          ../../bin/dagger-cue do init
-          ../../bin/dagger-cue do update
+          ../../bin/dagger-cue project init
+          ../../bin/dagger-cue project update
           ../../bin/dagger-cue do --cache-from type=gha --cache-to type=gha build
        
       - name: Upload Artifact
