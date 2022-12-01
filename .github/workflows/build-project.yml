@@ -239,8 +239,8 @@ jobs:
         run: |
           cd .github/dagger
           curl -L https://dl.dagger.io/dagger-cue/install.sh | sh
-          dagger-cue do update
-          dagger-cue do --cache-from type=gha --cache-to type=gha build
+          ./bin/dagger-cue do update
+          ./bin/dagger-cue do --cache-from type=gha --cache-to type=gha build
        
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
