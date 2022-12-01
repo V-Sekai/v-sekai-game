@@ -119,12 +119,12 @@ func skeleton_rename(gstate : GLTFState, p_base_scene: Node, p_skeleton: Skeleto
 func rotate_scene_180_inner(p_node: Node3D, mesh_set: Dictionary, skin_set: Dictionary):
 	if p_node is Skeleton3D:
 		for bone_idx in range(p_node.get_bone_count()):
-			var rest: Transform3D = ROTATE_180_TRANSFORM * p_node.get_bone_rest(bone_idx) * ROTATE_180_TRANSFORM
+			var rest: Transform3D = p_node.get_bone_rest(bone_idx) * ROTATE_180_TRANSFORM
 			p_node.set_bone_rest(bone_idx, rest)
-			p_node.set_bone_pose_rotation(bone_idx, Quaternion(ROTATE_180_BASIS) * p_node.get_bone_pose_rotation(bone_idx) * Quaternion(ROTATE_180_BASIS))
+			p_node.set_bone_pose_rotation(bone_idx, p_node.get_bone_pose_rotation(bone_idx) * Quaternion(ROTATE_180_BASIS))
 			p_node.set_bone_pose_scale(bone_idx, Vector3.ONE)
 			p_node.set_bone_pose_position(bone_idx, rest.origin)
-	p_node.transform = ROTATE_180_TRANSFORM * p_node.transform * ROTATE_180_TRANSFORM
+	p_node.transform = p_node.transform * ROTATE_180_TRANSFORM
 	if p_node is ImporterMeshInstance3D:
 		mesh_set[p_node.mesh] = true
 		skin_set[p_node.skin] = true
@@ -142,12 +142,11 @@ func rotate_scene_180(p_scene: Node3D):
 	var mesh_set: Dictionary = {}
 	var skin_set: Dictionary = {}
 	rotate_scene_180_inner(p_scene, mesh_set, skin_set)
-	#xtmp(p_scene, mesh_set, skin_set)
 	for mesh in mesh_set:
 		adjust_mesh_zforward(mesh)
 	for skin in skin_set:
 		for b in range(skin.get_bind_count()):
-			skin.set_bind_pose(b, ROTATE_180_TRANSFORM * skin.get_bind_pose(b) * ROTATE_180_TRANSFORM)
+			skin.set_bind_pose(b, skin.get_bind_pose(b) * ROTATE_180_TRANSFORM)
 
 func skeleton_rotate(p_base_scene: Node, src_skeleton: Skeleton3D, p_bone_map: BoneMap) -> Array[Basis]:
 	# is_renamed: was skeleton_rename already invoked?
