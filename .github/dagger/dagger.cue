@@ -142,7 +142,7 @@ build_godot_windows:
 		workdir: "/v-sekai-game/godot"
 		script: contents: #"""
 			mkdir -p /v-sekai-game/build/.scons_cache
-			SCONS_CACHE=/v-sekai-game/build/.scons_cache PATH=/opt/llvm-mingw/bin:$PATH scons optimize=speed werror=no platform=windows target=editor use_fastlto=yes deprecated=no use_mingw=yes use_llvm=yes LINKFLAGS=-Wl,-pdb= CCFLAGS='-Wall -Wno-tautological-compare -g -gcodeview' debug_symbols=no custom_modules=../godot_groups_modules
+			SCONS_CACHE=/v-sekai-game/build/.scons_cache PATH=/opt/llvm-mingw/bin:$PATH scons optimize=speed werror=yes platform=windows target=editor use_fastlto=yes deprecated=no use_mingw=yes use_llvm=yes LINKFLAGS=-Wl,-pdb= CCFLAGS='-Wall -Wno-tautological-compare -g -gcodeview' debug_symbols=no custom_modules=../godot_groups_modules
 			"""#
 		export:
 			files:
@@ -157,7 +157,7 @@ build_godot_linux:
 		workdir: "/v-sekai-game/godot"
 		script: contents: #"""
 			mkdir -p /v-sekai-game/build/.scons_cache
-			SCONS_CACHE=/v-sekai-game/build/.scons_cache PATH=/opt/llvm-mingw/bin:$PATH scons optimize=speed LINKFLAGS=-L/opt/rh/gcc-toolset-9/root/usr/lib/gcc/x86_64-redhat-linux/9/ werror=no platform=linuxbsd target=editor use_fastlto=yes deprecated=no use_static_cpp=yes use_llvm=yes builtin_freetype=yes custom_modules=../godot_groups_modules
+			SCONS_CACHE=/v-sekai-game/build/.scons_cache PATH=/opt/llvm-mingw/bin:$PATH scons optimize=speed LINKFLAGS=-L/opt/rh/gcc-toolset-9/root/usr/lib/gcc/x86_64-redhat-linux/9/ werror=yes platform=linuxbsd target=editor use_fastlto=yes deprecated=no use_static_cpp=yes use_llvm=yes builtin_freetype=yes custom_modules=../godot_groups_modules
 			"""#
 		export:
 			files:
