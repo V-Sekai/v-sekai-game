@@ -46,7 +46,7 @@ godot_groups_modules: {
 	core.#GitPull & {
 		keepGitDir: true
 		remote: "https://github.com/V-Sekai/godot-modules-groups"
-		ref:    "dbf3bbde0f3957088a08d4f9fda7b9c00a874f58"
+		ref:    "main"
 	}
 }
 
