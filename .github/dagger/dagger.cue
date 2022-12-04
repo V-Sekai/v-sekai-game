@@ -177,11 +177,6 @@ dagger.#Plan & {
 		filesystem: {
 			"../../build": write: contents: actions.build_windows.export.directories."/v-sekai-game/build"
 		}
-		filesystem: "../../": 
-			read: {
-				contents: dagger.#FS,
-				exclude: [".github/", ".godot/"]
-			}
 		filesystem: {
 			"../../build": write: contents: actions.build_linux.export.directories."/v-sekai-game/build"
 		}

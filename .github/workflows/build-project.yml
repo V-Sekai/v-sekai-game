@@ -217,7 +217,7 @@ jobs:
             README.md
             godot/vsekai_ios_xcode
 
-  build-windows:
+  build-linux-windows:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -270,35 +270,6 @@ jobs:
             README.md
             build/windows_release_x86_64
 
-  build-linux:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          submodules: recursive
-
-      - name: Load .cicd_cache directory
-        uses: actions/cache@v3
-        with:
-          path: build/.cicd_cache
-          key: ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}-${{github.sha}}
-          restore-keys: |
-            ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}-${{github.sha}}
-            ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}
-            ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}
-
-      - name: "Install Dagger"
-        run: |
-          curl -L https://dl.dagger.io/dagger-cue/install.sh | sh
-
-      - name: "Run Dagger"
-        run: |
-          cd .github/dagger
-          ../../bin/dagger-cue project init
-          ../../bin/dagger-cue project update
-          ../../bin/dagger-cue do build_linux
-       
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
