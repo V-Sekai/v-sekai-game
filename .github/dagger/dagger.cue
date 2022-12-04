@@ -137,9 +137,6 @@ fetch_godot: {
 				script: contents: #"""
 					"""#
 				export:
-					files:
-						"/v-sekai-game/build": dagger.#FS
-				export:
 					directories:
 						"/v-sekai-game/godot": dagger.#FS
 			}
