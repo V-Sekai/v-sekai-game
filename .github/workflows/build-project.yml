@@ -217,7 +217,7 @@ jobs:
             README.md
             godot/vsekai_ios_xcode
 
-  build-linux-windows:
+  build-windows:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -244,7 +244,60 @@ jobs:
           cd .github/dagger
           ../../bin/dagger-cue project init
           ../../bin/dagger-cue project update
-          ../../bin/dagger-cue do build
+          ../../bin/dagger-cue do build_windows
+      
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: editor_windows_release_x86_64
+          path: build/windows_release_x86_64.exe
+          retention-days: 14
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: "vsekai_windows_release_x86_64"
+          path: build/windows_release_x86_64
+          retention-days: 14
+
+      - name: v-sekai-windows-x86_64
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          prerelease: true
+          files: |
+            LICENSE
+            README.md
+            build/windows_release_x86_64
+
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Load .cicd_cache directory
+        uses: actions/cache@v3
+        with:
+          path: build/.cicd_cache
+          key: ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}-${{github.sha}}
+          restore-keys: |
+            ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}-${{github.sha}}
+            ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}
+            ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}
+
+      - name: "Install Dagger"
+        run: |
+          curl -L https://dl.dagger.io/dagger-cue/install.sh | sh
+
+      - name: "Run Dagger"
+        run: |
+          cd .github/dagger
+          ../../bin/dagger-cue project init
+          ../../bin/dagger-cue project update
+          ../../bin/dagger-cue do build_linux
        
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
@@ -256,22 +309,8 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: editor_windows_release_x86_64
-          path: build/windows_release_x86_64.exe
-          retention-days: 14
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v2
-        with:
           name: editor_linux_release_x86_64
           path: build/linux_release.x86_64
-          retention-days: 14
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: "vsekai_windows_release_x86_64"
-          path: build/windows_release_x86_64
           retention-days: 14
 
       - name: v-sekai-linux-x86_64
@@ -283,13 +322,3 @@ jobs:
             LICENSE
             README.md
             build/linux_release_x86_64
-
-      - name: v-sekai-windows-x86_64
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          prerelease: true
-          files: |
-            LICENSE
-            README.md
-            build/windows_release_x86_64
