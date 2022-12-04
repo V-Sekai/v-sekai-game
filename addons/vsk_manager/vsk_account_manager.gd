@@ -81,7 +81,7 @@ func _load_session() -> void:
 
 func _create_session(p_procesed_result: Dictionary) -> void:
 	_update_session(\
-		p_procesed_result["renewel_token"],\
+		p_procesed_result["renewal_token"],\
 		p_procesed_result["access_token"],\
 		p_procesed_result["user_id"],\
 		p_procesed_result["user_username"],\
