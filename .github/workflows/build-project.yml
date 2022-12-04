@@ -35,6 +35,7 @@ env:
   VSEKAI_BASE_BRANCH: main
   GODOT_MODULES_BRANCH: main
   GODOT_BRANCH: groups-4.x
+  EM_VERSION: 3.1.18
 
 concurrency:
   group: ci-macos-${{github.actor}}-${{github.head_ref || github.run_number}}-${{github.ref}}
@@ -133,6 +134,17 @@ jobs:
   build-web:
     runs-on: ubuntu-latest
     steps:
+
+      - name: Set up Emscripten latest
+        uses: mymindstorm/setup-emsdk@v11
+        with:
+          version: ${{env.EM_VERSION}}
+          actions-cache-folder: ${{env.EM_CACHE_FOLDER}}
+
+      - name: Verify Emscripten setup
+        run: |
+          emcc -v
+
       - uses: actions/checkout@v3
         with:
           path: "godot"
@@ -145,6 +157,22 @@ jobs:
           repository: "v-sekai/godot-modules-groups"
           ref: ${{env.GODOT_MODULES_BRANCH}}
           submodules: recursive
+
+      # Use python 3.x release (works cross platform)
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v4
+        with:
+          # Semantic version range syntax or exact version of a Python version
+          python-version: ${{ inputs.python-version }}
+          # Optional - x64 or x86 architecture, defaults to x64
+          architecture: ${{ inputs.python-arch }}
+
+      - name: Setup scons
+        shell: bash
+        run: |
+          python -c "import sys; print(sys.version)"
+          python -m pip install scons
+          scons --version
 
       - name: Checkout
         uses: actions/checkout@v2
@@ -165,7 +193,7 @@ jobs:
       - name: Run build
         run: |
           cd godot
-          SCONS_CACHE=.cicd_cache scons optimize=speed arch=arm64 werror=no platform=web target=editor use_lto=no deprecated=no builtin_freetype=yes custom_modules=../godot-modules-groups
+          SCONS_CACHE=.cicd_cache scons optimize=speed arch=wasm32 werror=no platform=web target=editor use_lto=no deprecated=no builtin_freetype=yes custom_modules=../godot-modules-groups
           cp bin/godot.web.template_release.wasm32.zip vsekai_web.zip
 
       - name: Upload Artifact
