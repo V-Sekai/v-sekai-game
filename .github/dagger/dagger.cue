@@ -132,40 +132,20 @@ fetch_godot: {
 					entrypoint: ["sh"]
 				}
 			},
+			bash.#Run & {
+				workdir: "/v-sekai-game/godot"
+				script: contents: #"""
+					"""#
+				export:
+					files:
+						"/v-sekai-game/build": dagger.#FS
+				export:
+					directories:
+						"/v-sekai-game/godot": dagger.#FS
+			}
 		]
 	}
 }
-
-build_godot_windows:
-	bash.#Run & {
-		input:   fetch_godot.output
-		workdir: "/v-sekai-game/godot"
-		script: contents: #"""
-			mkdir -p /v-sekai-game/build/.scons_cache
-			SCONS_CACHE=/v-sekai-game/build/.scons_cache PATH=/opt/llvm-mingw/bin:$PATH scons optimize=speed werror=no platform=windows target=editor use_fastlto=no deprecated=no use_mingw=yes use_llvm=yes LINKFLAGS=-Wl,-pdb= CCFLAGS='-Wall -Wno-tautological-compare -g -gcodeview' debug_symbols=no custom_modules=../godot_groups_modules
-			"""#
-		export:
-			files:
-				"/v-sekai-game/build": dagger.#FS
-		export:
-			directories:
-				"/v-sekai-game/godot/bin": dagger.#FS
-	}
-build_godot_linux:
-	bash.#Run & {
-		input:   fetch_godot.output
-		workdir: "/v-sekai-game/godot"
-		script: contents: #"""
-			mkdir -p /v-sekai-game/build/.scons_cache
-			SCONS_CACHE=/v-sekai-game/build/.scons_cache PATH=/opt/llvm-mingw/bin:$PATH scons optimize=speed LINKFLAGS=-L/opt/rh/gcc-toolset-9/root/usr/lib/gcc/x86_64-redhat-linux/9/ werror=no platform=linuxbsd target=editor use_fastlto=no deprecated=no use_static_cpp=yes use_llvm=yes builtin_freetype=yes custom_modules=../godot_groups_modules
-			"""#
-		export:
-			files:
-				"/v-sekai-game/build": dagger.#FS
-		export:
-			directories:
-				"/v-sekai-game/godot/bin": dagger.#FS
-	}
 
 dagger.#Plan & {
 	client: {
@@ -175,10 +155,10 @@ dagger.#Plan & {
 				exclude: [".github/", ".godot/"]
 			}
 		filesystem: {
-			"../../build": write: contents: actions.build_windows.export.directories."/v-sekai-game/build"
+			"../../build": write: contents: actions.build_linux.export.directories."/v-sekai-game/build"
 		}
 		filesystem: {
-			"../../build": write: contents: actions.build_linux.export.directories."/v-sekai-game/build"
+			"../../build": write: contents: actions.build_windows.export.directories."/v-sekai-game/build"
 		}
 	}
 
@@ -192,9 +172,11 @@ dagger.#Plan & {
 						dest:     "/v-sekai-game/project"
 					}
 				input:
-					build_godot_linux.output
+					fetch_godot.output
 				script: contents: #"""
-					mkdir -p /v-sekai-game/build/.scons_cache /v-sekai-game/project/build/.scons_cache
+					cd /v-sekai-game/godot
+					SCONS_CACHE=/v-sekai-game/project/.cicd_cache PATH=/opt/llvm-mingw/bin:$PATH scons optimize=speed LINKFLAGS=-L/opt/rh/gcc-toolset-9/root/usr/lib/gcc/x86_64-redhat-linux/9/ werror=no platform=linuxbsd target=editor use_fastlto=no deprecated=no use_static_cpp=yes use_llvm=yes builtin_freetype=yes custom_modules=../godot_groups_modules
+					cd /v-sekai-game/godot
 					cd /v-sekai-game/godot
 					cp bin/godot.linuxbsd.editor.x86_64.llvm bin/linux_debug.x86_64.llvm
 					cp bin/godot.linuxbsd.editor.x86_64.llvm bin/linux_editor.x86_64
@@ -235,10 +217,10 @@ dagger.#Plan & {
 						dest:     "/v-sekai-game/project"
 					}
 				input:
-					build_godot_windows.output
+					fetch_godot.output
 				script: contents: #"""
-					mkdir -p /v-sekai-game/build/.scons_cache /v-sekai-game/project/build/.scons_cache
 					cd /v-sekai-game/godot
+					SCONS_CACHE=/v-sekai-game/project/.cicd_cache PATH=/opt/llvm-mingw/bin:$PATH scons optimize=speed werror=no platform=windows target=editor use_fastlto=no deprecated=no use_mingw=yes use_llvm=yes LINKFLAGS=-Wl,-pdb= CCFLAGS='-Wall -Wno-tautological-compare -g -gcodeview' debug_symbols=no custom_modules=../godot_groups_modules
 					cp bin/godot.windows.editor.x86_64.llvm.exe bin/windows_release_x86_64.exe 
 					mingw-strip --strip-debug bin/windows_release_x86_64.exe
 					cp bin/godot.windows.editor.x86_64.llvm.pdb bin/windows_release_x86_64.pdb
