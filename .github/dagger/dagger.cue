@@ -152,15 +152,12 @@ dagger.#Plan & {
 				exclude: [".github/", ".godot/"]
 			}
 		filesystem: {
-			"../../build": write: contents: actions.build_linux.export.directories."/v-sekai-game/build"
-		}
-		filesystem: {
-			"../../build": write: contents: actions.build_windows.export.directories."/v-sekai-game/build"
+			"../../build": write: contents: actions.build.export.directories."/v-sekai-game/build"
 		}
 	}
 
 	actions: {
-		build_linux:
+		build:
 			bash.#Run & {
 				user: "root"
 				mounts:
@@ -171,6 +168,7 @@ dagger.#Plan & {
 				input:
 					fetch_godot.output
 				script: contents: #"""
+					# Windows
 					cd /v-sekai-game/godot
 					SCONS_CACHE=/v-sekai-game/project/.cicd_cache PATH=/opt/llvm-mingw/bin:$PATH scons optimize=speed LINKFLAGS=-L/opt/rh/gcc-toolset-9/root/usr/lib/gcc/x86_64-redhat-linux/9/ werror=no platform=linuxbsd target=editor use_fastlto=no deprecated=no use_static_cpp=yes use_llvm=yes builtin_freetype=yes custom_modules=../godot_groups_modules
 					cd /v-sekai-game/godot
@@ -200,22 +198,8 @@ dagger.#Plan & {
 					rm -rf /v-sekai-game/.godot
 					cp /v-sekai-game/godot/bin/linux_release.x86_64 /v-sekai-game/build/linux_release.x86_64
 					mkdir -p /v-sekai-game/build/linux_release_x86_64/ && mkdir -p /v-sekai-game/project/.godot/editor && mkdir -p /v-sekai-game/project/.godot/imported && chmod +x /v-sekai-game/godot/bin/linux_editor.x86_64 && (XDG_DATA_HOME=/v-sekai-game/.local/share/ /v-sekai-game/godot/bin/linux_editor.x86_64 --headless --export-release "Linux/X11" /v-sekai-game/build/linux_release_x86_64/${GODOT_ENGINE_GAME_NAME}linuxbsd --path /v-sekai-game/project --disable-crash-handler --disable-render-loop  || [ -f /v-sekai-game/build/linux_release_x86_64/${GODOT_ENGINE_GAME_NAME}linuxbsd ])
-					"""#
-				export:
-					directories:
-						"/v-sekai-game/build": dagger.#FS
-			}
-		build_windows:
-			bash.#Run & {
-				user: "root"
-				mounts:
-					"Local FS": {
-						contents: client.filesystem."../../".read.contents
-						dest:     "/v-sekai-game/project"
-					}
-				input:
-					fetch_godot.output
-				script: contents: #"""
+
+					# Linux
 					cd /v-sekai-game/godot
 					SCONS_CACHE=/v-sekai-game/project/.cicd_cache PATH=/opt/llvm-mingw/bin:$PATH scons optimize=speed werror=no platform=windows target=editor use_fastlto=no deprecated=no use_mingw=yes use_llvm=yes LINKFLAGS=-Wl,-pdb= CCFLAGS='-Wall -Wno-tautological-compare -g -gcodeview' debug_symbols=no custom_modules=../godot_groups_modules
 					cp bin/godot.windows.editor.x86_64.llvm.exe bin/windows_release_x86_64.exe 
