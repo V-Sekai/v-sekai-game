@@ -6,7 +6,7 @@
     {
       "label": "dagger do build",
       "type": "shell",
-      "command": "dagger-cue do build  --cache-to type=local,mode=max,dest=.dagger_storage --cache-from type=local,mode=max,src=.dagger_storage",
+      "command": "dagger-cue do build  --cache-to type=local,mode=max,dest=.dagger_storage --cache-from type=local,mode=max,src=.dagger_storage --log-format plain",
       "options": {
         "cwd": "${workspaceFolder}/.github/dagger"
       },
