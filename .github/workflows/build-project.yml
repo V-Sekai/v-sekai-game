@@ -219,7 +219,7 @@ jobs:
 
   build-linux:
     runs-on: ubuntu-18.04
-    container: docker.io/groupsinfra/gocd-agent-centos-8-groups:v22.3.0groupsbash1
+    container: docker.io/groupsinfra/gocd-agent-centos-8-groups:v22.3.0groupsbash2
     steps:
       # Setup scons, print python version and scons version info, so if anything is broken it won't run the build.
       - name: Installing yum packages
