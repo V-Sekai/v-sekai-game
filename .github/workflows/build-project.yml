@@ -260,8 +260,8 @@ jobs:
       - name: Run build
         run: |
           cd godot
-          export VSK_GODOT_LINUX_BSD_X86_64=godot.linuxbsd.editor.x86_64.llvm
-          SCONS_CACHE=.cicd_cache scons optimize=speed werror=no platform=linuxbsd target=editor use_fastlto=no deprecated=no use_llvm=yes use_static_cpp=yes builtin_freetype=yes custom_modules=../modules          
+          export VSK_GODOT_LINUX_BSD_X86_64=godot.linuxbsd.editor.x86_64
+          SCONS_CACHE=.cicd_cache scons optimize=speed werror=no platform=linuxbsd target=editor use_fastlto=no deprecated=no use_static_cpp=yes builtin_freetype=yes custom_modules=../modules          
           cp bin/$VSK_GODOT_LINUX_BSD_X86_64 bin/linux_debug.x86_64
           cp bin/$VSK_GODOT_LINUX_BSD_X86_64  bin/linux_editor.x86_64
           cp bin/$VSK_GODOT_LINUX_BSD_X86_64  bin/linux_release.x86_64 && cp bin/$VSK_GODOT_LINUX_BSD_X86_64  bin/linux_release.x86_64 && strip --strip-debug bin/linux_release.x86_64
