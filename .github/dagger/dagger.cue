@@ -66,14 +66,45 @@ fetch_godot: {
 			},
 			bash.#Run & {
 				script: contents: #"""
+					# Add base dependencies.
 					dnf install -y epel-release
 					dnf config-manager --set-enabled powertools
-					yum install unzip mingw32-binutils rsync fontconfig-devel gcc-toolset-9 gcc-toolset-9-libatomic-devel git-lfs automake autoconf libtool clang glibc-devel.i686 libgcc.i686 libstdc++.i686 python3-pip bash libX11-devel libXcursor-devel libXrandr-devel libXinerama-devel libXi-devel mesa-libGL-devel alsa-lib-devel pulseaudio-libs-devel freetype-devel openssl-devel libudev-devel mesa-libGLU-devel libpng-devel llvm-devel clang llvm-devel libxml2-devel libuuid-devel openssl-devel bash patch make git bzip2 xz xorg-x11-server-Xvfb pkgconfig mesa-dri-drivers ncurses-compat-libs unzip which gcc gcc-c++ libatomic -y
+					yum install unzip mingw32-binutils rsync fontconfig-devel gcc-toolset-9 gcc-toolset-9-libatomic-devel libatomic glibc-devel.i686 libgcc.i686 libstdc++.i686 -y
 					"""#
 			},
 			bash.#Run & {
 				script: contents: #"""
+					# Add git dependencies.
+					yum install  bash patch make git git-lfs -y
+					"""#
+			}, 
+			bash.#Run & {
+				script: contents: #"""
 					yum group install -y "Development Tools"
+					"""#
+			},
+			bash.#Run & {
+				script: contents: #"""
+					# Add compiling dependencies.
+					yum install clang gcc gcc-c++ automake autoconf libtool clang python3-pip bash llvm-devel llvm-devel  -y
+					"""#
+			},
+			bash.#Run & {
+				script: contents: #"""
+					# Add godot engine dependencies 1.
+					yum install libX11-devel libXcursor-devel libXrandr-devel libXinerama-devel libXi-devel mesa-libGL-devel alsa-lib-devel pulseaudio-libs-devel freetype-devel openssl-devel -y
+					"""#
+			},
+			bash.#Run & {
+				script: contents: #"""
+					# Add godot engine dependencies 2.
+					yum install libudev-devel mesa-libGLU-devel libpng-devel libxml2-devel libuuid-devel openssl-devel xorg-x11-server-Xvfb pkgconfig mesa-dri-drivers ncurses-compat-libs -y
+					"""#
+			},
+			bash.#Run & {
+				script: contents: #"""
+					# Add archiving dependencies.
+					yum install bzip2 xz unzip which -y
 					"""#
 			},
 			bash.#Run & {
