@@ -68,7 +68,7 @@ fetch_godot: {
 				script: contents: #"""
 					dnf install -y epel-release
 					dnf config-manager --set-enabled powertools
-					yum install unzip mingw32-binutils rsync gcc-toolset-9 gcc-toolset-9-libatomic-devel git-lfs automake autoconf libtool clang glibc-devel.i686 libgcc.i686 libstdc++.i686 python3-pip bash libX11-devel libXcursor-devel libXrandr-devel libXinerama-devel libXi-devel mesa-libGL-devel alsa-lib-devel pulseaudio-libs-devel freetype-devel openssl-devel libudev-devel mesa-libGLU-devel libpng-devel llvm-devel clang llvm-devel libxml2-devel libuuid-devel openssl-devel bash patch make git bzip2 xz xorg-x11-server-Xvfb pkgconfig mesa-dri-drivers ncurses-compat-libs unzip which gcc gcc-c++ libatomic -y
+					yum install unzip mingw32-binutils rsync fontconfig-devel gcc-toolset-9 gcc-toolset-9-libatomic-devel git-lfs automake autoconf libtool clang glibc-devel.i686 libgcc.i686 libstdc++.i686 python3-pip bash libX11-devel libXcursor-devel libXrandr-devel libXinerama-devel libXi-devel mesa-libGL-devel alsa-lib-devel pulseaudio-libs-devel freetype-devel openssl-devel libudev-devel mesa-libGLU-devel libpng-devel llvm-devel clang llvm-devel libxml2-devel libuuid-devel openssl-devel bash patch make git bzip2 xz xorg-x11-server-Xvfb pkgconfig mesa-dri-drivers ncurses-compat-libs unzip which gcc gcc-c++ libatomic -y
 					"""#
 			},
 			bash.#Run & {
