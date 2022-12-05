@@ -24,7 +24,7 @@ name: "Build V-Sekai Game"
 
 on:
   push:
-    branches: ["main"]
+    branches: ["*"]
   pull_request:
     branches: ["main"]
   workflow_dispatch:
@@ -219,7 +219,21 @@ jobs:
 
   build-linux:
     runs-on: ubuntu-18.04
+    container: quay.io/centos/centos:stream8
     steps:
+      # Setup scons, print python version and scons version info, so if anything is broken it won't run the build.
+      - name: Installing yum packages
+        run: |
+          yum install -y epel-release dnf-plugins-core && yum config-manager -y --set-enabled powertools && curl https://download.mono-project.com/repo/centos8-stable.repo | tee /etc/yum.repos.d/mono-stable.repo && yum update -y
+          yum upgrade -y && yum group install -y "Development Tools" && yum group install -y "Additional Development" && yum install -y git-lfs automake autoconf libtool yasm wine mono-devel cmake python3-scons clang glibc-devel.i686 libgcc.i686 libstdc++.i686 mingw64-gcc-c++ mingw32-gcc mingw32-gcc-c++ python3-pip mingw64-winpthreads mingw32-winpthreads mingw64-winpthreads-static mingw32-winpthreads-static libstdc++-static mingw64-filesystem mingw32-filesystem bash libX11-devel libXcursor-devel libXrandr-devel libXinerama-devel libXi-devel mesa-libGL-devel alsa-lib-devel pulseaudio-libs-devel freetype-devel openssl-devel libudev-devel mesa-libGLU-devel libpng-devel xar-devel llvm-devel clang llvm-devel libxml2-devel libuuid-devel openssl-devel bash patch libstdc++-static make git bzip2 xz java-openjdk yasm xorg-x11-server-Xvfb pkgconfig mesa-dri-drivers java-1.8.0-openjdk-devel ncurses-compat-libs unzip which gcc gcc-c++ libatomic-static libatomic ccache ninja-build
+          alternatives --set ld /usr/bin/ld.gold && git lfs install && alternatives --set python /usr/bin/python3 && ln -s /usr/bin/scons-3 /usr/local/bin/scons
+          mkdir /opt/llvm-mingw && curl -L https://github.com/mstorsjo/llvm-mingw/releases/download/20201020/llvm-mingw-20201020-ucrt-ubuntu-18.04.tar.xz | tar -Jxf - --strip 1 -C /opt/llvm-mingw
+          yum upgrade -y && yum group install -y "Development Tools" && yum group install -y "Additional Development" && yum install -y git-lfs automake autoconf libtool yasm wine mono-devel cmake clang glibc-devel.i686 libgcc.i686 libstdc++.i686 mingw64-gcc-c++ mingw32-gcc mingw32-gcc-c++ python3-pip mingw64-winpthreads mingw32-winpthreads mingw64-winpthreads-static mingw32-winpthreads-static libstdc++-static mingw64-filesystem mingw32-filesystem bash libX11-devel libXcursor-devel libXrandr-devel libXinerama-devel libXi-devel mesa-libGL-devel alsa-lib-devel pulseaudio-libs-devel freetype-devel openssl-devel libudev-devel mesa-libGLU-devel libpng-devel xar-devel llvm-devel clang llvm-devel libxml2-devel libuuid-devel openssl-devel bash patch libstdc++-static make git bzip2 xz yasm xorg-x11-server-Xvfb pkgconfig mesa-dri-drivers java-11-openjdk java-11-openjdk-devel ncurses-compat-libs unzip which gcc gcc-c++ libatomic-static libatomic ccache ninja-build
+          alternatives --set ld /usr/bin/ld.gold && git lfs install && alternatives --set python /usr/bin/python3
+          pip install -U pip && pip install -U scons
+          python --version
+          scons --version
+          
       - uses: actions/checkout@v3
         with:
           path: "godot"
@@ -249,14 +263,6 @@ jobs:
             ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}-${{github.ref}}
             ${{env.CACHE_NAME}}-${{env.VSEKAI_BASE_BRANCH}}
 
-      # Setup scons, print python version and scons version info, so if anything is broken it won't run the build.
-      - name: Configuring Python packages
-        run: |
-          python3 -c "import sys; print(sys.version)"
-          python3 -m pip install scons
-          python3 --version
-          scons --version
-          
       - name: Run build
         run: |
           cd godot
@@ -337,21 +343,17 @@ jobs:
           python3 --version
           scons --version
 
-      - uses: MinoruSekine/setup-scoop@v1
-        with:
-          add_extras_bucket: 'true'
-          scoop_checkup: 'true'
-
-      - name: Scoop install llvm-mingw
+      - name: Install llvm-mingw
         run: |
-          scoop bucket add dorado https://github.com/chawyehsu/dorado
-          scoop update
-          scoop install llvm-mingw 
+          curl -LO https://github.com/mstorsjo/llvm-mingw/releases/download/20220906/llvm-mingw-20220906-ucrt-x86_64.zip
+          7z x llvm-mingw-20220906-ucrt-x86_64.zip
+          mv llvm-mingw-20220906-ucrt-x86_64 llvm-mingw
 
       - name: Run build
         shell: bash
         run: |
           cd godot
+          export PATH="$PWD/../llvm-mingw/bin:$PATH"
           export VSK_GODOT_WINDOWS_X86_64=godot.windows.editor.x86_64.exe
           SCONS_CACHE=.cicd_cache scons optimize=speed werror=no platform=windows target=editor use_fastlto=no deprecated=no debug_symbols=no use_llvm=yes use_mingw=yes custom_modules=../modules
           cp bin/$VSK_GODOT_WINDOWS_X86_64 bin/windows_release_x86_64.exe 
