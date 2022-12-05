@@ -91,7 +91,7 @@ fetch_godot: {
 			bash.#Run & {
 				workdir: "/v-sekai-game/godot"
 				script: contents: #"""
-					mkdir /opt/llvm-mingw && curl -L https://github.com/mstorsjo/llvm-mingw/releases/download/20220323/llvm-mingw-20220323-ucrt-ubuntu-18.04-x86_64.tar.xz | tar -Jxf - --strip 1 -C /opt/llvm-mingw
+					mkdir /opt/llvm-mingw && curl -L https://github.com/mstorsjo/llvm-mingw/releases/download/20220906/llvm-mingw-20220906-ucrt-ubuntu-18.04-x86_64.tar.xz | tar -Jxf - --strip 1 -C /opt/llvm-mingw
 					"""#
 			},
 			bash.#Run & {
@@ -178,7 +178,7 @@ dagger.#Plan & {
 					###############
 					# Export Linux.
 					cd /v-sekai-game/godot
-					SCONS_CACHE=$VSK_CACHE PATH=/opt/llvm-mingw/bin:$PATH scons optimize=speed LINKFLAGS=-L/opt/rh/gcc-toolset-9/root/usr/lib/gcc/x86_64-redhat-linux/9/ werror=no platform=linuxbsd target=editor use_fastlto=no deprecated=no use_static_cpp=yes use_llvm=yes builtin_freetype=yes custom_modules=../godot_groups_modules					
+					SCONS_CACHE=$VSK_CACHE scons optimize=speed LINKFLAGS=-L/opt/rh/gcc-toolset-9/root/usr/lib/gcc/x86_64-redhat-linux/9/ werror=no platform=linuxbsd target=editor use_fastlto=no deprecated=no use_static_cpp=yes use_llvm=yes builtin_freetype=yes custom_modules=../godot_groups_modules					
 					cp bin/$VSK_GODOT_LINUX_BSD_X86_64 bin/linux_debug.x86_64.llvm
 					cp bin/$VSK_GODOT_LINUX_BSD_X86_64  bin/linux_editor.x86_64
 					cp bin/$VSK_GODOT_LINUX_BSD_X86_64  bin/linux_release.x86_64.llvm && cp bin/$VSK_GODOT_LINUX_BSD_X86_64  bin/linux_release.x86_64 && strip --strip-debug bin/linux_release.x86_64
