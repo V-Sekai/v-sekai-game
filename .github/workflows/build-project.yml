@@ -252,9 +252,9 @@ jobs:
       # Setup scons, print python version and scons version info, so if anything is broken it won't run the build.
       - name: Configuring Python packages
         run: |
-          python -c "import sys; print(sys.version)"
-          python -m pip install scons
-          python --version
+          python3 -c "import sys; print(sys.version)"
+          python3 -m pip install scons
+          python3 --version
           scons --version
           
       - name: Run build
@@ -332,9 +332,9 @@ jobs:
       # Setup scons, print python version and scons version info, so if anything is broken it won't run the build.
       - name: Configuring Python packages
         run: |
-          python -c "import sys; print(sys.version)"
-          python -m pip install scons
-          python --version
+          python3 -c "import sys; print(sys.version)"
+          python3 -m pip install scons
+          python3 --version
           scons --version
 
       - uses: MinoruSekine/setup-scoop@v1
