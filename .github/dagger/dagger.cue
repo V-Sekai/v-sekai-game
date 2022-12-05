@@ -86,18 +86,18 @@ fetch_godot: {
 			bash.#Run & {
 				script: contents: #"""
 					# Add compiling dependencies.
-					yum install clang gcc gcc-c++ automake autoconf libtool clang python3-pip bash llvm-devel llvm-devel  -y
+					yum install automake autoconf libtool python3-pip bash llvm-devel llvm-devel  -y
 					"""#
 			},
 			bash.#Run & {
 				script: contents: #"""
-					# Add godot engine dependencies 1.
+					# Add godot engine dependencies.
 					yum install libX11-devel libXcursor-devel libXrandr-devel libXinerama-devel libXi-devel mesa-libGL-devel alsa-lib-devel pulseaudio-libs-devel freetype-devel openssl-devel -y
 					"""#
 			},
 			bash.#Run & {
 				script: contents: #"""
-					# Add godot engine dependencies 2.
+					# Add godot engine dependencies.
 					yum install libudev-devel mesa-libGLU-devel libpng-devel libxml2-devel libuuid-devel openssl-devel xorg-x11-server-Xvfb pkgconfig mesa-dri-drivers ncurses-compat-libs -y
 					"""#
 			},
@@ -209,7 +209,7 @@ dagger.#Plan & {
 					###############
 					# Export Linux.
 					cd /v-sekai-game/godot
-					SCONS_CACHE=$VSK_CACHE scons optimize=speed LINKFLAGS=-L/opt/rh/gcc-toolset-9/root/usr/lib/gcc/x86_64-redhat-linux/9/ werror=no platform=linuxbsd target=editor use_fastlto=no deprecated=no use_static_cpp=yes use_llvm=yes builtin_freetype=yes custom_modules=../godot_groups_modules					
+					SCONS_CACHE=$VSK_CACHE PATH=/opt/llvm-mingw/bin:$PATH scons optimize=speed LINKFLAGS=-L/opt/rh/gcc-toolset-9/root/usr/lib/gcc/x86_64-redhat-linux/9/ werror=no platform=linuxbsd target=editor use_fastlto=no deprecated=no use_static_cpp=yes use_llvm=yes builtin_freetype=yes custom_modules=../godot_groups_modules					
 					cp bin/$VSK_GODOT_LINUX_BSD_X86_64 bin/linux_debug.x86_64.llvm
 					cp bin/$VSK_GODOT_LINUX_BSD_X86_64  bin/linux_editor.x86_64
 					cp bin/$VSK_GODOT_LINUX_BSD_X86_64  bin/linux_release.x86_64.llvm && cp bin/$VSK_GODOT_LINUX_BSD_X86_64  bin/linux_release.x86_64 && strip --strip-debug bin/linux_release.x86_64
