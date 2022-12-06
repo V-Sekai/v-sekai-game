@@ -28,6 +28,8 @@ on:
   pull_request:
     branches: ["main"]
   workflow_dispatch:
+  repository_dispatch:
+    types: [check_upstream]
 
 env:
   REPO_NAME: ${{ github.event.repository.name }}
@@ -41,6 +43,30 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  check_upstream_commits:
+    runs-on: ubuntu-latest
+    name: Check upstream latest commits
+
+    steps:
+    - name: Checkout main
+      uses: actions/checkout@v2
+
+    - name: Fetch upstream changes
+      id: sync
+      uses: ivanmilov/upstream_check_new_commits@v1
+      with:
+        upstream_repository: v-sekai/godot
+        upstream_branch: ${{env.GODOT_BRANCH}}
+        target_branch: ${{env.VSEKAI_BASE_BRANCH}}
+
+    - name: Fetch upstream changes
+      id: sync
+      uses: ivanmilov/upstream_check_new_commits@v1
+      with:
+        upstream_repository: v-sekai/godot-modules-groups
+        upstream_branch: ${{env.GODOT_MODULES_BRANCH}}
+        target_branch: ${{env.VSEKAI_BASE_BRANCH}}
+
   build-macos:
     runs-on: macos-12
     steps:
