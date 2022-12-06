@@ -52,7 +52,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Fetch upstream changes
-      id: sync
+      id: sync-godot
       uses: ivanmilov/upstream_check_new_commits@v1
       with:
         upstream_repository: v-sekai/godot
@@ -60,7 +60,7 @@ jobs:
         target_branch: ${{env.VSEKAI_BASE_BRANCH}}
 
     - name: Fetch upstream changes
-      id: sync
+      id: sync-godot-modules
       uses: ivanmilov/upstream_check_new_commits@v1
       with:
         upstream_repository: v-sekai/godot-modules-groups
