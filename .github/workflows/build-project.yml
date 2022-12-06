@@ -348,11 +348,11 @@ jobs:
         run: |
           cd godot
           export PATH="$PWD/../llvm-mingw/bin:$PATH"
-          export VSK_GODOT_WINDOWS_X86_64=godot.windows.editor.x86_64.exe
+          export VSK_GODOT_WINDOWS_X86_64=godot.windows.editor.x86_64.llvm.exe
           SCONS_CACHE=.cicd_cache scons optimize=speed werror=no platform=windows target=editor use_fastlto=no deprecated=no debug_symbols=no use_llvm=yes use_mingw=yes custom_modules=../modules
           cp bin/$VSK_GODOT_WINDOWS_X86_64 bin/windows_release_x86_64.exe 
           mingw-strip --strip-debug bin/windows_release_x86_64.exe
-          cp bin/godot.windows.editor.x86_64.pdb bin/windows_release_x86_64.pdb
+          cp bin/${VSK_GODOT_WINDOWS_X86_64%.exe}.pdb bin/windows_release_x86_64.pdb
           mkdir -p   project/build/
           mkdir -p   .local/share/godot/export_templates/
           cd   .local/share/godot/export_templates/
