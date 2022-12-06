@@ -45,7 +45,6 @@ concurrency:
 jobs:
   check_upstream_commits_godot:
     runs-on: ubuntu-latest
-    name: Check upstream latest commits
 
     steps:
     - name: Checkout main
@@ -61,7 +60,6 @@ jobs:
 
   check_upstream_commits_godot_modules:
     runs-on: ubuntu-latest
-    name: Check upstream latest commits
 
     steps:
     - name: Checkout main
