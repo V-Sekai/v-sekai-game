@@ -43,7 +43,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  check_upstream_commits:
+  check_upstream_commits_godot:
     runs-on: ubuntu-latest
     name: Check upstream latest commits
 
@@ -52,15 +52,23 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Fetch upstream changes
-      id: sync-godot
+      id: sync
       uses: ivanmilov/upstream_check_new_commits@v1
       with:
         upstream_repository: v-sekai/godot
         upstream_branch: ${{env.GODOT_BRANCH}}
         target_branch: ${{env.VSEKAI_BASE_BRANCH}}
 
+  check_upstream_commits_godot_modules:
+    runs-on: ubuntu-latest
+    name: Check upstream latest commits
+
+    steps:
+    - name: Checkout main
+      uses: actions/checkout@v2
+
     - name: Fetch upstream changes
-      id: sync-godot-modules
+      id: sync
       uses: ivanmilov/upstream_check_new_commits@v1
       with:
         upstream_repository: v-sekai/godot-modules-groups
