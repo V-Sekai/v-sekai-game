@@ -293,7 +293,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: editor_linux_release_x86_64
-          path: bin/godot.linuxbsd.editor.x86_64.llvm
+          path: godot/bin/godot.linuxbsd.editor.x86_64.llvm
           retention-days: 14
 
   build-windows:
@@ -381,12 +381,12 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: editor_windows_release_x86_64
-          path: windows_release_x86_64.exe
+          path: godot/bin/windows_release_x86_64.exe
           retention-days: 14
 
       - name: Upload Debug Symbols Artifact
         uses: actions/upload-artifact@v2
         with:
           name: editor_windows_release_x86_64_pdb
-          path: windows_release_x86_64.pdb
+          path: godot/bin/windows_release_x86_64.pdb
           retention-days: 14
