@@ -121,7 +121,7 @@ jobs:
       - name: Run build
         run: |
           cd godot
-          SCONS_CACHE=.cicd_cache scons optimize=speed werror=no platform=macos target=editor use_lto=no deprecated=no builtin_freetype=yes custom_modules=../modules
+          SCONS_CACHE=.cicd_cache scons module_mvsqlite_enabled=off optimize=speed werror=no platform=macos target=editor use_lto=no deprecated=no builtin_freetype=yes custom_modules=../modules
           cp -r misc/dist/macos_tools.app ./vsekai_macos_release_x86_64.app
           mkdir -p vsekai_macos_release_x86_64.app/Contents/MacOS
           cp bin/godot.macos.editor.x86_64  vsekai_macos_release_x86_64.app/Contents/MacOS/Godot
@@ -210,7 +210,7 @@ jobs:
       - name: Run build
         run: |
           cd godot
-          SCONS_CACHE=.cicd_cache scons optimize=speed arch=arm64 werror=no platform=ios target=editor use_lto=no deprecated=no builtin_freetype=yes custom_modules=../godot-modules-groups
+          SCONS_CACHE=.cicd_cache scons module_mvsqlite_enabled=off optimize=speed arch=arm64 werror=no platform=ios target=editor use_lto=no deprecated=no builtin_freetype=yes custom_modules=../godot-modules-groups
           cp -r misc/dist/ios_xcode vsekai_ios_xcode
           cp bin/libgodot.ios.editor.arm64.a vsekai_ios_xcode/libgodot.ios.release.xcframework/ios-arm64/libgodot.a
 
@@ -293,7 +293,7 @@ jobs:
         run: |
           cd godot
           export VSK_GODOT_LINUX_BSD_X86_64=godot.linuxbsd.editor.x86_64.llvm
-          SCONS_CACHE=.cicd_cache scons optimize=speed werror=no platform=linuxbsd target=editor use_llvm=yes use_fastlto=no deprecated=no use_static_cpp=yes builtin_freetype=yes custom_modules=../modules          
+          SCONS_CACHE=.cicd_cache scons module_mvsqlite_enabled=off optimize=speed werror=no platform=linuxbsd target=editor use_llvm=yes use_fastlto=no deprecated=no use_static_cpp=yes builtin_freetype=yes custom_modules=../modules          
           #cp bin/$VSK_GODOT_LINUX_BSD_X86_64 bin/linux_debug.x86_64
           #cp bin/$VSK_GODOT_LINUX_BSD_X86_64  bin/linux_editor.x86_64
           #cp bin/$VSK_GODOT_LINUX_BSD_X86_64  bin/linux_release.x86_64 && cp bin/$VSK_GODOT_LINUX_BSD_X86_64  bin/linux_release.x86_64 && strip --strip-debug bin/linux_release.x86_64
@@ -381,7 +381,7 @@ jobs:
           cd godot
           export PATH="$PWD/../llvm-mingw/bin:$PATH"
           export VSK_GODOT_WINDOWS_X86_64=godot.windows.editor.x86_64.llvm.exe
-          SCONS_CACHE=.cicd_cache scons optimize=speed werror=no platform=windows target=editor use_fastlto=no deprecated=no LINKFLAGS="-Wl,-pdb=" CCFLAGS="-Wall -Wno-tautological-compare -g -gcodeview" debug_symbols=no use_llvm=yes use_mingw=yes custom_modules=../modules
+          SCONS_CACHE=.cicd_cache scons module_mvsqlite_enabled=off optimize=speed werror=no platform=windows target=editor use_fastlto=no deprecated=no LINKFLAGS="-Wl,-pdb=" CCFLAGS="-Wall -Wno-tautological-compare -g -gcodeview" debug_symbols=no use_llvm=yes use_mingw=yes custom_modules=../modules
           cp bin/$VSK_GODOT_WINDOWS_X86_64 bin/windows_release_x86_64.exe 
           x86_64-w64-mingw32-strip --strip-debug bin/windows_release_x86_64.exe
           cp bin/${VSK_GODOT_WINDOWS_X86_64%.exe}.pdb bin/windows_release_x86_64.pdb
