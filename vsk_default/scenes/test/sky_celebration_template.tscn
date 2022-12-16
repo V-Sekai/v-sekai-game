@@ -50,7 +50,7 @@ entity_instance_list = []
 entity_instance_properties_list = []
 vskeditor_preview_type = 0
 vskeditor_preview_camera_path = NodePath("Camera")
-vskeditor_pipeline_paths = [NodePath("UroPipeline")]
+vskeditor_pipeline_paths = [NodePath(""), NodePath("UroPipeline")]
 
 [node name="DirectionalLight" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.542277, 0.110847, -0.832856, -0.739241, 0.408171, 0.535648, 0.399323, 0.906151, -0.139399, 0, 2, 0)
@@ -76,61 +76,61 @@ shape = SubResource("ConcavePolygonShape3D_s4ylr")
 navmesh = SubResource("NavigationMesh_lrty5")
 
 [node name="Beachball" parent="." instance=ExtResource("2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.46238, 0.539357, -0.0401002)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.46238, 0.485, -0.0401002)
 
 [node name="Beachball2" parent="." instance=ExtResource("2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.46238, 0.539357, 2.4163)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.46238, 0.485, 2.4163)
 
 [node name="Beachball3" parent="." instance=ExtResource("2")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.46238, 0.539357, 5.23109)
 
 [node name="Beachball4" parent="." instance=ExtResource("2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.46238, 2.70984, 5.23109)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.667, 0.484999, 5.23109)
 
 [node name="Basketball" parent="." instance=ExtResource("4")]
-transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 4.47624, 0.206347, 0)
+transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 4.47624, 0.158205, 0)
 
 [node name="Basketball2" parent="." instance=ExtResource("4")]
-transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 4.47624, 0.2931, 0.889367)
+transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 4.47624, 0.158205, 0.889367)
 
 [node name="Basketball3" parent="." instance=ExtResource("4")]
-transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 4.47624, 0.365204, 1.87365)
+transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 4.47624, 0.158205, 1.87365)
 
 [node name="Basketball4" parent="." instance=ExtResource("4")]
-transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 4.47624, 0.435034, 2.95683)
+transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 4.47624, 0.158205, 2.95683)
 
 [node name="Basketball5" parent="." instance=ExtResource("4")]
-transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 4.47624, 0.532151, 4.26031)
+transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 4.47624, 0.158205, 4.26031)
 
 [node name="Basketball6" parent="." instance=ExtResource("4")]
-transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 3.55238, 0.571684, 0)
+transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 3.55238, 0.158205, 0)
 
 [node name="Basketball7" parent="." instance=ExtResource("4")]
-transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 3.55238, 0.668518, 0.889367)
+transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 3.55238, 0.158205, 0.889367)
 
 [node name="Basketball8" parent="." instance=ExtResource("4")]
-transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 3.55238, 0.722889, 1.87365)
+transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 3.55238, 0.158205, 1.87365)
 
 [node name="Basketball9" parent="." instance=ExtResource("4")]
-transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 3.55238, 0.802638, 2.95683)
+transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 3.55238, 0.158205, 2.95683)
 
 [node name="Basketball10" parent="." instance=ExtResource("4")]
-transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 3.55238, 0.905647, 4.26031)
+transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 3.55238, 0.158205, 4.26031)
 
 [node name="Basketball11" parent="." instance=ExtResource("4")]
-transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 2.47422, 0.965321, 0)
+transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 2.47422, 0.158205, 0)
 
 [node name="Basketball12" parent="." instance=ExtResource("4")]
-transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 2.47422, 1.22506, 0.889367)
+transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 2.47422, 0.158205, 0.889367)
 
 [node name="Basketball13" parent="." instance=ExtResource("4")]
-transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 2.47422, 1.64281, 1.87365)
+transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 2.47422, 0.158205, 1.87365)
 
 [node name="Basketball14" parent="." instance=ExtResource("4")]
-transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 2.47422, 2.30858, 2.95683)
+transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 2.47422, 0.603807, 2.95683)
 
 [node name="Basketball15" parent="." instance=ExtResource("4")]
-transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 2.47422, 6.23294, 4.26031)
+transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 2.47422, 0.158204, 4.26031)
 
 [node name="Info" type="Node3D" parent="."]
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 1.4605, -4.76144)
@@ -142,8 +142,7 @@ offset_right = 809.0
 offset_bottom = 119.0
 
 [node name="RichTextLabel" type="RichTextLabel" parent="Info/HBoxContainer"]
-offset_right = 809.0
-offset_bottom = 119.0
+layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/focus = SubResource("1")
 theme_override_styles/normal = SubResource("2")
@@ -176,9 +175,9 @@ visible = false
 material_override = SubResource("StandardMaterial3D_4eapr")
 mesh = SubResource("5")
 
-[node name="UroPipeline" type="Node" parent="."]
-script = ExtResource("12")
-database_id = "908aea41-c724-4d8e-b866-82645df88965"
-
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = ExtResource("8_er26i")
+
+[node name="UroPipeline" type="Node" parent="."]
+script = ExtResource("12")
+database_id = "bb7d83a8-a92d-4ba4-8e3f-233468c3e9db"
