@@ -768,7 +768,7 @@ func _connect_pre_quitting_signals() -> void:
 ## When the screenshot manager requests a screenshot
 ##
 func _screenshot_requested(p_info: Dictionary, p_callback: Callable) -> void:
-	get_viewport().set_clear_mode(SubViewport.CLEAR_MODE_ONLY_NEXT_FRAME)
+	get_viewport().set_clear_mode(SubViewport.CLEAR_MODE_ONCE)
 	await get_tree().process_frame
 	await get_tree().process_frame
 	var image: Image = get_viewport().get_texture().get_data()
