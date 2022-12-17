@@ -734,4 +734,5 @@ config/process_priority=255
 [xr]
 
 openxr/enabled=true
+openxr/submit_depth_buffer=true
 shaders/enabled=true
