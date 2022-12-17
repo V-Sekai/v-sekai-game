@@ -1,4 +1,4 @@
-extends "res://addons/vsk_menu/setup_menu.gd" # setup_menu.gd
+extends "res://addons/vsk_menu/setup_menu.gd"  # setup_menu.gd
 
 @export var username_or_email_input_nodepath: NodePath = NodePath()
 @export var password_input_nodepath: NodePath = NodePath()
@@ -18,16 +18,19 @@ var password: String = ""
 
 const status_codes_const = preload("status_codes.gd")
 
+
 func set_status_by_code(p_status_code: int) -> void:
 	var string: String = TranslationServer.translate(status_codes_const.STATUS_STRING_MAP[p_status_code])
 	if status_label:
 		print(string)
 		status_label.set_text(string)
 
+
 func set_status_by_server_message(p_message: String) -> void:
 	if status_label:
 		print(p_message)
 		status_label.set_text(p_message)
+
 
 func check_if_login_input_valid(p_username_or_email: String, p_password: String) -> bool:
 	if p_username_or_email.length() == 0:
@@ -39,10 +42,8 @@ func check_if_login_input_valid(p_username_or_email: String, p_password: String)
 
 	return true
 
-func _session_request_complete(
-	p_code: GodotUro.godot_uro_helper_const.RequesterCode,
-	p_message: String) -> void:
 
+func _session_request_complete(p_code: GodotUro.godot_uro_helper_const.RequesterCode, p_message: String) -> void:
 	pending_login = false
 	update_login_button()
 	set_status_by_server_message(p_message)
@@ -59,11 +60,13 @@ func attempt_sign_in(p_username_or_email: String, p_password: String) -> void:
 
 		await VSKAccountManager.sign_in(p_username_or_email, p_password)
 
+
 func cancel_sign_in() -> void:
 	pending_login = false
 	update_login_button()
 	if VSKAccountManager.has_method("cancel"):
 		VSKAccountManager.cancel()
+
 
 func _ready() -> void:
 	if !Engine.is_editor_hint():
@@ -80,6 +83,7 @@ func _ready() -> void:
 
 func _gameflow_state_changed(_p_state) -> void:
 	pass
+
 
 func will_appear() -> void:
 	if VSKGameFlowManager.gameflow_state_changed.connect(self._gameflow_state_changed) != OK:

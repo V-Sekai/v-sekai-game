@@ -1,6 +1,5 @@
 extends HBoxContainer
 
-
 @export var sign_in_container_nodepath: NodePath = NodePath()
 @export var sign_out_container_nodepath: NodePath = NodePath()
 @export var reconnect_container_nodepath: NodePath = NodePath()
@@ -14,6 +13,7 @@ var response_code: int = GodotUro.godot_uro_helper_const.RequesterCode.OK
 signal sign_in_button_pressed(p_session_container)
 signal sign_out_button_pressed(p_session_container)
 
+
 func _on_sign_in_button_pressed() -> void:
 	sign_in_button_pressed.emit(self)
 
@@ -21,11 +21,14 @@ func _on_sign_in_button_pressed() -> void:
 func _on_sign_out_button_pressed() -> void:
 	sign_out_button_pressed.emit(self)
 
+
 func _on_reconnect_button_pressed():
 	await reconnect()
 
+
 func is_pending() -> bool:
 	return pending_action
+
 
 func set_connection_failure_message(p_string: String) -> void:
 	get_node(sign_in_container_nodepath).hide()
@@ -34,14 +37,14 @@ func set_connection_failure_message(p_string: String) -> void:
 	get_node(session_info_nodepath).show()
 	get_node(session_info_nodepath).text = TranslationServer.translate(p_string)
 
+
 func update_from_response(p_response: int) -> void:
-	if p_response == GodotUro.godot_uro_helper_const.RequesterCode.OK and \
-	VSKAccountManager.is_signed_in():
+	if p_response == GodotUro.godot_uro_helper_const.RequesterCode.OK and VSKAccountManager.is_signed_in():
 		get_node(sign_in_container_nodepath).hide()
 		get_node(sign_out_container_nodepath).show()
 		get_node(reconnect_container_nodepath).hide()
 		get_node(session_info_nodepath).show()
-		get_node(session_info_nodepath).text = str(TranslationServer.translate("TR_MENU_SESSION_SIGNED_IN_AS")).format({"display_name":display_name})
+		get_node(session_info_nodepath).text = str(TranslationServer.translate("TR_MENU_SESSION_SIGNED_IN_AS")).format({"display_name": display_name})
 	elif p_response == GodotUro.godot_uro_helper_const.RequesterCode.CANT_CONNECT:
 		set_connection_failure_message("TR_MENU_SESSION_CANT_CONNECT")
 	elif p_response == GodotUro.godot_uro_helper_const.RequesterCode.CANT_RESOLVE:
@@ -57,6 +60,7 @@ func update_from_response(p_response: int) -> void:
 		get_node(sign_out_container_nodepath).hide()
 		get_node(session_info_nodepath).hide()
 
+
 func set_pending(p_pending: bool) -> void:
 	pending_action = p_pending
 	if pending_action:
@@ -70,7 +74,7 @@ func set_pending(p_pending: bool) -> void:
 
 
 func _session_renew_started() -> void:
-	pass # Do nothing
+	pass  # Do nothing
 
 
 func _session_request_complete(p_code: int, p_message: String) -> void:
@@ -95,7 +99,7 @@ func _session_deletion_complete(_p_code: int, p_message: String) -> void:
 
 
 func reconnect() -> void:
-	if ! is_pending():
+	if !is_pending():
 		set_pending(true)
 		await VSKAccountManager.get_profile_info()
 
@@ -116,7 +120,7 @@ func sign_in(p_navigation_controller: NavigationController, p_login_screen):
 
 
 func sign_out():
-	if ! is_pending():
+	if !is_pending():
 		set_pending(true)
 		await VSKAccountManager.sign_out()
 
@@ -125,4 +129,3 @@ func _ready():
 	assert(VSKAccountManager.session_renew_started.connect(self._session_renew_started) == OK)
 	assert(VSKAccountManager.session_request_complete.connect(self._session_request_complete) == OK)
 	assert(VSKAccountManager.session_deletion_complete.connect(self._session_deletion_complete) == OK)
-

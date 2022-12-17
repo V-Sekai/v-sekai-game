@@ -35,13 +35,15 @@ var project_theme: Theme = null
 var menu_active: bool = false
 var menu_request_count: int = 0
 
-const RESOURCE_ID_TITLE_SCREEN=0
-const RESOURCE_ID_LOADING_SCREEN=1
-const RESOURCE_ID_INGAME_MENU_SCREEN=2
-const RESOURCE_ID_INGAME_GUI=3
+const RESOURCE_ID_TITLE_SCREEN = 0
+const RESOURCE_ID_LOADING_SCREEN = 1
+const RESOURCE_ID_INGAME_MENU_SCREEN = 2
+const RESOURCE_ID_INGAME_GUI = 3
+
 
 func new_origin_assigned(_origin: XROrigin3D) -> void:
 	setup_viewport()
+
 
 func clear() -> void:
 	get_menu_root().clear_view_controller_stack()
@@ -50,6 +52,7 @@ func clear() -> void:
 		for child in ingame_gui_root.get_children():
 			child.queue_free()
 			child.get_parent().remove_child(child)
+
 
 func _fade_color_changed(p_color: Color) -> void:
 	flat_fader.color = p_color
@@ -64,10 +67,7 @@ func menu_gui_input(p_event: InputEvent) -> void:
 	if menu_canvas_pivot_instance != null and menu_canvas_pivot_instance.is_inside_tree():
 		var plane: Node3D = menu_canvas_pivot_instance.get_canvas_plane()
 		if p_event is InputEventMouse:
-			p_event.position *= (
-				Vector2(plane.canvas_width, plane.canvas_height)
-				/ Vector2(get_viewport().size)
-			)
+			p_event.position *= (Vector2(plane.canvas_width, plane.canvas_height) / Vector2(get_viewport().size))
 			plane.viewport.push_input(p_event)
 
 
@@ -96,10 +96,7 @@ func menu_button_pressed() -> void:
 
 
 func update_vr_flat_menu_visibility():
-	if (
-		outgame_root_vr_instance.is_inside_tree()
-		and VRManager.vr_user_preferences.vr_hmd_mirroring == VRManager.vr_user_preferences.vr_hmd_mirroring_enum.HMD_MIRROR_FLAT_UI
-	):
+	if outgame_root_vr_instance.is_inside_tree() and VRManager.vr_user_preferences.vr_hmd_mirroring == VRManager.vr_user_preferences.vr_hmd_mirroring_enum.HMD_MIRROR_FLAT_UI:
 		FlatViewport.texture_rect_menu.show()
 	else:
 		FlatViewport.texture_rect_menu.hide()
@@ -112,6 +109,7 @@ func update_vr_flat_menu_visibility():
 func _can_teleport() -> bool:
 	return VSKGameFlowManager.gameflow_state == VSKGameFlowManager.GAMEFLOW_STATE_INGAME
 
+
 ##
 ##
 ##
@@ -120,6 +118,7 @@ func _update_menu_canvas() -> void:
 		menu_canvas_pivot_instance.show()
 	else:
 		menu_canvas_pivot_instance.hide()
+
 
 ##
 ##
@@ -130,6 +129,7 @@ func _console_active(p_is_active: bool) -> void:
 	else:
 		menu_request_decrement()
 
+
 ##
 ##
 ##
@@ -138,6 +138,7 @@ func menu_request_increment() -> void:
 	InputManager.increment_ingame_input_block()
 
 	_update_menu_canvas()
+
 
 ##
 ##
@@ -149,6 +150,7 @@ func menu_request_decrement() -> void:
 	InputManager.decrement_ingame_input_block()
 
 	_update_menu_canvas()
+
 
 ##
 ## Called to request the main menu to disappear.
@@ -255,9 +257,11 @@ func setup_ingame() -> void:
 	if menu_root:
 		menu_root.push_view_controller(ingame_menu_screen_packed_scene.instantiate(), false)
 
+
 func setup_outgame() -> void:
 	if outgame_root_vr_instance == null:
 		VSKGameFlowManager.gameroot.add_child(outgame_root_vr_const.instantiate(), true)
+
 
 func setup_preloading_screen() -> void:
 	if menu_root:
@@ -292,23 +296,17 @@ func assign_resource(p_resource: Resource, p_resource_id: int) -> void:
 
 func get_preload_tasks() -> Dictionary:
 	var preloading_tasks: Dictionary = {}
-	preloading_tasks["res://addons/vsk_menu/main_menu/title_screen.tscn"] = {
-		"target": self, "method": "assign_resource", "args": [RESOURCE_ID_TITLE_SCREEN]
-	}
-	preloading_tasks["res://addons/vsk_menu/main_menu/loading_screen.tscn"] = {
-		"target": self, "method": "assign_resource", "args": [RESOURCE_ID_LOADING_SCREEN]
-	}
-	preloading_tasks["res://addons/vsk_menu/main_menu/ingame_menu_screen.tscn"] = {
-		"target": self, "method": "assign_resource", "args": [RESOURCE_ID_INGAME_MENU_SCREEN]
-	}
-	preloading_tasks["res://addons/vsk_menu/ingame_menu/ingame_gui.tscn"] = {
-		"target": self, "method": "assign_resource", "args": [RESOURCE_ID_INGAME_GUI]
-	}
+	preloading_tasks["res://addons/vsk_menu/main_menu/title_screen.tscn"] = {"target": self, "method": "assign_resource", "args": [RESOURCE_ID_TITLE_SCREEN]}
+	preloading_tasks["res://addons/vsk_menu/main_menu/loading_screen.tscn"] = {"target": self, "method": "assign_resource", "args": [RESOURCE_ID_LOADING_SCREEN]}
+	preloading_tasks["res://addons/vsk_menu/main_menu/ingame_menu_screen.tscn"] = {"target": self, "method": "assign_resource", "args": [RESOURCE_ID_INGAME_MENU_SCREEN]}
+	preloading_tasks["res://addons/vsk_menu/ingame_menu/ingame_gui.tscn"] = {"target": self, "method": "assign_resource", "args": [RESOURCE_ID_INGAME_GUI]}
 
 	return preloading_tasks
 
+
 func _update_console() -> void:
 	pass
+
 
 func setup() -> void:
 	if not Engine.is_editor_hint():

@@ -4,14 +4,17 @@ extends Node
 const DEFAULT_GAME_MODE_PATH = ""
 
 var current_game_mode_path: String = ""
-var game_mode : Node = null
+var game_mode: Node = null
+
 
 func get_current_game_mode_path() -> String:
 	return current_game_mode_path
 
+
 ##
 ##
 ##
+
 
 func on_game_mode_initalised() -> void:
 	if game_mode:

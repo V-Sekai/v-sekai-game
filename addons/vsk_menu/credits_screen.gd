@@ -1,4 +1,4 @@
-extends "res://addons/vsk_menu/menu_view_controller.gd" # menu_view_controller.gd
+extends "res://addons/vsk_menu/menu_view_controller.gd"  # menu_view_controller.gd
 
 var audio_setup = load("res://addons/vsk_menu/main_menu/audio_setup.tscn")
 var network_setup = load("res://addons/vsk_menu/main_menu/network_setup.tscn")
@@ -6,8 +6,10 @@ var vr_setup = load("res://addons/vsk_menu/main_menu/vr_setup.tscn")
 
 @export var credits_label_nodepath: NodePath = NodePath()
 
+
 func _on_BackButton_pressed():
 	super.back_button_pressed()
+
 
 func _ready():
 	var credits_label: RichTextLabel = get_node_or_null(credits_label_nodepath)

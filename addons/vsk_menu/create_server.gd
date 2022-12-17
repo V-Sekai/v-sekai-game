@@ -1,15 +1,15 @@
-extends "res://addons/vsk_menu/menu_view_controller.gd" # menu_view_controller.gd
+extends "res://addons/vsk_menu/menu_view_controller.gd"  # menu_view_controller.gd
 
 var loading_screen = load("res://addons/vsk_menu/main_menu/loading_screen.tscn")
 
-@export var host_button_nodepath : NodePath = NodePath()
-@export var max_players_input_nodepath : NodePath = NodePath()
-@export var port_input_nodepath : NodePath = NodePath()
-@export var map_browse_line_edit_nodepath : NodePath = NodePath()
-@export var map_browse_button_nodepath : NodePath = NodePath()
-@export var server_name_nodepath : NodePath = NodePath()
-@export var dedicated_server_toggle_nodepath : NodePath = NodePath()
-@export var public_server_toggle_nodepath : NodePath = NodePath()
+@export var host_button_nodepath: NodePath = NodePath()
+@export var max_players_input_nodepath: NodePath = NodePath()
+@export var port_input_nodepath: NodePath = NodePath()
+@export var map_browse_line_edit_nodepath: NodePath = NodePath()
+@export var map_browse_button_nodepath: NodePath = NodePath()
+@export var server_name_nodepath: NodePath = NodePath()
+@export var dedicated_server_toggle_nodepath: NodePath = NodePath()
+@export var public_server_toggle_nodepath: NodePath = NodePath()
 
 var host_button = null
 var max_players_input = null
@@ -61,16 +61,18 @@ func _map_path_selected(p_path: String) -> void:
 func set_controls_disabled(p_disabled: bool) -> void:
 	host_button.set_disabled(p_disabled)
 
-	max_players_input.set_editable(! p_disabled)
-	port_input.set_editable(! p_disabled)
+	max_players_input.set_editable(!p_disabled)
+	port_input.set_editable(!p_disabled)
 
-	map_browse_line_edit.set_editable(! p_disabled)
+	map_browse_line_edit.set_editable(!p_disabled)
 	map_browse_button.set_disabled(p_disabled)
 
 	dedicated_server_toggle.set_disabled(p_disabled)
 	public_server_toggle.set_disabled(p_disabled)
 
+
 var host_server_callable = VSKGameFlowManager.host_server
+
 
 func _on_HostButton_pressed() -> void:
 	var next_map_path: String = ""
@@ -81,7 +83,9 @@ func _on_HostButton_pressed() -> void:
 	else:
 		next_map_path = map_browse_line_edit.text
 
-	host_server_callable.call_deferred(
+	(
+		host_server_callable
+		. call_deferred(
 			server_name_line_edit.text,
 			next_map_path,
 			next_game_mode_path,
@@ -89,7 +93,10 @@ func _on_HostButton_pressed() -> void:
 			int(max_players_input.value),
 			dedicated_server_toggle.button_pressed,
 			public_server_toggle.button_pressed,
-			VSKNetworkManager.DEFAULT_MAX_RETRIES)
+			VSKNetworkManager.DEFAULT_MAX_RETRIES
+		)
+	)
+
 
 func _on_BackButton_pressed():
 	super.back_button_pressed()
@@ -97,4 +104,3 @@ func _on_BackButton_pressed():
 
 func _on_map_browse_button_pressed() -> void:
 	$MapSelectorPopup.popup_centered_ratio()
-

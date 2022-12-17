@@ -13,6 +13,7 @@ func _notification(p_notification: int):
 		NOTIFICATION_PREDELETE:
 			print("Destroying FlatViewport plugin")
 
+
 func _get_plugin_name() -> String:
 	return "FlatViewport"
 

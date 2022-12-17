@@ -23,9 +23,8 @@ var states_map: Dictionary = {}
 
 var states_stack: Array = []
 var current_state: Object = null
-var _active: bool = false :
+var _active: bool = false:
 	set = set_active
-
 
 
 func initialize(p_start_state: NodePath) -> void:
@@ -64,7 +63,7 @@ func _change_state(p_state_name: String) -> void:
 
 
 func start() -> void:
-	if ! Engine.is_editor_hint():
+	if !Engine.is_editor_hint():
 		if start_state == NodePath():
 			start_state = get_child(0).get_path()
 		for child in get_children():

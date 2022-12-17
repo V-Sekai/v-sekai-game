@@ -1,18 +1,20 @@
 @tool
 class_name NavigationController extends "res://addons/navigation_controller/view_controller.gd"
 
-
 var blocking: bool = false
 var view_controller_stack: Array = []
 
 var current_view_node: Control = null
 
+
 static func is_navigation_controller() -> bool:
 	return true
+
 
 func _input(_event: InputEvent) -> void:
 	if blocking:
 		get_viewport().set_input_as_handled()
+
 
 func set_input_blocking(p_blocking: bool) -> void:
 	blocking = p_blocking
@@ -21,7 +23,8 @@ func set_input_blocking(p_blocking: bool) -> void:
 	else:
 		mouse_filter = Control.MOUSE_FILTER_PASS
 
-func get_top_view_controller() -> Node: # -> ViewController:
+
+func get_top_view_controller() -> Node:  # -> ViewController:
 	return view_controller_stack.front()
 
 
@@ -51,16 +54,16 @@ func pop_view_controller(p_animated: bool) -> void:
 
 	clear_view_node(current_view_node, true)
 
-	if ! view_controller_stack.is_empty():
+	if !view_controller_stack.is_empty():
 		view_controller_stack.pop_front()
-		if ! view_controller_stack.is_empty():
+		if !view_controller_stack.is_empty():
 			current_view_node.add_child(get_top_view_controller(), true)
 	else:
 		printerr("Tried to pop root view controller")
 
 
 func clear_view_controller_stack() -> void:
-	while ! view_controller_stack.is_empty():
+	while !view_controller_stack.is_empty():
 		pop_view_controller(false)
 
 
@@ -74,6 +77,7 @@ func _notification(what: int) -> void:
 			for view_controller in view_controller_stack:
 				if is_instance_valid(view_controller):
 					view_controller.queue_free()
+
 
 func _init():
 	current_view_node = Control.new()

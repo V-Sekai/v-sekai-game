@@ -6,18 +6,16 @@ var spatial_secondary_viewport: SubViewport = null
 
 signal viewport_updated(p_viewport)
 
+
 func update_viewports() -> void:
 	if spatial_game_viewport:
-		_update_viewport(\
-		spatial_game_viewport,\
-		VRManager.is_xr_active())
+		_update_viewport(spatial_game_viewport, VRManager.is_xr_active())
 
 	if spatial_secondary_viewport:
-		_update_viewport(\
-		spatial_secondary_viewport,\
-		false)
+		_update_viewport(spatial_secondary_viewport, false)
 
-func _update_viewport(p_viewport:SubViewport, p_use_vr:bool) -> void:
+
+func _update_viewport(p_viewport: SubViewport, p_use_vr: bool) -> void:
 	p_viewport.use_xr = p_use_vr
 
 	if p_use_vr:
@@ -31,6 +29,7 @@ func _update_viewport(p_viewport:SubViewport, p_use_vr:bool) -> void:
 
 	viewport_updated.emit(p_viewport)
 
+
 func create_spatial_secondary_viewport() -> SubViewport:
 	if spatial_secondary_viewport:
 		printerr("SpatialGameCameraViewport has already been created")
@@ -43,6 +42,7 @@ func create_spatial_secondary_viewport() -> SubViewport:
 
 	return spatial_secondary_viewport
 
+
 func create_spatial_game_viewport() -> SubViewport:
 	if spatial_game_viewport:
 		printerr("SpatialGameViewport has already been created!")
@@ -53,6 +53,7 @@ func create_spatial_game_viewport() -> SubViewport:
 	spatial_game_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 
 	return spatial_game_viewport
+
 
 func _ready() -> void:
 	if !Engine.is_editor_hint():

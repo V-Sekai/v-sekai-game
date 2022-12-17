@@ -1,4 +1,4 @@
-extends "res://addons/vsk_menu/setup_menu.gd" # setup_menu.gd
+extends "res://addons/vsk_menu/setup_menu.gd"  # setup_menu.gd
 
 var loading_screen = load("res://addons/vsk_menu/main_menu/loading_screen.tscn")
 var shard_button_tscn = load("res://addons/vsk_menu/main_menu/shard_button.tscn")
@@ -27,7 +27,7 @@ func _gameflow_state_changed(p_gameflow_state: int):
 
 
 func shard_button_pressed(p_button) -> void:
-	print("Joining shard button: " + str(p_button.address) +":" + str(p_button.port))
+	print("Joining shard button: " + str(p_button.address) + ":" + str(p_button.port))
 	VSKGameFlowManager.join_server(p_button.address, p_button.port)
 
 

@@ -1,4 +1,4 @@
-extends "res://addons/vsk_menu/setup_menu.gd" # setup_menu.gd
+extends "res://addons/vsk_menu/setup_menu.gd"  # setup_menu.gd
 
 const password_input_const = preload("res://addons/vsk_menu/password_input.gd")
 
@@ -14,8 +14,8 @@ const password_input_const = preload("res://addons/vsk_menu/password_input.gd")
 
 var username_input: LineEdit = null
 var email_input: LineEdit = null
-var password_input: HBoxContainer = null # password_input_const
-var password_confirmation_input: HBoxContainer = null # password_input_const
+var password_input: HBoxContainer = null  # password_input_const
+var password_confirmation_input: HBoxContainer = null  # password_input_const
 var email_notifications_input: CheckBox = null
 
 var register_cancel_button: Button = null
@@ -46,16 +46,19 @@ func will_disappear() -> void:
 	if VSKGameFlowManager.gameflow_state_changed.is_connected(self._gameflow_state_changed):
 		VSKGameFlowManager.gameflow_state_changed.disconnect(self._gameflow_state_changed)
 
+
 func set_status_by_code(p_status_code: int) -> void:
 	var string: String = TranslationServer.translate(status_codes_const.STATUS_STRING_MAP[p_status_code])
 	if status_label:
 		print(string)
 		status_label.set_text(string)
 
+
 func set_status_by_server_message(p_message: String) -> void:
 	if status_label:
 		print(p_message)
 		status_label.set_text(p_message)
+
 
 func check_if_registration_input_valid(p_username: String, p_email, p_password: String, p_password_confirmation: String) -> bool:
 	if p_username.length() == 0:
@@ -73,11 +76,13 @@ func check_if_registration_input_valid(p_username: String, p_email, p_password: 
 
 	return true
 
+
 func registration_submission_complete(p_result, p_message) -> void:
 	pending_registration = false
 	update_registration_button()
 
 	set_status_by_server_message(p_message)
+
 
 func attempt_registration(p_username: String, p_email, p_password: String, p_password_confirmation: String, p_email_notifications) -> void:
 	if check_if_registration_input_valid(p_username, p_email, p_password, p_password_confirmation):
@@ -87,17 +92,16 @@ func attempt_registration(p_username: String, p_email, p_password: String, p_pas
 
 		await VSKAccountManager.register(p_username, p_email, p_password, p_password_confirmation, p_email_notifications)
 
+
 func cancel_registration() -> void:
 	pending_registration = false
 	update_registration_button()
 
 	VSKAccountManager.cancel()
 
+
 func update_registration_button() -> void:
-	if username.length() > 0\
-		and email.length() > 0\
-		and password.length() > 0\
-		and password_confirmation.length() > 0:
+	if username.length() > 0 and email.length() > 0 and password.length() > 0 and password_confirmation.length() > 0:
 		register_cancel_button.disabled = false
 	else:
 		register_cancel_button.disabled = true
@@ -129,7 +133,7 @@ func _on_PasswordConfirmationInput_text_changed(p_text):
 
 
 func _on_RegisterCancelButton_pressed():
-	if ! pending_registration:
+	if !pending_registration:
 		await attempt_registration(username, email, password, password_confirmation, email_notifications)
 	else:
 		cancel_registration()
@@ -141,6 +145,7 @@ func _on_BackButton_pressed() -> void:
 
 func save_changes() -> void:
 	super.save_changes()
+
 
 func _ready() -> void:
 	VSKAccountManager.registration_request_complete.connect(self.registration_submission_complete)

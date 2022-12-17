@@ -1,4 +1,4 @@
-extends "res://addons/vsk_manager/services/service.gd" # service.gd
+extends "res://addons/vsk_manager/services/service.gd"  # service.gd
 
 var shard_id: String = ""
 

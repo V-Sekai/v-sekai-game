@@ -1,10 +1,9 @@
 @tool
 class_name ViewController extends Control
 
-
 const script_util_const = preload("res://addons/gd_util/script_util.gd")
 
-var navigation_controller = null :
+var navigation_controller = null:
 	set = set_navigation_controller,
 	get = get_navigation_controller
 
@@ -37,9 +36,7 @@ func update_navigation_controller() -> void:
 	var control: Control = self
 	while control:
 		if control != self:
-			if script_util_const.does_script_inherit(
-				control.get_script(), script_util_const.get_root_script(get_script())
-			):
+			if script_util_const.does_script_inherit(control.get_script(), script_util_const.get_root_script(get_script())):
 				if control.has_method("is_navigation_controller"):
 					if control.is_navigation_controller():
 						set_navigation_controller(control)

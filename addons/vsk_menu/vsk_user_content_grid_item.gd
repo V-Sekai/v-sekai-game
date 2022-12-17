@@ -11,8 +11,10 @@ var vsk_name: String = ""
 var vsk_url: String = ""
 var is_ready: bool = false
 
+
 func set_id(p_id: String) -> void:
 	id = p_id
+
 
 func set_content_name(p_name: String) -> void:
 	vsk_name = p_name
@@ -23,11 +25,13 @@ func set_content_name(p_name: String) -> void:
 		else:
 			label.set_text(vsk_name)
 
+
 func set_url(p_url: String) -> void:
 	vsk_url = p_url
 	var texture_rect: TextureRect = get_node_or_null(texture_rect_url_path)
 	if texture_rect and self.is_ready:
 		texture_rect.textureUrl = p_url
+
 
 func _ready():
 	is_ready = true

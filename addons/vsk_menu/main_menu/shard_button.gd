@@ -10,4 +10,4 @@ var max_users: int
 
 func _ready():
 	$HBoxContainer/NameLabel.set_text("%s - %s" % [server_name, map.get_file()])
-	$HBoxContainer/PlayerCountLabel.set_text(str(current_users) + '/' + str(max_users))
+	$HBoxContainer/PlayerCountLabel.set_text(str(current_users) + "/" + str(max_users))

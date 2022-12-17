@@ -1,4 +1,4 @@
-extends "res://addons/vsk_menu/menu_view_controller.gd" # menu_view_controller.gd
+extends "res://addons/vsk_menu/menu_view_controller.gd"  # menu_view_controller.gd
 
 var shard_browser = load("res://addons/vsk_menu/main_menu/shard_browser.tscn")
 var create_server = load("res://addons/vsk_menu/main_menu/create_server.tscn")
@@ -7,6 +7,7 @@ var options_screen = load("res://addons/vsk_menu/main_menu/options_screen.tscn")
 var credits_screen = load("res://addons/vsk_menu/main_menu/credits_screen.tscn")
 var login_screen = load("res://addons/vsk_menu/main_menu/login_screen.tscn")
 const vsk_version_const = preload("res://addons/vsk_version/vsk_version.gd")
+
 
 func _callback_state(p_state: int, p_callback_dictionary: Dictionary) -> void:
 	if p_state != VSKGameFlowManager.CALLBACK_STATE_NONE:
@@ -51,6 +52,7 @@ func _callback_state(p_state: int, p_callback_dictionary: Dictionary) -> void:
 
 	VSKGameFlowManager.set_callback_state(VSKGameFlowManager.CALLBACK_STATE_NONE, {})
 
+
 func get_encompasing_theme(p_node: Node) -> Theme:
 	if p_node == null:
 		push_warning("Somehow every Control and Window has null Theme.")
@@ -86,6 +88,7 @@ func _ready() -> void:
 	if exit_dialog.confirmed.connect(self.quit) != OK:
 		printerr("Could not connected exit_dialog confirmed!")
 
+
 func _on_HostButton_pressed() -> void:
 	if has_navigation_controller():
 		get_navigation_controller().push_view_controller(create_server.instantiate(), true)
@@ -112,12 +115,13 @@ func _on_CreditsButton_pressed():
 
 
 func _on_ExitButton_pressed() -> void:
-	$ExitDialog.popup_centered_ratio() # Was without ratio but now broken
+	$ExitDialog.popup_centered_ratio()  # Was without ratio but now broken
 
 
 func _on_sign_in_button_pressed(p_session_controller):
 	if has_navigation_controller():
 		p_session_controller.sign_in(get_navigation_controller(), login_screen)
+
 
 func _on_sign_out_button_pressed(p_session_controller):
 	if has_navigation_controller():

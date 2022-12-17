@@ -25,6 +25,7 @@ var is_fading = false
 ##  Emitted when a fade is complete
 signal fade_complete(p_fade_skipped)
 
+
 ##
 ## Callback function which emitted when a crossfade is completed.
 ## Emits the fade_complete signal and disables the input blocker on
@@ -37,6 +38,7 @@ func _fade_complete(p_fade_skipped: bool) -> void:
 	fade_complete.emit(p_fade_skipped)
 
 	VSKMenuManager.get_menu_root().set_input_blocking(false)
+
 
 ##
 ## Called to execute a crossfade usually used to denotate transitions between
@@ -62,8 +64,9 @@ func execute_fade(p_fade_in: bool) -> Node:
 # Node #
 ########
 
+
 func setup() -> void:
-	if ! Engine.is_editor_hint():
+	if !Engine.is_editor_hint():
 		var game_viewport: SubViewport = VSKGameFlowManager.game_viewport
 		# Setup the VR fader
 		var vr_fader: ColorRect = VRManager.vr_fader
@@ -79,4 +82,3 @@ func setup() -> void:
 
 		if FadeManager.fade_complete.connect(self._fade_complete) != OK:
 			printerr("Could not connect fade_complete")
-

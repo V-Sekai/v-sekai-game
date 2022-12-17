@@ -7,6 +7,7 @@ var editor_interface = null
 func _init():
 	print("Initialising SpatialGameViewportManager plugin")
 
+
 func _notification(p_notification: int):
 	match p_notification:
 		NOTIFICATION_PREDELETE:

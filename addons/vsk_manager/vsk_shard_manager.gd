@@ -10,23 +10,10 @@ signal shard_update_player_count_callback(p_result)
 var active_shards: Dictionary = {}
 
 
-func create_shard(
-	p_callback: RefCounted,
-	p_port: int,
-	p_map: String,
-	p_server_name: String,
-	p_player_count: int,
-	p_max_players: int
-) -> void:
-	var async_result = await GodotUro.godot_uro_api.create_shard_async(
-			{
-				"port": p_port,
-				"map": p_map,
-				"name": p_server_name,
-				"max_users": p_max_players,
-				"current_users": p_player_count
-			}
-		)
+func create_shard(p_callback: RefCounted, p_port: int, p_map: String, p_server_name: String, p_player_count: int, p_max_players: int) -> void:
+	var async_result = await (
+		GodotUro . godot_uro_api . create_shard_async({"port": p_port, "map": p_map, "name": p_server_name, "max_users": p_max_players, "current_users": p_player_count})
+	)
 
 	if async_result["output"] is Dictionary:
 		var data = async_result["output"].get("data")
@@ -58,7 +45,7 @@ func delete_shard(p_callback: RefCounted, p_id: String):
 func show_shards(p_callback: RefCounted) -> void:
 	var async_result = await GodotUro.godot_uro_api.get_shards_async()
 
-	if ! async_result["output"]["data"].is_empty():
+	if !async_result["output"]["data"].is_empty():
 		shard_list_callback.emit({"result": OK, "data": async_result["output"]["data"], "callback": p_callback})
 		return
 
@@ -92,6 +79,7 @@ func shard_update_player_count(p_id: String, p_player_count: int) -> void:
 	else:
 		active_shards[async_result] = {}
 		shard_update_player_count_callback.emit({"result": FAILED, "data": null, "callback": null})
+
 
 func setup() -> void:
 	pass

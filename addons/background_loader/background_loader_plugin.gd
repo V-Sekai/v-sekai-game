@@ -35,12 +35,11 @@ var editor_interface: EditorInterface = null
 func _init():
 	print("Initialising BackgroundLoader plugin")
 
+
 func _enter_tree():
 	editor_interface = get_editor_interface()
 
-	add_autoload_singleton(
-		"BackgroundLoader", "res://addons/background_loader/background_loader.gd"
-	)
+	add_autoload_singleton("BackgroundLoader", "res://addons/background_loader/background_loader.gd")
 
 
 func _notification(p_notification: int):

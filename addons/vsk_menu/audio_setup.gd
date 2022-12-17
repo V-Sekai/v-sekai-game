@@ -1,4 +1,4 @@
-extends "res://addons/vsk_menu/setup_menu.gd" # setup_menu.gd
+extends "res://addons/vsk_menu/setup_menu.gd"  # setup_menu.gd
 
 @export var flat_audio_output_nodepath: NodePath = NodePath()
 var flat_audio_output_button: MenuButton = null
@@ -45,23 +45,22 @@ func _ready() -> void:
 
 	flat_audio_output_button = get_node(flat_audio_output_nodepath)
 	setup_menu_button(flat_audio_output_button, flat_output_device_index, audio_output_devices)
-	if (flat_audio_output_button.get_popup().connect(
-			"id_pressed", self._flat_audio_output_changed)!= OK):
+	if flat_audio_output_button.get_popup().connect("id_pressed", self._flat_audio_output_changed) != OK:
 		printerr("Could not connect 'id_pressed'!")
 
 	flat_audio_input_button = get_node(flat_audio_input_nodepath)
 	setup_menu_button(flat_audio_input_button, flat_input_device_index, audio_input_devices)
-	if (flat_audio_input_button.get_popup().id_pressed.connect(self._flat_audio_input_changed) != OK):
+	if flat_audio_input_button.get_popup().id_pressed.connect(self._flat_audio_input_changed) != OK:
 		printerr("Could not connect 'id_pressed'!")
 
 	xr_audio_output_button = get_node(xr_audio_output_nodepath)
 	setup_menu_button(xr_audio_output_button, xr_output_device_index, audio_output_devices)
-	if (xr_audio_output_button.get_popup().id_pressed.connect(self._xr_audio_output_changed) != OK):
+	if xr_audio_output_button.get_popup().id_pressed.connect(self._xr_audio_output_changed) != OK:
 		printerr("Could not connect 'id_pressed'!")
 
 	xr_audio_input_button = get_node(xr_audio_input_nodepath)
 	setup_menu_button(xr_audio_input_button, xr_input_device_index, audio_input_devices)
-	if (xr_audio_input_button.get_popup().id_pressed.connect(self._xr_audio_input_changed) != OK):
+	if xr_audio_input_button.get_popup().id_pressed.connect(self._xr_audio_input_changed) != OK:
 		printerr("Could not connect 'id_pressed'!")
 
 	var voice_output_volume: float = VSKAudioManager.get_voice_output_volume()

@@ -9,9 +9,11 @@ func get_skipped_audio_packets() -> int:
 	else:
 		return -1
 
+
 func clear_skipped_audio_packets() -> void:
 	if godot_speech:
 		godot_speech.clear_skipped_audio_packets()
+
 
 func start_recording() -> bool:
 	if godot_speech:
@@ -21,7 +23,7 @@ func start_recording() -> bool:
 
 
 func end_recording() -> bool:
-	var result : bool = false
+	var result: bool = false
 	if godot_speech:
 		# FIXME: fire 2022-07-05 Remove hack to convert null to false
 		result = godot_speech.end_recording() if true else false
@@ -29,15 +31,8 @@ func end_recording() -> bool:
 	return result
 
 
-func decompress_buffer(
-	p_decoder: RefCounted,
-	p_byte_array: PackedByteArray,
-	p_buffer_size: int,
-	p_uncompressed_audio: PackedVector2Array
-):
-	return godot_speech.decompress_buffer(
-		p_decoder, p_byte_array, p_buffer_size, p_uncompressed_audio
-	)
+func decompress_buffer(p_decoder: RefCounted, p_byte_array: PackedByteArray, p_buffer_size: int, p_uncompressed_audio: PackedVector2Array):
+	return godot_speech.decompress_buffer(p_decoder, p_byte_array, p_buffer_size, p_uncompressed_audio)
 
 
 func copy_and_clear_buffers() -> Array:
@@ -74,7 +69,7 @@ func get_speech_decoder() -> RefCounted:
 
 
 func _ready() -> void:
-	if ! Engine.is_editor_hint():
+	if !Engine.is_editor_hint():
 		godot_speech.set_name("GodotSpeech")
 		add_child(godot_speech, true)
 		assert(NetworkManager.peer_unregistered.connect(godot_speech.remove_player_audio) == OK)

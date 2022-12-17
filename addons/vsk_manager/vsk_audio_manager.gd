@@ -14,6 +14,7 @@ var voice_id: int = 0
 var voice_timeslice: int = 0
 var voice_recording_started: bool = false
 
+
 # TESTING
 func get_required_packet_count(p_playback: AudioStreamPlayback, p_frame_size: int) -> int:
 	var to_fill: int = p_playback.get_frames_available()
@@ -25,14 +26,13 @@ func get_required_packet_count(p_playback: AudioStreamPlayback, p_frame_size: in
 
 	return required_packets
 
+
 func test_voice_locally() -> void:
 	## Testing
-	if ! speech_decoder:
+	if !speech_decoder:
 		speech_decoder = godot_speech.get_speech_decoder()
 	var playback: AudioStreamPlayback = local_mic_test.get_stream_playback()
-	var required_packets: int = get_required_packet_count(
-		playback, PACKET_FRAME_COUNT
-	)
+	var required_packets: int = get_required_packet_count(playback, PACKET_FRAME_COUNT)
 
 	var current_voice_id: int = get_current_voice_id()
 	var copied_voice_buffer: Array = get_voice_buffers()
@@ -44,24 +44,21 @@ func test_voice_locally() -> void:
 			print("voice_timeslice: %s" % str(voice_timeslice + i))
 
 			var voice_buffer = copied_voice_buffer.front()
-			uncompressed_audio = godot_speech.decompress_buffer(\
-			speech_decoder,\
-			voice_buffer["byte_array"],\
-			voice_buffer["buffer_size"],\
-			uncompressed_audio)
+			uncompressed_audio = godot_speech.decompress_buffer(speech_decoder, voice_buffer["byte_array"], voice_buffer["buffer_size"], uncompressed_audio)
 
 			playback.push_buffer(uncompressed_audio)
 			copied_voice_buffer.pop_front()
 			current_voice_id += 1
 		#else:
-			#print("EMPTY")
-			#for j in range(0, 16):
-			#	playback.push_buffer(empty_buffer)
+		#print("EMPTY")
+		#for j in range(0, 16):
+		#	playback.push_buffer(empty_buffer)
 
 	print("skips: " + str(playback.get_skips()))
 
+
 const PACKET_FRAME_COUNT = 480
-var empty_buffer : PackedVector2Array = PackedVector2Array()
+var empty_buffer: PackedVector2Array = PackedVector2Array()
 var uncompressed_audio: PackedVector2Array = PackedVector2Array()
 var local_mic_test: AudioStreamPlayer = null
 var speech_decoder: RefCounted = null
@@ -83,10 +80,10 @@ var godot_speech: Node = null
 var audio_start_tick: int = 0
 
 # Buses
-var voice_output_bus_index: int = - 1
-var music_output_bus_index: int = - 1
-var game_sfx_output_bus_index: int = - 1
-var menu_output_bus_index: int = - 1
+var voice_output_bus_index: int = -1
+var music_output_bus_index: int = -1
+var game_sfx_output_bus_index: int = -1
+var menu_output_bus_index: int = -1
 var mic_input_bus_index: int = -1
 
 # Volumes
@@ -98,67 +95,74 @@ var mic_input_volume: float = 1.0
 
 var ignore_network_voice_packets: bool = false
 
-var signal_table : Array = [
-	{"singleton":"VSKGameFlowManager", "signal":"ingame_started", "method":"_ingame_started"},
-	{"singleton":"VSKGameFlowManager", "signal":"ingame_ended", "method":"_ingame_ended"},
-	{"singleton":"VSKGameFlowManager", "signal": "is_quitting", "method": "set_settings_values"}
+var signal_table: Array = [
+	{"singleton": "VSKGameFlowManager", "signal": "ingame_started", "method": "_ingame_started"},
+	{"singleton": "VSKGameFlowManager", "signal": "ingame_ended", "method": "_ingame_ended"},
+	{"singleton": "VSKGameFlowManager", "signal": "is_quitting", "method": "set_settings_values"}
 ]
 
 const MAX_VOICE_BUFFERS = 16
-var voice_buffers : Array = []
+var voice_buffers: Array = []
 
-var dynamic_stream_players : Array = []
-var dynamic_3d_stream_players : Array = []
+var dynamic_stream_players: Array = []
+var dynamic_3d_stream_players: Array = []
 
-var flat_output_device : String = "Default"
-var flat_input_device : String = "Default"
-var xr_output_device : String = "Default"
-var xr_input_device : String = "Default"
+var flat_output_device: String = "Default"
+var flat_input_device: String = "Default"
+var xr_output_device: String = "Default"
+var xr_input_device: String = "Default"
 
 # Path to a file which can be played automatically by GodotSpeech instead
 # of mic input
-var test_audio : String = ""
+var test_audio: String = ""
 
-var gate_threshold : float = 0.003
+var gate_threshold: float = 0.003
 # How long the loudness has to beneath
 # the threshold before it gates itself.
-var gate_timeout : float = 0.5
+var gate_timeout: float = 0.5
 
 # The state of mic input
-var gate_timer : float = 0.0 # How long have we been below the gate threshold
-var loudness : float = 0.0 # How loud are we this frame
-var muted : bool = true :
+var gate_timer: float = 0.0  # How long have we been below the gate threshold
+var loudness: float = 0.0  # How loud are we this frame
+var muted: bool = true:
 	set = set_muted,
 	get = is_muted
- # Are we muted?
-var gated : bool = true :
+# Are we muted?
+var gated: bool = true:
 	set = set_gated,
 	get = is_gated
- # Are we voice gated?
+# Are we voice gated?
 
-signal audio_gate_or_muted_state_changed()
+signal audio_gate_or_muted_state_changed
+
 
 static func get_audio_output_devices() -> PackedStringArray:
 	return AudioServer.get_device_list()
 
+
 static func get_audio_input_devices() -> PackedStringArray:
 	return AudioServer.capture_get_device_list()
+
 
 func set_muted(p_muted) -> void:
 	if muted != p_muted:
 		muted = p_muted
 		audio_gate_or_muted_state_changed.emit()
 
+
 func is_muted() -> bool:
 	return muted
+
 
 func set_gated(p_gated) -> void:
 	if gated != p_gated:
 		gated = p_gated
 		audio_gate_or_muted_state_changed.emit()
 
+
 func is_gated() -> bool:
 	return gated
+
 
 func should_send_audio() -> bool:
 	if !is_muted() and !is_gated():
@@ -166,9 +170,11 @@ func should_send_audio() -> bool:
 	else:
 		return false
 
-func voice_packet_compressed(p_peer_id : int, p_sequence_id : int, p_buffer : PackedByteArray) -> void:
+
+func voice_packet_compressed(p_peer_id: int, p_sequence_id: int, p_buffer: PackedByteArray) -> void:
 	if godot_speech and !ignore_network_voice_packets:
 		godot_speech.on_received_audio_packet(p_peer_id, p_sequence_id, p_buffer)
+
 
 func update_audio_devices() -> void:
 	if !Engine.is_editor_hint():
@@ -179,21 +185,27 @@ func update_audio_devices() -> void:
 			AudioServer.set_device(flat_output_device)
 			AudioServer.capture_set_device(flat_input_device)
 
+
 func get_voice_timeslice() -> int:
 	return voice_timeslice
+
 
 func reset_voice_timeslice() -> void:
 	audio_start_tick = Time.get_ticks_msec()
 	voice_timeslice = 0
 
+
 func get_current_voice_id() -> int:
 	return voice_id
+
 
 func reset_voice_id() -> void:
 	voice_id = 0
 
+
 func get_ticks_since_recording_started() -> int:
-	return (Time.get_ticks_msec() - audio_start_tick)
+	return Time.get_ticks_msec() - audio_start_tick
+
 
 func _ingame_started():
 	if godot_speech and !VSKNetworkManager.is_dedicated_server():
@@ -204,21 +216,23 @@ func _ingame_started():
 		reset_voice_id()
 		reset_voice_timeslice()
 
+
 func _ingame_ended():
 	if godot_speech:
 		godot_speech.end_recording()
 		voice_recording_started = false
 
+
 ##
 ## Global Audio
 ##
 
-func _audio_stream_player_finished(p_audio_stream_player : AudioStreamPlayer) -> void:
+
+func _audio_stream_player_finished(p_audio_stream_player: AudioStreamPlayer) -> void:
 	stop_audio_stream(p_audio_stream_player)
 
-func play_oneshot_audio_stream(p_stream : AudioStream,\
-	p_bus_name: String,
-	p_volume_db: float = linear_to_db(1.0)) -> void:
+
+func play_oneshot_audio_stream(p_stream: AudioStream, p_bus_name: String, p_volume_db: float = linear_to_db(1.0)) -> void:
 	var audio_stream_player: AudioStreamPlayer = AudioStreamPlayer.new()
 	audio_stream_player.name = "OneshotAudioStream"
 	audio_stream_player.stream = p_stream
@@ -230,8 +244,9 @@ func play_oneshot_audio_stream(p_stream : AudioStream,\
 
 	add_child(audio_stream_player, true)
 
-func stop_audio_stream(p_stream_player : AudioStreamPlayer) -> void:
-	var index : int = dynamic_stream_players.find(p_stream_player)
+
+func stop_audio_stream(p_stream_player: AudioStreamPlayer) -> void:
+	var index: int = dynamic_stream_players.find(p_stream_player)
 	if index != -1:
 		dynamic_stream_players.remove_at(index)
 
@@ -239,22 +254,24 @@ func stop_audio_stream(p_stream_player : AudioStreamPlayer) -> void:
 	p_stream_player.queue_free()
 	p_stream_player.get_parent().remove_child(p_stream_player)
 
+
 func clear_dynamic_audio_stream_players():
 	for stream_player in dynamic_stream_players:
 		stop_audio_stream(stream_player)
 
 	dynamic_stream_players = []
 
+
 ##
 ## 3D Audio
 ##
 
-func _audio_stream_3d_player_finished(p_audio_stream_player_3d : AudioStreamPlayer3D) -> void:
+
+func _audio_stream_3d_player_finished(p_audio_stream_player_3d: AudioStreamPlayer3D) -> void:
 	stop_audio_stream_3d(p_audio_stream_player_3d)
 
-func play_oneshot_audio_stream_3d(p_stream : AudioStream,\
-	p_bus_name: String,\
-	p_transform : Transform3D) -> void:
+
+func play_oneshot_audio_stream_3d(p_stream: AudioStream, p_bus_name: String, p_transform: Transform3D) -> void:
 	if spatial_node:
 		var audio_stream_player_3d: AudioStreamPlayer3D = AudioStreamPlayer3D.new()
 		audio_stream_player_3d.name = "Oneshot3DAudioStream"
@@ -268,8 +285,9 @@ func play_oneshot_audio_stream_3d(p_stream : AudioStream,\
 		spatial_node.add_child(audio_stream_player_3d, true)
 		audio_stream_player_3d.global_transform = p_transform
 
-func stop_audio_stream_3d(p_stream_player : AudioStreamPlayer3D) -> void:
-	var index : int = dynamic_3d_stream_players.find(p_stream_player)
+
+func stop_audio_stream_3d(p_stream_player: AudioStreamPlayer3D) -> void:
+	var index: int = dynamic_3d_stream_players.find(p_stream_player)
 	if index != -1:
 		dynamic_3d_stream_players.remove_at(index)
 
@@ -277,11 +295,13 @@ func stop_audio_stream_3d(p_stream_player : AudioStreamPlayer3D) -> void:
 	p_stream_player.queue_free()
 	p_stream_player.get_parent().remove_child(p_stream_player)
 
+
 func clear_dynamic_audio_stream_players_3d():
 	for stream_player in dynamic_3d_stream_players:
 		stop_audio_stream_3d(stream_player)
 
 	dynamic_3d_stream_players = []
+
 
 func toggle_mute() -> void:
 	if is_muted():
@@ -289,42 +309,52 @@ func toggle_mute() -> void:
 	else:
 		set_muted(true)
 
+
 func get_voice_output_volume() -> float:
 	return voice_output_volume
+
 
 func get_music_output_volume() -> float:
 	return music_output_volume
 
+
 func get_game_sfx_output_volume() -> float:
 	return game_sfx_output_volume
+
 
 func get_menu_output_volume() -> float:
 	return menu_output_volume
 
+
 func get_mic_input_volume() -> float:
 	return mic_input_volume
 
-func set_voice_output_volume(p_value : float) -> void:
+
+func set_voice_output_volume(p_value: float) -> void:
 	voice_output_volume = p_value
 	if voice_output_bus_index != -1:
 		AudioServer.set_bus_volume_db(voice_output_bus_index, linear_to_db(voice_output_volume))
 
-func set_music_output_volume(p_value : float) -> void:
+
+func set_music_output_volume(p_value: float) -> void:
 	music_output_volume = p_value
 	if music_output_bus_index != -1:
 		AudioServer.set_bus_volume_db(music_output_bus_index, linear_to_db(music_output_volume))
 
-func set_game_sfx_output_volume(p_value : float) -> void:
+
+func set_game_sfx_output_volume(p_value: float) -> void:
 	game_sfx_output_volume = p_value
 	if game_sfx_output_bus_index != -1:
 		AudioServer.set_bus_volume_db(game_sfx_output_bus_index, linear_to_db(game_sfx_output_volume))
 
-func set_menu_output_volume(p_value : float) -> void:
+
+func set_menu_output_volume(p_value: float) -> void:
 	menu_output_volume = p_value
 	if menu_output_bus_index != -1:
 		AudioServer.set_bus_volume_db(menu_output_bus_index, linear_to_db(menu_output_volume))
 
-func set_mic_input_volume(p_value : float) -> void:
+
+func set_mic_input_volume(p_value: float) -> void:
 	mic_input_volume = p_value
 	if mic_input_bus_index != -1:
 		AudioServer.set_bus_volume_db(mic_input_bus_index, linear_to_db(mic_input_volume))
@@ -347,6 +377,7 @@ func set_settings_values():
 	VSKUserPreferencesManager.set_value(USER_PREFERENCES_SECTION_NAME, "gate_threshold", gate_threshold)
 	VSKUserPreferencesManager.set_value(USER_PREFERENCES_SECTION_NAME, "gate_timeout", gate_timeout)
 
+
 func get_settings_values() -> void:
 	flat_output_device = VSKUserPreferencesManager.get_value(USER_PREFERENCES_SECTION_NAME, "flat_output_device", TYPE_STRING, flat_output_device)
 	flat_input_device = VSKUserPreferencesManager.get_value(USER_PREFERENCES_SECTION_NAME, "flat_input_device", TYPE_STRING, flat_input_device)
@@ -364,13 +395,15 @@ func get_settings_values() -> void:
 	gate_threshold = VSKUserPreferencesManager.get_value(USER_PREFERENCES_SECTION_NAME, "gate_threshold", TYPE_FLOAT, gate_threshold)
 	gate_timeout = VSKUserPreferencesManager.get_value(USER_PREFERENCES_SECTION_NAME, "gate_timeout", TYPE_FLOAT, gate_timeout)
 
+
 func set_settings_values_and_save() -> void:
 	set_settings_values()
 	VSKUserPreferencesManager.save_settings()
 
-func process_input_audio(p_delta : float):
+
+func process_input_audio(p_delta: float):
 	if godot_speech:
-		var copied_voice_buffers : Array = godot_speech.copy_and_clear_buffers()
+		var copied_voice_buffers: Array = godot_speech.copy_and_clear_buffers()
 
 		var current_skipped: int = godot_speech.get_skipped_audio_packets()
 		#print("current_skipped: %s" % str(current_skipped))
@@ -378,8 +411,7 @@ func process_input_audio(p_delta : float):
 
 		voice_id += current_skipped
 
-		voice_timeslice = (get_ticks_since_recording_started() / PACKET_TICK_TIMESLICE)\
-		- (copied_voice_buffers.size() + current_skipped)
+		voice_timeslice = (get_ticks_since_recording_started() / PACKET_TICK_TIMESLICE) - (copied_voice_buffers.size() + current_skipped)
 
 		if copied_voice_buffers.size() > 0:
 			loudness = 0.0
@@ -418,7 +450,7 @@ func get_voice_buffers() -> Array:
 	# Increment the internal voice id
 	voice_id += voice_buffers.size()
 
-	var copied_voice_buffers : Array = voice_buffers
+	var copied_voice_buffers: Array = voice_buffers
 	voice_buffers = []
 	return copied_voice_buffers
 
@@ -426,6 +458,7 @@ func get_voice_buffers() -> Array:
 ########
 # Node #
 ########
+
 
 func _input(event):
 	if event.is_action_type():
@@ -441,9 +474,8 @@ func _process(p_delta):
 		#test_voice_locally()
 
 
-
 func setup() -> void:
-	if ! Engine.is_editor_hint():
+	if !Engine.is_editor_hint():
 		test_audio = VSKStartupManager.test_audio
 
 		empty_buffer.resize(PACKET_FRAME_COUNT)
@@ -469,7 +501,7 @@ func setup() -> void:
 		audio_input_stream_player.stream = audio_input_stream
 
 		var index: int = AudioServer.get_bus_index(MIC_BUS_NAME)
-		if(index != -1):
+		if index != -1:
 			audio_input_stream_player.set_bus(MIC_BUS_NAME)
 
 		add_child(audio_input_stream_player, true)
@@ -522,8 +554,9 @@ func setup() -> void:
 
 	update_audio_devices()
 
+
 func _ready():
-	if ! Engine.is_editor_hint():
+	if !Engine.is_editor_hint():
 		set_process(true)
 		set_process_input(true)
 	else:

@@ -2,12 +2,11 @@ extends Node
 
 signal finished(next_state_name)
 
-var state_machine: Node = null : # addons/state_machine/state_machine.gd
+var state_machine: Node = null:  # addons/state_machine/state_machine.gd
 	set = set_state_machine
 
 
-
-func set_state_machine(p_state_machine: Node) -> void: # state_machine
+func set_state_machine(p_state_machine: Node) -> void:  # state_machine
 	state_machine = p_state_machine
 
 
@@ -17,6 +16,7 @@ func enter() -> void:
 
 func update(_delta: float) -> void:
 	pass
+
 
 func exit() -> void:
 	pass

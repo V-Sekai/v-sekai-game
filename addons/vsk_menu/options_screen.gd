@@ -1,9 +1,10 @@
-extends "res://addons/vsk_menu/menu_view_controller.gd" # menu_view_controller.gd
+extends "res://addons/vsk_menu/menu_view_controller.gd"  # menu_view_controller.gd
 
 var audio_setup = load("res://addons/vsk_menu/main_menu/audio_setup.tscn")
 var network_setup = load("res://addons/vsk_menu/main_menu/network_setup.tscn")
 var input_setup = load("res://addons/vsk_menu/main_menu/input_setup.tscn")
 var vr_setup = load("res://addons/vsk_menu/main_menu/vr_setup.tscn")
+
 
 func _on_BackButton_pressed():
 	back_button_pressed()
