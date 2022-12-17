@@ -59,7 +59,7 @@ TR_MENU_LOGIN_PASSWORD_CONFIRMATION,Password Confirmation,Confirmar contraseña
 TR_MENU_LOGIN_REGISTER,Register,Registrarse
 TR_MENU_LOGIN_SIGN_IN,Sign in,Iniciar sesión
 TR_MENU_LOGIN_USERNAME,Username,Nombre de usuario
-TR_MENU_LOGIN_USERNAME_OR_EMAIL,Username/Email,Nombre de usuario/Correo electrónico
+TR_MENU_LOGIN_USERNAME_OR_EMAIL,Username/Email,Usuario/Correo
 TR_MENU_LOOK_INVERT,Look Invert,Invertir giro
 TR_MENU_MAP,Map,Mapa 
 TR_MENU_MAP_LOAD_COMPLETE,Map loading complete!,¡Se terminó de cargar el mapa!
