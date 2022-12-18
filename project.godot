@@ -690,6 +690,7 @@ config/default_autohost=false
 
 driver/threads/thread_model=2
 textures/vram_compression/import_bptc=true
+lights_and_shadows/use_physical_light_units=true
 reflections/reflection_atlas/reflection_size=1024
 global_illumination/gi/use_half_resolution=true
 global_illumination/sdfgi/probe_ray_count=0
