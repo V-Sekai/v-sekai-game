@@ -195,10 +195,7 @@ func _physics_process(_delta):
 
 func _LerpBasis(from: Basis, to: Basis, f: float) -> Basis:
 	var res: Basis = Basis()
-	res.x = from.x.lerp(to.x, f)
-	res.y = from.y.lerp(to.y, f)
-	res.z = from.z.lerp(to.z, f)
-	return res
+	return from.slerp(to, f)
 
 
 func _SetFlags(f: int) -> void:
