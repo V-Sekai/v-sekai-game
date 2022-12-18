@@ -10,10 +10,6 @@ const vsk_version_const = preload("res://addons/vsk_version/vsk_version.gd")
 ## The startup manager is the entrypoint for VSK game-related stuff
 ##
 
-# Flag which tells if the application should attempt to host with
-# the default map, if no
-var default_autohost: bool = false
-
 const commandline_arguments_const = preload("commandline_arguments.gd")
 var managers_requiring_preloading: Array = []
 
@@ -53,7 +49,7 @@ func _startup_complate() -> void:
 	if not ip.is_empty():
 		await VSKGameFlowManager.join_server(ip, port)
 	else:
-		if map.is_empty() and default_autohost:
+		if map.is_empty():
 			map = VSKMapManager.get_default_map_path()
 
 		if map:
@@ -178,15 +174,12 @@ func parse_commandline_args() -> void:
 
 func apply_project_settings() -> void:
 	if Engine.is_editor_hint():
-		if !ProjectSettings.has_setting("network/config/default_autohost"):
-			ProjectSettings.set_setting("network/config/default_autohost", default_autohost)
-
 		if ProjectSettings.save() != OK:
 			printerr("Could not save project settings!")
 
 
 func get_project_settings() -> void:
-	default_autohost = ProjectSettings.get_setting("network/config/default_autohost")
+	pass
 
 
 func _ready() -> void:
