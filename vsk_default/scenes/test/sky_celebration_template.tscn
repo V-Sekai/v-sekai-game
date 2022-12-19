@@ -1,7 +1,7 @@
 [gd_scene load_steps=16 format=3 uid="uid://butcvlel8eodv"]
 
 [ext_resource type="PackedScene" uid="uid://d0xavoy61xjau" path="res://vsk_default/scenes/prefabs/beachball.tscn" id="2"]
-[ext_resource type="Material" uid="uid://d1r0ak530xwwq" path="res://vsk_default/import/sky_celebration/main_room_mat.tres" id="2_wj3xi"]
+[ext_resource type="Material" path="res://vsk_default/import/sky_celebration/main_room_mat.tres" id="2_wj3xi"]
 [ext_resource type="PackedScene" uid="uid://c4vqy00grclrx" path="res://vsk_default/scenes/prefabs/basketball.tscn" id="4"]
 [ext_resource type="Script" path="res://addons/vsk_map/vsk_map_definition.gd" id="5"]
 [ext_resource type="Script" path="res://addons/canvas_plane/canvas_3d.gd" id="6"]
