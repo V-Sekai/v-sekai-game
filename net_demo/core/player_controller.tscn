@@ -1,11 +1,12 @@
-[gd_scene load_steps=12 format=3 uid="uid://22qy7iinftdd"]
+[gd_scene load_steps=13 format=3 uid="uid://22qy7iinftdd"]
 
 [ext_resource type="Script" path="res://net_demo/core/player_controller.gd" id="1_u1u4j"]
 [ext_resource type="Script" path="res://net_demo/core/player_snapshot_interpolation.gd" id="2_7x5fr"]
 [ext_resource type="Script" path="res://net_demo/core/camera_holder.gd" id="3_7p7cm"]
 [ext_resource type="Script" path="res://net_demo/core/node3d_bobbing.gd" id="4_58mrl"]
 [ext_resource type="Script" path="res://net_demo/core/character_model_holder.gd" id="5_0vx7h"]
-[ext_resource type="PackedScene" path="res://net_demo/uiux/ingame_gui.tscn" id="5_tyui0"]
+[ext_resource type="PackedScene" uid="uid://ciyq2g4d1psug" path="res://net_demo/uiux/ingame_gui.tscn" id="5_tyui0"]
+[ext_resource type="Script" path="res://net_demo/core/peer_label_3d.gd" id="7_janfo"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_e2hvn"]
 radius = 0.25
@@ -94,3 +95,9 @@ replication_config = SubResource("SceneReplicationConfig_hj2ph")
 visibility_update_mode = 1
 
 [node name="IngameGUI" parent="." instance=ExtResource("5_tyui0")]
+
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5373, 0)
+billboard = 2
+text = "PLACEHOLDER_ID"
+script = ExtResource("7_janfo")
