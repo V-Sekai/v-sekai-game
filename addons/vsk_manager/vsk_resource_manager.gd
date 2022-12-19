@@ -98,10 +98,6 @@ func get_entity_resource_for_path(p_path: String) -> Resource:
 			var id: int = string_diget.to_int()
 			return get_entity_resource_for_game_mode_id(id)
 
-	var entity_resource_string_beginning: String = "user://asset_cache/"
-	if p_path.begins_with(entity_resource_string_beginning):
-		return ResourceLoader.load(p_path)
-
 	push_error("Refusing to load unrecognized resource path: " + str(p_path))
 	return null
 
