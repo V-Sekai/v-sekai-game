@@ -9,10 +9,6 @@ func _update_menu_visibility() -> void:
 		$ToggleMenu.hide()
 
 
-func assign_peer_color(p_color: Color) -> void:
-	$PeerBoxContainer/PeerColorID.color = p_color
-
-
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("menu_toggle"):
 		get_node("/root/GameManager").ingame_menu_visible = !get_node("/root/GameManager").ingame_menu_visible
