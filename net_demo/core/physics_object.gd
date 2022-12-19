@@ -87,3 +87,4 @@ func _physics_process(_delta: float) -> void:
 		or pending_authority_request
 	):
 		_quantize_simulation_locally()
+		$Label3D.text = str(get_tree().get_multiplayer().get_unique_id())

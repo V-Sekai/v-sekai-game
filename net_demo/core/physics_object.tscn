@@ -26,6 +26,9 @@ properties/3/sync = false
 properties/4/path = NodePath("PhysicsStateSynchronizer:sync_net_state")
 properties/4/spawn = false
 properties/4/sync = true
+properties/5/path = NodePath("Label3D:text")
+properties/5/spawn = true
+properties/5/sync = true
 
 [node name="physics_object" type="RigidBody3D"]
 collision_layer = 8
@@ -49,5 +52,10 @@ replication_interval = 0.1
 replication_config = SubResource("SceneReplicationConfig_pwbj6")
 visibility_update_mode = 1
 script = ExtResource("3_6j57q")
+
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.550303, 0)
+billboard = 2
+text = "PLACEHOLDER_ID"
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
