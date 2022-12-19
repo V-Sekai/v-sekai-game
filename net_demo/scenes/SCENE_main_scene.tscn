@@ -1,6 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://c8xb5anoggiov"]
+[gd_scene load_steps=3 format=3 uid="uid://qfe2acah02ks"]
 
-[ext_resource type="Script" path="res://net_demo/uiux/main_menu.gd" id="1_ollto"]
+[ext_resource type="Script" path="res://net_demo/core/main_menu.gd" id="1_jcqmg"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_81xgi"]
 font_size = 72
@@ -12,7 +12,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_ollto")
+script = ExtResource("1_jcqmg")
 ip_path = NodePath("HBoxContainer/VBoxContainer/IP")
 port_path = NodePath("HBoxContainer/VBoxContainer/Port")
 max_player_path = NodePath("HBoxContainer/VBoxContainer/MaxPlayers")

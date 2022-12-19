@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://coycdgq4vb4by"]
+[gd_scene load_steps=2 format=3]
 
-[ext_resource type="Script" path="res://net_demo/uiux/ingame_gui.gd" id="1_20ubr"]
+[ext_resource type="Script" path="res://net_demo/core/ingame_gui.gd" id="1_20ubr"]
+
 
 [node name="IngameGUI" type="Control"]
 layout_mode = 3
