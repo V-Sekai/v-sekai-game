@@ -119,7 +119,7 @@ func set_y_rotation(p_rotation: float) -> void:
 
 
 func _input(p_event: InputEvent) -> void:
-	if is_controllable and !get_node("/root/GameManager").is_movement_locked():
+	if is_controllable and !GameManager.is_movement_locked():
 		if InputMap.has_action("zoom_in") and p_event.is_action_pressed("zoom_in"):
 			zoom_in()
 		elif InputMap.has_action("zoom_out") and p_event.is_action_pressed("zoom_out"):
@@ -132,7 +132,7 @@ func _input(p_event: InputEvent) -> void:
 
 func _ready() -> void:
 	if !multiplayer.has_multiplayer_peer() or is_multiplayer_authority():
-		if !get_node("/root/GameManager").ingame_menu_visible:
+		if !GameManager.ingame_menu_visible:
 			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 		else:
 			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)

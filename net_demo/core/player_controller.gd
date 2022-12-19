@@ -125,7 +125,7 @@ func _physics_process(p_delta: float) -> void:
 				Input.get_action_strength("move_right") - Input.get_action_strength("move_left"),
 				Input.get_action_strength("move_forwards") - Input.get_action_strength("move_backwards")
 			)
-			if !get_node("/root/GameManager").is_movement_locked()
+			if !GameManager.is_movement_locked()
 			else Vector2()
 		)
 
