@@ -325,6 +325,7 @@ window/vsync/vsync_via_compositor=true
 
 [editor]
 
+run/main_run_args="--xr-mode off"
 movie_writer/mjpeg_quality=1.0
 movie_writer/movie_file="../export.avi"
 import/use_multiple_threads=false
@@ -650,15 +651,15 @@ toggle_vr={
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":16777254,"unicode":0,"echo":false,"script":null)
 ]
 }
+menu_toggle={
+"deadzone": 0.5,
+"events": []
+}
 physics_reset={
 "deadzone": 0.5,
 "events": []
 }
 block_physics_send={
-"deadzone": 0.5,
-"events": []
-}
-menu_toggle={
 "deadzone": 0.5,
 "events": []
 }
