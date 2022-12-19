@@ -258,8 +258,6 @@ config/gate_timeout=1.0
 
 [autoload]
 
-GameManager="*res://net_demo/core/game_manager.gd"
-MultiplayerPhysicsOwnershipTracker="*res://net_demo/core/multiplayer_physics_ownership_tracker.gd"
 BackgroundLoader="*res://addons/background_loader/background_loader.gd"
 FlatViewport="*res://addons/flat_viewport/flat_viewport.gd"
 ConnectionUtil="*res://addons/gd_util/connection_util.gd"

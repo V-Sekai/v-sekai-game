@@ -8,21 +8,21 @@
 [ext_resource type="PackedScene" uid="uid://ciyq2g4d1psug" path="res://net_demo/uiux/ingame_gui.tscn" id="5_tyui0"]
 [ext_resource type="Script" path="res://net_demo/core/peer_label_3d.gd" id="7_janfo"]
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_e2hvn"]
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_c74dh"]
 radius = 0.25
 height = 1.2
 
-[sub_resource type="SphereShape3D" id="SphereShape3D_cnwt3"]
+[sub_resource type="SphereShape3D" id="SphereShape3D_ea4l0"]
 radius = 0.1
 
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_151lx"]
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_1oib7"]
 radius = 0.25
 height = 1.2
 
-[sub_resource type="BoxMesh" id="BoxMesh_uxh0q"]
+[sub_resource type="BoxMesh" id="BoxMesh_36e1n"]
 size = Vector3(0.1, 0.1, 0.5)
 
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_hj2ph"]
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_lkewk"]
 properties/0/path = NodePath("PlayerSnapshotInterpolation:sync_net_state")
 properties/0/spawn = false
 properties/0/sync = true
@@ -43,7 +43,7 @@ player_controller = NodePath("..")
 
 [node name="CollisionBody" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
-shape = SubResource("CapsuleShape3D_e2hvn")
+shape = SubResource("CapsuleShape3D_c74dh")
 
 [node name="CameraHolder" type="Node3D" parent="."]
 script = ExtResource("3_7p7cm")
@@ -61,7 +61,7 @@ script = ExtResource("4_58mrl")
 bobbing_speed = 22.0
 
 [node name="CameraSpringArm" type="SpringArm3D" parent="CameraHolder/CameraPivot/CameraBobbing"]
-shape = SubResource("SphereShape3D_cnwt3")
+shape = SubResource("SphereShape3D_ea4l0")
 spring_length = 1.5
 
 [node name="MainCamera" type="XRCamera3D" parent="CameraHolder/CameraPivot/CameraBobbing/CameraSpringArm"]
@@ -81,17 +81,17 @@ script = ExtResource("5_0vx7h")
 
 [node name="Base" type="MeshInstance3D" parent="CharacterModelHolder/ThirdPersonModel"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
-mesh = SubResource("CapsuleMesh_151lx")
+mesh = SubResource("CapsuleMesh_1oib7")
 skeleton = NodePath("")
 
 [node name="Pointer" type="MeshInstance3D" parent="CharacterModelHolder/ThirdPersonModel"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0.2)
-mesh = SubResource("BoxMesh_uxh0q")
+mesh = SubResource("BoxMesh_36e1n")
 skeleton = NodePath("../Base")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_interval = 0.1
-replication_config = SubResource("SceneReplicationConfig_hj2ph")
+replication_config = SubResource("SceneReplicationConfig_lkewk")
 visibility_update_mode = 1
 
 [node name="IngameGUI" parent="." instance=ExtResource("5_tyui0")]

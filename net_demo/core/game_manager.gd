@@ -171,8 +171,6 @@ func close_connection() -> void:
 		multiplayer.multiplayer_peer.close()
 		multiplayer.set_multiplayer_peer(null)
 
-	MultiplayerColorTable.clear_multiplayer_color_table()
-
 	_update_window_title()
 	load_main_menu_scene()
 
