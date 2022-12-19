@@ -20,9 +20,9 @@ var multiplayer_color_id: int = -1
 var pending_authority_request: bool = false
 
 
-# Function resturns if the game is running without a multiplayer peer,
+# Function returns if the game is running without a multiplayer peer,
 # if the we have explicit authority over this node, or
-# we are pending explicit authority over
+# we are pending explicit authority over.
 func has_authority() -> bool:
 	if !multiplayer.has_multiplayer_peer() or is_multiplayer_authority() or pending_authority_request:
 		return true
@@ -46,7 +46,7 @@ func _update_collision() -> void:
 			set_collision_mask_value(3, false)
 
 
-# Updates the material to match the color of the object
+# Updates the material to match the color of the object.
 func update_color_id_and_material() -> void:
 	multiplayer_color_id = (
 		MultiplayerColorTable . get_multiplayer_material_index_for_peer_id(multiplayer.get_unique_id() if pending_authority_request else get_multiplayer_authority(), false)
@@ -61,7 +61,7 @@ func update_color_id_and_material() -> void:
 
 # Applies quantization locally to gain improved simulation consistency between peers
 # (currently causes objects to jitter; disabling local quantization during
-# sleep state helps a bit, but still needs further investigation)
+# sleep state helps a bit, but still needs further investigation).
 func _quantize_simulation_locally() -> void:
 	var physics_state: physics_state_sync_const.PhysicsState = physics_state_sync_const.PhysicsState.new()
 	physics_state.set_from_rigid_body(self)
@@ -73,7 +73,7 @@ func _quantize_simulation_locally() -> void:
 	angular_velocity = physics_state.angular_velocity
 
 
-# Sleeping rigid bodies will show up as partially transparent
+# Sleeping rigid bodies will show up as partially transparent.
 func _update_sleep_visualization() -> void:
 	if sleeping:
 		$MeshInstance3D.transparency = SLEEP_STATE_TRANSPARENCY
@@ -93,12 +93,12 @@ func _on_body_entered(p_body: PhysicsBody3D) -> void:
 
 
 func _physics_process(_delta: float) -> void:
-	# Sets all the physics objects back to their original transforms
+	# Sets all the physics objects back to their original transforms.
 	if Input.is_action_just_pressed("physics_reset"):
 		if has_authority():
 			transform = original_transfrom
 
-	# Sets all the physics objects back to their original transforms
+	# Sets all the physics objects back to their original transforms.
 	if Input.is_action_pressed("block_physics_send"):
 		$MultiplayerSynchronizer.public_visibility = false
 	else:
