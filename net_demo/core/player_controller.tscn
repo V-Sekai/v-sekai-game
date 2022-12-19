@@ -1,0 +1,96 @@
+[gd_scene load_steps=12 format=3 uid="uid://22qy7iinftdd"]
+
+[ext_resource type="Script" path="res://net_demo/core/player_controller.gd" id="1_u1u4j"]
+[ext_resource type="Script" path="res://net_demo/core/player_snapshot_interpolation.gd" id="2_7x5fr"]
+[ext_resource type="Script" path="res://net_demo/core/camera_holder.gd" id="3_7p7cm"]
+[ext_resource type="Script" path="res://net_demo/core/node3d_bobbing.gd" id="4_58mrl"]
+[ext_resource type="Script" path="res://net_demo/core/character_model_holder.gd" id="5_0vx7h"]
+[ext_resource type="PackedScene" uid="uid://coycdgq4vb4by" path="res://net_demo/uiux/ingame_gui.tscn" id="5_tyui0"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_e0hs4"]
+radius = 0.25
+height = 1.2
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_8h7sh"]
+radius = 0.1
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_trv7t"]
+radius = 0.25
+height = 1.2
+
+[sub_resource type="BoxMesh" id="BoxMesh_t35wk"]
+size = Vector3(0.1, 0.1, 0.5)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_yj27s"]
+properties/0/path = NodePath("PlayerSnapshotInterpolation:sync_net_state")
+properties/0/spawn = false
+properties/0/sync = true
+
+[node name="PlayerController" type="CharacterBody3D"]
+top_level = true
+collision_layer = 2
+axis_lock_angular_x = true
+axis_lock_angular_y = true
+axis_lock_angular_z = true
+floor_max_angle = 0.698132
+script = ExtResource("1_u1u4j")
+camera_holder = NodePath("CameraHolder")
+
+[node name="PlayerSnapshotInterpolation" type="Node" parent="."]
+script = ExtResource("2_7x5fr")
+player_controller = NodePath("..")
+
+[node name="CollisionBody" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+shape = SubResource("CapsuleShape3D_e0hs4")
+
+[node name="CameraHolder" type="Node3D" parent="."]
+script = ExtResource("3_7p7cm")
+camera_pivot = NodePath("CameraPivot")
+camera_spring_arm = NodePath("CameraPivot/CameraBobbing/CameraSpringArm")
+camera_bobbing = NodePath("CameraPivot/CameraBobbing")
+third_person_model = NodePath("../CharacterModelHolder/ThirdPersonModel")
+view_mode = 0
+collision_mask = 1
+
+[node name="CameraPivot" type="Node3D" parent="CameraHolder"]
+
+[node name="CameraBobbing" type="Node3D" parent="CameraHolder/CameraPivot"]
+script = ExtResource("4_58mrl")
+bobbing_speed = 22.0
+
+[node name="CameraSpringArm" type="SpringArm3D" parent="CameraHolder/CameraPivot/CameraBobbing"]
+shape = SubResource("SphereShape3D_8h7sh")
+spring_length = 1.5
+
+[node name="MainCamera" type="XRCamera3D" parent="CameraHolder/CameraPivot/CameraBobbing/CameraSpringArm"]
+cull_mask = 1
+current = true
+fov = 90.0
+near = 0.01
+far = 150.0
+
+[node name="AudioListener3D" type="AudioListener3D" parent="CameraHolder/CameraPivot/CameraBobbing/CameraSpringArm/MainCamera"]
+current = true
+
+[node name="CharacterModelHolder" type="Node3D" parent="."]
+script = ExtResource("5_0vx7h")
+
+[node name="ThirdPersonModel" type="Node3D" parent="CharacterModelHolder"]
+
+[node name="Base" type="MeshInstance3D" parent="CharacterModelHolder/ThirdPersonModel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+mesh = SubResource("CapsuleMesh_trv7t")
+skeleton = NodePath("")
+
+[node name="Pointer" type="MeshInstance3D" parent="CharacterModelHolder/ThirdPersonModel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0.2)
+mesh = SubResource("BoxMesh_t35wk")
+skeleton = NodePath("../Base")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_interval = 0.1
+replication_config = SubResource("SceneReplicationConfig_yj27s")
+visibility_update_mode = 1
+
+[node name="IngameGUI" parent="." instance=ExtResource("5_tyui0")]

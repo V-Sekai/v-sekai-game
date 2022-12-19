@@ -1,0 +1,92 @@
+[gd_scene load_steps=2 format=3 uid="uid://coycdgq4vb4by"]
+
+[ext_resource type="Script" path="res://net_demo/uiux/ingame_gui.gd" id="1_20ubr"]
+
+[node name="IngameGUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_20ubr")
+
+[node name="ToggleMenu" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="ToggleMenu"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.501961)
+
+[node name="Menu" type="VBoxContainer" parent="ToggleMenu"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="DisconnectButton" type="Button" parent="ToggleMenu/Menu"]
+offset_top = 308.0
+offset_right = 1152.0
+offset_bottom = 339.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Disconnect"
+
+[node name="PeerBoxContainer" type="HBoxContainer" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="PeerColorID" type="ColorRect" parent="PeerBoxContainer"]
+custom_minimum_size = Vector2(64, 64)
+offset_right = 64.0
+offset_bottom = 64.0
+color = Color(1, 1, 1, 0)
+
+[node name="PeerIDLabel" type="Label" parent="PeerBoxContainer"]
+offset_left = 68.0
+offset_top = 19.0
+offset_right = 133.0
+offset_bottom = 45.0
+text = "Peer ID: "
+
+[node name="InfoContainer" type="VBoxContainer" parent="."]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 40.0
+grow_horizontal = 0
+
+[node name="Header" type="Label" parent="InfoContainer"]
+offset_right = 189.0
+offset_bottom = 26.0
+text = "Instructions:"
+horizontal_alignment = 2
+
+[node name="PhysicsResetInfo" type="Label" parent="InfoContainer"]
+offset_top = 30.0
+offset_right = 189.0
+offset_bottom = 56.0
+text = "R: Reset Physics"
+horizontal_alignment = 2
+
+[node name="BlockPhysicsUpdatesInfo" type="Label" parent="InfoContainer"]
+offset_top = 60.0
+offset_right = 189.0
+offset_bottom = 86.0
+text = "E: Block Physics Updates"
+horizontal_alignment = 2
+
+[connection signal="pressed" from="ToggleMenu/Menu/DisconnectButton" to="." method="_on_disconnect_button_pressed"]

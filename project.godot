@@ -99,6 +99,11 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://addons/sar1_mocap_manager/sar1_mocap_recording.gd"
 }, {
+"base": "MultiplayerAPIExtension",
+"class": &"MultiplayerExtension",
+"language": &"GDScript",
+"path": "res://net_demo/core/multiplayer_extension.gd"
+}, {
 "base": "Control",
 "class": &"NavigationController",
 "language": &"GDScript",
@@ -188,6 +193,7 @@ _global_script_class_icons={
 "MocapManager": "",
 "MocapManagerPlugin": "",
 "MocapRecording": "",
+"MultiplayerExtension": "",
 "NavigationController": "",
 "NetworkHierarchy": "",
 "NetworkIdentity": "",
@@ -298,6 +304,9 @@ VSKEntityManager="*res://addons/entity_manager/entity_manager.gd"
 NetworkManager="*res://addons/network_manager/network_manager.gd"
 LogManager="*res://addons/sar1_log_manager/log_manager.gd"
 ScreenshotManager="*res://addons/sar1_screenshot_manager/screenshot_manager.gd"
+MultiplayerColorTable="*res://net_demo/core/multiplayer_color_table.gd"
+MultiplayerPhysicsOwnershipTracker="*res://net_demo/core/multiplayer_physics_ownership_tracker.gd"
+GameManager="*res://net_demo/core/game_manager.gd"
 
 [debug]
 
@@ -644,6 +653,18 @@ toggle_vr={
 "deadzone": 0.5,
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":16777254,"unicode":0,"echo":false,"script":null)
 ]
+}
+physics_reset={
+"deadzone": 0.5,
+"events": []
+}
+block_physics_send={
+"deadzone": 0.5,
+"events": []
+}
+menu_toggle={
+"deadzone": 0.5,
+"events": []
 }
 
 [internationalization]

@@ -1,0 +1,92 @@
+[gd_scene load_steps=3 format=3 uid="uid://c8xb5anoggiov"]
+
+[ext_resource type="Script" path="res://net_demo/uiux/main_menu.gd" id="1_ollto"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_81xgi"]
+font_size = 72
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ollto")
+ip_path = NodePath("HBoxContainer/VBoxContainer/IP")
+port_path = NodePath("HBoxContainer/VBoxContainer/Port")
+max_player_path = NodePath("HBoxContainer/VBoxContainer/MaxPlayers")
+dedicated_server_path = NodePath("HBoxContainer/VBoxContainer/DedicatedServerCheckbox")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Title" type="Label" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Multiplayer Demo"
+label_settings = SubResource("LabelSettings_81xgi")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="IPLabel" type="Label" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "IP"
+
+[node name="IP" type="LineEdit" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "127.0.0.1"
+
+[node name="PortLabel" type="Label" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Port"
+
+[node name="Port" type="SpinBox" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+min_value = 1.0
+max_value = 9999.0
+value = 7777.0
+
+[node name="MaxPlayersLabel" type="Label" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Max Players"
+
+[node name="MaxPlayers" type="SpinBox" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+min_value = 1.0
+max_value = 128.0
+value = 32.0
+
+[node name="DedicatedServerCheckbox" type="CheckBox" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Dedicated Server"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="HostButton" type="Button" parent="HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Host"
+
+[node name="JoinButton" type="Button" parent="HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Join"
+
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/HostButton" to="." method="_on_HostButton_pressed"]
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/VBoxContainer/HBoxContainer/JoinButton" to="." method="_on_JoinButton_pressed"]
