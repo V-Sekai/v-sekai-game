@@ -78,16 +78,7 @@ func _on_body_entered(p_body: PhysicsBody3D) -> void:
 
 
 func _physics_process(_delta: float) -> void:
-	# Sets all the physics objects back to their original transforms.
-	if Input.is_action_just_pressed("physics_reset"):
-		if has_authority():
-			transform = original_transfrom
-
-	# Sets all the physics objects back to their original transforms.
-	if Input.is_action_pressed("block_physics_send"):
-		$MultiplayerSynchronizer.public_visibility = false
-	else:
-		$MultiplayerSynchronizer.public_visibility = true
+	$MultiplayerSynchronizer.public_visibility = true
 
 	_update_sleep_visualization()
 

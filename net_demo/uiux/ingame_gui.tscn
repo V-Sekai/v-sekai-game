@@ -51,28 +51,4 @@ offset_bottom = 40.0
 layout_mode = 2
 text = "Peer ID: "
 
-[node name="InfoContainer" type="VBoxContainer" parent="."]
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -40.0
-offset_bottom = 40.0
-grow_horizontal = 0
-
-[node name="Header" type="Label" parent="InfoContainer"]
-layout_mode = 2
-text = "Instructions:"
-horizontal_alignment = 2
-
-[node name="PhysicsResetInfo" type="Label" parent="InfoContainer"]
-layout_mode = 2
-text = "R: Reset Physics"
-horizontal_alignment = 2
-
-[node name="BlockPhysicsUpdatesInfo" type="Label" parent="InfoContainer"]
-layout_mode = 2
-text = "E: Block Physics Updates"
-horizontal_alignment = 2
-
 [connection signal="pressed" from="ToggleMenu/Menu/DisconnectButton" to="." method="_on_disconnect_button_pressed"]
