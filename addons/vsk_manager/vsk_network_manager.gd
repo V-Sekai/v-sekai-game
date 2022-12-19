@@ -16,7 +16,6 @@ const network_writer_const = preload("res://addons/network_manager/network_write
 const scene_tree_execution_table_const = preload("res://addons/entity_manager/scene_tree_execution_table.gd")
 const vsk_map_definition_runtime_const = preload("res://addons/vsk_map/vsk_map_definition_runtime.gd")
 const vsk_map_entity_instance_record_const = preload("res://addons/vsk_map/vsk_map_entity_instance_record.gd")
-const vsk_map_manager_const = preload("res://addons/vsk_manager/vsk_map_manager.gd")
 const vsk_network_manager_const = preload("res://addons/vsk_manager/vsk_network_manager.gd")
 const connection_util_const = preload("res://addons/gd_util/connection_util.gd")
 
@@ -610,8 +609,8 @@ func _host_state_instance() -> Dictionary:
 	var map_instance: Node = VSKMapManager.instance_map(false)
 
 	var new_player_instances: Array = []
-	if map_instance and map_instance is vsk_map_definition_runtime_const:
-		vsk_map_manager_const.instance_embedded_map_entities(map_instance, [player_scene_path])
+	if map_instance:
+		VSKMapManager.instance_embedded_map_entities(map_instance, [player_scene_path])
 
 		if !NetworkManager.server_dedicated:
 			# Create player instance for server if server is not a

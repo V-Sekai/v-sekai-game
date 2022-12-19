@@ -682,9 +682,9 @@ config/shard_heartbeat_frequency=10.0
 config/default_port=7777
 config/network_fps=60
 config/default_map_path="uro://bb7d83a8-a92d-4ba4-8e3f-233468c3e9db"
+config/default_autohost=false
 config/use_threaded_host_state_initalisation_func=false
 config/use_threaded_received_server_state_func=false
-config/default_autohost=false
 
 [rendering]
 

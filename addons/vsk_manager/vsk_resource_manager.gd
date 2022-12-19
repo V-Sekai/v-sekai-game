@@ -98,9 +98,11 @@ func get_entity_resource_for_path(p_path: String) -> Resource:
 			var id: int = string_diget.to_int()
 			return get_entity_resource_for_game_mode_id(id)
 
+	if p_path.begins_with("user://asset_cache/"):
+		return ResourceLoader.load(p_path)
+
 	push_error("Refusing to load unrecognized resource path: " + str(p_path))
 	return null
-	# return ResourceLoader.load(p_path)
 
 
 func setup() -> void:

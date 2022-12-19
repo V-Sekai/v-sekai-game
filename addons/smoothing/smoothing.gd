@@ -107,13 +107,11 @@ func _SetProcessing() -> void:
 
 	set_process(bEnable)
 	set_physics_process(bEnable)
-	pass
 
 
 func _enter_tree():
 	# might have been moved
 	_FindTarget()
-	pass
 
 
 func _notification(what):
@@ -190,11 +188,9 @@ func _physics_process(_delta):
 		_RefreshTransform()
 
 	_SetFlags(SF_DIRTY)
-	pass
 
 
 func _LerpBasis(from: Basis, to: Basis, f: float) -> Basis:
-	var res: Basis = Basis()
 	return from.slerp(to, f)
 
 

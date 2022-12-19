@@ -5,6 +5,7 @@ const vsk_map_definition_const = preload("res://addons/vsk_map/vsk_map_definitio
 const vsk_map_definition_runtime_const = preload("res://addons/vsk_map/vsk_map_definition_runtime.gd")
 const vsk_map_entity_instance_record_const = preload("res://addons/vsk_map/vsk_map_entity_instance_record.gd")
 const runtime_entity_const = preload("res://addons/entity_manager/runtime_entity.gd")
+const network_constants_const = preload("res://addons/network_manager/network_constants.gd")
 
 var default_map_path: String = ""
 
@@ -171,8 +172,8 @@ static func instance_embedded_map_entities(p_map_instance: Node, p_invalid_scene
 					if logic_node_property_names.has(key):
 						logic_node.set(key, properties[key])
 
-				p_map_instance.add_child(map_entity_instance, true)
 				map_entity_instance.transform = map_entity_instance_info.transform
+				VSKMapManager.gameroot.add_child(map_entity_instance, true)
 			else:
 				push_warning("Map entity id %s: no scene path could be found for entity" % str(i))
 				continue
