@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://geq6j3uji82n"
-path.s3tc="res://.godot/imported/groups_logo.png-0849b077ddbadfef35697642e678545e.s3tc.ctex"
-path.etc2="res://.godot/imported/groups_logo.png-0849b077ddbadfef35697642e678545e.etc2.ctex"
+path.s3tc="res://.godot/imported/groups_logo.png-251ef96d6bc0e449b1e49aa78eea2f09.s3tc.ctex"
+path.etc2="res://.godot/imported/groups_logo.png-251ef96d6bc0e449b1e49aa78eea2f09.etc2.ctex"
 metadata={
 "imported_formats": ["bptc", "s3tc", "etc2"],
 "vram_texture": true
@@ -12,8 +12,8 @@ metadata={
 
 [deps]
 
-source_file="res://vsk_default/textures/groups_logo.png"
-dest_files=["res://.godot/imported/groups_logo.png-0849b077ddbadfef35697642e678545e.s3tc.ctex", "res://.godot/imported/groups_logo.png-0849b077ddbadfef35697642e678545e.etc2.ctex"]
+source_file="res://vsk_default/icon/groups_logo.png"
+dest_files=["res://.godot/imported/groups_logo.png-251ef96d6bc0e449b1e49aa78eea2f09.s3tc.ctex", "res://.godot/imported/groups_logo.png-251ef96d6bc0e449b1e49aa78eea2f09.etc2.ctex"]
 
 [params]
 

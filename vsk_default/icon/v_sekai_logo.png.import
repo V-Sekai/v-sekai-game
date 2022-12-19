@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://csatgikji4yrf"
-path="res://.godot/imported/test_texture.svg-a289d9fa2c827c37843e4e5128219d3f.ctex"
+uid="uid://mwvsa6uo0xhh"
+path="res://.godot/imported/v_sekai_logo.png-bd0bace8e0655fcf5aca7e5efffbe14f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://vsk_default/textures/test_texture.svg"
-dest_files=["res://.godot/imported/test_texture.svg-a289d9fa2c827c37843e4e5128219d3f.ctex"]
+source_file="res://vsk_default/icon/v_sekai_logo.png"
+dest_files=["res://.godot/imported/v_sekai_logo.png-bd0bace8e0655fcf5aca7e5efffbe14f.ctex"]
 
 [params]
 
@@ -30,8 +30,5 @@ process/premult_alpha=false
 process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
-process/size_limit=256
+process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=1.0
-editor/scale_with_editor_scale=false
-editor/convert_colors_with_editor_theme=false
