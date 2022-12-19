@@ -3,7 +3,7 @@ extends Control
 
 func _update_menu_visibility() -> void:
 	# Can't call GameManager singleton directly yet due to circular dependency.
-	if get_node("/root/GameManager").ingame_menu_visible:
+	if GameManager.ingame_menu_visible:
 		$ToggleMenu.show()
 	else:
 		$ToggleMenu.hide()
@@ -11,7 +11,7 @@ func _update_menu_visibility() -> void:
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("menu_toggle"):
-		get_node("/root/GameManager").ingame_menu_visible = !get_node("/root/GameManager").ingame_menu_visible
+		GameManager.ingame_menu_visible = !GameManager.ingame_menu_visible
 		_update_menu_visibility()
 
 
@@ -23,4 +23,4 @@ func _ready():
 
 
 func _on_disconnect_button_pressed():
-	get_node("/root/GameManager").close_connection()
+	GameManager.close_connection()
