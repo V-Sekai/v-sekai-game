@@ -46,19 +46,6 @@ func _update_collision() -> void:
 			set_collision_mask_value(3, false)
 
 
-# Updates the material to match the color of the object.
-func update_color_id_and_material() -> void:
-	multiplayer_color_id = (
-		MultiplayerColorTable . get_multiplayer_material_index_for_peer_id(multiplayer.get_unique_id() if pending_authority_request else get_multiplayer_authority(), false)
-	)
-	if multiplayer_color_id >= 0:
-		var color_material: Material = MultiplayerColorTable.get_material_for_index(multiplayer_color_id)
-		assert(color_material)
-		$MeshInstance3D.material_override = color_material
-	else:
-		$MeshInstance3D.material_override = null
-
-
 # Applies quantization locally to gain improved simulation consistency between peers
 # (currently causes objects to jitter; disabling local quantization during
 # sleep state helps a bit, but still needs further investigation).
@@ -87,8 +74,6 @@ func _on_body_entered(p_body: PhysicsBody3D) -> void:
 			if p_body.get_multiplayer_authority() != get_multiplayer_authority():
 				if !pending_authority_request:
 					pending_authority_request = true
-					if multiplayer.has_multiplayer_peer():
-						update_color_id_and_material()
 					assert($MultiplayerSynchronizer.rpc_id(1, "claim_authority") == OK)
 
 
@@ -112,9 +97,3 @@ func _physics_process(_delta: float) -> void:
 	):
 		_quantize_simulation_locally()
 
-
-func _ready() -> void:
-	assert(MultiplayerColorTable.color_table_updated.connect(update_color_id_and_material) == OK)
-
-	if multiplayer.has_multiplayer_peer() and multiplayer.multiplayer_peer.get_connection_status() == MultiplayerPeer.CONNECTION_CONNECTED:
-		update_color_id_and_material()

@@ -155,12 +155,4 @@ func _ready() -> void:
 		set_collision_layer_value(2, true)
 		set_collision_layer_value(3, false)
 
-	if multiplayer_color_id >= 0:
-		var color_material: Material = MultiplayerColorTable.get_material_for_index(multiplayer_color_id)
-		assert(color_material)
-
-		$CharacterModelHolder.assign_multiplayer_material(color_material)
-		if !multiplayer.has_multiplayer_peer() or is_multiplayer_authority():
-			$IngameGUI.assign_peer_color(color_material.albedo_color)
-
 	$CharacterModelHolder.transform.basis = Basis().rotated(Vector3.UP, y_rotation)

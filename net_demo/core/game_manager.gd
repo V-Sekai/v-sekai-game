@@ -123,7 +123,6 @@ func _on_peer_connect(p_id: int) -> void:
 func _on_peer_disconnect(p_id: int) -> void:
 	print(str(multiplayer.get_unique_id()) + ": _on_peer_disconnect(%s)" % str(p_id))
 	if multiplayer.is_server():
-		MultiplayerColorTable.erase_multiplayer_peer_id(p_id)
 		var player_instance: Node3D = player_parent_scene.get_node_or_null("PlayerController_" + str(p_id))
 		if player_instance:
 			player_instance.queue_free()
@@ -134,15 +133,10 @@ func _on_peer_disconnect(p_id: int) -> void:
 
 func _on_server_disconnected() -> void:
 	print(str(multiplayer.get_unique_id()) + ": _on_server_disconnected")
-	MultiplayerColorTable.clear_multiplayer_color_table()
 	load_main_menu_scene()
 
 
 func host_server(p_port: int, p_max_players: int, p_dedicated: bool) -> void:
-	MultiplayerColorTable.reset_colors()
-
-	assert(p_max_players < MultiplayerColorTable.multiplayer_materials.size())
-
 	player_list = []
 	is_dedicated_server = p_dedicated
 	var peer: MultiplayerPeer = ENetMultiplayerPeer.new()
@@ -157,7 +151,6 @@ func host_server(p_port: int, p_max_players: int, p_dedicated: bool) -> void:
 
 
 func join_server(p_address: String, p_port: int) -> void:
-	MultiplayerColorTable.reset_colors()
 
 	player_list = []
 	var peer = ENetMultiplayerPeer.new()
