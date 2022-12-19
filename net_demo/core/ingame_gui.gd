@@ -2,7 +2,6 @@ extends Control
 
 
 func _update_menu_visibility() -> void:
-	# Can't call GameManager singleton directly yet due to circular dependency.
 	if GameManager.ingame_menu_visible:
 		$ToggleMenu.show()
 	else:
