@@ -142,8 +142,7 @@ offset_right = 809.0
 offset_bottom = 119.0
 
 [node name="RichTextLabel" type="RichTextLabel" parent="Info/HBoxContainer"]
-offset_right = 809.0
-offset_bottom = 119.0
+layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/focus = SubResource("1")
 theme_override_styles/normal = SubResource("2")

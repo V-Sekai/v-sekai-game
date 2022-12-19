@@ -609,7 +609,7 @@ func _host_state_instance() -> Dictionary:
 	var map_instance: Node = VSKMapManager.instance_map(false)
 
 	var new_player_instances: Array = []
-	if map_instance:
+	if map_instance and map_instance is vsk_map_definition_runtime_const:
 		VSKMapManager.instance_embedded_map_entities(map_instance, [player_scene_path])
 
 		if !NetworkManager.server_dedicated:
