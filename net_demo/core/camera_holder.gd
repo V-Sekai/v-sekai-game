@@ -132,10 +132,7 @@ func _input(p_event: InputEvent) -> void:
 
 func _ready() -> void:
 	if !multiplayer.has_multiplayer_peer() or is_multiplayer_authority():
-		if !GameManager.ingame_menu_visible:
-			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-		else:
-			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 		is_controllable = true
 	else:
 		queue_free()

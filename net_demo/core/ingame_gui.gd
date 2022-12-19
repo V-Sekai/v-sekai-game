@@ -2,16 +2,7 @@ extends Control
 
 
 func _update_menu_visibility() -> void:
-	if GameManager.ingame_menu_visible:
-		$ToggleMenu.show()
-	else:
-		$ToggleMenu.hide()
-
-
-func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("menu_toggle"):
-		GameManager.ingame_menu_visible = !GameManager.ingame_menu_visible
-		_update_menu_visibility()
+	$ToggleMenu.show()
 
 
 func _ready():

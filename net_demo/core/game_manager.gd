@@ -1,13 +1,5 @@
 extends Node
 
-var ingame_menu_visible: bool = false:
-	set(value):
-		ingame_menu_visible = value
-		if ingame_menu_visible or is_dedicated_server:
-			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-		else:
-			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-
 # The node which all the player scenes are parented to
 var player_parent_scene: Node3D = null
 
@@ -35,10 +27,7 @@ func remove_player_from_list(p_id: int) -> void:
 
 
 func is_movement_locked() -> bool:
-	if ingame_menu_visible == true:
-		return true
-	else:
-		return false
+	return false
 
 
 func is_session_authority(p_peer_id: int) -> bool:
@@ -62,13 +51,11 @@ func get_session_authority() -> int:
 
 func load_main_menu_scene() -> void:
 	assert(get_tree().change_scene_to_file("res://net_demo/uiux/main_menu.tscn") == OK)
-	ingame_menu_visible = false
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 
 func load_default_scene() -> void:
 	assert(get_tree().change_scene_to_file("res://net_demo/scenes/SCENE_game_map.tscn") == OK)
-	ingame_menu_visible = false
 
 
 func get_random_spawn_point() -> Transform3D:
