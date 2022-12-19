@@ -96,4 +96,3 @@ func _physics_process(_delta: float) -> void:
 		or pending_authority_request
 	):
 		_quantize_simulation_locally()
-

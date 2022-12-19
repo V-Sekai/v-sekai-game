@@ -156,3 +156,6 @@ func _ready() -> void:
 		set_collision_layer_value(3, false)
 
 	$CharacterModelHolder.transform.basis = Basis().rotated(Vector3.UP, y_rotation)
+
+	multiplayer_color_id = get_tree().get_multiplayer().get_unique_id()
+	$Label3D.text = str(multiplayer_color_id)

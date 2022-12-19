@@ -39,6 +39,7 @@ var distance_velocity: float = 0.0
 @export var walk_bobbing_rate: float = 10.0
 @export var sprint_bobbing_rate: float = 22.0
 
+
 func zoom_in():
 	distance -= 0.1
 	if distance < distance_min:

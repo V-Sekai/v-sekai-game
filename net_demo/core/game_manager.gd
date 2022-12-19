@@ -151,7 +151,6 @@ func host_server(p_port: int, p_max_players: int, p_dedicated: bool) -> void:
 
 
 func join_server(p_address: String, p_port: int) -> void:
-
 	player_list = []
 	var peer = ENetMultiplayerPeer.new()
 	if peer.create_client(p_address, p_port) == OK:

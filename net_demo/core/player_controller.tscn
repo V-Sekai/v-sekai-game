@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://22qy7iinftdd"]
+[gd_scene load_steps=12 format=3 uid="uid://22qy7iinftdd"]
 
 [ext_resource type="Script" path="res://net_demo/core/player_controller.gd" id="1_u1u4j"]
 [ext_resource type="Script" path="res://net_demo/core/player_snapshot_interpolation.gd" id="2_7x5fr"]
@@ -6,7 +6,6 @@
 [ext_resource type="Script" path="res://net_demo/core/node3d_bobbing.gd" id="4_58mrl"]
 [ext_resource type="Script" path="res://net_demo/core/character_model_holder.gd" id="5_0vx7h"]
 [ext_resource type="PackedScene" uid="uid://ciyq2g4d1psug" path="res://net_demo/uiux/ingame_gui.tscn" id="5_tyui0"]
-[ext_resource type="Script" path="res://net_demo/core/peer_label_3d.gd" id="7_janfo"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_c74dh"]
 radius = 0.25
@@ -26,6 +25,9 @@ size = Vector3(0.1, 0.1, 0.5)
 properties/0/path = NodePath("PlayerSnapshotInterpolation:sync_net_state")
 properties/0/spawn = false
 properties/0/sync = true
+properties/1/path = NodePath("Label3D:text")
+properties/1/spawn = true
+properties/1/sync = true
 
 [node name="PlayerController" type="CharacterBody3D"]
 top_level = true
@@ -100,4 +102,3 @@ visibility_update_mode = 1
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5373, 0)
 billboard = 2
 text = "PLACEHOLDER_ID"
-script = ExtResource("7_janfo")
