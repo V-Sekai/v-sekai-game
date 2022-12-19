@@ -18,18 +18,14 @@ enum { FIRST_PERSON, THIRD_PERSON }
 
 @export_flags_3d_physics var collision_mask: int = 0
 
-# Camera height
 @export var camera_height_first_person: float = 1.45
 @export var camera_height_third_person: float = 1.3
 
-# Smoothing
 @export var camera_smooth_time: float = 0.1
 
-# Pitch
 @export_range(0.0, 90.0) var pitch_min_limit: float = -40.0
 @export_range(0.0, 90.0) var pitch_max_limit: float = 40.0
 
-# Distance
 @export var distance_min: float = 1.0
 @export var distance_max: float = 2.5
 
@@ -37,13 +33,11 @@ var distance: float = 1.5
 var interpolated_distance: float = 1.5
 var distance_velocity: float = 0.0
 
-# Bobbing
 @export var minimum_sprint_velocity: float = 3.0
 @export var bobbing_v_amount: float = 0.01
 @export var bobbing_h_amount: float = 0.0
 @export var walk_bobbing_rate: float = 10.0
 @export var sprint_bobbing_rate: float = 22.0
-
 
 func zoom_in():
 	distance -= 0.1
@@ -60,7 +54,7 @@ func zoom_out():
 func update_bobbing(p_velocity_length: float) -> void:
 	var camera_bobbing_node: Node3D = get_node(camera_bobbing)
 
-	# Only apply bobbing when in first-person mode
+	# Only apply bobbing when in the first-person mode.
 	match view_mode:
 		FIRST_PERSON:
 			camera_bobbing_node.bobbing_v_amount = bobbing_v_amount * p_velocity_length
