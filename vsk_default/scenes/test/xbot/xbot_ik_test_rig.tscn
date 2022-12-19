@@ -1,10 +1,10 @@
-[gd_scene load_steps=15 format=3 uid="uid://bdwsmoq2xdexo"]
+[gd_scene load_steps=15 format=3]
 
 [ext_resource type="Script" path="res://addons/vsk_avatar/vsk_avatar_definition.gd" id="1_4s76f"]
 [ext_resource type="Script" path="res://addons/vsk_importer_exporter/vsk_uro_pipeline.gd" id="2_4nyka"]
 [ext_resource type="Script" path="res://addons/vrm/vrm_toplevel.gd" id="3_a6yxp"]
 [ext_resource type="Script" path="res://addons/vrm/vrm_meta.gd" id="4_fgde1"]
-[ext_resource type="PackedScene" uid="uid://c1yvwrff2702u" path="res://vsk_default/scenes/avatars/exported/xbot/xbot_avatar_upload.tscn" id="5_8jlsy"]
+[ext_resource type="PackedScene" uid="uid://c1yvwrff2702u" path="res://vsk_default/scenes/test/xbot/xbot_avatar_upload.tscn" id="5_8jlsy"]
 
 [sub_resource type="Resource" id="Resource_7bhbh"]
 resource_name = "CLICK TO SEE METADATA"

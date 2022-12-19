@@ -1,6 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://c8pigwgc1tjqr"]
+[gd_scene load_steps=5 format=3]
 
-[ext_resource type="PackedScene" uid="uid://smepoujc3fj" path="res://vsk_default/scenes/maps/test_scene/data/static_cube.tscn" id="1"]
+[ext_resource type="PackedScene" uid="uid://smepoujc3fj" path="res://vsk_default/scenes/test/test_scene/data/static_cube.tscn" id="1"]
 
 [sub_resource type="BoxMesh" id="1"]
 

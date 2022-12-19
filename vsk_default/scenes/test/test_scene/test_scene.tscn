@@ -1,6 +1,6 @@
-[gd_scene load_steps=11 format=3 uid="uid://cpy6dlgrumcs4"]
+[gd_scene load_steps=11 format=3]
 
-[ext_resource type="PackedScene" uid="uid://c8pigwgc1tjqr" path="res://vsk_default/scenes/maps/test_scene/data/world_geometry.tscn" id="1"]
+[ext_resource type="PackedScene" path="res://vsk_default/scenes/test/test_scene/data/world_geometry.tscn" id="1"]
 [ext_resource type="Script" path="res://addons/network_manager/network_spawn.gd" id="3"]
 [ext_resource type="PackedScene" uid="uid://bwcl6tiiptf7k" path="res://vsk_default/scenes/prefabs/test_ball_animation.tscn" id="5"]
 [ext_resource type="Script" path="res://addons/vsk_importer_exporter/vsk_uro_pipeline.gd" id="5_gsr6m"]
