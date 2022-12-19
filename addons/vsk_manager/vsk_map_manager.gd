@@ -134,7 +134,7 @@ func instance_map(_p_strip_all_entities: bool) -> Node:
 
 static func instance_embedded_map_entities(p_map_instance: Node, p_invalid_scene_paths: PackedStringArray) -> Node:
 	assert(p_map_instance)
-	assert(p_map_instance is vsk_map_definition_runtime_const)
+	assert(p_map_instance.get_script() == vsk_map_definition_runtime_const)
 
 	for i in range(0, p_map_instance.entity_instance_list.size()):
 		var map_entity_instance_info = p_map_instance.entity_instance_list[i]
@@ -172,8 +172,8 @@ static func instance_embedded_map_entities(p_map_instance: Node, p_invalid_scene
 					if logic_node_property_names.has(key):
 						logic_node.set(key, properties[key])
 
-				p_map_instance.add_child(map_entity_instance, true)
 				map_entity_instance.transform = map_entity_instance_info.transform
+				VSKMapManager.gameroot.add_child(map_entity_instance, true)
 			else:
 				push_warning("Map entity id %s: no scene path could be found for entity" % str(i))
 				continue
