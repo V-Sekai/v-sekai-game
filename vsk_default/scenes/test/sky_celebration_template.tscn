@@ -44,6 +44,7 @@ roughness = 0.0
 [sub_resource type="SphereMesh" id="5"]
 
 [node name="SkyCelebration" type="Node3D"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 4, 0, 2.38419e-07)
 script = ExtResource("5")
 map_resources = []
 entity_instance_list = []
@@ -59,7 +60,7 @@ shadow_enabled = true
 directional_shadow_blend_splits = true
 
 [node name="SkyCelebrationMainRoom" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 1.20525, -0.5, 4.13925)
 
 [node name="MainRoomBaked" type="Node3D" parent="SkyCelebrationMainRoom"]
 
@@ -76,64 +77,64 @@ shape = SubResource("ConcavePolygonShape3D_s4ylr")
 navmesh = SubResource("NavigationMesh_lrty5")
 
 [node name="Beachball" parent="." instance=ExtResource("2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.46238, 0.485, -0.0401002)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 1.16515, 0.485, -4.32313)
 
 [node name="Beachball2" parent="." instance=ExtResource("2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.46238, 0.485, 2.4163)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 3.62155, 0.485, -4.32313)
 
 [node name="Beachball3" parent="." instance=ExtResource("2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.46238, 0.539357, 5.23109)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 6.43634, 0.539357, -4.32313)
 
 [node name="Beachball4" parent="." instance=ExtResource("2")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.667, 0.484999, 5.23109)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 6.43634, 0.484999, -6.52775)
 
 [node name="Basketball" parent="." instance=ExtResource("4")]
-transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 4.47624, 0.158205, 0)
+transform = Transform3D(0.959383, 0, 0.282107, 0, 1, 0, -0.282107, 0, 0.959383, 1.20525, 0.158205, -0.336987)
 
 [node name="Basketball2" parent="." instance=ExtResource("4")]
-transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 4.47624, 0.158205, 0.889367)
+transform = Transform3D(0.959383, 0, 0.282107, 0, 1, 0, -0.282107, 0, 0.959383, 2.09462, 0.158205, -0.336987)
 
 [node name="Basketball3" parent="." instance=ExtResource("4")]
-transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 4.47624, 0.158205, 1.87365)
+transform = Transform3D(0.959383, 0, 0.282107, 0, 1, 0, -0.282107, 0, 0.959383, 3.0789, 0.158205, -0.336987)
 
 [node name="Basketball4" parent="." instance=ExtResource("4")]
-transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 4.47624, 0.158205, 2.95683)
+transform = Transform3D(0.959383, 0, 0.282107, 0, 1, 0, -0.282107, 0, 0.959383, 4.16208, 0.158205, -0.336987)
 
 [node name="Basketball5" parent="." instance=ExtResource("4")]
-transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 4.47624, 0.158205, 4.26031)
+transform = Transform3D(0.959383, 0, 0.282107, 0, 1, 0, -0.282107, 0, 0.959383, 5.46556, 0.158205, -0.336987)
 
 [node name="Basketball6" parent="." instance=ExtResource("4")]
-transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 3.55238, 0.158205, 0)
+transform = Transform3D(0.959383, 0, 0.282107, 0, 1, 0, -0.282107, 0, 0.959383, 1.20525, 0.158205, 0.586873)
 
 [node name="Basketball7" parent="." instance=ExtResource("4")]
-transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 3.55238, 0.158205, 0.889367)
+transform = Transform3D(0.959383, 0, 0.282107, 0, 1, 0, -0.282107, 0, 0.959383, 2.09462, 0.158205, 0.586873)
 
 [node name="Basketball8" parent="." instance=ExtResource("4")]
-transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 3.55238, 0.158205, 1.87365)
+transform = Transform3D(0.959383, 0, 0.282107, 0, 1, 0, -0.282107, 0, 0.959383, 3.0789, 0.158205, 0.586873)
 
 [node name="Basketball9" parent="." instance=ExtResource("4")]
-transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 3.55238, 0.158205, 2.95683)
+transform = Transform3D(0.959383, 0, 0.282107, 0, 1, 0, -0.282107, 0, 0.959383, 4.16208, 0.158205, 0.586873)
 
 [node name="Basketball10" parent="." instance=ExtResource("4")]
-transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 3.55238, 0.158205, 4.26031)
+transform = Transform3D(0.959383, 0, 0.282107, 0, 1, 0, -0.282107, 0, 0.959383, 5.46556, 0.158205, 0.586873)
 
 [node name="Basketball11" parent="." instance=ExtResource("4")]
-transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 2.47422, 0.158205, 0)
+transform = Transform3D(0.959383, 0, 0.282107, 0, 1, 0, -0.282107, 0, 0.959383, 1.20525, 0.158205, 1.66503)
 
 [node name="Basketball12" parent="." instance=ExtResource("4")]
-transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 2.47422, 0.158205, 0.889367)
+transform = Transform3D(0.959383, 0, 0.282107, 0, 1, 0, -0.282107, 0, 0.959383, 2.09462, 0.158205, 1.66503)
 
 [node name="Basketball13" parent="." instance=ExtResource("4")]
-transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 2.47422, 0.158205, 1.87365)
+transform = Transform3D(0.959383, 0, 0.282107, 0, 1, 0, -0.282107, 0, 0.959383, 3.0789, 0.158205, 1.66503)
 
 [node name="Basketball14" parent="." instance=ExtResource("4")]
-transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 2.47422, 0.603807, 2.95683)
+transform = Transform3D(0.959383, 0, 0.282107, 0, 1, 0, -0.282107, 0, 0.959383, 4.16208, 0.603807, 1.66503)
 
 [node name="Basketball15" parent="." instance=ExtResource("4")]
-transform = Transform3D(0.282107, 0, -0.959383, 0, 1, 0, 0.959383, 0, 0.282107, 2.47422, 0.158204, 4.26031)
+transform = Transform3D(0.959383, 0, 0.282107, 0, 1, 0, -0.282107, 0, 0.959383, 5.46556, 0.158204, 1.66503)
 
 [node name="Info" type="Node3D" parent="."]
-transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 1.4605, -4.76144)
+transform = Transform3D(-4.37114e-07, 0, 10, 0, 10, 0, -10, 0, -4.37114e-07, -3.55619, 1.4605, 4.13925)
 script = ExtResource("6")
 translucent = true
 
@@ -156,12 +157,12 @@ This canvas generates a power-of-two texture.[/wave]"
 fit_content_height = true
 
 [node name="Camera" type="Camera3D" parent="."]
-transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -16.432, 1.485, 1.631)
+transform = Transform3D(1, 0, -1.06581e-14, 0, 1, 0, 1.06581e-14, 0, 1, 2.83625, 1.485, 20.5713)
 attributes = SubResource("CameraAttributesPhysical_dg1fj")
 current = true
 
 [node name="ReflectionProbe" type="ReflectionProbe" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 1.20525, 5, 4.13925)
 visible = false
 extents = Vector3(22.5, 6, 12)
 origin_offset = Vector3(0, -3.5, 0)
@@ -170,7 +171,7 @@ enable_shadows = true
 cull_mask = 1
 
 [node name="ReflectionSphere" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 1.03249, -4.44135)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -3.2361, 1.03249, 12.1393)
 visible = false
 material_override = SubResource("StandardMaterial3D_4eapr")
 mesh = SubResource("5")
