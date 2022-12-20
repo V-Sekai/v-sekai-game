@@ -99,11 +99,6 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://addons/sar1_mocap_manager/sar1_mocap_recording.gd"
 }, {
-"base": "MultiplayerAPIExtension",
-"class": &"MultiplayerExtension",
-"language": &"GDScript",
-"path": "res://net_demo/core/multiplayer_extension.gd"
-}, {
 "base": "Control",
 "class": &"NavigationController",
 "language": &"GDScript",
@@ -193,7 +188,6 @@ _global_script_class_icons={
 "MocapManager": "",
 "MocapManagerPlugin": "",
 "MocapRecording": "",
-"MultiplayerExtension": "",
 "NavigationController": "",
 "NetworkHierarchy": "",
 "NetworkIdentity": "",
