@@ -3,7 +3,7 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://c7th51bq3834f"
+uid="uid://cr4xerufsmv43"
 path="res://.godot/imported/main_room.gltf-6896802c47202e0aeee3338a5738a3d3.scn"
 
 [deps]
@@ -30,8 +30,16 @@ import_script/path=""
 _subresources={
 "materials": {
 "Concrete": {
-"use_external/enabled": false,
+"use_external/enabled": true,
 "use_external/path": "res://vsk_default/import/sky_celebration/main_room_mat.tres"
+}
+},
+"nodes": {
+"PATH:MainRoomBaked": {
+"decomposition/precision": 10,
+"generate/navmesh": 1,
+"generate/physics": true,
+"physics/shape_type": 2
 }
 }
 }
