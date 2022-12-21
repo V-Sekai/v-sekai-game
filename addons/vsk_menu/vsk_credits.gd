@@ -1,5 +1,3 @@
 extends RefCounted
 
-const LEAD_DEVELOPERS = [
-
-]
+const LEAD_DEVELOPERS = []

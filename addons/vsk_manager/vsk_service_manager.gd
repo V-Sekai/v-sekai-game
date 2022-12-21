@@ -8,19 +8,15 @@ var loaded_services: Array = []
 
 
 func setup_configuration() -> void:
-	if ! ProjectSettings.has_setting("services/services/services"):
+	if !ProjectSettings.has_setting("services/services/services"):
 		ProjectSettings.set_setting("services/services/services", services)
 	else:
 		services = ProjectSettings.get_setting("services/services/services")
 
-	if ! ProjectSettings.has_setting("services/services/required_host_notify_services"):
-		ProjectSettings.set_setting(
-			"services/services/required_host_notify_services", required_host_notify_services
-		)
+	if !ProjectSettings.has_setting("services/services/required_host_notify_services"):
+		ProjectSettings.set_setting("services/services/required_host_notify_services", required_host_notify_services)
 	else:
-		required_host_notify_services = ProjectSettings.get_setting(
-			"services/services/required_host_notify_services"
-		)
+		required_host_notify_services = ProjectSettings.get_setting("services/services/required_host_notify_services")
 
 
 func is_required_host_notify_service(p_service: String) -> bool:
@@ -91,6 +87,7 @@ func setup() -> void:
 
 	install_services()
 	setup_services()
+
 
 func _ready():
 	set_process(true)

@@ -17,7 +17,7 @@ func _ready() -> void:
 	set_focus_mode(FOCUS_NONE)
 	set_mouse_filter(MOUSE_FILTER_IGNORE)
 
-	if ! Engine.is_editor_hint():
+	if !Engine.is_editor_hint():
 		texture_rect_ingame = TextureRect.new()
 		texture_rect_ingame.set_name("TextureRect")
 		texture_rect_ingame.set_focus_mode(FOCUS_NONE)
@@ -34,9 +34,7 @@ func _ready() -> void:
 		texture_rect_ingame.material = hack
 
 		add_child(texture_rect_ingame, true)
-		texture_rect_ingame.set_anchors_and_offsets_preset(
-			Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE, 0
-		)
+		texture_rect_ingame.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE, 0)
 
 		##
 		texture_rect_menu = TextureRect.new()
@@ -53,6 +51,4 @@ func _ready() -> void:
 			printerr("Could could connect gui_input signal!")
 
 		add_child(texture_rect_menu, true)
-		texture_rect_menu.set_anchors_and_offsets_preset(
-			Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE, 0
-		)
+		texture_rect_menu.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE, 0)

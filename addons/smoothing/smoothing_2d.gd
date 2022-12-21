@@ -20,21 +20,20 @@
 
 extends Node2D
 
-@export var target : NodePath:
+@export var target: NodePath:
 	set = set_target,
 	get = get_target
 
+var _m_Target: Node2D
 
-var _m_Target : Node2D
+var m_Pos_curr: Vector2 = Vector2()
+var m_Pos_prev: Vector2 = Vector2()
 
-var m_Pos_curr : Vector2 = Vector2()
-var m_Pos_prev : Vector2 = Vector2()
+var m_Angle_curr: float
+var m_Angle_prev: float
 
-var m_Angle_curr : float
-var m_Angle_prev : float
-
-var m_Scale_curr : Vector2 = Vector2()
-var m_Scale_prev : Vector2 = Vector2()
+var m_Scale_curr: Vector2 = Vector2()
+var m_Scale_prev: Vector2 = Vector2()
 
 const SF_ENABLED: int = 1 << 0
 const SF_TRANSLATE: int = 1 << 1
@@ -45,13 +44,13 @@ const SF_GLOBAL_OUT: int = 1 << 5
 const SF_DIRTY: int = 1 << 6
 const SF_INVISIBLE: int = 1 << 7
 
-@export var flags : int = SF_ENABLED | SF_TRANSLATE: # (int, FLAGS, "enabled", "translate", "rotate", "scale", "global in", "global out") = SF_ENABLED | SF_TRANSLATE
+@export var flags: int = SF_ENABLED | SF_TRANSLATE:  # (int, FLAGS, "enabled", "translate", "rotate", "scale", "global in", "global out") = SF_ENABLED | SF_TRANSLATE
 	set = _set_flags,
 	get = _get_flags
 
-
 ##########################################################################################
 # USER FUNCS
+
 
 # call this on e.g. starting a level, AFTER moving the target
 # so we can update both the previous and current values
@@ -70,14 +69,14 @@ func teleport() -> void:
 	# get back the old flags
 	flags = temp_flags
 
-func set_enabled(bEnable : bool) -> void:
+
+func set_enabled(bEnable: bool) -> void:
 	_ChangeFlags(SF_ENABLED, bEnable)
 	_SetProcessing()
 
+
 func is_enabled() -> bool:
 	return _TestFlags(SF_ENABLED)
-
-
 
 
 ##########################################################################################
@@ -88,35 +87,42 @@ func _ready():
 	m_Angle_prev = 0
 	pass
 
+
 func set_target(new_value: NodePath) -> void:
 	target = new_value
 	if is_inside_tree():
 		_FindTarget()
 
+
 func get_target() -> NodePath:
 	return target
+
 
 func _set_flags(new_value: int) -> void:
 	flags = new_value
 	# we may have enabled or disabled
 	_SetProcessing()
 
+
 func _get_flags() -> int:
 	return flags
+
 
 func _SetProcessing() -> void:
 	var bEnable = _TestFlags(SF_ENABLED)
 	if _TestFlags(SF_INVISIBLE):
 		bEnable = false
 
-	set_process(bEnable);
-	set_physics_process(bEnable);
+	set_process(bEnable)
+	set_physics_process(bEnable)
 	pass
+
 
 func _enter_tree():
 	# might have been moved
 	_FindTarget()
 	pass
+
 
 func _notification(what):
 	match what:
@@ -126,9 +132,8 @@ func _notification(what):
 			_SetProcessing()
 
 
-
 func _RefreshTransform() -> void:
-	_ClearFlags(SF_DIRTY);
+	_ClearFlags(SF_DIRTY)
 
 	if _HasTarget() == false:
 		return
@@ -190,7 +195,6 @@ func _process(_delta: float):
 
 	var f = Engine.get_physics_interpolation_fraction()
 
-
 	if _TestFlags(SF_GLOBAL_OUT):
 		# translate
 		if _TestFlags(SF_TRANSLATE):
@@ -218,6 +222,7 @@ func _process(_delta: float):
 
 	pass
 
+
 func _physics_process(_delta: float):
 	# take care of the special case where multiple physics ticks
 	# occur before a frame .. the data must flow!
@@ -227,22 +232,28 @@ func _physics_process(_delta: float):
 	_SetFlags(SF_DIRTY)
 	pass
 
+
 func _LerpAngle(from: float, to: float, weight: float) -> float:
 	return from + _ShortAngleDist(from, to) * weight
 
+
 func _ShortAngleDist(from: float, to: float) -> float:
-	var max_angle : float = 2 * PI
-	var diff : float = fmod(to-from, max_angle)
+	var max_angle: float = 2 * PI
+	var diff: float = fmod(to - from, max_angle)
 	return fmod(2.0 * diff, max_angle) - diff
+
 
 func _SetFlags(f: int) -> void:
 	flags |= f
 
+
 func _ClearFlags(f: int) -> void:
 	flags &= ~f
 
+
 func _TestFlags(f: int) -> bool:
 	return (flags & f) == f
+
 
 func _ChangeFlags(f: int, bSet: bool) -> void:
 	if bSet:

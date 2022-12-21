@@ -16,10 +16,8 @@ const network_writer_const = preload("res://addons/network_manager/network_write
 const scene_tree_execution_table_const = preload("res://addons/entity_manager/scene_tree_execution_table.gd")
 const vsk_map_definition_runtime_const = preload("res://addons/vsk_map/vsk_map_definition_runtime.gd")
 const vsk_map_entity_instance_record_const = preload("res://addons/vsk_map/vsk_map_entity_instance_record.gd")
-const vsk_map_manager_const = preload("res://addons/vsk_manager/vsk_map_manager.gd")
 const vsk_network_manager_const = preload("res://addons/vsk_manager/vsk_network_manager.gd")
 const connection_util_const = preload("res://addons/gd_util/connection_util.gd")
-
 
 # Determines whether to the server should process the host state
 # in a background thread (debugging).
@@ -36,8 +34,10 @@ const NETWORK_MAJOR_VERSION = 0
 const NETWORK_MINOR_VERSION = 3
 const NETWORK_PROTOCOL_NAME = "vsk"
 
+
 static func get_vsk_network_version_string() -> String:
 	return "%s_v%s.%s" % [NETWORK_PROTOCOL_NAME, str(NETWORK_MAJOR_VERSION), str(NETWORK_MINOR_VERSION)]
+
 
 # The default number of players for a server unless specified otherwise
 const DEFAULT_MAX_PLAYERS = 64
@@ -52,18 +52,18 @@ const DEFAULT_SERVER_NAME = "V-Sekai Server"
 const NETWORK_SPAWNER_GROUP_NAME = "NetworkSpawnGroup"
 
 # Resource ID for the resource preloader
-const RESOURCE_ID_PLAYER_SCENE=0
-
+const RESOURCE_ID_PLAYER_SCENE = 0
 
 # Result IDs emitted by the network_callback signal
-enum { HOST_GAME_OKAY, HOST_GAME_FAILED, SHARD_REGISTRATION_FAILED, INVALID_MAP, NO_SERVER_INFO, NO_SERVER_INFO_VERSION, SERVER_INFO_VERSION_MISMATCH}
+enum { HOST_GAME_OKAY, HOST_GAME_FAILED, SHARD_REGISTRATION_FAILED, INVALID_MAP, NO_SERVER_INFO, NO_SERVER_INFO_VERSION, SERVER_INFO_VERSION_MISMATCH }
 
-var advertised_server: bool = false # Whether this server is to be advertised
+var advertised_server: bool = false  # Whether this server is to be advertised
 # on a backend server.
 
 # Timer to send a heartbeat command to backend shard in order to keep it alive.
 var shard_heartbeat_timer: Timer = null
 var shard_heartbeat_frequency: float = 10.0  # In seconds
+
 
 ##
 ## This method is called by the shard heartbeat timer when it times out. It will
@@ -86,6 +86,7 @@ func _heartbeat_timer_timout() -> void:
 var shard_create_callback: RefCounted = RefCounted.new()
 var shard_delete_callback: RefCounted = RefCounted.new()
 
+
 func refresh_shard_callbacks():
 	shard_create_callback = RefCounted.new()
 	shard_delete_callback = RefCounted.new()
@@ -101,6 +102,7 @@ var host_state_tasks: int = 0
 # Flag to tell threads that the network session should be killed
 var kill_flag: bool = false
 
+
 func _host_state_task_increment() -> void:
 	host_state_tasks += 1
 
@@ -112,6 +114,7 @@ func _host_state_task_decrement() -> void:
 
 	if host_state_tasks == 0 and kill_flag:
 		NetworkManager.request_network_kill()
+
 
 # Spatial root containing an active game session, assigned externally by the
 # VSKGameflowManager
@@ -134,29 +137,29 @@ var player_avatar_paths = {}
 var player_instances: Dictionary = {}
 
 var signal_table: Array = [
-	{"singleton": "NetworkManager","signal": "requested_server_info","method": "_requested_server_info"},
-	{"singleton": "NetworkManager","signal": "requested_server_state","method": "_requested_server_state"},
-	{"singleton": "NetworkManager","signal": "create_server_info","method": "_host_create_server_info"},
-	{"singleton": "NetworkManager","signal": "create_server_state","method": "_host_create_server_state"},
+	{"singleton": "NetworkManager", "signal": "requested_server_info", "method": "_requested_server_info"},
+	{"singleton": "NetworkManager", "signal": "requested_server_state", "method": "_requested_server_state"},
+	{"singleton": "NetworkManager", "signal": "create_server_info", "method": "_host_create_server_info"},
+	{"singleton": "NetworkManager", "signal": "create_server_state", "method": "_host_create_server_state"},
 	{"singleton": "NetworkManager", "signal": "connection_succeeded", "method": "_connection_succeeded"},
 	{"singleton": "NetworkManager", "signal": "connection_failed", "method": "_connection_failed"},
 	{"singleton": "NetworkManager", "signal": "peer_registered", "method": "_peer_registered"},
 	{"singleton": "NetworkManager", "signal": "peer_unregistered", "method": "_peer_unregistered"},
 	{"singleton": "NetworkManager", "signal": "peer_list_changed", "method": "_peer_list_changed"},
-	{"singleton": "NetworkManager","signal": "peer_registration_complete","method": "_peer_registration_complete"},
-	{"singleton": "NetworkManager","signal": "network_peer_packet","method": "_network_peer_packet"},
-	{"singleton": "NetworkManager","signal": "server_disconnected","method": "_server_disconnected"},
-	{"singleton": "NetworkManager","signal": "received_server_info","method": "_received_server_info"},
-	{"singleton": "NetworkManager","signal": "received_server_state","method": "_received_server_state"},
-	{"singleton": "NetworkManager","signal": "received_client_info","method": "_received_client_info"},
-	{"singleton": "NetworkManager","signal": "session_data_reset","method": "_session_data_reset"},
+	{"singleton": "NetworkManager", "signal": "peer_registration_complete", "method": "_peer_registration_complete"},
+	{"singleton": "NetworkManager", "signal": "network_peer_packet", "method": "_network_peer_packet"},
+	{"singleton": "NetworkManager", "signal": "server_disconnected", "method": "_server_disconnected"},
+	{"singleton": "NetworkManager", "signal": "received_server_info", "method": "_received_server_info"},
+	{"singleton": "NetworkManager", "signal": "received_server_state", "method": "_received_server_state"},
+	{"singleton": "NetworkManager", "signal": "received_client_info", "method": "_received_client_info"},
+	{"singleton": "NetworkManager", "signal": "session_data_reset", "method": "_session_data_reset"},
 	{"singleton": "NetworkManager", "signal": "connection_killed", "method": "_connection_killed"},
 	{"singleton": "NetworkManager", "signal": "peer_became_active", "method": "_peer_became_active"},
 	{"singleton": "VSKGameFlowManager", "signal": "is_quitting", "method": "_is_quitting"},
 	{"singleton": "VSKGameFlowManager", "signal": "map_loaded", "method": "_map_loaded"},
 	{"singleton": "VSKGameFlowManager", "signal": "server_hosted", "method": "_server_hosted"},
-	{"singleton": "NetworkManager","signal": "requesting_server_info","method": "_requesting_server_info"},
-	{"singleton": "NetworkManager","signal": "requesting_server_state","method": "_requesting_server_state"},
+	{"singleton": "NetworkManager", "signal": "requesting_server_info", "method": "_requesting_server_info"},
+	{"singleton": "NetworkManager", "signal": "requesting_server_state", "method": "_requesting_server_state"},
 ]
 
 signal network_callback(p_result, p_args)
@@ -170,9 +173,9 @@ signal requesting_server_info
 signal requesting_server_state
 
 signal server_state_initialising
-signal server_state_ready # Fired before a fadeout
+signal server_state_ready  # Fired before a fadeout
 
-signal session_ready(fade_skipped) # Fired when we're ready to go ingame
+signal session_ready(fade_skipped)  # Fired when we're ready to go ingame
 
 signal connection_succeeded
 signal connection_failed
@@ -182,6 +185,7 @@ signal connection_killed
 
 signal player_display_name_updated(p_id, p_name)
 signal player_avatar_path_updated(p_id, p_name)
+
 
 ##
 ## If the shard is active, attempt to send a kill command to the server
@@ -202,7 +206,7 @@ func attempt_to_kill_shard() -> void:
 ## Callback from the main network manager telling us the connection has successfully shutdown
 ##
 func _connection_killed() -> void:
-	await attempt_to_kill_shard() # FIXME: This wasn't await before.
+	await attempt_to_kill_shard()  # FIXME: This wasn't await before.
 	destroy_all_entities()
 	kill_flag = false
 
@@ -212,11 +216,12 @@ func _connection_killed() -> void:
 
 	connection_killed.emit()
 
+
 ##
 ## Returns true if we have an active network session in the NetworkManager
 ##
 func is_session_alive() -> bool:
-	if ! kill_flag:
+	if !kill_flag:
 		if NetworkManager.has_active_peer():
 			return true
 
@@ -270,9 +275,11 @@ func get_random_spawn_transform_for_spawners(p_spawners: Array) -> Transform3D:
 
 	return spawn_location
 
+
 func get_random_spawn_transform() -> Transform3D:
 	var spawn_nodes: Array = get_tree().get_nodes_in_group(NETWORK_SPAWNER_GROUP_NAME)
 	return get_random_spawn_transform_for_spawners(spawn_nodes)
+
 
 ##
 ## Instantiates a player scene, usually called by the server host when
@@ -283,12 +290,12 @@ func get_random_spawn_transform() -> Transform3D:
 func add_player_scene(p_master_id: int) -> Node:
 	print("Adding player scene for {master_id}...".format({"master_id": str(p_master_id)}))
 
-	if ! player_instances.has(p_master_id):
-		var instantiate: Node = EntityManager.instantiate_entity_and_setup(
-			player_scene,
-			{"avatar_path":VSKPlayerManager.avatar_path},
-			"NetEntity_Player_{master_id}".format({"master_id": str(p_master_id)}),
-			p_master_id
+	if !player_instances.has(p_master_id):
+		var instantiate: Node = (
+			EntityManager
+			. instantiate_entity_and_setup(
+				player_scene, {"avatar_path": VSKPlayerManager.avatar_path}, "NetEntity_Player_{master_id}".format({"master_id": str(p_master_id)}), p_master_id
+			)
 		)
 
 		player_instances[p_master_id] = instantiate
@@ -300,6 +307,7 @@ func add_player_scene(p_master_id: int) -> Node:
 	else:
 		printerr("Attempted to add duplicate client player scene!")
 		return null
+
 
 ##
 ## Destroys a player scene, usually called by the server host when a peer
@@ -316,6 +324,7 @@ func remove_player_scene(p_master_id: int) -> void:
 	else:
 		printerr("Attempted to remove unrecorded client player scene!")
 
+
 ##
 ## Destroys all the player scene instances, called as part of the cleanup phase.
 ##
@@ -324,6 +333,7 @@ func clear_all_player_scenes() -> void:
 
 	for key in player_instances.keys():
 		remove_player_scene(key)
+
 
 ##
 ## Returns the EntityRef for the player instantiate of the corresponding network ID
@@ -334,6 +344,7 @@ func get_player_instance_ref(p_network_id: int) -> EntityRef:
 	else:
 		return null
 
+
 ##
 ## Returns a dictionary containing EntityRefs for all the valid player instances
 ##
@@ -343,6 +354,7 @@ func get_all_player_instance_refs() -> Dictionary:
 		player_dictionary[key] = player_instances[key].get_entity_ref()
 
 	return player_dictionary
+
 
 ##
 ## Callback function to the NetworkManager, called when the session data
@@ -355,6 +367,7 @@ func _session_data_reset() -> void:
 	clear_all_player_display_names()
 	clear_all_player_avatar_paths()
 	clear_all_validated_peers()
+
 
 ##
 ## Assigns the display name for a new peer.
@@ -381,6 +394,7 @@ func remove_player_display_name(p_master_id: int) -> void:
 	else:
 		printerr("Attempted to remove unrecorded client display name!")
 
+
 ##
 ## Removes all of the player display names
 ##
@@ -390,6 +404,7 @@ func clear_all_player_display_names() -> void:
 	for key in player_display_names.keys():
 		remove_player_display_name(key)
 
+
 ##
 ## Removes all of the validated peers
 ##
@@ -398,12 +413,15 @@ func clear_all_validated_peers() -> void:
 
 	validated_peers = []
 
+
 ##
 ## Returns true if currently running as a dedicated
 ##
 
+
 func is_dedicated_server() -> bool:
 	return NetworkManager.server_dedicated
+
 
 ##
 ## Assigns the avatar path for a new peer.
@@ -415,6 +433,7 @@ func update_player_avatar_path(p_master_id: int, p_avatar_path: String) -> void:
 
 	player_avatar_paths[p_master_id] = p_avatar_path
 	player_avatar_path_updated.emit(p_master_id, p_avatar_path)
+
 
 ##
 ## Removes the avatar path for a corresponding peer.
@@ -445,18 +464,17 @@ func clear_all_player_avatar_paths() -> void:
 func _map_loaded() -> void:
 	print("_map_loaded")
 
-	if (
-		NetworkManager.get_current_peer_id()
-		== NetworkManager.network_constants_const.SERVER_MASTER_PEER_ID
-	):
+	if NetworkManager.get_current_peer_id() == NetworkManager.network_constants_const.SERVER_MASTER_PEER_ID:
 		NetworkManager.send_create_server_state()
 	else:
 		NetworkManager.client_request_server_state({})
+
 
 func _requesting_server_info() -> void:
 	print("_requesting_server_info")
 
 	requesting_server_info.emit()
+
 
 func _requesting_server_state() -> void:
 	print("_requesting_server_state")
@@ -467,6 +485,7 @@ func _requesting_server_state() -> void:
 ##########
 # Server #
 ##########
+
 
 ##
 ## Callback from the gameflow manager that the server has been successfully hosted
@@ -489,14 +508,7 @@ func _server_hosted() -> void:
 ## Returns enum Error
 ##
 func host_game(
-	p_server_name: String,
-	p_map_path: String,
-	p_game_mode_path: String,
-	p_port: int,
-	p_max_players: int,
-	p_dedicated_server: bool,
-	p_advertise: bool,
-	p_retry_count: int
+	p_server_name: String, p_map_path: String, p_game_mode_path: String, p_port: int, p_max_players: int, p_dedicated_server: bool, p_advertise: bool, p_retry_count: int
 ) -> void:
 	if p_port < 0:
 		p_port = NetworkManager.default_port
@@ -510,15 +522,7 @@ func host_game(
 		if advertised_server:
 			registering_shard.emit()
 			refresh_shard_callbacks()
-			VSKShardManager.call_deferred(
-				"create_shard",
-				shard_create_callback,
-				p_port,
-				p_map_path,
-				p_server_name,
-				0 if p_dedicated_server else 1,
-				p_max_players
-			)
+			VSKShardManager.call_deferred("create_shard", shard_create_callback, p_port, p_map_path, p_server_name, 0 if p_dedicated_server else 1, p_max_players)
 			# FIXME: Godot bug with signal return type.
 			var tmp = await VSKShardManager.shard_create_callback
 			shard_callback = tmp
@@ -537,6 +541,7 @@ func host_game(
 	else:
 		network_callback.emit(HOST_GAME_FAILED, {})
 
+
 ##
 ## Callback function for when the host has created the server info,
 ## infrequently changing data describing the server such as the current map.
@@ -545,10 +550,8 @@ func _host_create_server_info() -> void:
 	print("_host_create_server_info")
 
 	host_creating_server_info.emit()
-	await VSKMapManager.request_map_load(
-		VSKGameFlowManager.multiplayer_request.map_path,
-		false,
-		false) # Warning, this skips all validation on localhosted maps
+	await VSKMapManager.request_map_load(VSKGameFlowManager.multiplayer_request.map_path, false, false)  # Warning, this skips all validation on localhosted maps
+
 
 ##
 ## Called when server has initialised their host state. Called from the main thread.
@@ -566,19 +569,14 @@ func _host_setup_map(p_instances: Dictionary, p_fade_skipped: bool) -> void:
 		if p_instances["map"]:
 			VSKMapManager._set_current_map_unsafe(p_instances["map"])
 			var players: Array = p_instances["players"]
-			var spawn_nodes = node_util_const.find_nodes_in_group(
-				NETWORK_SPAWNER_GROUP_NAME, p_instances["map"]
-			)
+			var spawn_nodes = node_util_const.find_nodes_in_group(NETWORK_SPAWNER_GROUP_NAME, p_instances["map"])
 			for player_instance in players:
 				if not player_instance:
 					continue
 				var transform: Transform3D = get_random_spawn_transform_for_spawners(spawn_nodes)
 				player_instance.transform = transform
 
-				EntityManager.scene_tree_execution_command(
-					scene_tree_execution_table_const.ADD_ENTITY,
-					player_instance
-				)
+				EntityManager.scene_tree_execution_command(scene_tree_execution_table_const.ADD_ENTITY, player_instance)
 
 			EntityManager.scene_tree_execution_table._execute_scene_tree_execution_table_unsafe()
 			# Tell the server it is now safe to send server state
@@ -588,6 +586,7 @@ func _host_setup_map(p_instances: Dictionary, p_fade_skipped: bool) -> void:
 		else:
 			LogManager.error("Could not instantiate map!")
 			network_callback.emit(INVALID_MAP, {})
+
 
 ##
 ##
@@ -601,6 +600,7 @@ func _host_state_complete(p_instances: Dictionary) -> void:
 		else:
 			network_callback.emit(INVALID_MAP, {})
 
+
 ##
 ##
 ##
@@ -610,14 +610,12 @@ func _host_state_instance() -> Dictionary:
 
 	var new_player_instances: Array = []
 	if map_instance and map_instance is vsk_map_definition_runtime_const:
-		vsk_map_manager_const.instance_embedded_map_entities(map_instance, [player_scene_path])
+		VSKMapManager.instance_embedded_map_entities(map_instance, [player_scene_path])
 
-		if ! NetworkManager.server_dedicated:
+		if !NetworkManager.server_dedicated:
 			# Create player instance for server if server is not a
 			# dedicated server
-			var player_instance: Node = add_player_scene(
-				NetworkManager.network_constants_const.SERVER_MASTER_PEER_ID
-			)
+			var player_instance: Node = add_player_scene(NetworkManager.network_constants_const.SERVER_MASTER_PEER_ID)
 
 			new_player_instances.push_back(player_instance)
 
@@ -625,6 +623,7 @@ func _host_state_instance() -> Dictionary:
 	instanced_nodes["players"] = new_player_instances
 
 	return instanced_nodes
+
 
 ##
 ## Called in the main thread once the host_state_initialization thread function
@@ -639,6 +638,7 @@ func _threaded_host_state_initialization_complete() -> void:
 
 	_host_state_task_decrement()
 
+
 ##
 ## Threaded function for processing the host state. Mostly used for instancing
 ## map and entities.
@@ -651,11 +651,12 @@ func _threaded_host_state_initialization_func() -> Dictionary:
 	call_deferred("_threaded_host_state_initialization_complete")
 	return instanced_nodes
 
+
 func _unthreaded_host_state_initialization_func() -> void:
 	print("_unthreaded_host_state_initialization_func")
 
 	var instanced_nodes: Dictionary = _host_state_instance()
-	await _host_state_complete(instanced_nodes) # FIXME: changed to await
+	await _host_state_complete(instanced_nodes)  # FIXME: changed to await
 
 	_host_state_task_decrement()
 
@@ -666,21 +667,19 @@ func _host_create_server_state() -> void:
 	host_creating_server_state.emit()
 	NetworkManager.network_entity_manager.reset_server_instances()
 
-	if ! is_session_alive():
+	if !is_session_alive():
 		return
 
 	server_state_initialising.emit()
 
 	_host_state_task_increment()
 	if use_threaded_host_state_initalisation_func:
-		if (
-			state_initialization_thread.start(
-				_threaded_host_state_initialization_func) != OK
-			):
+		if state_initialization_thread.start(_threaded_host_state_initialization_func) != OK:
 			_host_state_task_decrement()
 			printerr("Could not start 'state_initialization_thread' thread'")
 	else:
 		call_deferred("_unthreaded_host_state_initialization_func")
+
 
 func _requested_server_info(p_network_id: int) -> void:
 	print("_requested_server_info")
@@ -707,21 +706,12 @@ func _threaded_requested_server_state_complete(p_thread: Thread, p_network_id: i
 	if is_session_alive():
 		player_instance.transform = get_random_spawn_transform()
 
-		EntityManager.scene_tree_execution_command(
-			scene_tree_execution_table_const.ADD_ENTITY,
-			player_instance
-		)
+		EntityManager.scene_tree_execution_command(scene_tree_execution_table_const.ADD_ENTITY, player_instance)
 
 		EntityManager.scene_tree_execution_table._execute_scene_tree_execution_table_unsafe()
 
-		if (
-			NetworkManager.network_replication_manager.connect(
-				"spawn_state_for_new_client_ready", self._server_state_ready_to_send)
-			== OK
-		):
-			NetworkManager.network_replication_manager.create_spawn_state_for_new_client(
-				p_network_id
-			)
+		if NetworkManager.network_replication_manager.connect("spawn_state_for_new_client_ready", self._server_state_ready_to_send) == OK:
+			NetworkManager.network_replication_manager.create_spawn_state_for_new_client(p_network_id)
 		else:
 			printerr("Could not connect spawn_state_for_new_client_ready!")
 
@@ -733,9 +723,7 @@ func _threaded_requested_server_state_func(p_userdata) -> Node:
 
 	var player_instance: Node = add_player_scene(p_userdata.network_id)
 
-	call_deferred(
-		"_threaded_requested_server_state_complete", p_userdata.thread, p_userdata.network_id
-	)
+	call_deferred("_threaded_requested_server_state_complete", p_userdata.thread, p_userdata.network_id)
 
 	return player_instance
 
@@ -745,11 +733,11 @@ func _requested_server_state(p_network_id: int) -> void:
 
 	var thread: Thread = Thread.new()
 
-	if ! is_session_alive():
+	if !is_session_alive():
 		return
 
 	_host_state_task_increment()
-	var callable : Callable = Callable(self, "_threaded_requested_server_state_func")
+	var callable: Callable = Callable(self, "_threaded_requested_server_state_func")
 	if thread.start(callable.bind({"thread": thread, "network_id": p_network_id})) != OK:
 		_host_state_task_decrement()
 		printerr("Could not start 'state_initialization_thread'!")
@@ -761,23 +749,14 @@ func _requested_server_state(p_network_id: int) -> void:
 func _server_state_ready_to_send(p_network_id: int, p_network_writer: Object) -> void:
 	print("_server_state_ready_to_send")
 
-	NetworkManager.network_replication_manager.disconnect(
-		"spawn_state_for_new_client_ready", Callable(self, "_server_state_ready_to_send"
-	))
+	NetworkManager.network_replication_manager.disconnect("spawn_state_for_new_client_ready", Callable(self, "_server_state_ready_to_send"))
 
 	# For all the existing active peers, send them client info about the
 	# new peer
 	for active_peer in NetworkManager.active_peers:
-		NetworkManager.server_send_client_info(active_peer, p_network_id,\
-		{\
-		"display_name":player_display_names[p_network_id],\
-		"avatar_path":player_avatar_paths[p_network_id]\
-		})
+		NetworkManager.server_send_client_info(active_peer, p_network_id, {"display_name": player_display_names[p_network_id], "avatar_path": player_avatar_paths[p_network_id]})
 
-	NetworkManager.server_send_server_state(
-		p_network_id,
-		{"entity_state": p_network_writer.get_raw_data(p_network_writer.get_position())}
-	)
+	NetworkManager.server_send_server_state(p_network_id, {"entity_state": p_network_writer.get_raw_data(p_network_writer.get_position())})
 	NetworkManager.confirm_client_ready_for_sync(p_network_id)
 
 
@@ -790,11 +769,7 @@ func join_game(p_ip: String, p_port: int) -> void:
 
 
 func _peer_registration_complete() -> void:
-	NetworkManager.client_request_server_info(\
-	{\
-	"display_name": VSKPlayerManager.display_name,\
-	"avatar_path": VSKPlayerManager.avatar_path\
-	})
+	NetworkManager.client_request_server_info({"display_name": VSKPlayerManager.display_name, "avatar_path": VSKPlayerManager.avatar_path})
 
 
 func _received_server_info(p_server_info: Dictionary) -> void:
@@ -804,18 +779,11 @@ func _received_server_info(p_server_info: Dictionary) -> void:
 
 			if p_server_info["version"] == client_server_version_string:
 				NetworkManager.session_master = NetworkManager.network_constants_const.SERVER_MASTER_PEER_ID
-				await VSKMapManager.request_map_load(
-					p_server_info["map_path"],
-					false,
-					false)
+				await VSKMapManager.request_map_load(p_server_info["map_path"], false, false)
 
 				return
 			else:
-				network_callback.emit(SERVER_INFO_VERSION_MISMATCH,\
-				{\
-				"server_network_version":p_server_info["version"],\
-				"client_network_version":client_server_version_string}\
-				)
+				network_callback.emit(SERVER_INFO_VERSION_MISMATCH, {"server_network_version": p_server_info["version"], "client_network_version": client_server_version_string})
 		else:
 			network_callback.emit(NO_SERVER_INFO_VERSION, {})
 	else:
@@ -824,6 +792,7 @@ func _received_server_info(p_server_info: Dictionary) -> void:
 
 func _received_client_info(p_network_id: int, p_client_info: Dictionary) -> void:
 	_validated_peer_connected(p_network_id, p_client_info)
+
 
 func _client_state_initialization_fade_complete(p_instance: Node, p_skipped: bool) -> void:
 	if is_session_alive():
@@ -869,9 +838,7 @@ func _threaded_received_server_state_initialization_func(p_userdata) -> Node:
 	var instantiate: Node = _client_instance_map_func()
 
 	print("Decoding server state init buffer...")
-	NetworkManager.decode_buffer(
-		NetworkManager.network_constants_const.SERVER_MASTER_PEER_ID, server_state["entity_state"]
-	)
+	NetworkManager.decode_buffer(NetworkManager.network_constants_const.SERVER_MASTER_PEER_ID, server_state["entity_state"])
 	print("Done!")
 
 	call_deferred("_threaded_client_state_initialization_complete")
@@ -884,9 +851,7 @@ func _unthreaded_received_server_state_initialization_func(p_server_state: Dicti
 	var instantiate: Node = _client_instance_map_func()
 
 	print("Decoding server state init buffer...")
-	NetworkManager.decode_buffer(
-		NetworkManager.network_constants_const.SERVER_MASTER_PEER_ID, server_state["entity_state"]
-	)
+	NetworkManager.decode_buffer(NetworkManager.network_constants_const.SERVER_MASTER_PEER_ID, server_state["entity_state"])
 	print("Done!")
 
 	await _client_state_initialization_complete(instantiate)
@@ -900,13 +865,14 @@ func _received_server_state(p_server_state: Dictionary) -> void:
 
 	_host_state_task_increment()
 	if use_threaded_received_server_state_func and state_initialization_thread:
-		var callable : Callable = Callable(self, "_threaded_received_server_state_initialization_func")
-		callable = callable.bind( {"server_state": p_server_state})
+		var callable: Callable = Callable(self, "_threaded_received_server_state_initialization_func")
+		callable = callable.bind({"server_state": p_server_state})
 		if state_initialization_thread.start(callable) != OK:
 			_host_state_task_decrement()
 			printerr("Could not start 'state_initialization_thread'!")
 	else:
 		call_deferred("_unthreaded_received_server_state_initialization_func", p_server_state)
+
 
 ##
 ## Callback from the NetworkManager for when a connection has succeeded.
@@ -914,20 +880,20 @@ func _received_server_state(p_server_state: Dictionary) -> void:
 func _connection_succeeded() -> void:
 	connection_succeeded.emit()
 
+
 ##
 ## Callback from the NetworkManager for when a connection has failed.
 ##
 func _connection_failed() -> void:
 	connection_failed.emit()
 
+
 ##
 ## Callback from the NetworkManager for when the list of peers has changed.
 ##
 func _peer_list_changed() -> void:
 	if NetworkManager.is_server() and advertised_server:
-		VSKShardManager.call_deferred(
-			"shard_update_player_count", shard_id, NetworkManager.get_peer_count(true)
-		)
+		VSKShardManager.call_deferred("shard_update_player_count", shard_id, NetworkManager.get_peer_count(true))
 
 		var shard_callback = await VSKShardManager.shard_update_player_count_callback
 		if shard_callback["result"] == OK:
@@ -935,6 +901,7 @@ func _peer_list_changed() -> void:
 				shard_heartbeat_timer.start(shard_heartbeat_frequency)
 		else:
 			printerr("Shard peer list update failed!")
+
 
 ##
 ## Callback from the NetworkManager for when a particular peer has been classified
@@ -944,24 +911,25 @@ func _peer_became_active(p_network_id: int) -> void:
 	if NetworkManager.is_server():
 		# Send info about server host as a regular peer
 		# if the server is not dedicated
-		if ! NetworkManager.server_dedicated:
-			NetworkManager.server_send_client_info(p_network_id,\
-			NetworkManager.network_constants_const.SERVER_MASTER_PEER_ID,\
-			{\
-			"display_name":VSKPlayerManager.display_name,\
-			"avatar_path":VSKPlayerManager.avatar_path\
-			})
+		if !NetworkManager.server_dedicated:
+			(
+				NetworkManager
+				. server_send_client_info(
+					p_network_id,
+					NetworkManager.network_constants_const.SERVER_MASTER_PEER_ID,
+					{"display_name": VSKPlayerManager.display_name, "avatar_path": VSKPlayerManager.avatar_path}
+				)
+			)
 
 		# Send info about all the other active peers to the new
 		# peer
 		for active_peer in NetworkManager.active_peers:
 			if p_network_id != active_peer:
-				NetworkManager.server_send_client_info(p_network_id,\
-				active_peer,\
-				{\
-				"display_name":player_display_names[active_peer],\
-				"avatar_path":player_avatar_paths[active_peer]\
-				})
+				(
+					NetworkManager
+					. server_send_client_info(p_network_id, active_peer, {"display_name": player_display_names[active_peer], "avatar_path": player_avatar_paths[active_peer]})
+				)
+
 
 ##
 ## Called when a peers client info has been received.
@@ -987,6 +955,7 @@ func _validated_peer_connected(p_network_id: int, p_client_info: Dictionary) -> 
 	update_player_display_name(p_network_id, display_name)
 	update_player_avatar_path(p_network_id, avatar_path)
 
+
 ##
 ## Called when a peers client info has been received.
 ##
@@ -1001,12 +970,14 @@ func _validated_peer_disconnected(p_network_id: int) -> void:
 	remove_player_avatar_path(p_network_id)
 	validated_peers.erase(p_network_id)
 
+
 ##
 ## Callback from the NetworkManager for when a particular peer has connected
 ## p_network_id is the peer id for the peer who connected
 ##
 func _peer_registered(_network_id: int) -> void:
 	pass
+
 
 ##
 ## Callback from the NetworkManager for when a particular peer has disconnected
@@ -1016,6 +987,7 @@ func _peer_unregistered(p_network_id: int) -> void:
 	if validated_peers.has(p_network_id):
 		_validated_peer_disconnected(p_network_id)
 
+
 ##
 ## Callback from the NetworkManager when a new packet for a particular peer
 ## has been received.
@@ -1024,6 +996,7 @@ func _peer_unregistered(p_network_id: int) -> void:
 ##
 func _network_peer_packet(p_network_id: int, p_packet: PackedByteArray) -> void:
 	NetworkManager.decode_buffer(p_network_id, p_packet)
+
 
 ##
 ## Called by regular _server_disconnected as a deferred function...I can't remember
@@ -1046,6 +1019,7 @@ func _server_disconnected_deferred() -> void:
 func _server_disconnected() -> void:
 	call_deferred("_server_disconnected_deferred")
 
+
 ##
 ## Callback function for when the application is about to close.
 ##
@@ -1061,21 +1035,18 @@ func assign_resource(p_resource: Resource, p_resource_id: int) -> void:
 
 func get_preload_tasks() -> Dictionary:
 	var preloading_tasks: Dictionary = {}
-	preloading_tasks[player_scene_path] = {
-		"target": self, "method": "assign_resource", "args": [RESOURCE_ID_PLAYER_SCENE]
-	}
+	preloading_tasks[player_scene_path] = {"target": self, "method": "assign_resource", "args": [RESOURCE_ID_PLAYER_SCENE]}
 
 	var network_scene_paths = NetworkManager.get_network_scene_paths()
 	for path in network_scene_paths:
-		if ! preloading_tasks.has(path):
+		if !preloading_tasks.has(path):
 			preloading_tasks[path] = {"target": null, "method": "", "args": []}
 
 	return preloading_tasks
 
 
 func setup() -> void:
-	if ! Engine.is_editor_hint():
-
+	if !Engine.is_editor_hint():
 		shard_heartbeat_timer = Timer.new()
 		shard_heartbeat_timer.set_name("ShardHeartbeatTimer")
 		add_child(shard_heartbeat_timer, true)
@@ -1085,50 +1056,52 @@ func setup() -> void:
 		var godot_speech: Node = GodotSpeech.godot_speech
 		if godot_speech:
 			NetworkManager.network_voice_manager.get_voice_buffers = VSKAudioManager.get_voice_buffers
-			if ! NetworkManager.network_voice_manager.get_voice_buffers.is_valid():
+			if !NetworkManager.network_voice_manager.get_voice_buffers.is_valid():
 				printerr("Could not register get_voice_buffers callfunc")
 
 			NetworkManager.network_voice_manager.get_sequence_id = VSKAudioManager.get_current_voice_id
-			if ! NetworkManager.network_voice_manager.get_sequence_id.is_valid():
+			if !NetworkManager.network_voice_manager.get_sequence_id.is_valid():
 				printerr("Could not register get_sequence_id callfunc")
 		else:
 			printerr("Could not find GodotSpeech node")
 
 		NetworkManager.network_voice_manager.should_send_audio = VSKAudioManager.should_send_audio
-		if ! NetworkManager.network_voice_manager.should_send_audio.is_valid():
+		if !NetworkManager.network_voice_manager.should_send_audio.is_valid():
 			printerr("Could not register should_send_audio callfunc")
 
 		NetworkLogger.assign_printl_func(LogManager, "printl")
 		NetworkLogger.assign_error_func(LogManager, "error")
-
 
 		if use_threaded_host_state_initalisation_func:
 			state_initialization_thread = Thread.new()
 
 		connection_util_const.connect_signal_table(signal_table, self)
 
+
 func apply_project_settings() -> void:
 	if Engine.is_editor_hint():
-		if ! ProjectSettings.has_setting("network/config/use_threaded_host_state_initalisation_func"):
+		if !ProjectSettings.has_setting("network/config/use_threaded_host_state_initalisation_func"):
 			ProjectSettings.set_setting("network/config/use_threaded_host_state_initalisation_func", use_threaded_host_state_initalisation_func)
 
-		if ! ProjectSettings.has_setting("network/config/use_threaded_received_server_state_func"):
+		if !ProjectSettings.has_setting("network/config/use_threaded_received_server_state_func"):
 			ProjectSettings.set_setting("network/config/use_threaded_received_server_state_func", use_threaded_received_server_state_func)
 
-		if ! ProjectSettings.has_setting("network/config/player_scene"):
+		if !ProjectSettings.has_setting("network/config/player_scene"):
 			ProjectSettings.set_setting("network/config/player_scene", player_scene_path)
 
-		if ! ProjectSettings.has_setting("network/config/shard_heartbeat_frequency"):
+		if !ProjectSettings.has_setting("network/config/shard_heartbeat_frequency"):
 			ProjectSettings.set_setting("network/config/shard_heartbeat_frequency", shard_heartbeat_frequency)
 
 		if ProjectSettings.save() != OK:
 			printerr("Could not save project settings!")
+
 
 func get_project_settings() -> void:
 	use_threaded_host_state_initalisation_func = ProjectSettings.get_setting("network/config/use_threaded_host_state_initalisation_func")
 	use_threaded_received_server_state_func = ProjectSettings.get_setting("network/config/use_threaded_received_server_state_func")
 	player_scene_path = ProjectSettings.get_setting("network/config/player_scene")
 	shard_heartbeat_frequency = ProjectSettings.get_setting("network/config/shard_heartbeat_frequency")
+
 
 func _ready() -> void:
 	apply_project_settings()

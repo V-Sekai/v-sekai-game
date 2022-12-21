@@ -1,4 +1,4 @@
-extends "res://addons/vsk_menu/setup_menu.gd" # setup_menu.gd
+extends "res://addons/vsk_menu/setup_menu.gd"  # setup_menu.gd
 
 @export var mouse_sensitivity_nodepath: NodePath = NodePath()
 var mouse_sensitivity_node: Control = null
@@ -10,8 +10,10 @@ var look_invert_node: Button = null
 func _on_look_invert_toggled(button_pressed: bool) -> void:
 	InputManager.invert_look_y = button_pressed
 
+
 func _on_mouse_sensitivity_value_changed(p_value: float) -> void:
 	InputManager.mouse_sensitivity = p_value
+
 
 func _ready() -> void:
 	mouse_sensitivity_node = get_node(mouse_sensitivity_nodepath)

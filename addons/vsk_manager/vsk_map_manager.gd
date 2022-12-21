@@ -5,6 +5,7 @@ const vsk_map_definition_const = preload("res://addons/vsk_map/vsk_map_definitio
 const vsk_map_definition_runtime_const = preload("res://addons/vsk_map/vsk_map_definition_runtime.gd")
 const vsk_map_entity_instance_record_const = preload("res://addons/vsk_map/vsk_map_entity_instance_record.gd")
 const runtime_entity_const = preload("res://addons/entity_manager/runtime_entity.gd")
+const network_constants_const = preload("res://addons/network_manager/network_constants.gd")
 
 var default_map_path: String = ""
 
@@ -22,19 +23,15 @@ var _instanced_map: Node = null
 var current_map: Node = null
 var gameroot: Node = null
 
-signal map_download_started()
+signal map_download_started
 signal map_load_callback(p_callback_id)
 signal map_load_update(p_stage, p_stage_count)
 
 const validator_map_const = preload("res://addons/vsk_importer_exporter/vsk_map_validator.gd")
 var validator_map = validator_map_const.new()
 
-func _user_content_load_done(
-	p_url: String,
-	p_err: int,
-	p_packed_scene: PackedScene,
-	p_skip_validation: bool
-	) -> void:
+
+func _user_content_load_done(p_url: String, p_err: int, p_packed_scene: PackedScene, p_skip_validation: bool) -> void:
 	if p_url == _current_map_path:
 		var validated_packed_scene: PackedScene = null
 
@@ -58,23 +55,22 @@ func _user_content_load_done(
 			_:
 				map_load_callback.emit(p_err, {})
 
-func _user_content_asset_request_started(p_url : String) -> void:
+
+func _user_content_asset_request_started(p_url: String) -> void:
 	if p_url == _current_map_path:
 		map_download_started.emit()
 
-func _set_loading_stage_count(p_url : String, p_stage_count: int):
+
+func _set_loading_stage_count(p_url: String, p_stage_count: int):
 	if p_url == _current_map_path:
 		_loading_stage_count = p_stage_count
 
 		map_load_update.emit(0, _loading_stage_count)
 
-func _set_loading_stage(p_url : String, p_stage: int):
+
+func _set_loading_stage(p_url: String, p_stage: int):
 	if p_url == _current_map_path:
-		LogManager.printl(
-			"Loading map {stage}/{stage_count}".format(
-				{"stage": str(p_stage), "stage_count": str(_loading_stage_count)}
-			)
-		)
+		LogManager.printl("Loading map {stage}/{stage_count}".format({"stage": str(p_stage), "stage_count": str(_loading_stage_count)}))
 
 		map_load_update.emit(p_stage, _loading_stage_count)
 
@@ -124,8 +120,7 @@ func instance_map(_p_strip_all_entities: bool) -> Node:
 		LogManager.printl("Instancing map...")
 		var map_instance: Node = _current_map_packed.instantiate()
 
-		if map_instance.get_script() != vsk_map_definition_const and\
-		map_instance.get_script() != vsk_map_definition_runtime_const:
+		if map_instance.get_script() != vsk_map_definition_const and map_instance.get_script() != vsk_map_definition_runtime_const:
 			LogManager.error("Map does not have a map definition script at root!")
 			map_instance.queue_free()
 
@@ -135,6 +130,7 @@ func instance_map(_p_strip_all_entities: bool) -> Node:
 		return map_instance
 
 	return null
+
 
 static func instance_embedded_map_entities(p_map_instance: Node, p_invalid_scene_paths: PackedStringArray) -> Node:
 	assert(p_map_instance)
@@ -184,24 +180,26 @@ static func instance_embedded_map_entities(p_map_instance: Node, p_invalid_scene
 
 	return p_map_instance
 
+
 func destroy_map() -> void:
 	# Destroy old current scene and cancel any in progress map loads
 	unload_current_map()
 
 
-func request_map_load(
-	p_map_path: String,
-	p_bypass_whitelist: bool,
-	p_skip_validation: bool) -> void:
+func request_map_load(p_map_path: String, p_bypass_whitelist: bool, p_skip_validation: bool) -> void:
 	_current_map_path = p_map_path
 
-	await super.request_user_content_load(
-		p_map_path,
-		VSKAssetManager.user_content_type.USER_CONTENT_MAP,
-		p_bypass_whitelist,
-		p_skip_validation,
-		validator_map.valid_external_path_whitelist,
-		validator_map.valid_resource_whitelist)
+	await (
+		super
+		. request_user_content_load(
+			p_map_path,
+			VSKAssetManager.user_content_type.USER_CONTENT_MAP,
+			p_bypass_whitelist,
+			p_skip_validation,
+			validator_map.valid_external_path_whitelist,
+			validator_map.valid_resource_whitelist
+		)
+	)
 
 
 func cancel_map_load() -> void:
@@ -220,7 +218,8 @@ func get_request_data_progress() -> Dictionary:
 
 	return {}
 
-func get_map_id_for_resource(p_resource : Resource) -> int:
+
+func get_map_id_for_resource(p_resource: Resource) -> int:
 	var _mutex_lock = mutex_lock_const.new(_instance_map_mutex)
 
 	if _instanced_map:
@@ -228,7 +227,8 @@ func get_map_id_for_resource(p_resource : Resource) -> int:
 
 	return -1
 
-func get_resource_for_map_id(p_id : int) -> Resource:
+
+func get_resource_for_map_id(p_id: int) -> Resource:
 	LogManager.printl("get_resource_for_map_id %s" % str(p_id))
 	if _instanced_map:
 		if p_id >= 0 and p_id < _instanced_map.map_resources.size():
@@ -236,8 +236,10 @@ func get_resource_for_map_id(p_id : int) -> Resource:
 
 	return null
 
+
 func get_default_map_path() -> String:
 	return default_map_path
+
 
 func setup() -> void:
 	VSKResourceManager.assign_get_map_id_for_resource_function(self, "get_map_id_for_resource")
@@ -250,16 +252,19 @@ func setup() -> void:
 	if connect("user_content_background_load_stage_count", self._set_loading_stage_count) != OK:
 		LogManager.error("Could not connect user_content_background_load_stage_count")
 
+
 func apply_project_settings() -> void:
 	if Engine.is_editor_hint():
-		if ! ProjectSettings.has_setting("network/config/default_map_path"):
+		if !ProjectSettings.has_setting("network/config/default_map_path"):
 			ProjectSettings.set_setting("network/config/default_map_path", default_map_path)
 
 		if ProjectSettings.save() != OK:
 			printerr("Could not save project settings!")
 
+
 func get_project_settings() -> void:
 	default_map_path = ProjectSettings.get_setting("network/config/default_map_path")
+
 
 func _ready() -> void:
 	apply_project_settings()

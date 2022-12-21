@@ -99,6 +99,11 @@ _global_script_classes=[{
 "language": &"GDScript",
 "path": "res://addons/sar1_mocap_manager/sar1_mocap_recording.gd"
 }, {
+"base": "MultiplayerAPIExtension",
+"class": &"MultiplayerExtension",
+"language": &"GDScript",
+"path": "res://net_demo/core/multiplayer_extension.gd"
+}, {
 "base": "Control",
 "class": &"NavigationController",
 "language": &"GDScript",
@@ -188,6 +193,7 @@ _global_script_class_icons={
 "MocapManager": "",
 "MocapManagerPlugin": "",
 "MocapRecording": "",
+"MultiplayerExtension": "",
 "NavigationController": "",
 "NetworkHierarchy": "",
 "NetworkIdentity": "",
@@ -207,7 +213,7 @@ _global_script_class_icons={
 [application]
 
 config/name="V-Sekai"
-run/main_scene="res://vsk_default/scenes/main_scene.tscn"
+run/main_scene="res://vsk_default/main_scene.tscn"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="groups_4_000"
 config/features=PackedStringArray("4.0")
@@ -319,6 +325,7 @@ window/vsync/vsync_via_compositor=true
 
 [editor]
 
+run/main_run_args="--xr-mode on"
 movie_writer/mjpeg_quality=1.0
 movie_writer/movie_file="../export.avi"
 import/use_multiple_threads=false
@@ -644,6 +651,14 @@ toggle_vr={
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":16777254,"unicode":0,"echo":false,"script":null)
 ]
 }
+physics_reset={
+"deadzone": 0.5,
+"events": []
+}
+block_physics_send={
+"deadzone": 0.5,
+"events": []
+}
 
 [internationalization]
 
@@ -734,4 +749,5 @@ config/process_priority=255
 [xr]
 
 openxr/enabled=true
+openxr/submit_depth_buffer=true
 shaders/enabled=true

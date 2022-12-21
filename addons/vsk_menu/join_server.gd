@@ -1,10 +1,10 @@
-extends "res://addons/vsk_menu/menu_view_controller.gd" # menu_view_controller.gd
+extends "res://addons/vsk_menu/menu_view_controller.gd"  # menu_view_controller.gd
 
 var loading_screen = load("res://addons/vsk_menu/main_menu/loading_screen.tscn")
 
-@export var join_button_nodepath : NodePath = NodePath()
-@export var ip_input_nodepath : NodePath = NodePath()
-@export var port_input_nodepath : NodePath = NodePath()
+@export var join_button_nodepath: NodePath = NodePath()
+@export var ip_input_nodepath: NodePath = NodePath()
+@export var port_input_nodepath: NodePath = NodePath()
 
 var join_button = null
 var ip_input = null
@@ -38,14 +38,17 @@ func will_disappear() -> void:
 func set_controls_disabled(p_disabled: bool) -> void:
 	join_button.set_disabled(p_disabled)
 
-	ip_input.set_editable(! p_disabled)
-	port_input.set_editable(! p_disabled)
+	ip_input.set_editable(!p_disabled)
+	port_input.set_editable(!p_disabled)
 
-var join_server_callable : Callable = VSKGameFlowManager.join_server
+
+var join_server_callable: Callable = VSKGameFlowManager.join_server
+
 
 func _on_JoinButton_pressed() -> void:
 	set_controls_disabled(true)
 	join_server_callable.call_deferred(ip_input.text, round(port_input.value))
+
 
 func _on_BackButton_pressed():
 	super.back_button_pressed()

@@ -9,33 +9,37 @@ var progress_texture = TextureProgressBar.new()
 var file_name = ""
 var file_ext = ""
 
-@export var textureUrl = "" :
+@export var textureUrl = "":
 	set = _setTextureUrl
 
-@export var storeCache : bool = true
-@export var everCache : bool = false # Ever load from cache after the first acess
-@export var preloadImage : bool = true
+@export var storeCache: bool = true
+@export var everCache: bool = false  # Ever load from cache after the first acess
+@export var preloadImage: bool = true
 
-@export var progressbar : bool = true :
+@export var progressbar: bool = true:
 	set = _setProgressbar
 
-@export var progressbarRect : Rect2 = Rect2(0,0,0,0)
-@export var progressbarColor : Color = Color.RED
+@export var progressbarRect: Rect2 = Rect2(0, 0, 0, 0)
+@export var progressbarColor: Color = Color.RED
 
 signal loaded(image, fromCache)
 signal progress(percent)
 
+
 func _setProgressbar(newValue):
 	progressbar = newValue
 	_adjustProgress()
+
 
 func _setTextureUrl(newValue):
 	textureUrl = newValue
 	if preloadImage and is_inside_tree():
 		_loadImage(false)
 
+
 func _loadImage(p_cache_only):
-	if textureUrl.is_empty(): return
+	if textureUrl.is_empty():
+		return
 
 	var dt = textureUrl.split(":")
 	if dt[0] == "data":
@@ -43,7 +47,7 @@ func _loadImage(p_cache_only):
 		return
 
 	var spl = textureUrl.split("/")
-	file_name = spl[spl.size()-1]
+	file_name = spl[spl.size() - 1]
 
 	if not self.request_in_progress.is_empty():
 		push_warning("Canceling current request " + str(self.request_in_progress))
@@ -53,32 +57,33 @@ func _loadImage(p_cache_only):
 
 	var file_name_stripped = file_name.split("?")[0]
 	var ext = file_name_stripped.split(".")
-	file_ext = ext[ext.size()-1].to_lower()
-	
+	file_ext = ext[ext.size() - 1].to_lower()
+
 	if not file_ext.is_empty():
 		var doFileExists = FileAccess.file_exists(str("user://image_cache/", file_name.sha256_text() + "." + file_ext))
 		if doFileExists:
 			var _image = Image.new()
 			if _image.load(str("user://image_cache/", file_name.sha256_text() + "." + file_ext)) == OK:
 				var _texture = ImageTexture.create_from_image(_image)
-				
+
 				texture = _texture
-				
+
 				progress_texture.hide()
 				loaded.emit(_texture, true)
-				
+
 				if everCache:
 					return
-					
+
 		elif storeCache:
 			# Add cache directory
-			var dir : DirAccess = DirAccess.open("user://")
+			var dir: DirAccess = DirAccess.open("user://")
 			var _err = dir.make_dir("image_cache")
 
 			http.download_file = str("user://image_cache/", file_name.sha256_text() + "." + file_ext)
 
 		if !p_cache_only:
 			_downloadImage()
+
 
 func _downloadImage():
 	if not textureUrl.is_empty():
@@ -89,6 +94,7 @@ func _downloadImage():
 		print("Starting request for " + str(textureUrl))
 		http.request(textureUrl)
 
+
 func _recreateHttp():
 	if http != null:
 		http.queue_free()
@@ -97,6 +103,7 @@ func _recreateHttp():
 	http.use_threads = true
 	http.request_completed.connect(self._on_HTTPRequest_request_completed)
 	add_child(http, true)
+
 
 func _ready():
 	add_to_group("TextureRectUrl")
@@ -107,6 +114,7 @@ func _ready():
 
 	set_process(false)
 	_loadImage(false)
+
 
 func _adjustProgress():
 	if progressbar:
@@ -135,6 +143,7 @@ func _adjustProgress():
 			progress_texture.position.y = 0
 		else:
 			progress_texture.position.y = progressbarRect.position.y
+
 
 func _on_HTTPRequest_request_completed(result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray):
 	var this_url = self.request_in_progress
@@ -173,6 +182,7 @@ func _on_HTTPRequest_request_completed(result: int, response_code: int, _headers
 	else:
 		print("Request failed for " + this_url + " with result " + str(result) + " and code " + str(response_code))
 
+
 func _process(_delta):
 	# show progressbar
 	var bodySize = http.get_body_size()
@@ -184,6 +194,7 @@ func _process(_delta):
 	if progressbar:
 		progress_texture.value = percent
 
+
 func _base64texture(image64):
 	var tmp = image64.split(",")[1]
 	var image = Image.new()
@@ -193,7 +204,7 @@ func _base64texture(image64):
 			progress_texture.hide()
 			loaded.emit(image, false)
 		return
-	var image_texture : ImageTexture = ImageTexture.create_from_image(image)
+	var image_texture: ImageTexture = ImageTexture.create_from_image(image)
 	texture = image_texture
 
 	if !Engine.is_editor_hint():

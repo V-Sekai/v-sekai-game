@@ -32,11 +32,13 @@ var test_audio: String = ""
 var headless_flag: bool = false
 var display_name_override: String = ""
 
+
 ##
 ## Returns true if we are running as a headless server
 ##
 func is_headless() -> bool:
 	return headless_flag
+
 
 ##
 ## Called once all the startup function is complete. Sets up the ingame gui,
@@ -55,17 +57,10 @@ func _startup_complate() -> void:
 			map = VSKMapManager.get_default_map_path()
 
 		if map:
-			await VSKGameFlowManager.host_server(\
-			server_name,\
-			map,\
-			game_mode,
-			port,\
-			max_players,\
-			is_dedicated,\
-			is_public,\
-			max_retries)
+			await VSKGameFlowManager.host_server(server_name, map, game_mode, port, max_players, is_dedicated, is_public, max_retries)
 		else:
 			VSKGameFlowManager.go_to_title(_skipped)
+
 
 ##
 ## This method is called by the startup method in order to explictly initalise,
@@ -94,6 +89,7 @@ func setup_vsk_singletons() -> void:
 	VSKCreditsManager.setup()
 	VSKAccountManager.setup()
 
+
 ##
 ## This method is the entry-point for the gameplay logic, as called by the
 ## main_scenes root script as part of its _ready method. It first executes a fade,
@@ -101,12 +97,12 @@ func setup_vsk_singletons() -> void:
 ## the resource preloads
 ##
 func startup() -> void:
-	assert(VSKVersion != null) # VSKVersion must be moved up before VSKStartupManager in Autoloads
+	assert(VSKVersion != null)  # VSKVersion must be moved up before VSKStartupManager in Autoloads
 	print("V-Sekai Build: %s" % vsk_version_const.get_build_label())
 
 	setup_vsk_singletons()
 
-	if ! Engine.is_editor_hint():
+	if !Engine.is_editor_hint():
 		#var upnp_result : int = yield(ConnectionMediator.upnp_discover_async(), "completed")
 		#print("UPNP_discoery result %s!" % ConnectionMediator.get_string_for_upnp_result(upnp_result))
 
@@ -118,17 +114,16 @@ func startup() -> void:
 
 		var _skipped: bool = await VSKFadeManager.execute_fade(true).fade_complete
 
+
 ##
 ## This method takes the commandline arguments from the OS, passes them to the
 ## commandline arg parsing library, then sets the appropriate members in this
 ## class based on what it has parsed.
 ##
 func parse_commandline_args() -> void:
-	var commandline_argument_dictionary: Dictionary = commandline_arguments_const.parse_commandline_arguments(
-		OS.get_cmdline_args()
-	)
+	var commandline_argument_dictionary: Dictionary = commandline_arguments_const.parse_commandline_arguments(OS.get_cmdline_args())
 	display_name_override = ""
-	if ! Engine.is_editor_hint():
+	if !Engine.is_editor_hint():
 		# Check if we're running in headless mode
 		if is_headless():
 			VSKGameFlowManager.autoquit = true
@@ -183,18 +178,21 @@ func parse_commandline_args() -> void:
 
 func apply_project_settings() -> void:
 	if Engine.is_editor_hint():
-		if ! ProjectSettings.has_setting("network/config/default_autohost"):
+		if !ProjectSettings.has_setting("network/config/default_autohost"):
 			ProjectSettings.set_setting("network/config/default_autohost", default_autohost)
 
 		if ProjectSettings.save() != OK:
 			printerr("Could not save project settings!")
 
+
 func get_project_settings() -> void:
 	default_autohost = ProjectSettings.get_setting("network/config/default_autohost")
+
 
 func _ready() -> void:
 	apply_project_settings()
 	get_project_settings()
+
 
 ########
 # Node #

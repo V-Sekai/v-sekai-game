@@ -14,11 +14,12 @@ var get_entity_resource_for_game_mode_id_funcref: Callable = Callable()
 ## Map
 ##
 
-func assign_get_map_id_for_resource_function(p_node: Node, p_method : String) -> void:
+
+func assign_get_map_id_for_resource_function(p_node: Node, p_method: String) -> void:
 	get_map_id_for_entity_resource_funcref = Callable(p_node, p_method)
 
 
-func assign_get_resource_for_map_id_function(p_node: Node, p_method : String) -> void:
+func assign_get_resource_for_map_id_function(p_node: Node, p_method: String) -> void:
 	get_entity_resource_for_map_id_funcref = Callable(p_node, p_method)
 
 
@@ -39,11 +40,11 @@ func get_entity_resource_for_map_id(p_int: int) -> Resource:
 ##
 ## Game Mode
 ##
-func assign_get_game_mode_id_for_resource_function(p_node: Node, p_method : String) -> void:
+func assign_get_game_mode_id_for_resource_function(p_node: Node, p_method: String) -> void:
 	get_game_mode_id_for_entity_resource_funcref = Callable(p_node, p_method)
 
 
-func assign_get_resource_for_game_mode_id_function(p_node: Node, p_method : String) -> void:
+func assign_get_resource_for_game_mode_id_function(p_node: Node, p_method: String) -> void:
 	get_entity_resource_for_game_mode_id_funcref = Callable(p_node, p_method)
 
 
@@ -60,11 +61,13 @@ func get_entity_resource_for_game_mode_id(p_int: int) -> Resource:
 
 	return null
 
+
 ##
 ##
 
+
 func get_path_for_entity_resource(p_resource: Resource) -> String:
-	if ! p_resource:
+	if !p_resource:
 		return ""
 
 	var map_resource_id: int = get_map_id_for_entity_resource(p_resource)
@@ -97,7 +100,6 @@ func get_entity_resource_for_path(p_path: String) -> Resource:
 
 	push_error("Refusing to load unrecognized resource path: " + str(p_path))
 	return null
-	# return ResourceLoader.load(p_path)
 
 
 func setup() -> void:

@@ -1,4 +1,4 @@
-extends "res://addons/vsk_menu/menu_view_controller.gd" # menu_view_controller.gd
+extends "res://addons/vsk_menu/menu_view_controller.gd"  # menu_view_controller.gd
 
 @export var progress_bar_path: NodePath = NodePath()
 var progress_bar: ProgressBar = null

@@ -5,18 +5,20 @@
 [ext_resource type="AudioStream" uid="uid://ceefv7idopk7q" path="res://vsk_default/audio/sfx/basketball_drop.wav" id="3"]
 
 [sub_resource type="PhysicsMaterial" id="1"]
-bounce = 0.5
+friction = 0.85
+rough = true
+bounce = 1.0
 
 [node name="Basketball" instance=ExtResource("1")]
 simulation_logic_node/hit_sample = ExtResource("3")
-simulation_logic_node/hit_velocity = 0.005
+simulation_logic_node/hit_velocity = 0.01
 simulation_logic_node/physics_material = SubResource("1")
-simulation_logic_node/mass = 0.2
+simulation_logic_node/mass = 0.624
 simulation_logic_node/model_scene = ExtResource("2")
 
 [node name="PropSimulationLogic" parent="." index="2"]
 hit_sample = ExtResource("3")
-hit_velocity = 0.005
+hit_velocity = 0.01
 physics_material = SubResource("1")
-mass = 0.2
+mass = 0.624
 model_scene = ExtResource("2")

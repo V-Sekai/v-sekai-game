@@ -21,6 +21,7 @@ const VALID_LAUNCH_ARGUMENTS: Dictionary = {
 
 const ARGUMENT_PREFIX = "--"
 
+
 static func parse_commandline_arguments(p_cmdline_args: PackedStringArray) -> Dictionary:
 	var launch_arguments: Dictionary = {}
 

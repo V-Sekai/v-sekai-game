@@ -1,4 +1,4 @@
-extends "res://addons/vsk_menu/setup_menu.gd" # setup_menu.gd
+extends "res://addons/vsk_menu/setup_menu.gd"  # setup_menu.gd
 
 @export var name_input_nodepath: NodePath = NodePath()
 @export var avatar_input_nodepath: NodePath = NodePath()
@@ -6,14 +6,16 @@ extends "res://addons/vsk_menu/setup_menu.gd" # setup_menu.gd
 var name_input: LineEdit = null
 var avatar_input: LineEdit = null
 
+
 func _avatar_path_selected(p_path: String) -> void:
 	avatar_input.text = p_path
 	VSKPlayerManager.set_avatar_path(p_path)
 
 	save_changes()
 
+
 func set_controls_disabled(p_disabled: bool) -> void:
-	name_input.set_editable(! p_disabled)
+	name_input.set_editable(!p_disabled)
 
 
 func _on_NameLineEdit_text_changed(new_text: String) -> void:
@@ -50,6 +52,7 @@ func will_appear() -> void:
 func will_disappear() -> void:
 	if VSKGameFlowManager.gameflow_state_changed.is_connected(self._gameflow_state_changed):
 		VSKGameFlowManager.gameflow_state_changed.disconnect(self._gameflow_state_changed)
+
 
 func _ready() -> void:
 	name_input = get_node_or_null(name_input_nodepath)

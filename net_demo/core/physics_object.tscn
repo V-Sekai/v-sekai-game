@@ -1,0 +1,61 @@
+[gd_scene load_steps=7 format=3 uid="uid://cdlkb6ohd5ceo"]
+
+[ext_resource type="Script" path="res://net_demo/core/physics_object.gd" id="1_3rtga"]
+[ext_resource type="Script" path="res://net_demo/core/physics_state_synchronizer.gd" id="2_swk7l"]
+[ext_resource type="Script" path="res://net_demo/core/physics_object_multiplayer_synchronizer.gd" id="3_6j57q"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_723tu"]
+size = Vector3(0.25, 0.25, 0.25)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_dmqq1"]
+size = Vector3(0.25, 0.25, 0.25)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_pwbj6"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/sync = false
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/sync = false
+properties/2/path = NodePath(".:linear_velocity")
+properties/2/spawn = true
+properties/2/sync = false
+properties/3/path = NodePath(".:angular_velocity")
+properties/3/spawn = true
+properties/3/sync = false
+properties/4/path = NodePath("PhysicsStateSynchronizer:sync_net_state")
+properties/4/spawn = false
+properties/4/sync = true
+properties/5/path = NodePath("Label3D:text")
+properties/5/spawn = true
+properties/5/sync = true
+
+[node name="physics_object" type="RigidBody3D"]
+collision_layer = 8
+collision_mask = 11
+continuous_cd = true
+max_contacts_reported = 1
+contact_monitor = true
+script = ExtResource("1_3rtga")
+
+[node name="PhysicsStateSynchronizer" type="Node" parent="."]
+script = ExtResource("2_swk7l")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_723tu")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_dmqq1")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_interval = 0.1
+replication_config = SubResource("SceneReplicationConfig_pwbj6")
+visibility_update_mode = 1
+script = ExtResource("3_6j57q")
+
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.550303, 0)
+billboard = 2
+text = "PLACEHOLDER_ID"
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

@@ -22,6 +22,7 @@ var preloading_failed_flag: bool = false
 ##
 var preloading_tasks: Dictionary = {}
 
+
 ##
 ## Called once all the preloading tasks are complete. Disconnects the
 ## BackgroundLoader signals, disables processing, and then emits the
@@ -63,11 +64,7 @@ func _preloading_failed() -> void:
 ##
 func _preloading_task_done(p_task: String, p_err: int, p_resource: Resource) -> void:
 	if p_err != OK:
-		printerr(
-			"_preloading_task_done: task '{task}' failed with the error code '{error}'!".format(
-				{"task": p_task, "error": str(p_err)}
-			)
-		)
+		printerr("_preloading_task_done: task '{task}' failed with the error code '{error}'!".format({"task": p_task, "error": str(p_err)}))
 		_preloading_failed()
 		return
 	if preloading_tasks.has(p_task):
@@ -79,15 +76,15 @@ func _preloading_task_done(p_task: String, p_err: int, p_resource: Resource) -> 
 
 		for callback in callback_array:
 			if callback:
-				if ! callback.has("target"):
+				if !callback.has("target"):
 					printerr("_preloading_task_done: no target data for task '%s'!" % p_task)
 					_preloading_failed()
 					return
-				if ! callback.has("method"):
+				if !callback.has("method"):
 					printerr("_preloading_task_done: no method data for task '%s'!" % p_task)
 					_preloading_failed()
 					return
-				if ! callback.has("args"):
+				if !callback.has("args"):
 					printerr("_preloading_task_done: no args data for task '%s'!" % p_task)
 					_preloading_failed()
 					return
@@ -101,9 +98,7 @@ func _preloading_task_done(p_task: String, p_err: int, p_resource: Resource) -> 
 						target.callv(method, [p_resource] + args)
 					else:
 						_preloading_failed()
-						printerr(
-							"_preloading_task_done: no valid method for task '%s'!" % p_task
-						)
+						printerr("_preloading_task_done: no valid method for task '%s'!" % p_task)
 						return
 			else:
 				_preloading_failed()
@@ -120,6 +115,7 @@ func _preloading_task_done(p_task: String, p_err: int, p_resource: Resource) -> 
 	else:
 		_next_preloading_task()
 
+
 ##
 ## This method is called by request_preloading_tasks, and dispatches the task to
 ## the BackgroundLoader.
@@ -128,18 +124,12 @@ func _preloading_task_done(p_task: String, p_err: int, p_resource: Resource) -> 
 ## p_callback_method is the name of the method which should be called up completion.
 ## p_callback_arguments is an array of arguments which should be called with the method.
 ##
-func _request_preloading_task(
-	p_task: String,
-	p_callback_target: Object,
-	p_callback_method: String,
-	p_callback_arguments: Array
-) -> void:
-	if ! preloading_tasks.has(p_task):
+func _request_preloading_task(p_task: String, p_callback_target: Object, p_callback_method: String, p_callback_arguments: Array) -> void:
+	if !preloading_tasks.has(p_task):
 		preloading_tasks[p_task] = []
 
-	preloading_tasks[p_task].push_back(
-		{"target": p_callback_target, "method": p_callback_method, "args": p_callback_arguments}
-	)
+	preloading_tasks[p_task].push_back({"target": p_callback_target, "method": p_callback_method, "args": p_callback_arguments})
+
 
 ##
 ## This method is called by the startup function and polls various VSK subsystems
@@ -158,12 +148,7 @@ func request_preloading_tasks() -> bool:
 		# Place preloading tasks here!
 		var manager_preload_tasks: Dictionary = manager.get_preload_tasks()
 		for task in manager_preload_tasks.keys():
-			_request_preloading_task(
-				task,
-				manager_preload_tasks[task]["target"],
-				manager_preload_tasks[task].method,
-				manager_preload_tasks[task]["args"]
-			)
+			_request_preloading_task(task, manager_preload_tasks[task]["target"], manager_preload_tasks[task].method, manager_preload_tasks[task]["args"])
 	if preloading_tasks.is_empty():
 		_all_preloading_done()
 	else:
@@ -171,13 +156,16 @@ func request_preloading_tasks() -> bool:
 
 	return true
 
+
 ########
 # Node #
 ########
 
+
 func _process(_delta: float) -> void:
 	if preloading_failed_flag:
 		LogManager.fatal_error("preloading failure flag triggered!")
+
 
 func setup() -> void:
 	pass

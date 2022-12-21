@@ -1,0 +1,221 @@
+[gd_scene load_steps=15 format=3]
+
+[ext_resource type="Script" path="res://addons/vsk_avatar/vsk_avatar_definition.gd" id="1_4s76f"]
+[ext_resource type="Script" path="res://addons/vsk_importer_exporter/vsk_uro_pipeline.gd" id="2_4nyka"]
+[ext_resource type="Script" path="res://addons/vrm/vrm_toplevel.gd" id="3_a6yxp"]
+[ext_resource type="Script" path="res://addons/vrm/vrm_meta.gd" id="4_fgde1"]
+[ext_resource type="PackedScene" uid="uid://c1yvwrff2702u" path="res://vsk_default/scenes/test/xbot/xbot_avatar_upload.tscn" id="5_8jlsy"]
+
+[sub_resource type="Resource" id="Resource_7bhbh"]
+resource_name = "CLICK TO SEE METADATA"
+script = ExtResource("4_fgde1")
+title = "X Bot"
+version = ""
+author = ""
+contact_information = ""
+reference_information = ""
+allowed_user_name = "Everyone"
+violent_usage = "Allow"
+sexual_usage = "Allow"
+commercial_usage = "Allow"
+other_permission_url = ""
+license_name = "Other"
+other_license_url = ""
+humanoid_bone_mapping = {
+"chest": "chest",
+"head": "head",
+"hips": "hips",
+"jaw": "head_top",
+"leftEye": "eye_right",
+"leftFoot": "foot_left",
+"leftHand": "hand_left",
+"leftIndexDistal": "index_distal_left",
+"leftIndexIntermediate": "index_intermediate_left",
+"leftIndexProximal": "index_proximal_left",
+"leftLittleDistal": "little_distal_left",
+"leftLittleIntermediate": "little_intermediate_left",
+"leftLittleProximal": "little_proximal_left",
+"leftLowerArm": "forearm_left",
+"leftLowerLeg": "shin_left",
+"leftMiddleDistal": "middle_distal_left",
+"leftMiddleIntermediate": "middle_intermediate_left",
+"leftMiddleProximal": "middle_proximal_left",
+"leftRingDistal": "ring_distal_left",
+"leftRingIntermediate": "ring_intermediate_left",
+"leftRingProximal": "ring_proximal_left",
+"leftShoulder": "shoulder_left",
+"leftThumbDistal": "thumb_distal_left",
+"leftThumbIntermediate": "thumb_intermediate_left",
+"leftThumbProximal": "thumb_proximal_left",
+"leftToes": "toe_left",
+"leftUpperArm": "upper_arm_left",
+"leftUpperLeg": "thigh_left",
+"neck": "neck",
+"rightEye": "eye_left",
+"rightFoot": "foot_right",
+"rightHand": "hand_right",
+"rightIndexDistal": "index_distal_right",
+"rightIndexIntermediate": "index_intermediate_right",
+"rightIndexProximal": "index_proximal_right",
+"rightLittleDistal": "little_distal_right",
+"rightLittleIntermediate": "little_intermediate_right",
+"rightLittleProximal": "little_proximal_right",
+"rightLowerArm": "forearm_right",
+"rightLowerLeg": "shin_right",
+"rightMiddleDistal": "middle_distal_right",
+"rightMiddleIntermediate": "middle_intermediate_right",
+"rightMiddleProximal": "middle_proximal_right",
+"rightRingDistal": "ring_distal_right",
+"rightRingIntermediate": "ring_intermediate_right",
+"rightRingProximal": "ring_proximal_right",
+"rightShoulder": "shoulder_right",
+"rightThumbDistal": "thumb_distal_right",
+"rightThumbIntermediate": "thumb_intermediate_right",
+"rightThumbProximal": "thumb_proximal_right",
+"rightToes": "toe_right",
+"rightUpperArm": "upper_arm_right",
+"rightUpperLeg": "thigh_right",
+"spine": "spine",
+"upperChest": "upper_chest"
+}
+humanoid_skeleton_path = NodePath("")
+eye_offset = Vector3(0, 0, 0)
+exporter_version = "saturday06_blender_vrm_exporter_experimental_2.0.9"
+spec_version = "0.0"
+
+[sub_resource type="Animation" id="Animation_i6vx5"]
+
+[sub_resource type="Animation" id="Animation_imeok"]
+
+[sub_resource type="Animation" id="Animation_q2ljn"]
+
+[sub_resource type="Animation" id="Animation_h5rxe"]
+
+[sub_resource type="Animation" id="Animation_jlvfe"]
+
+[sub_resource type="Animation" id="Animation_2n88e"]
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_b837x"]
+_data = {
+"FirstPerson": SubResource("Animation_i6vx5"),
+"LOOKDOWN": SubResource("Animation_imeok"),
+"LOOKLEFT": SubResource("Animation_q2ljn"),
+"LOOKRIGHT": SubResource("Animation_h5rxe"),
+"LOOKUP": SubResource("Animation_jlvfe"),
+"ThirdPerson": SubResource("Animation_2n88e")
+}
+
+[sub_resource type="GDScript" id="GDScript_lea46"]
+script/source = "@tool
+extends Node
+
+@export var ren_ik: NodePath = NodePath(\"../RenIK\")
+@onready var _ren_ik: RenIK = get_node_or_null(ren_ik)
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+	_ren_ik.set_process(false)
+	_ren_ik.set_process_internal(false)
+	_ren_ik.set_physics_process(false)
+	_ren_ik.set_physics_process_internal(false)
+	_ren_ik.enable_hip_placement(true)
+	_ren_ik.enable_foot_placement(true)
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	_ren_ik.update_ik()
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _physics_process(delta):
+	_ren_ik.update_placement(delta)
+"
+
+[node name="Avatar" type="Node3D"]
+script = ExtResource("1_4s76f")
+vskeditor_preview_type = 0
+vskeditor_pipeline_paths = [NodePath("UroPipeline")]
+eye_transform_node_path = NodePath("Targets/EyePosition")
+database_id = ""
+
+[node name="UroPipeline" type="Node" parent="."]
+script = ExtResource("2_4nyka")
+database_id = "3fdedd0f-3c2a-4217-88c3-ab7d31540c6b"
+
+[node name="x_bot" type="Node3D" parent="."]
+script = ExtResource("3_a6yxp")
+vrm_skeleton = NodePath("")
+vrm_animplayer = NodePath("anim")
+vrm_secondary = NodePath("")
+vrm_meta = SubResource("Resource_7bhbh")
+
+[node name="xbot" parent="x_bot" instance=ExtResource("5_8jlsy")]
+
+[node name="secondary" type="Node3D" parent="x_bot"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
+
+[node name="anim" type="AnimationPlayer" parent="x_bot"]
+libraries = {
+"": SubResource("AnimationLibrary_b837x")
+}
+
+[node name="LogicContainer" type="Node3D" parent="x_bot"]
+transform = Transform3D(0.898533, 0.432097, -0.077013, -0.433652, 0.84693, -0.307663, -0.067716, 0.309842, 0.948374, 0, 0, 0)
+
+[node name="RenIK" type="RenIK" parent="x_bot/LogicContainer"]
+armature_skeleton_path = NodePath("")
+armature_head = "Head"
+armature_left_hand = "LeftHand"
+armature_left_lower_arm = "LeftLowerArm"
+armature_left_upper_arm = "LeftUpperArm"
+armature_right_hand = "RightHand"
+armature_right_lower_arm = "RightLowerArm"
+armature_right_upper_arm = "RightUpperArm"
+armature_hip = "Hips"
+armature_left_foot = "LeftFoot"
+armature_left_lower_leg = "LeftLowerLeg"
+armature_left_upper_leg = "LeftUpperLeg"
+armature_right_foot = "RightFoot"
+armature_right_lower_leg = "RightLowerLeg"
+armature_right_upper_leg = "RightUpperLeg"
+armature_head_target = NodePath("../../../Targets/Head")
+armature_left_hand_target = NodePath("../../../Targets/LeftHand")
+armature_right_hand_target = NodePath("../../../Targets/RightHand")
+armature_hip_target = NodePath("../../../Targets/Hips")
+armature_left_foot_target = NodePath("../../../Targets/Leftfoot")
+armature_right_foot_target = NodePath("../../../Targets/RightFoot")
+arm_pole_offset = Vector3(15, 90, 60)
+
+[node name="IKDriver" type="Node" parent="x_bot/LogicContainer"]
+script = SubResource("GDScript_lea46")
+
+[node name="Targets" type="Node3D" parent="."]
+
+[node name="EyePosition" type="Marker3D" parent="Targets"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 9.91279e-08, 1.59646, -0.00997776)
+
+[node name="Leftfoot" type="Marker3D" parent="Targets"]
+transform = Transform3D(-1, -9.41795e-08, 4.28178e-08, 9.27015e-08, -0.631962, 0.775, -4.59299e-08, 0.775, 0.631962, 0.0820778, 0.0844146, -0.0221959)
+
+[node name="RightFoot" type="Marker3D" parent="Targets"]
+transform = Transform3D(-1, -1.47941e-07, 4.65494e-08, 1.29517e-07, -0.631494, 0.77538, -8.53148e-08, 0.77538, 0.631494, -0.0820779, 0.0844193, -0.0222262)
+
+[node name="LeftHand" type="Marker3D" parent="Targets"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.717271, 1.38336, -0.49954)
+rotation_edit_mode = 2
+
+[node name="RightHand" type="Marker3D" parent="Targets"]
+transform = Transform3D(-0.382071, -0.924133, 0, 0.924133, -0.382071, 0, 0, 0, 1, -0.351681, 1.05436, 0.19999)
+rotation_edit_mode = 2
+
+[node name="Hips" type="Marker3D" parent="Targets"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.81498e-09, 1.03991, 0.0207609)
+
+[node name="Head" type="Marker3D" parent="Targets"]
+transform = Transform3D(1, -9.44667e-12, -1.32331e-10, 9.46088e-12, 1, -1.49012e-07, 1.32346e-10, 1.49012e-07, 1, 9.91255e-08, 1.59645, -0.00997795)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.303387, 2.18797)
+
+[editable path="x_bot/xbot"]

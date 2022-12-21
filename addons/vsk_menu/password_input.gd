@@ -6,15 +6,17 @@ var text: String:
 	set = set_text,
 	get = get_text
 
-
 var password_visible_off = load("res://addons/vsk_menu/textures/password_visible_off.svg")
 var password_visible_on = load("res://addons/vsk_menu/textures/password_visible_on.svg")
+
 
 func set_text(p_text: String) -> void:
 	$PasswordLineEdit.text = p_text
 
+
 func get_text() -> String:
 	return $PasswordLineEdit.text
+
 
 # Why doesn't this toggle signal work by itself?
 func _on_password_hide_toggle_toggled(p_button_pressed: bool) -> void:

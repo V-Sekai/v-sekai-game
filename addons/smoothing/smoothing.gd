@@ -20,15 +20,14 @@
 
 extends Node3D
 
-@export var target : NodePath:
+@export var target: NodePath:
 	set = set_target,
 	get = get_target
 
+var _m_Target: Node3D
 
-var _m_Target : Node3D
-
-var _m_trCurr : Transform3D
-var _m_trPrev : Transform3D
+var _m_trCurr: Transform3D
+var _m_trPrev: Transform3D
 
 const SF_ENABLED: int = 1 << 0
 const SF_TRANSLATE: int = 1 << 1
@@ -37,16 +36,16 @@ const SF_SLERP: int = 1 << 3
 const SF_DIRTY: int = 1 << 4
 const SF_INVISIBLE: int = 1 << 5
 
-@export var flags : int = SF_ENABLED | SF_TRANSLATE | SF_BASIS: # (int, FLAGS, "enabled", "translate", "basis", "slerp") = SF_ENABLED | SF_TRANSLATE | SF_BASIS
+@export var flags: int = SF_ENABLED | SF_TRANSLATE | SF_BASIS:  # (int, FLAGS, "enabled", "translate", "basis", "slerp") = SF_ENABLED | SF_TRANSLATE | SF_BASIS
 	set = _set_flags,
 	get = _get_flags
-
 
 ##########################################################################################
 # USER FUNCS
 
 # Saracen: callback
 signal transform_complete(p_delta)
+
 
 # call this on e.g. starting a level, AFTER moving the target
 # so we can update both the previous and current values
@@ -63,14 +62,14 @@ func teleport():
 	# resume old flags
 	flags = temp_flags
 
-func set_enabled(bEnable : bool):
+
+func set_enabled(bEnable: bool):
 	_ChangeFlags(SF_ENABLED, bEnable)
 	_SetProcessing()
 
+
 func is_enabled():
 	return _TestFlags(SF_ENABLED)
-
-
 
 
 ##########################################################################################
@@ -86,30 +85,34 @@ func set_target(new_value: NodePath) -> void:
 	if is_inside_tree():
 		_FindTarget()
 
+
 func get_target() -> NodePath:
 	return target
+
 
 func _set_flags(new_value: int) -> void:
 	flags = new_value
 	# we may have enabled or disabled
 	_SetProcessing()
 
+
 func _get_flags() -> int:
 	return flags
+
 
 func _SetProcessing() -> void:
 	var bEnable: bool = _TestFlags(SF_ENABLED)
 	if _TestFlags(SF_INVISIBLE):
 		bEnable = false
 
-	set_process(bEnable);
-	set_physics_process(bEnable);
-	pass
+	set_process(bEnable)
+	set_physics_process(bEnable)
+
 
 func _enter_tree():
 	# might have been moved
 	_FindTarget()
-	pass
+
 
 func _notification(what):
 	match what:
@@ -119,9 +122,8 @@ func _notification(what):
 			_SetProcessing()
 
 
-
 func _RefreshTransform() -> void:
-	_ClearFlags(SF_DIRTY);
+	_ClearFlags(SF_DIRTY)
 
 	if _HasTarget() == false:
 		return
@@ -162,7 +164,7 @@ func _process(_delta):
 
 	var f = Engine.get_physics_interpolation_fraction()
 
-	var current_xform : Transform3D = Transform3D()
+	var current_xform: Transform3D = Transform3D()
 
 	# translate
 	if _TestFlags(SF_TRANSLATE):
@@ -178,6 +180,7 @@ func _process(_delta):
 	transform = current_xform
 	transform_complete.emit(_delta)
 
+
 func _physics_process(_delta):
 	# take care of the special case where multiple physics ticks
 	# occur before a frame .. the data must flow!
@@ -185,23 +188,27 @@ func _physics_process(_delta):
 		_RefreshTransform()
 
 	_SetFlags(SF_DIRTY)
-	pass
+
 
 func _LerpBasis(from: Basis, to: Basis, f: float) -> Basis:
-	var res : Basis = Basis()
+	var res: Basis = Basis()
 	res.x = from.x.lerp(to.x, f)
 	res.y = from.y.lerp(to.y, f)
 	res.z = from.z.lerp(to.z, f)
 	return res
 
+
 func _SetFlags(f: int) -> void:
 	flags |= f
+
 
 func _ClearFlags(f: int) -> void:
 	flags &= ~f
 
+
 func _TestFlags(f: int) -> bool:
 	return (flags & f) == f
+
 
 func _ChangeFlags(f: int, bSet: bool):
 	if bSet:
