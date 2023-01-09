@@ -3,7 +3,7 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://dqf7pwq16qe3y"
+uid="uid://cyg4h7vift1fc"
 path="res://.godot/imported/scene.gltf-19e631e7df8697e234689acf9d22cf55.scn"
 
 [deps]
@@ -31,11 +31,11 @@ _subresources={
 "materials": {
 "Scene_-_Root": {
 "use_external/enabled": true,
-"use_external/path": "res://vsk_default/import/beachball/Scene_-_Root.tres"
+"use_external/path": "res://vsk_default/art/import/beachball/Scene_-_Root.tres"
 }
 },
 "nodes": {
-"PATH:RootNode (gltf orientation matrix)/RootNode (model correction matrix)/Root/Sphere/Sphere_0": {
+"PATH:Sphere_0": {
 "decomposition/precision": 10,
 "generate/navmesh": 1,
 "generate/physics": true
