@@ -76,7 +76,7 @@ const GAME_SFX_OUTPUT_BUS_NAME = "GameSFXOutput"
 const MENU_OUTPUT_BUS_NAME = "MenuOutput"
 const MIC_INPUT_BUS_NAME = "MicInput"
 
-var godot_speech: Node = null
+var godot_speech: Speech = null
 
 var audio_start_tick: int = 0
 
@@ -482,7 +482,7 @@ func setup() -> void:
 		empty_buffer.resize(PACKET_FRAME_COUNT)
 		uncompressed_audio.resize(PACKET_FRAME_COUNT)
 
-		godot_speech = GodotSpeech.godot_speech
+		godot_speech = GodotSpeech
 
 		if not test_audio.is_empty():
 			print("Using test audio at path %s..." % test_audio)

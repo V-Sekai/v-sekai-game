@@ -1053,7 +1053,7 @@ func setup() -> void:
 
 		assert(shard_heartbeat_timer.timeout.connect(self._heartbeat_timer_timout) == OK)
 
-		var godot_speech: Node = GodotSpeech.godot_speech
+		var godot_speech: Node = GodotSpeech
 		if godot_speech:
 			NetworkManager.network_voice_manager.get_voice_buffers = VSKAudioManager.get_voice_buffers
 			if !NetworkManager.network_voice_manager.get_voice_buffers.is_valid():
