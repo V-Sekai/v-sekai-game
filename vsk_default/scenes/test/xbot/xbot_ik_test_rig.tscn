@@ -1,10 +1,10 @@
-[gd_scene load_steps=15 format=3]
+[gd_scene load_steps=15 format=3 uid="uid://dw3b15yoicnyq"]
 
 [ext_resource type="Script" path="res://addons/vsk_avatar/vsk_avatar_definition.gd" id="1_4s76f"]
 [ext_resource type="Script" path="res://addons/vsk_importer_exporter/vsk_uro_pipeline.gd" id="2_4nyka"]
 [ext_resource type="Script" path="res://addons/vrm/vrm_toplevel.gd" id="3_a6yxp"]
 [ext_resource type="Script" path="res://addons/vrm/vrm_meta.gd" id="4_fgde1"]
-[ext_resource type="PackedScene" uid="uid://c1yvwrff2702u" path="res://vsk_default/scenes/test/xbot/xbot_avatar_upload.tscn" id="5_8jlsy"]
+[ext_resource type="PackedScene" uid="uid://cel8a3nj1waxy" path="res://vsk_default/art/import/xbot/xbot.vrm" id="5_8jlsy"]
 
 [sub_resource type="Resource" id="Resource_7bhbh"]
 resource_name = "CLICK TO SEE METADATA"
@@ -152,6 +152,28 @@ vrm_meta = SubResource("Resource_7bhbh")
 
 [node name="xbot" parent="x_bot" instance=ExtResource("5_8jlsy")]
 
+[node name="GeneralSkeleton" parent="x_bot/xbot" index="0"]
+bones/0/position = Vector3(1.81498e-09, 1.03991, 0.0207609)
+bones/1/rotation = Quaternion(-0.0495941, -1.46423e-11, 2.66504e-09, 0.998769)
+bones/2/rotation = Quaternion(-0.025265, -1.45845e-11, -5.13857e-08, 0.999681)
+bones/3/rotation = Quaternion(6.67742e-06, -1.32503e-11, 5.20196e-08, 1)
+bones/4/rotation = Quaternion(0.160996, -2.33644e-11, -2.84447e-09, 0.986955)
+bones/5/rotation = Quaternion(-0.086715, -1.56446e-09, -1.31205e-10, 0.996233)
+bones/9/rotation = Quaternion(0.533086, 0.463888, 0.461755, -0.536105)
+bones/10/rotation = Quaternion(-0.111071, 0.512197, 0.202385, 0.827259)
+bones/11/rotation = Quaternion(-5.16978e-08, -0.00740241, 5.50207e-08, 0.999973)
+bones/12/rotation = Quaternion(0.41486, -5.09563e-05, 0.597073, 0.686582)
+bones/33/rotation = Quaternion(0.604393, -0.409548, -0.551846, -0.403045)
+bones/34/rotation = Quaternion(0.182918, 0.819074, -0.419109, -0.346418)
+bones/35/rotation = Quaternion(0.194392, -0.0436526, -0.458838, 0.865895)
+bones/36/rotation = Quaternion(-0.48432, 0.086729, 0.0210623, 0.870327)
+bones/57/rotation = Quaternion(-6.77319e-09, 0.00332365, 0.999994, 2.28197e-08)
+bones/58/rotation = Quaternion(-0.0369246, 2.39681e-09, -2.88799e-10, 0.999318)
+bones/59/rotation = Quaternion(0.459086, 3.35315e-09, -2.67419e-08, 0.888392)
+bones/62/rotation = Quaternion(4.2758e-09, 0.0033484, 0.999994, -4.43938e-08)
+bones/63/rotation = Quaternion(-0.0370109, -1.6982e-09, -3.30149e-10, 0.999315)
+bones/64/rotation = Quaternion(0.459409, 1.35482e-09, -1.19285e-07, 0.888225)
+
 [node name="secondary" type="Node3D" parent="x_bot"]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
 
@@ -164,7 +186,7 @@ libraries = {
 transform = Transform3D(0.898533, 0.432097, -0.077013, -0.433652, 0.84693, -0.307663, -0.067716, 0.309842, 0.948374, 0, 0, 0)
 
 [node name="RenIK" type="RenIK" parent="x_bot/LogicContainer"]
-armature_skeleton_path = NodePath("")
+armature_skeleton_path = NodePath("/root/@@16950/@@655/@@656/@@665/@@668/@@676/@@684/@@685/@@687/@@713/@@714/@@753/MainScreen/@@9725/@@9552/@@9554/@@9556/@@9557/@@9558/@@9559/Avatar/x_bot/xbot/GeneralSkeleton")
 armature_head = "Head"
 armature_left_hand = "LeftHand"
 armature_left_lower_arm = "LeftLowerArm"
