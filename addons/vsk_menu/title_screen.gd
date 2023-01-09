@@ -48,7 +48,7 @@ func _callback_state(p_state: int, p_callback_dictionary: Dictionary) -> void:
 				callback_string = "TR_MENU_CALLBACK_STATE_SERVER_INFO_VERSION_MISMATCH"
 
 		$AcceptDialog.set_text(tr(callback_string).format(p_callback_dictionary))
-		$AcceptDialog.popup_centered()
+		$AcceptDialog.popup_centered_ratio()
 
 	VSKGameFlowManager.set_callback_state(VSKGameFlowManager.CALLBACK_STATE_NONE, {})
 
@@ -115,7 +115,7 @@ func _on_CreditsButton_pressed():
 
 
 func _on_ExitButton_pressed() -> void:
-	$ExitDialog.popup_centered_ratio()  # Was without ratio but now broken
+	$ExitDialog.popup_centered_ratio()
 
 
 func _on_sign_in_button_pressed(p_session_controller):
