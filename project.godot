@@ -355,8 +355,8 @@ singletons_disabled=[]
 [gui]
 
 theme/custom="res://addons/emote_theme/emote_theme.tres"
-theme/custom_font="res://addons/emote_theme/fonts/default_regular_font.tres"
 theme/default_font_multichannel_signed_distance_field=true
+theme/default_font_generate_mipmaps=true
 theme/use_hidpi=true
 
 [importer_defaults]
