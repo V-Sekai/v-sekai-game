@@ -1,10 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://birsrhka7ib37"]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://addons/vsk_menu/title_screen.gd" id="1"]
-[ext_resource type="Theme" uid="uid://bsqrhr15k2kar" path="res://addons/emote_theme/emote_theme.tres" id="1_qxdo7"]
+[ext_resource type="Theme" uid="uid://3ehnjbt2mvio" path="res://addons/emote_theme/emote_theme.tres" id="1_qxdo7"]
 [ext_resource type="Texture2D" uid="uid://cjdhvcb8tulgj" path="res://vsk_default/icon/groups_logo_no_bg.png" id="2_dy48j"]
 [ext_resource type="PackedScene" uid="uid://bxaya8pq2i21c" path="res://addons/vsk_menu/main_menu/session_container.tscn" id="3"]
-[ext_resource type="PackedScene" path="res://addons/vsk_menu/vsk_large_button.tscn" id="4"]
+[ext_resource type="PackedScene" uid="uid://tt3cnvs3qqlq" path="res://addons/vsk_menu/vsk_large_button.tscn" id="4"]
 
 [node name="TitleScreen" type="Control"]
 layout_mode = 3
@@ -35,6 +35,9 @@ grow_vertical = 2
 
 [node name="Control" type="Control" parent="Panel/Container"]
 layout_mode = 2
+anchors_preset = 0
+offset_right = 1152.0
+offset_bottom = 648.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
@@ -54,38 +57,60 @@ alignment = 1
 [node name="GroupsLogoNoBg" type="TextureRect" parent="Panel/Container/Control/CenterContainer"]
 custom_minimum_size = Vector2(256, 256)
 layout_mode = 2
+offset_top = 89.0
+offset_right = 256.0
+offset_bottom = 345.0
 texture = ExtResource("2_dy48j")
 ignore_texture_size = true
 
 [node name="ButtonsCenterContainer" type="HBoxContainer" parent="Panel/Container/Control/CenterContainer"]
 layout_mode = 2
+offset_top = 365.0
+offset_right = 256.0
+offset_bottom = 559.0
 alignment = 1
 
 [node name="ButtonsVerticalContainer" type="VBoxContainer" parent="Panel/Container/Control/CenterContainer/ButtonsCenterContainer"]
 layout_mode = 2
+offset_right = 256.0
+offset_bottom = 194.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 alignment = 1
 
 [node name="HostServer" parent="Panel/Container/Control/CenterContainer/ButtonsCenterContainer/ButtonsVerticalContainer" instance=ExtResource("4")]
 layout_mode = 2
+offset_right = 256.0
+offset_bottom = 34.0
 text = "TR_MENU_HOST_SERVER"
 
 [node name="BrowseServers" parent="Panel/Container/Control/CenterContainer/ButtonsCenterContainer/ButtonsVerticalContainer" instance=ExtResource("4")]
 layout_mode = 2
+offset_top = 40.0
+offset_right = 256.0
+offset_bottom = 74.0
 text = "TR_MENU_BROWSE_SERVERS"
 
 [node name="OptionsButton" parent="Panel/Container/Control/CenterContainer/ButtonsCenterContainer/ButtonsVerticalContainer" instance=ExtResource("4")]
 layout_mode = 2
+offset_top = 80.0
+offset_right = 256.0
+offset_bottom = 114.0
 theme_override_font_sizes/font_size = 16
 text = "TR_MENU_OPTIONS"
 
 [node name="CreditsButton" parent="Panel/Container/Control/CenterContainer/ButtonsCenterContainer/ButtonsVerticalContainer" instance=ExtResource("4")]
 layout_mode = 2
+offset_top = 120.0
+offset_right = 256.0
+offset_bottom = 154.0
 text = "TR_MENU_CREDITS"
 
 [node name="ExitButton" parent="Panel/Container/Control/CenterContainer/ButtonsCenterContainer/ButtonsVerticalContainer" instance=ExtResource("4")]
 layout_mode = 2
+offset_top = 160.0
+offset_right = 256.0
+offset_bottom = 194.0
 text = "TR_MENU_EXIT"
 
 [node name="TopBar" type="HBoxContainer" parent="Panel"]
@@ -97,6 +122,9 @@ alignment = 2
 
 [node name="SessionContainer" parent="Panel/TopBar" instance=ExtResource("3")]
 layout_mode = 2
+offset_left = 550.0
+offset_right = 1152.0
+offset_bottom = 49.0
 
 [node name="ExitDialog" type="ConfirmationDialog" parent="."]
 min_size = Vector2i(150, 52)
