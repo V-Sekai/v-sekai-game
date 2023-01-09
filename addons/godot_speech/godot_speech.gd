@@ -54,6 +54,13 @@ func set_streaming_bus(p_name: String) -> void:
 		printerr("Could not set streaming bus")
 
 
+func set_error_cancellation_bus(p_name: String) -> void:
+	if godot_speech:
+		godot_speech.set_error_cancellation_bus(p_name)
+	else:
+		printerr("Could not set error cancellation bus")
+
+
 func set_audio_input_stream_player(p_audio_stream_player: AudioStreamPlayer) -> void:
 	if godot_speech:
 		godot_speech.set_audio_input_stream_player(p_audio_stream_player)

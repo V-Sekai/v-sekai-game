@@ -8,6 +8,7 @@ var audio_input_stream_player: AudioStreamPlayer = null
 
 const PACKET_TICK_TIMESLICE = 10
 const MIC_BUS_NAME = "Mic"
+const AEC_BUS_NAME = "Master"
 
 var voice_buffer_overrun_count: int = 0
 var voice_id: int = 0
@@ -61,7 +62,7 @@ const PACKET_FRAME_COUNT = 480
 var empty_buffer: PackedVector2Array = PackedVector2Array()
 var uncompressed_audio: PackedVector2Array = PackedVector2Array()
 var local_mic_test: AudioStreamPlayer = null
-var speech_decoder: RefCounted = null
+var speech_decoder: SpeechDecoder = null
 
 #~
 
@@ -508,26 +509,27 @@ func setup() -> void:
 
 		godot_speech.set_audio_input_stream_player(audio_input_stream_player)
 		godot_speech.set_streaming_bus(MIC_BUS_NAME)
-
+		godot_speech.set_error_cancellation_bus(AEC_BUS_NAME)
+		
 		spatial_node = Node3D.new()
 		spatial_node.set_name("SpatialNode")
 		add_child(spatial_node, true)
 
-		# Testing
-		##
-		## 		local_mic_test = AudioStreamPlayer.new()
-		## 		local_mic_test.set_name("LocalMicTest")
-		## 		add_child(local_mic_test)
-		##
-		## 		var new_generator: AudioStreamGenerator = AudioStreamGenerator.new()
-		## 		new_generator.set_mix_rate(48000)
-		## 		new_generator.set_buffer_length(0.1)
-		##
-		## 		local_mic_test.set_stream(new_generator)
-		## 		var playback = local_mic_test.get_stream_playback()
-		## 		playback.push_buffer(empty_buffer)
-		##
-		#~
+#		# Testing
+#
+#		local_mic_test = AudioStreamPlayer.new()
+#		local_mic_test.set_name("LocalMicTest")
+#		add_child(local_mic_test)
+#
+#		var new_generator: AudioStreamGenerator = AudioStreamGenerator.new()
+#		new_generator.set_mix_rate(48000)
+#		new_generator.set_buffer_length(0.1)
+#
+#		local_mic_test.set_stream(new_generator)
+#		var playback = local_mic_test.get_stream_playback()
+#		playback.push_buffer(empty_buffer)
+#
+#		#~
 
 		voice_output_bus_index = AudioServer.get_bus_index(VOICE_OUTPUT_BUS_NAME)
 		music_output_bus_index = AudioServer.get_bus_index(MUSIC_OUTPUT_BUS_NAME)
