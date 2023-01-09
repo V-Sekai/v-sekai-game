@@ -1,6 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://xwjqnmdyn5qm"]
+[gd_scene load_steps=3 format=3]
 
-[ext_resource type="PackedScene" uid="uid://dqf7pwq16qe3y" path="res://vsk_default/import/beachball/scene.gltf" id="1"]
+[ext_resource type="PackedScene" uid="uid://dqf7pwq16qe3y" path="res://vsk_default/art/import/beachball/scene.gltf" id="1"]
 
 [sub_resource type="SphereShape3D" id="1"]
 

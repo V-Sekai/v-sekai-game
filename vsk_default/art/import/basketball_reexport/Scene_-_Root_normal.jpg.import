@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://xqs08mljpyvy"
-path.s3tc="res://.godot/imported/Scene_-_Root_normal.jpg-c8b70b01a16311f418d062e87c6c9f94.s3tc.ctex"
-path.etc2="res://.godot/imported/Scene_-_Root_normal.jpg-c8b70b01a16311f418d062e87c6c9f94.etc2.ctex"
+path.s3tc="res://.godot/imported/Scene_-_Root_normal.jpg-33b35885d75261e579223f5ecd9fdc57.s3tc.ctex"
+path.etc2="res://.godot/imported/Scene_-_Root_normal.jpg-33b35885d75261e579223f5ecd9fdc57.etc2.ctex"
 metadata={
 "imported_formats": ["bptc", "s3tc", "etc2"],
 "vram_texture": true
@@ -12,8 +12,8 @@ metadata={
 
 [deps]
 
-source_file="res://vsk_default/import/basketball_reexport/Scene_-_Root_normal.jpg"
-dest_files=["res://.godot/imported/Scene_-_Root_normal.jpg-c8b70b01a16311f418d062e87c6c9f94.s3tc.ctex", "res://.godot/imported/Scene_-_Root_normal.jpg-c8b70b01a16311f418d062e87c6c9f94.etc2.ctex"]
+source_file="res://vsk_default/art/import/basketball_reexport/Scene_-_Root_normal.jpg"
+dest_files=["res://.godot/imported/Scene_-_Root_normal.jpg-33b35885d75261e579223f5ecd9fdc57.s3tc.ctex", "res://.godot/imported/Scene_-_Root_normal.jpg-33b35885d75261e579223f5ecd9fdc57.etc2.ctex"]
 
 [params]
 

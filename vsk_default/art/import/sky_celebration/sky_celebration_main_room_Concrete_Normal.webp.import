@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ccucmvilo4ttd"
-path.s3tc="res://.godot/imported/sky_celebration_main_room_Concrete_Normal.webp-7b4ecb4d98a911b62ff6685ed3b13cfd.s3tc.ctex"
-path.etc2="res://.godot/imported/sky_celebration_main_room_Concrete_Normal.webp-7b4ecb4d98a911b62ff6685ed3b13cfd.etc2.ctex"
+path.s3tc="res://.godot/imported/sky_celebration_main_room_Concrete_Normal.webp-12973326a2fb13e6edf01c77e3f9c1de.s3tc.ctex"
+path.etc2="res://.godot/imported/sky_celebration_main_room_Concrete_Normal.webp-12973326a2fb13e6edf01c77e3f9c1de.etc2.ctex"
 metadata={
 "imported_formats": ["bptc", "s3tc", "etc2"],
 "vram_texture": true
@@ -12,8 +12,8 @@ metadata={
 
 [deps]
 
-source_file="res://vsk_default/import/sky_celebration/sky_celebration_main_room_Concrete_Normal.webp"
-dest_files=["res://.godot/imported/sky_celebration_main_room_Concrete_Normal.webp-7b4ecb4d98a911b62ff6685ed3b13cfd.s3tc.ctex", "res://.godot/imported/sky_celebration_main_room_Concrete_Normal.webp-7b4ecb4d98a911b62ff6685ed3b13cfd.etc2.ctex"]
+source_file="res://vsk_default/art/import/sky_celebration/sky_celebration_main_room_Concrete_Normal.webp"
+dest_files=["res://.godot/imported/sky_celebration_main_room_Concrete_Normal.webp-12973326a2fb13e6edf01c77e3f9c1de.s3tc.ctex", "res://.godot/imported/sky_celebration_main_room_Concrete_Normal.webp-12973326a2fb13e6edf01c77e3f9c1de.etc2.ctex"]
 
 [params]
 

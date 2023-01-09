@@ -213,7 +213,7 @@ _global_script_class_icons={
 [application]
 
 config/name="V-Sekai"
-run/main_scene="res://vsk_default/main_scene.tscn"
+run/main_scene="res://vsk_default/scenes/main_scene.tscn"
 config/use_custom_user_dir=true
 config/custom_user_dir_name="groups_4_000"
 config/features=PackedStringArray("4.0", "Double Precision")

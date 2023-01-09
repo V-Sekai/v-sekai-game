@@ -1,7 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://bwcl6tiiptf7k"]
+[gd_scene load_steps=6 format=3]
 
-[ext_resource type="PackedScene" uid="uid://byuaeey7uygft" path="res://vsk_default/import/test_ball/test_ball.gltf" id="1"]
-[ext_resource type="AudioStream" uid="uid://ceefv7idopk7q" path="res://vsk_default/audio/sfx/basketball_drop.wav" id="2"]
+[ext_resource type="PackedScene" uid="uid://byuaeey7uygft" path="res://vsk_default/art/import/test_ball/test_ball.gltf" id="1"]
+[ext_resource type="AudioStream" uid="uid://ceefv7idopk7q" path="res://vsk_default/art/audio/sfx/basketball_drop.wav" id="2"]
 
 [sub_resource type="Animation" id="Animation_ayxn6"]
 length = 0.001

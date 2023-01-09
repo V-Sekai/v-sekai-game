@@ -3,8 +3,8 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ote3tv4osxs2"
-path.s3tc="res://.godot/imported/Scene_-_Root_baseColor.jpg-1fee26bc459d6b3c1098f385067f4a25.s3tc.ctex"
-path.etc2="res://.godot/imported/Scene_-_Root_baseColor.jpg-1fee26bc459d6b3c1098f385067f4a25.etc2.ctex"
+path.s3tc="res://.godot/imported/Scene_-_Root_baseColor.jpg-84e52ebb51a74daecbd40281fdfd1163.s3tc.ctex"
+path.etc2="res://.godot/imported/Scene_-_Root_baseColor.jpg-84e52ebb51a74daecbd40281fdfd1163.etc2.ctex"
 metadata={
 "imported_formats": ["bptc", "s3tc", "etc2"],
 "vram_texture": true
@@ -12,8 +12,8 @@ metadata={
 
 [deps]
 
-source_file="res://vsk_default/import/basketball_reexport/Scene_-_Root_baseColor.jpg"
-dest_files=["res://.godot/imported/Scene_-_Root_baseColor.jpg-1fee26bc459d6b3c1098f385067f4a25.s3tc.ctex", "res://.godot/imported/Scene_-_Root_baseColor.jpg-1fee26bc459d6b3c1098f385067f4a25.etc2.ctex"]
+source_file="res://vsk_default/art/import/basketball_reexport/Scene_-_Root_baseColor.jpg"
+dest_files=["res://.godot/imported/Scene_-_Root_baseColor.jpg-84e52ebb51a74daecbd40281fdfd1163.s3tc.ctex", "res://.godot/imported/Scene_-_Root_baseColor.jpg-84e52ebb51a74daecbd40281fdfd1163.etc2.ctex"]
 
 [params]
 

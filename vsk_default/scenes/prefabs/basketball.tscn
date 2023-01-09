@@ -1,8 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://c4vqy00grclrx"]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="PackedScene" uid="uid://ciytelwuu2qee" path="res://addons/vsk_entities/vsk_interactable_prop.tscn" id="1"]
-[ext_resource type="PackedScene" uid="uid://dbmqfpl0udm23" path="res://vsk_default/models/basketball/basketball.tscn" id="2"]
-[ext_resource type="AudioStream" uid="uid://ceefv7idopk7q" path="res://vsk_default/audio/sfx/basketball_drop.wav" id="3"]
+[ext_resource type="PackedScene" path="res://vsk_default/art/models/basketball/basketball.tscn" id="2"]
+[ext_resource type="AudioStream" uid="uid://ceefv7idopk7q" path="res://vsk_default/art/audio/sfx/basketball_drop.wav" id="3"]
 
 [sub_resource type="PhysicsMaterial" id="1"]
 friction = 0.85

@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://dqf7pwq16qe3y"
-path="res://.godot/imported/scene.gltf-ea91818c118ed80f05226b258e65b5f1.scn"
+path="res://.godot/imported/scene.gltf-19e631e7df8697e234689acf9d22cf55.scn"
 
 [deps]
 
-source_file="res://vsk_default/import/beachball/scene.gltf"
-dest_files=["res://.godot/imported/scene.gltf-ea91818c118ed80f05226b258e65b5f1.scn"]
+source_file="res://vsk_default/art/import/beachball/scene.gltf"
+dest_files=["res://.godot/imported/scene.gltf-19e631e7df8697e234689acf9d22cf55.scn"]
 
 [params]
 
