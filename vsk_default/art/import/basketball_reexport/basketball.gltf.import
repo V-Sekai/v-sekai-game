@@ -3,7 +3,7 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://u1204tacxsu3"
+uid="uid://t83gvfjjmupb"
 path="res://.godot/imported/basketball.gltf-78ec900028ce41b55959a0b5deaf50ac.scn"
 
 [deps]
@@ -35,7 +35,7 @@ _subresources={
 }
 },
 "nodes": {
-"PATH:Cube__0": {
+"PATH:RootNode (gltf orientation matrix)/RootNode (model correction matrix)/17b590cce40b46b089bc3041c1774279fbx/RootNode/Cube/Cube__0": {
 "decomposition/precision": 10,
 "generate/navmesh": 1,
 "generate/physics": true
