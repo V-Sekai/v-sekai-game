@@ -24,8 +24,8 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="TabContainer" type="TabContainer" parent="Main"]
-offset_right = 921.0
-offset_bottom = 478.0
+offset_right = 1024.0
+offset_bottom = 536.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 tab_alignment = 1
@@ -39,8 +39,6 @@ offset_left = 6.0
 offset_top = 41.0
 offset_right = -6.0
 offset_bottom = -6.0
-grow_horizontal = 2
-grow_vertical = 2
 
 [node name="PublicContent" parent="Main/TabContainer/Public" instance=ExtResource("2_ip71e")]
 layout_mode = 3
@@ -52,15 +50,7 @@ load_content_on_creation = true
 [node name="Personal" type="Control" parent="Main/TabContainer"]
 visible = false
 layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 6.0
-offset_top = 41.0
-offset_right = -6.0
-offset_bottom = -6.0
-grow_horizontal = 2
-grow_vertical = 2
+anchors_preset = 0
 size_flags_horizontal = 3
 
 [node name="PersonalContent" parent="Main/TabContainer/Personal" instance=ExtResource("2_ip71e")]
@@ -72,20 +62,20 @@ load_content_on_creation = true
 public_content = false
 
 [node name="ToolBar" type="HBoxContainer" parent="Main"]
-offset_top = 484.0
-offset_right = 921.0
-offset_bottom = 518.0
+offset_top = 542.0
+offset_right = 1024.0
+offset_bottom = 576.0
 alignment = 1
 
 [node name="LocalFilesButton" type="Button" parent="Main/ToolBar"]
-offset_left = 275.0
-offset_right = 476.0
+offset_left = 327.0
+offset_right = 528.0
 offset_bottom = 34.0
 text = "TR_MENU_LOCAL_FILES"
 
 [node name="RefreshButton" type="Button" parent="Main/ToolBar"]
-offset_left = 482.0
-offset_right = 645.0
+offset_left = 534.0
+offset_right = 697.0
 offset_bottom = 34.0
 text = "TR_MENU_REFRESH"
 
