@@ -7,7 +7,6 @@
 [node name="VSKUserContentItem" type="Button"]
 clip_contents = true
 custom_minimum_size = Vector2(640, 360)
-anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_right = -640.0
