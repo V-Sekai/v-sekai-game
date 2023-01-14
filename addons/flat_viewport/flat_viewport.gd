@@ -26,7 +26,6 @@ func _ready() -> void:
 		texture_rect_ingame.set_mouse_filter(MOUSE_FILTER_IGNORE)
 		texture_rect_ingame.set_flip_v(false)
 		texture_rect_ingame.set_stretch_mode(TextureRect.STRETCH_KEEP_ASPECT_COVERED)
-		texture_rect_ingame.ignore_texture_size = true
 
 		var shader_material: ShaderMaterial = ShaderMaterial.new()
 		shader_material.shader = flat_viewport_const
@@ -45,7 +44,6 @@ func _ready() -> void:
 		texture_rect_menu.size_flags_vertical = TextureRect.SIZE_EXPAND
 		texture_rect_menu.set_flip_v(false)
 		texture_rect_menu.set_stretch_mode(TextureRect.STRETCH_SCALE)
-		texture_rect_menu.ignore_texture_size = true
 
 		if texture_rect_menu.gui_input.connect(self.emit_menu_gui_input) != OK:
 			printerr("Could could connect gui_input signal!")
