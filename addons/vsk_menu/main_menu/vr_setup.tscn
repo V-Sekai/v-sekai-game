@@ -4,21 +4,25 @@
 [ext_resource type="PackedScene" uid="uid://cogvc7mlmr810" path="res://addons/vsk_menu/vsk_button.tscn" id="2"]
 
 [node name="VRSetup" type="Control"]
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-script = ExtResource( "1" )
-restart_notification_nodepath = NodePath("Panel/CenterContainer/RestartRequired")
+script = ExtResource("1")
 vr_mode_enabled_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/VREnabledContainer/VREnabled")
 movement_orientation_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/MovementOrientationContainer/MovementOrientation")
 turning_mode_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/TurningMode/TurningMode")
 custom_player_height_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/PlayerHeightContainer/PlayerHeightSpinbox")
 movement_type_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/MovementType/MovementType")
+restart_notification_nodepath = NodePath("Panel/CenterContainer/RestartRequired")
 
 [node name="Panel" type="Panel" parent="."]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 
 [node name="CenterContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 10.0
@@ -28,109 +32,82 @@ offset_bottom = -10.0
 alignment = 1
 
 [node name="RestartRequired" type="Label" parent="Panel/CenterContainer"]
-offset_right = 1004.0
-offset_bottom = 33.0
+layout_mode = 2
 theme_override_colors/font_color = Color(1, 0, 0, 1)
 text = "TR_MENU_RESTART_REQUIRED"
 
 [node name="Control" type="HBoxContainer" parent="Panel/CenterContainer"]
-offset_top = 39.0
-offset_right = 1004.0
-offset_bottom = 542.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="BlankSpaceLeft" type="Control" parent="Panel/CenterContainer/Control"]
-offset_right = 165.0
-offset_bottom = 503.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.25
 
 [node name="ButtonsContainer" type="VBoxContainer" parent="Panel/CenterContainer/Control"]
-offset_left = 171.0
-offset_right = 832.0
-offset_bottom = 503.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 alignment = 1
 
 [node name="VREnabledContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer"]
-offset_top = 135.0
-offset_right = 661.0
-offset_bottom = 179.0
+layout_mode = 2
 size_flags_horizontal = 3
 alignment = 1
 
 [node name="VREnabledLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/VREnabledContainer"]
-offset_top = 5.0
-offset_right = 327.0
-offset_bottom = 38.0
+layout_mode = 2
 size_flags_horizontal = 3
 text = "TR_MENU_VR_ENABLED"
 
 [node name="VREnabled" type="CheckBox" parent="Panel/CenterContainer/Control/ButtonsContainer/VREnabledContainer"]
-offset_left = 333.0
-offset_right = 661.0
-offset_bottom = 44.0
+layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="MovementOrientationContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer"]
-offset_top = 185.0
-offset_right = 661.0
-offset_bottom = 218.0
+layout_mode = 2
 size_flags_horizontal = 3
 alignment = 1
 
 [node name="MovementOrientationLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/MovementOrientationContainer"]
-offset_right = 327.0
-offset_bottom = 33.0
+layout_mode = 2
 size_flags_horizontal = 3
 text = "TR_MENU_VR_MOVEMENT_ORIENTATION"
 
 [node name="MovementOrientation" type="MenuButton" parent="Panel/CenterContainer/Control/ButtonsContainer/MovementOrientationContainer"]
-offset_left = 333.0
-offset_right = 661.0
-offset_bottom = 33.0
+layout_mode = 2
 size_flags_horizontal = 3
 flat = false
 
 [node name="TurningMode" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer"]
-offset_top = 224.0
-offset_right = 661.0
-offset_bottom = 257.0
+layout_mode = 2
 size_flags_horizontal = 3
 alignment = 1
 
 [node name="TurningModeLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/TurningMode"]
-offset_right = 327.0
-offset_bottom = 33.0
+layout_mode = 2
 size_flags_horizontal = 3
 text = "TR_MENU_VR_TURNING_MODE"
 
 [node name="TurningMode" type="MenuButton" parent="Panel/CenterContainer/Control/ButtonsContainer/TurningMode"]
-offset_left = 333.0
-offset_right = 661.0
-offset_bottom = 33.0
+layout_mode = 2
 size_flags_horizontal = 3
 flat = false
 
 [node name="PlayerHeightContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer"]
-offset_top = 263.0
-offset_right = 661.0
-offset_bottom = 296.0
+layout_mode = 2
 size_flags_horizontal = 3
 alignment = 1
 
 [node name="PlayerHeightLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/PlayerHeightContainer"]
-offset_right = 327.0
-offset_bottom = 33.0
+layout_mode = 2
 size_flags_horizontal = 3
 text = "TR_MENU_VR_PLAYER_HEIGHT"
 
 [node name="PlayerHeightSpinbox" type="SpinBox" parent="Panel/CenterContainer/Control/ButtonsContainer/PlayerHeightContainer"]
-offset_left = 333.0
-offset_right = 661.0
-offset_bottom = 33.0
+layout_mode = 2
 size_flags_horizontal = 3
 min_value = 0.5
 max_value = 2.8
@@ -138,51 +115,37 @@ step = 0.01
 value = 1.0
 
 [node name="MovementType" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer"]
-offset_top = 302.0
-offset_right = 661.0
-offset_bottom = 335.0
+layout_mode = 2
 size_flags_horizontal = 3
 alignment = 1
 
 [node name="MovementTypeLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/MovementType"]
-offset_right = 327.0
-offset_bottom = 33.0
+layout_mode = 2
 size_flags_horizontal = 3
 text = "TR_MENU_VR_MOVEMENT_TYPE"
 
 [node name="MovementType" type="MenuButton" parent="Panel/CenterContainer/Control/ButtonsContainer/MovementType"]
-offset_left = 333.0
-offset_right = 661.0
-offset_bottom = 33.0
+layout_mode = 2
 size_flags_horizontal = 3
 flat = false
 
 [node name="StatusContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer"]
-offset_top = 341.0
-offset_right = 661.0
-offset_bottom = 368.0
+layout_mode = 2
 alignment = 1
 
 [node name="StatusLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/StatusContainer"]
-offset_left = 324.0
-offset_right = 337.0
-offset_bottom = 27.0
+layout_mode = 2
 
 [node name="BlankSpaceRight" type="Control" parent="Panel/CenterContainer/Control"]
-offset_left = 838.0
-offset_right = 1004.0
-offset_bottom = 503.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.25
 
 [node name="BottomContainer" type="HBoxContainer" parent="Panel/CenterContainer"]
-offset_top = 548.0
-offset_right = 1004.0
-offset_bottom = 580.0
+layout_mode = 2
 
-[node name="BackButton" parent="Panel/CenterContainer/BottomContainer" instance=ExtResource( "2" )]
-offset_right = 134.0
-offset_bottom = 32.0
+[node name="BackButton" parent="Panel/CenterContainer/BottomContainer" instance=ExtResource("2")]
+layout_mode = 2
 text = "TR_MENU_BACK"
 
 [connection signal="pressed" from="Panel/CenterContainer/Control/ButtonsContainer/VREnabledContainer/VREnabled" to="." method="_on_VREnabled_pressed"]
