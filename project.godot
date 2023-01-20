@@ -678,7 +678,7 @@ block_physics_send={
 
 [internationalization]
 
-locale/translations=PackedStringArray("res://addons/vsk_menu/localisation/menu_strings.en.translation", "res://addons/sar1_vr_manager/localisation/vr_manager_strings.en.translation")
+locale/translations=PackedStringArray("res://addons/vsk_menu/localisation/menu_strings.en.translation", "res://addons/sar1_vr_manager/localisation/vr_manager_strings.en.translation", "res://addons/vsk_menu/localisation/menu_strings.es.translation")
 locale/include_text_server_data=true
 
 [layer_names]
@@ -765,5 +765,5 @@ config/process_priority=255
 [xr]
 
 openxr/enabled=true
-openxr/submit_depth_buffer=true
 shaders/enabled=true
+openxr/submit_depth_buffer=true
