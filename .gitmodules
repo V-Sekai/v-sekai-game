@@ -112,3 +112,7 @@
 	path = addons/vrm
 	url = https://github.com/V-Sekai/godot-vrm
 	branch = only-addon
+[submodule "addons/splerger"]
+	path = addons/splerger
+	url = https://github.com/V-Sekai/godot-splerger.git
+	branch = main
