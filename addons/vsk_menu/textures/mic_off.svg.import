@@ -4,23 +4,22 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://dq1xor4m23klh"
 path.s3tc="res://.godot/imported/mic_off.svg-307fc8ce1cb1f748505a2ece0bf172c4.s3tc.ctex"
-path.etc2="res://.godot/imported/mic_off.svg-307fc8ce1cb1f748505a2ece0bf172c4.etc2.ctex"
 metadata={
-"imported_formats": ["bptc", "s3tc", "etc2"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://addons/vsk_menu/textures/mic_off.svg"
-dest_files=["res://.godot/imported/mic_off.svg-307fc8ce1cb1f748505a2ece0bf172c4.s3tc.ctex", "res://.godot/imported/mic_off.svg-307fc8ce1cb1f748505a2ece0bf172c4.etc2.ctex"]
+dest_files=["res://.godot/imported/mic_off.svg-307fc8ce1cb1f748505a2ece0bf172c4.s3tc.ctex"]
 
 [params]
 
 compress/mode=2
+compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=1
-compress/bptc_ldr=1
 compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=false

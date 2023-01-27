@@ -28,3 +28,4 @@ animation/fps=30
 animation/trimming=false
 import_script/path=""
 _subresources={}
+meshes/handle_gltf_embedded_images=1
