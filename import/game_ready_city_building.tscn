@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=3 uid="uid://c22ri1ldvb5ys"]
+
+[ext_resource type="PackedScene" uid="uid://doswx35utu5bb" path="res://import/game_ready_city_building.glb" id="1_6os02"]
+[ext_resource type="Script" path="res://addons/splerger/run_split.gd" id="2_gm3bj"]
+
+[node name="game_ready_city_building" instance=ExtResource("1_6os02")]
+script = ExtResource("2_gm3bj")
