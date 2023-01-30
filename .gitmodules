@@ -30,10 +30,6 @@
 	path = addons/godot_uro
 	url = https://github.com/V-Sekai/godot_uro
 	branch = godot4
-[submodule "addons/godot_xr_vignette"]
-	path = addons/xr_vignette
-	url = https://github.com/V-Sekai/godot_xr_vignette
-	branch = godot4
 [submodule "addons/input_manager"]
 	path = addons/input_manager
 	url = https://github.com/V-Sekai/input_manager
