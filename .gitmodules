@@ -112,3 +112,6 @@
 	path = addons/splerger
 	url = https://github.com/V-Sekai/godot-splerger.git
 	branch = main
+[submodule "xr_vignette"]
+	path = xr_vignette
+	url = https://github.com/V-Sekai/godot_xr_vignette
