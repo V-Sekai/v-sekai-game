@@ -138,11 +138,11 @@ signal audio_gate_or_muted_state_changed
 
 
 static func get_audio_output_devices() -> PackedStringArray:
-	return AudioServer.get_device_list()
+	return AudioServer.get_output_device_list()
 
 
 static func get_audio_input_devices() -> PackedStringArray:
-	return AudioServer.capture_get_device_list()
+	return AudioServer.get_input_device_list()
 
 
 func set_muted(p_muted) -> void:
@@ -180,11 +180,11 @@ func voice_packet_compressed(p_peer_id: int, p_sequence_id: int, p_buffer: Packe
 func update_audio_devices() -> void:
 	if !Engine.is_editor_hint():
 		if VRManager.is_xr_active():
-			AudioServer.set_device(xr_output_device)
-			AudioServer.capture_set_device(xr_input_device)
+			AudioServer.set_input_device(xr_output_device)
+			AudioServer.set_output_device(xr_input_device)
 		else:
-			AudioServer.set_device(flat_output_device)
-			AudioServer.capture_set_device(flat_input_device)
+			AudioServer.set_input_device(flat_output_device)
+			AudioServer.set_output_device(flat_input_device)
 
 
 func get_voice_timeslice() -> int:
