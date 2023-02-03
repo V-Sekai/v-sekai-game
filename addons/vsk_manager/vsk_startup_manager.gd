@@ -47,7 +47,7 @@ func is_headless() -> bool:
 ## join a server if an ip commandline argument was provided, or attempt
 ## to go the main menu
 ##
-func _startup_complate() -> void:
+func _startup_complete() -> void:
 	var _skipped: bool = await VSKFadeManager.execute_fade(false).fade_complete
 
 	if not ip.is_empty():
@@ -106,13 +106,13 @@ func startup() -> void:
 		#var upnp_result : int = yield(ConnectionMediator.upnp_discover_async(), "completed")
 		#print("UPNP_discoery result %s!" % ConnectionMediator.get_string_for_upnp_result(upnp_result))
 
-		assert(VSKPreloadManager.all_preloading_done.connect(self._startup_complate, CONNECT_ONE_SHOT) == OK)
+		assert(VSKPreloadManager.all_preloading_done.connect(self._startup_complete, CONNECT_ONE_SHOT) == OK)
 
 		VSKGameFlowManager.go_to_preloading()
 		if !VSKPreloadManager.request_preloading_tasks():
 			LogManager.fatal_error("Could not request preloading tasks!")
 
-		var _skipped: bool = await VSKFadeManager.execute_fade(true).fade_complete
+		await VSKFadeManager.execute_fade(true).fade_complete
 
 
 ##

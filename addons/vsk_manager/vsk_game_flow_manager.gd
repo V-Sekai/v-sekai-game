@@ -749,7 +749,7 @@ func setup() -> void:
 		get_tree().set_auto_accept_quit(false)
 		get_tree().set_quit_on_go_back(false)
 
-		VSKAccountManager.call("start_session")  ### FIXME: Is await correct here??
+		VSKAccountManager.call("start_session")
 
 		_setup_input_manager()
 		_setup_graphics_manager()

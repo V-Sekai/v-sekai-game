@@ -266,17 +266,17 @@ func setup_outgame() -> void:
 
 func setup_preloading_screen() -> void:
 	if menu_root:
-		menu_root.push_view_controller(preloading_screen_const.instantiate(), false)
+		menu_root.push_view_controller(preloading_screen_const.instantiate() as ViewController, false)
 
 
 func setup_title_screen() -> void:
 	if menu_root:
-		menu_root.push_view_controller(title_screen_packed_scene.instantiate(), false)
+		menu_root.push_view_controller(title_screen_packed_scene.instantiate() as ViewController, false)
 
 
 func setup_loading_screen() -> void:
 	if menu_root:
-		menu_root.push_view_controller(loading_screen_packed_scene.instantiate(), false)
+		menu_root.push_view_controller(loading_screen_packed_scene.instantiate() as ViewController, false)
 
 
 func play_menu_sfx(p_stream: AudioStream) -> void:

@@ -206,7 +206,7 @@ func attempt_to_kill_shard() -> void:
 ## Callback from the main network manager telling us the connection has successfully shutdown
 ##
 func _connection_killed() -> void:
-	await attempt_to_kill_shard()  # FIXME: This wasn't await before.
+	attempt_to_kill_shard()
 	destroy_all_entities()
 	kill_flag = false
 
