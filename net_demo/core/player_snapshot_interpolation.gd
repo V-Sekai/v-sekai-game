@@ -3,7 +3,7 @@ extends Node
 const quantization_const = preload("quantization.gd")
 
 # Path to the player node
-@export_node_path(CharacterBody3D) var player_controller: NodePath = NodePath()
+@export_node_path("CharacterBody3D") var player_controller: NodePath = NodePath()
 @onready var _player_controller_node: CharacterBody3D = get_node_or_null(player_controller)
 
 # Current snapshot to sync to the actual player node

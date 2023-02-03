@@ -2,7 +2,7 @@ extends Node
 
 const quantization_const = preload("quantization.gd")
 
-@export_node_path(RigidBody3D) var rigid_body: NodePath = NodePath("..")
+@export_node_path("RigidBody3D") var rigid_body: NodePath = NodePath("..")
 @onready var _rigid_body_node: RigidBody3D = get_node_or_null(rigid_body)
 
 # This is intended to implement state synchronisation for physics objects

@@ -3,7 +3,7 @@ extends "movement_controller.gd"
 const godot_math_extensions_const = preload("res://addons/math_util/math_funcs.gd")
 
 const camera_holder_const = preload("camera_holder.gd")
-@export_node_path var camera_holder: NodePath = NodePath()
+@export_node_path("Node3D") var camera_holder: NodePath = NodePath()
 
 # Settings for controlling movement
 @export var walk_speed: float = 1.5

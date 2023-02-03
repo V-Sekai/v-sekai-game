@@ -7,10 +7,10 @@ var mouse_velocity: Vector2 = Vector2()
 
 enum { FIRST_PERSON, THIRD_PERSON }
 
-@export_node_path(Node3D) var camera_pivot: NodePath = NodePath()
-@export_node_path(SpringArm3D) var camera_spring_arm: NodePath = NodePath()
-@export_node_path(Node3D) var camera_bobbing: NodePath = NodePath()
-@export_node_path(Node3D) var third_person_model: NodePath = NodePath()
+@export_node_path("Node3D") var camera_pivot: NodePath = NodePath()
+@export_node_path("SpringArm3D") var camera_spring_arm: NodePath = NodePath()
+@export_node_path("Node3D"") var camera_bobbing: NodePath = NodePath()
+@export_node_path("Node3D") var third_person_model: NodePath = NodePath()
 
 @export_enum("First-Person", "Third-Person") var view_mode: int = THIRD_PERSON:
 	set(p_view_mode):
