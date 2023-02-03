@@ -5,7 +5,7 @@ extends Node3D
 
 func get_control_root() -> Control:
 	var canvas_plane: Node3D = get_node_or_null(canvas_plane_nodepath)
-	if canvas_plane:
+	if canvas_plane and canvas_plane.has_method("get_control_root"):
 		return canvas_plane.get_control_root()
 	else:
 		return null
