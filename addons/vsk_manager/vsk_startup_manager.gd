@@ -102,14 +102,15 @@ func startup() -> void:
 
 	setup_vsk_singletons()
 
-	if !Engine.is_editor_hint():
-		assert(VSKPreloadManager.all_preloading_done.connect(self._startup_complete, CONNECT_ONE_SHOT) == OK)
+	if Engine.is_editor_hint():
+		return
+	assert(VSKPreloadManager.all_preloading_done.connect(self._startup_complete, CONNECT_ONE_SHOT) == OK)
 
-		VSKGameFlowManager.go_to_preloading()
-		if !VSKPreloadManager.request_preloading_tasks():
-			LogManager.fatal_error("Could not request preloading tasks!")
+	VSKGameFlowManager.go_to_preloading()
+	if !VSKPreloadManager.request_preloading_tasks():
+		LogManager.fatal_error("Could not request preloading tasks!")
 
-		await VSKFadeManager.execute_fade(true).fade_complete
+	await VSKFadeManager.execute_fade(true).fade_complete
 
 
 ##
@@ -181,12 +182,13 @@ func parse_commandline_args() -> void:
 
 
 func apply_project_settings() -> void:
-	if Engine.is_editor_hint():
-		if !ProjectSettings.has_setting("network/config/default_autohost"):
-			ProjectSettings.set_setting("network/config/default_autohost", default_autohost)
+	if not Engine.is_editor_hint():
+		return
+	if !ProjectSettings.has_setting("network/config/default_autohost"):
+		ProjectSettings.set_setting("network/config/default_autohost", default_autohost)
 
-		if ProjectSettings.save() != OK:
-			printerr("Could not save project settings!")
+	if ProjectSettings.save() != OK:
+		printerr("Could not save project settings!")
 
 
 func get_project_settings() -> void:
