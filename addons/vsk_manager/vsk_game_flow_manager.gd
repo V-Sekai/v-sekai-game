@@ -657,11 +657,6 @@ func _setup_mocap_manager() -> void:
 func _spatial_game_viewport_updated(p_viewport: SubViewport):
 	if p_viewport == game_viewport:
 		FlatViewport.texture_rect_ingame.texture = game_viewport.get_texture()
-		# What the hell? Ugly hack.
-		# Without this, the texture rect totally breaks when switching
-		# VR and flat modes
-		FlatViewport.texture_rect_ingame.flip_h = !FlatViewport.texture_rect_ingame.flip_h
-		FlatViewport.texture_rect_ingame.flip_h = !FlatViewport.texture_rect_ingame.flip_h
 
 
 ##
@@ -671,11 +666,15 @@ func _setup_viewports() -> void:
 	if !game_viewport:
 		game_viewport = SpatialGameViewportManager.create_spatial_game_viewport()
 		add_child(game_viewport, true)
+		game_viewport.owner = self
 	FlatViewport.texture_rect_ingame.texture = game_viewport.get_texture()
+	var viewport_path = game_viewport.owner.get_path_to(game_viewport)
+	FlatViewport.texture_rect_ingame.texture.viewport_path = viewport_path
 
 	if !secondary_viewport:
 		secondary_viewport = SpatialGameViewportManager.create_spatial_secondary_viewport()
 		add_child(secondary_viewport, true)
+		secondary_viewport.owner = self
 
 	if !gameroot:
 		gameroot = Node3D.new()
