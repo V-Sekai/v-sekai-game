@@ -43,7 +43,9 @@ class PlayerSnapshot:
 			new_origin.y = p_player_snapshot_byte_array.decode_half(2)
 			new_origin.z = p_player_snapshot_byte_array.decode_half(4)
 
-			var new_rotation_y: float = quantization_const.dequantize_s16_angle_to_euler_angle(p_player_snapshot_byte_array.decode_s16(6))
+			var new_rotation_y: float = quantization_const.dequantize_s16_angle_to_euler_angle(
+				p_player_snapshot_byte_array.decode_s16(6)
+			)
 
 			new_player_snapshot.origin = new_origin
 			new_player_snapshot.y_rotation = new_rotation_y

@@ -21,7 +21,11 @@ func _ready() -> void:
 	vr_mode_enabled_checkbox.button_pressed = VRManager.vr_user_preferences.vr_mode_enabled
 
 	movement_orientation_button = get_node_or_null(movement_orientation_nodepath)
-	setup_menu_button(movement_orientation_button, VRManager.vr_user_preferences.movement_orientation, VRManager.movement_orientation_names)
+	setup_menu_button(
+		movement_orientation_button,
+		VRManager.vr_user_preferences.movement_orientation,
+		VRManager.movement_orientation_names
+	)
 	if movement_orientation_button.get_popup().connect("id_pressed", self._on_movement_orientation_changed) != OK:
 		printerr("Could not connect 'id_pressed'!")
 
@@ -57,12 +61,18 @@ func will_disappear() -> void:
 
 func _on_movement_orientation_changed(p_id: int) -> void:
 	VRManager.vr_user_preferences.movement_orientation = p_id
-	update_menu_button_text(movement_orientation_button, VRManager.vr_user_preferences.movement_orientation, VRManager.movement_orientation_names)
+	update_menu_button_text(
+		movement_orientation_button,
+		VRManager.vr_user_preferences.movement_orientation,
+		VRManager.movement_orientation_names
+	)
 
 
 func _on_turning_mode_changed(p_id: int) -> void:
 	VRManager.vr_user_preferences.turning_mode = p_id
-	update_menu_button_text(turning_mode_button, VRManager.vr_user_preferences.turning_mode, VRManager.turning_mode_names)
+	update_menu_button_text(
+		turning_mode_button, VRManager.vr_user_preferences.turning_mode, VRManager.turning_mode_names
+	)
 
 
 func _on_PlayerHeightSpinbox_value_changed(p_value: float) -> void:
@@ -71,7 +81,9 @@ func _on_PlayerHeightSpinbox_value_changed(p_value: float) -> void:
 
 func _on_movement_type_changed(p_id: int) -> void:
 	VRManager.vr_user_preferences.movement_type = p_id
-	update_menu_button_text(movement_type_button, VRManager.vr_user_preferences.movement_type, VRManager.movement_type_names)
+	update_menu_button_text(
+		movement_type_button, VRManager.vr_user_preferences.movement_type, VRManager.movement_type_names
+	)
 
 
 func _on_VREnabled_pressed():

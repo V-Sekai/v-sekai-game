@@ -43,7 +43,9 @@ static func copy_kusudama(p_bone_name_from: String, p_bone_name_to: PackedString
 		var cone_count = p_ik.get_kusudama_limit_cone_count(from)
 		p_ik.set_kusudama_limit_cone_count(to, cone_count)
 		for cone_i in range(cone_count):
-			p_ik.set_kusudama_limit_cone_center(to, cone_i, p_ik.get_kusudama_limit_cone_center(from, cone_i) * p_mirror)
+			p_ik.set_kusudama_limit_cone_center(
+				to, cone_i, p_ik.get_kusudama_limit_cone_center(from, cone_i) * p_mirror
+			)
 			p_ik.set_kusudama_limit_cone_radius(to, cone_i, p_ik.get_kusudama_limit_cone_radius(from, cone_i))
 		var twist = p_ik.get_kusudama_twist(from)
 		p_ik.set_kusudama_twist(to, twist * p_mirror.normalized().sign().x)
@@ -180,12 +182,17 @@ func tune_bone(new_ik: ManyBoneIK3D, skeleton: Skeleton3D, bone_name: String, bo
 			parent = node
 			node_3d.owner = owner
 			break
-	node_3d.global_transform = (skeleton.global_transform.affine_inverse() * skeleton.get_bone_global_pose_no_override(bone_i))
+	node_3d.global_transform = (
+		skeleton.global_transform.affine_inverse() * skeleton.get_bone_global_pose_no_override(bone_i)
+	)
 	if not children.size():
 		new_ik.add_child(node_3d, true)
 	if bone_name in ["Head"]:
 		# Move slightly higher to avoid the crunching into the body effect.
-		node_3d.transform.origin = (node_3d.get_parent_node_3d().global_transform.affine_inverse() * node_3d.global_transform.origin + Vector3(0, 0.1, 0))
+		node_3d.transform.origin = (
+			node_3d.get_parent_node_3d().global_transform.affine_inverse() * node_3d.global_transform.origin
+			+ Vector3(0, 0.1, 0)
+		)
 	if bone_name in ["LeftHand"]:
 		if is_thumbs_up:
 			node_3d.global_transform.basis = Basis.from_euler(Vector3(0, 0, -PI / 2))

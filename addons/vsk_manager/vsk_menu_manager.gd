@@ -96,7 +96,13 @@ func menu_button_pressed() -> void:
 
 
 func update_vr_flat_menu_visibility():
-	if outgame_root_vr_instance.is_inside_tree() and (VRManager.vr_user_preferences.vr_hmd_mirroring == VRManager.vr_user_preferences.vr_hmd_mirroring_enum.HMD_MIRROR_FLAT_UI):
+	if (
+		outgame_root_vr_instance.is_inside_tree()
+		and (
+			VRManager.vr_user_preferences.vr_hmd_mirroring
+			== VRManager.vr_user_preferences.vr_hmd_mirroring_enum.HMD_MIRROR_FLAT_UI
+		)
+	):
 		FlatViewport.texture_rect_menu.show()
 	else:
 		FlatViewport.texture_rect_menu.hide()
@@ -297,10 +303,18 @@ func assign_resource(p_resource: Resource, p_resource_id: int) -> void:
 
 func get_preload_tasks() -> Dictionary:
 	var preloading_tasks: Dictionary = {}
-	preloading_tasks["res://addons/vsk_menu/main_menu/title_screen.tscn"] = {"target": self, "method": "assign_resource", "args": [RESOURCE_ID_TITLE_SCREEN]}
-	preloading_tasks["res://addons/vsk_menu/main_menu/loading_screen.tscn"] = {"target": self, "method": "assign_resource", "args": [RESOURCE_ID_LOADING_SCREEN]}
-	preloading_tasks["res://addons/vsk_menu/main_menu/ingame_menu_screen.tscn"] = {"target": self, "method": "assign_resource", "args": [RESOURCE_ID_INGAME_MENU_SCREEN]}
-	preloading_tasks["res://addons/vsk_menu/ingame_menu/ingame_gui.tscn"] = {"target": self, "method": "assign_resource", "args": [RESOURCE_ID_INGAME_GUI]}
+	preloading_tasks["res://addons/vsk_menu/main_menu/title_screen.tscn"] = {
+		"target": self, "method": "assign_resource", "args": [RESOURCE_ID_TITLE_SCREEN]
+	}
+	preloading_tasks["res://addons/vsk_menu/main_menu/loading_screen.tscn"] = {
+		"target": self, "method": "assign_resource", "args": [RESOURCE_ID_LOADING_SCREEN]
+	}
+	preloading_tasks["res://addons/vsk_menu/main_menu/ingame_menu_screen.tscn"] = {
+		"target": self, "method": "assign_resource", "args": [RESOURCE_ID_INGAME_MENU_SCREEN]
+	}
+	preloading_tasks["res://addons/vsk_menu/ingame_menu/ingame_gui.tscn"] = {
+		"target": self, "method": "assign_resource", "args": [RESOURCE_ID_INGAME_GUI]
+	}
 
 	return preloading_tasks
 

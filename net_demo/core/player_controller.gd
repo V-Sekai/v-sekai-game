@@ -50,15 +50,26 @@ func _process_rotation(p_movement_vector: Vector2) -> void:
 
 		var camera_basis: Basis = camera_pivot_node.global_transform.basis
 
-		var direction: Vector3 = (camera_basis[0] * direction_vector.x) - (camera_basis[2] * direction_vector.y).normalized()
+		var direction: Vector3 = (
+			(camera_basis[0] * direction_vector.x) - (camera_basis[2] * direction_vector.y).normalized()
+		)
 
-		var rotation_difference = godot_math_extensions_const.shortest_angle_distance(y_rotation, Vector2(direction.z, direction.x).angle())
+		var rotation_difference = godot_math_extensions_const.shortest_angle_distance(
+			y_rotation, Vector2(direction.z, direction.x).angle()
+		)
 
 		var clamped_rotation_difference: float = 0.0
 		clamped_rotation_difference = rotation_difference
 
 		y_rotation = cubic_interpolate_angle_in_time(
-			y_rotation, y_rotation + clamped_rotation_difference, last_rotation[0], y_rotation + clamped_rotation_difference, 1.0, last_rotation[1], 0, get_process_delta_time()
+			y_rotation,
+			y_rotation + clamped_rotation_difference,
+			last_rotation[0],
+			y_rotation + clamped_rotation_difference,
+			1.0,
+			last_rotation[1],
+			0,
+			get_process_delta_time()
 		)
 
 		# Limit rotation range
@@ -91,10 +102,16 @@ func _process_movement(p_delta: float, p_movement_vector: Vector2, p_is_sprintin
 	var target_velocity: Vector3
 	if camera_holder_node.view_mode == camera_holder_const.FIRST_PERSON:
 		target_velocity = (
-			((camera_pivot_node.global_transform.basis.x * p_movement_vector.x) + (camera_pivot_node.global_transform.basis.z * -p_movement_vector.y)) * speed_modifier
+			(
+				(camera_pivot_node.global_transform.basis.x * p_movement_vector.x)
+				+ (camera_pivot_node.global_transform.basis.z * -p_movement_vector.y)
+			)
+			* speed_modifier
 		)
 	else:
-		target_velocity = (Basis().rotated(Vector3.UP, y_rotation).z * p_movement_vector.normalized().length() * speed_modifier)
+		target_velocity = (
+			Basis().rotated(Vector3.UP, y_rotation).z * p_movement_vector.normalized().length() * speed_modifier
+		)
 
 	var speed: float = deacceleration
 	if is_moving:
@@ -102,7 +119,9 @@ func _process_movement(p_delta: float, p_movement_vector: Vector2, p_is_sprintin
 
 	var horizontal_velocity: Vector3 = velocity * (Vector3.ONE - up_direction)
 
-	horizontal_velocity = horizontal_velocity.cubic_interpolate_in_time(target_velocity, last_movement[0], target_velocity, 1.0, last_movement[1].x, 0, speed * p_delta)
+	horizontal_velocity = horizontal_velocity.cubic_interpolate_in_time(
+		target_velocity, last_movement[0], target_velocity, 1.0, last_movement[1].x, 0, speed * p_delta
+	)
 	last_movement[0] = target_velocity
 	last_movement[1] = Vector3(-speed * p_delta, -speed * p_delta, -speed * p_delta)
 

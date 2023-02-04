@@ -10,9 +10,17 @@ signal shard_update_player_count_callback(p_result)
 var active_shards: Dictionary = {}
 
 
-func create_shard(p_callback: RefCounted, p_port: int, p_map: String, p_server_name: String, p_player_count: int, p_max_players: int) -> void:
+func create_shard(
+	p_callback: RefCounted, p_port: int, p_map: String, p_server_name: String, p_player_count: int, p_max_players: int
+) -> void:
 	var async_result = await (GodotUro.godot_uro_api.create_shard_async(
-		{"port": p_port, "map": p_map, "name": p_server_name, "max_users": p_max_players, "current_users": p_player_count}
+		{
+			"port": p_port,
+			"map": p_map,
+			"name": p_server_name,
+			"max_users": p_max_players,
+			"current_users": p_player_count
+		}
 	))
 
 	if async_result["output"] is Dictionary:

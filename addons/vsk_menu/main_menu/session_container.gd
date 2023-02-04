@@ -44,7 +44,9 @@ func update_from_response(p_response: int) -> void:
 		get_node(sign_out_container_nodepath).show()
 		get_node(reconnect_container_nodepath).hide()
 		get_node(session_info_nodepath).show()
-		get_node(session_info_nodepath).text = str(TranslationServer.translate("TR_MENU_SESSION_SIGNED_IN_AS")).format({"display_name": display_name})
+		get_node(session_info_nodepath).text = str(TranslationServer.translate("TR_MENU_SESSION_SIGNED_IN_AS")).format(
+			{"display_name": display_name}
+		)
 	elif p_response == GodotUro.godot_uro_helper_const.RequesterCode.CANT_CONNECT:
 		set_connection_failure_message("TR_MENU_SESSION_CANT_CONNECT")
 	elif p_response == GodotUro.godot_uro_helper_const.RequesterCode.CANT_RESOLVE:

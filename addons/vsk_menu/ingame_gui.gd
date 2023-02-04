@@ -74,7 +74,9 @@ func _process(_delta):
 		if audio_icon:
 			var texture_size: Vector2 = audio_icon_state.texture.get_size() * SPRITE_SCALE * HALF_SCALE
 
-			audio_icon.position = Vector2(get_rect().size.x - texture_size.x - MARGIN_SCALE, texture_size.y + MARGIN_SCALE)
+			audio_icon.position = Vector2(
+				get_rect().size.x - texture_size.x - MARGIN_SCALE, texture_size.y + MARGIN_SCALE
+			)
 
 			audio_icon.scale = Vector2(SPRITE_SCALE, SPRITE_SCALE)
 

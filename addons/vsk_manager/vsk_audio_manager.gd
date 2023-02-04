@@ -45,7 +45,9 @@ func test_voice_locally() -> void:
 			print("voice_timeslice: %s" % str(voice_timeslice + i))
 
 			var voice_buffer = copied_voice_buffer.front()
-			uncompressed_audio = godot_speech.decompress_buffer(speech_decoder, voice_buffer["byte_array"], voice_buffer["buffer_size"], uncompressed_audio)
+			uncompressed_audio = godot_speech.decompress_buffer(
+				speech_decoder, voice_buffer["byte_array"], voice_buffer["buffer_size"], uncompressed_audio
+			)
 
 			playback.push_buffer(uncompressed_audio)
 			copied_voice_buffer.pop_front()
@@ -233,7 +235,9 @@ func _audio_stream_player_finished(p_audio_stream_player: AudioStreamPlayer) -> 
 	stop_audio_stream(p_audio_stream_player)
 
 
-func play_oneshot_audio_stream(p_stream: AudioStream, p_bus_name: String, p_volume_db: float = linear_to_db(1.0)) -> void:
+func play_oneshot_audio_stream(
+	p_stream: AudioStream, p_bus_name: String, p_volume_db: float = linear_to_db(1.0)
+) -> void:
 	var audio_stream_player: AudioStreamPlayer = AudioStreamPlayer.new()
 	audio_stream_player.name = "OneshotAudioStream"
 	audio_stream_player.stream = p_stream
@@ -281,7 +285,14 @@ func play_oneshot_audio_stream_3d(p_stream: AudioStream, p_bus_name: String, p_t
 		audio_stream_player_3d.bus = p_bus_name
 		audio_stream_player_3d.max_polyphony = 128
 
-		assert(audio_stream_player_3d.finished.connect(self._audio_stream_3d_player_finished.bind(audio_stream_player_3d)) == OK)
+		assert(
+			(
+				audio_stream_player_3d.finished.connect(
+					self._audio_stream_3d_player_finished.bind(audio_stream_player_3d)
+				)
+				== OK
+			)
+		)
 
 		spatial_node.add_child(audio_stream_player_3d, true)
 		audio_stream_player_3d.global_transform = p_transform
@@ -374,27 +385,53 @@ func set_settings_values():
 	VSKUserPreferencesManager.set_value(USER_PREFERENCES_SECTION_NAME, "menu_output_volume", menu_output_volume)
 	VSKUserPreferencesManager.set_value(USER_PREFERENCES_SECTION_NAME, "mic_input_volume", mic_input_volume)
 
-	VSKUserPreferencesManager.set_value(USER_PREFERENCES_SECTION_NAME, "ignore_network_voice_packets", ignore_network_voice_packets)
+	VSKUserPreferencesManager.set_value(
+		USER_PREFERENCES_SECTION_NAME, "ignore_network_voice_packets", ignore_network_voice_packets
+	)
 	VSKUserPreferencesManager.set_value(USER_PREFERENCES_SECTION_NAME, "gate_threshold", gate_threshold)
 	VSKUserPreferencesManager.set_value(USER_PREFERENCES_SECTION_NAME, "gate_timeout", gate_timeout)
 
 
 func get_settings_values() -> void:
-	flat_output_device = VSKUserPreferencesManager.get_value(USER_PREFERENCES_SECTION_NAME, "flat_output_device", TYPE_STRING, flat_output_device)
-	flat_input_device = VSKUserPreferencesManager.get_value(USER_PREFERENCES_SECTION_NAME, "flat_input_device", TYPE_STRING, flat_input_device)
-	xr_output_device = VSKUserPreferencesManager.get_value(USER_PREFERENCES_SECTION_NAME, "xr_output_device", TYPE_STRING, xr_output_device)
-	xr_input_device = VSKUserPreferencesManager.get_value(USER_PREFERENCES_SECTION_NAME, "xr_input_device", TYPE_STRING, xr_input_device)
+	flat_output_device = VSKUserPreferencesManager.get_value(
+		USER_PREFERENCES_SECTION_NAME, "flat_output_device", TYPE_STRING, flat_output_device
+	)
+	flat_input_device = VSKUserPreferencesManager.get_value(
+		USER_PREFERENCES_SECTION_NAME, "flat_input_device", TYPE_STRING, flat_input_device
+	)
+	xr_output_device = VSKUserPreferencesManager.get_value(
+		USER_PREFERENCES_SECTION_NAME, "xr_output_device", TYPE_STRING, xr_output_device
+	)
+	xr_input_device = VSKUserPreferencesManager.get_value(
+		USER_PREFERENCES_SECTION_NAME, "xr_input_device", TYPE_STRING, xr_input_device
+	)
 	muted = VSKUserPreferencesManager.get_value(USER_PREFERENCES_SECTION_NAME, "muted", TYPE_BOOL, muted)
 
-	voice_output_volume = VSKUserPreferencesManager.get_value(USER_PREFERENCES_SECTION_NAME, "voice_output_volume", TYPE_FLOAT, voice_output_volume)
-	music_output_volume = VSKUserPreferencesManager.get_value(USER_PREFERENCES_SECTION_NAME, "music_output_volume", TYPE_FLOAT, music_output_volume)
-	game_sfx_output_volume = VSKUserPreferencesManager.get_value(USER_PREFERENCES_SECTION_NAME, "game_sfx_output_volume", TYPE_FLOAT, game_sfx_output_volume)
-	menu_output_volume = VSKUserPreferencesManager.get_value(USER_PREFERENCES_SECTION_NAME, "menu_output_volume", TYPE_FLOAT, menu_output_volume)
-	mic_input_volume = VSKUserPreferencesManager.get_value(USER_PREFERENCES_SECTION_NAME, "mic_input_volume", TYPE_FLOAT, mic_input_volume)
+	voice_output_volume = VSKUserPreferencesManager.get_value(
+		USER_PREFERENCES_SECTION_NAME, "voice_output_volume", TYPE_FLOAT, voice_output_volume
+	)
+	music_output_volume = VSKUserPreferencesManager.get_value(
+		USER_PREFERENCES_SECTION_NAME, "music_output_volume", TYPE_FLOAT, music_output_volume
+	)
+	game_sfx_output_volume = VSKUserPreferencesManager.get_value(
+		USER_PREFERENCES_SECTION_NAME, "game_sfx_output_volume", TYPE_FLOAT, game_sfx_output_volume
+	)
+	menu_output_volume = VSKUserPreferencesManager.get_value(
+		USER_PREFERENCES_SECTION_NAME, "menu_output_volume", TYPE_FLOAT, menu_output_volume
+	)
+	mic_input_volume = VSKUserPreferencesManager.get_value(
+		USER_PREFERENCES_SECTION_NAME, "mic_input_volume", TYPE_FLOAT, mic_input_volume
+	)
 
-	ignore_network_voice_packets = VSKUserPreferencesManager.get_value(USER_PREFERENCES_SECTION_NAME, "ignore_network_voice_packets", TYPE_BOOL, ignore_network_voice_packets)
-	gate_threshold = VSKUserPreferencesManager.get_value(USER_PREFERENCES_SECTION_NAME, "gate_threshold", TYPE_FLOAT, gate_threshold)
-	gate_timeout = VSKUserPreferencesManager.get_value(USER_PREFERENCES_SECTION_NAME, "gate_timeout", TYPE_FLOAT, gate_timeout)
+	ignore_network_voice_packets = VSKUserPreferencesManager.get_value(
+		USER_PREFERENCES_SECTION_NAME, "ignore_network_voice_packets", TYPE_BOOL, ignore_network_voice_packets
+	)
+	gate_threshold = VSKUserPreferencesManager.get_value(
+		USER_PREFERENCES_SECTION_NAME, "gate_threshold", TYPE_FLOAT, gate_threshold
+	)
+	gate_timeout = VSKUserPreferencesManager.get_value(
+		USER_PREFERENCES_SECTION_NAME, "gate_timeout", TYPE_FLOAT, gate_timeout
+	)
 
 
 func set_settings_values_and_save() -> void:
@@ -412,7 +449,10 @@ func process_input_audio(p_delta: float):
 
 		voice_id += current_skipped
 
-		voice_timeslice = ((get_ticks_since_recording_started() / PACKET_TICK_TIMESLICE) - (copied_voice_buffers.size() + current_skipped))
+		voice_timeslice = (
+			(get_ticks_since_recording_started() / PACKET_TICK_TIMESLICE)
+			- (copied_voice_buffers.size() + current_skipped)
+		)
 
 		if copied_voice_buffers.size() > 0:
 			loudness = 0.0

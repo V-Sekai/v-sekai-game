@@ -144,7 +144,9 @@ func _adjustProgress():
 			progress_texture.position.y = progressbarRect.position.y
 
 
-func _on_HTTPRequest_request_completed(result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray):
+func _on_HTTPRequest_request_completed(
+	result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray
+):
 	var this_url = self.request_in_progress
 	self.request_in_progress = ""
 	if response_code == 200:
@@ -161,7 +163,16 @@ func _on_HTTPRequest_request_completed(result: int, response_code: int, _headers
 
 			set_process(false)
 			if image_error == OK:
-				print("Request completed successfully for " + this_url + ": " + str(image.get_width()) + "x" + str(image.get_height()))
+				print(
+					(
+						"Request completed successfully for "
+						+ this_url
+						+ ": "
+						+ str(image.get_width())
+						+ "x"
+						+ str(image.get_height())
+					)
+				)
 				# An error did not occur while trying to display the image
 
 				var _texture = ImageTexture.create_from_image(image)

@@ -4,7 +4,10 @@ extends EditorPlugin
 var editor_interface: EditorInterface = null
 
 var singleton_table = [
-	{"singleton_name": "VSKUserPreferencesManager", "singleton_path": "res://addons/vsk_manager/vsk_user_preferences_manager.gd"},
+	{
+		"singleton_name": "VSKUserPreferencesManager",
+		"singleton_path": "res://addons/vsk_manager/vsk_user_preferences_manager.gd"
+	},
 	{"singleton_name": "VSKDebugManager", "singleton_path": "res://addons/vsk_manager/vsk_debug_manager.gd"},
 	{"singleton_name": "VSKServiceManager", "singleton_path": "res://addons/vsk_manager/vsk_service_manager.gd"},
 	{"singleton_name": "VSKCreditsManager", "singleton_path": "res://addons/vsk_manager/vsk_credits_manager.gd"},
@@ -26,7 +29,10 @@ var singleton_table = [
 ]
 
 var backup_singleton_table_original_order = [
-	{"singleton_name": "VSKUserPreferencesManager", "singleton_path": "res://addons/vsk_manager/vsk_user_preferences_manager.gd"},
+	{
+		"singleton_name": "VSKUserPreferencesManager",
+		"singleton_path": "res://addons/vsk_manager/vsk_user_preferences_manager.gd"
+	},
 	{"singleton_name": "VSKDebugManager", "singleton_path": "res://addons/vsk_manager/vsk_debug_manager.gd"},
 	{"singleton_name": "VSKAudioManager", "singleton_path": "res://addons/vsk_manager/vsk_audio_manager.gd"},
 	{"singleton_name": "VSKAssetManager", "singleton_path": "res://addons/vsk_manager/vsk_asset_manager.gd"},

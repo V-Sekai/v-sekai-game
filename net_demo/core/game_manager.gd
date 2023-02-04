@@ -104,7 +104,9 @@ func _on_peer_connect(p_id: int) -> void:
 	print(str(multiplayer.get_unique_id()) + ": _on_peer_connect(%s)" % str(p_id))
 	if multiplayer.is_server():
 		var spawn_point_transform: Transform3D = get_random_spawn_point()
-		var _new_player: Node = player_spawner.spawn(player_spawner.get_player_spawn_buffer(p_id, spawn_point_transform))
+		var _new_player: Node = player_spawner.spawn(
+			player_spawner.get_player_spawn_buffer(p_id, spawn_point_transform)
+		)
 
 
 func _on_peer_disconnect(p_id: int) -> void:
@@ -153,7 +155,11 @@ func close_connection() -> void:
 		player.queue_free()
 		player_parent_scene.remove_child(player)
 
-	if multiplayer and multiplayer.has_multiplayer_peer() and multiplayer.multiplayer_peer.get_connection_status() != MultiplayerPeer.CONNECTION_DISCONNECTED:
+	if (
+		multiplayer
+		and multiplayer.has_multiplayer_peer()
+		and multiplayer.multiplayer_peer.get_connection_status() != MultiplayerPeer.CONNECTION_DISCONNECTED
+	):
 		multiplayer.multiplayer_peer.close()
 		multiplayer.set_multiplayer_peer(null)
 
@@ -162,7 +168,11 @@ func close_connection() -> void:
 
 
 func get_multiplayer_id() -> int:
-	if multiplayer and multiplayer.has_multiplayer_peer() and multiplayer.multiplayer_peer.get_connection_status() == MultiplayerPeer.CONNECTION_CONNECTED:
+	if (
+		multiplayer
+		and multiplayer.has_multiplayer_peer()
+		and multiplayer.multiplayer_peer.get_connection_status() == MultiplayerPeer.CONNECTION_CONNECTED
+	):
 		return multiplayer.get_unique_id()
 
 	return -1

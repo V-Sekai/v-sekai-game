@@ -53,7 +53,9 @@ func _quantize_simulation_locally() -> void:
 	var physics_state: physics_state_sync_const.PhysicsState = physics_state_sync_const.PhysicsState.new()
 	physics_state.set_from_rigid_body(self)
 
-	physics_state = physics_state_sync_const.PhysicsState.decode_physics_state(physics_state_sync_const.PhysicsState.encode_physics_state(physics_state))
+	physics_state = physics_state_sync_const.PhysicsState.decode_physics_state(
+		physics_state_sync_const.PhysicsState.encode_physics_state(physics_state)
+	)
 
 	transform = Transform3D(Basis(physics_state.rotation), physics_state.origin)
 	linear_velocity = physics_state.linear_velocity
@@ -83,7 +85,11 @@ func _physics_process(_delta: float) -> void:
 	_update_sleep_visualization()
 
 	if (
-		(multiplayer.has_multiplayer_peer() and multiplayer.multiplayer_peer.get_connection_status() == MultiplayerPeer.CONNECTION_CONNECTED and is_multiplayer_authority())
+		(
+			multiplayer.has_multiplayer_peer()
+			and multiplayer.multiplayer_peer.get_connection_status() == MultiplayerPeer.CONNECTION_CONNECTED
+			and is_multiplayer_authority()
+		)
 		or pending_authority_request
 	):
 		_quantize_simulation_locally()

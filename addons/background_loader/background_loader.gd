@@ -72,7 +72,9 @@ func set_loading_active(p_bool: bool) -> void:
 	_loading_active = p_bool
 
 
-func request_loading_task(p_path: String, p_external_path_whitelist: Dictionary, p_type_whitelist: Dictionary, p_type_hint: String = "") -> bool:
+func request_loading_task(
+	p_path: String, p_external_path_whitelist: Dictionary, p_type_whitelist: Dictionary, p_type_hint: String = ""
+) -> bool:
 	var new_loading_task: LoadingTask = LoadingTask.new(p_type_hint)
 	new_loading_task.bypass_whitelist = false
 	new_loading_task.external_path_whitelist = p_external_path_whitelist
@@ -125,7 +127,11 @@ func _destroy_loading_task(p_path) -> void:
 	if _loading_tasks.has(p_path):
 		assert(_loading_tasks.erase(p_path))
 	else:
-		printerr("background_loader_destroy_loading_task: could not destroy loading task {path}".format({"path": str(p_path)}))
+		printerr(
+			"background_loader_destroy_loading_task: could not destroy loading task {path}".format(
+				{"path": str(p_path)}
+			)
+		)
 
 
 func _get_loading_task_paths() -> Dictionary:
@@ -145,7 +151,11 @@ func _task_cancelled(p_task: String) -> void:
 func _task_done(p_task: String, p_err: int, p_resource: Resource) -> void:
 	print_debug(
 		"background_loader_task_done: {task}, error: {err} resource_path: {resource_path}".format(
-			{"task": str(p_task), "err": str(p_err), "resource_path": str(p_resource.resource_path) if p_resource else ""}
+			{
+				"task": str(p_task),
+				"err": str(p_err),
+				"resource_path": str(p_resource.resource_path) if p_resource else ""
+			}
 		)
 	)
 	task_done.emit(p_task, p_err, p_resource)
@@ -186,7 +196,9 @@ func _threaded_loading_method() -> void:
 
 				if loading_task.load_path == "":
 					if loading_task.bypass_whitelist:
-						print("Load " + str(task_path) + " of type " + str(loading_task.type_hint) + " **skip whitelist**")
+						print(
+							"Load " + str(task_path) + " of type " + str(loading_task.type_hint) + " **skip whitelist**"
+						)
 						ResourceLoader.load_threaded_request(task_path, loading_task.type_hint)
 					else:
 						print(
@@ -201,7 +213,12 @@ func _threaded_loading_method() -> void:
 								+ str(loading_task.type_whitelist)
 							)
 						)
-						ResourceLoader.load_threaded_request_whitelisted(task_path, loading_task.external_path_whitelist, loading_task.type_whitelist, loading_task.type_hint)
+						ResourceLoader.load_threaded_request_whitelisted(
+							task_path,
+							loading_task.external_path_whitelist,
+							loading_task.type_whitelist,
+							loading_task.type_hint
+						)
 					load_path = task_path
 					if load_path:
 						loading_task.load_path = load_path
@@ -218,7 +235,9 @@ func _threaded_loading_method() -> void:
 						var r_progress: Array = [].duplicate()
 						err = ResourceLoader.load_threaded_get_status(loading_task.load_path, r_progress)
 						if err == ResourceLoader.THREAD_LOAD_LOADED:
-							call_deferred("_task_done", task_path, OK, ResourceLoader.load_threaded_get(loading_task.load_path))
+							call_deferred(
+								"_task_done", task_path, OK, ResourceLoader.load_threaded_get(loading_task.load_path)
+							)
 							_destroy_loading_task(task_path)
 						elif err != ResourceLoader.THREAD_LOAD_IN_PROGRESS:
 							call_deferred("_task_done", task_path, FAILED, null)

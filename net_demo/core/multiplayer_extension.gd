@@ -31,7 +31,12 @@ func _rpc(peer: int, object: Object, method: StringName, args: Array) -> int:  #
 
 func _object_configuration_add(object, config: Variant) -> int:
 	if config is MultiplayerSynchronizer:
-		print(_get_unique_id_string() + ": Adding synchronization configuration for %s. Synchronizer: %s" % [object, config])
+		print(
+			(
+				_get_unique_id_string()
+				+ ": Adding synchronization configuration for %s. Synchronizer: %s" % [object, config]
+			)
+		)
 	elif config is MultiplayerSpawner:
 		print(_get_unique_id_string() + ": Adding node %s to the spawn list. Spawner: %s" % [object, config])
 	return base_multiplayer.object_configuration_add(object, config)
@@ -39,7 +44,12 @@ func _object_configuration_add(object, config: Variant) -> int:
 
 func _object_configuration_remove(object, config: Variant) -> int:
 	if config is MultiplayerSynchronizer:
-		print(_get_unique_id_string() + ": Removing synchronization configuration for %s. Synchronizer: %s" % [object, config])
+		print(
+			(
+				_get_unique_id_string()
+				+ ": Removing synchronization configuration for %s. Synchronizer: %s" % [object, config]
+			)
+		)
 	elif config is MultiplayerSpawner:
 		print(_get_unique_id_string() + ": Removing node %s from the spawn list. Spawner: %s" % [object, config])
 	return base_multiplayer.object_configuration_remove(object, config)

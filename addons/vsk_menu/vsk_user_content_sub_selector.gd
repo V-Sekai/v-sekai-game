@@ -88,7 +88,12 @@ func _parse_avatars_result(p_result: Dictionary) -> Dictionary:
 		if avatar.has("user_content_data"):
 			item_data_url = GodotUro.get_base_url() + avatar["user_content_data"]
 
-		content_dictionary[id] = {"name": item_name, "description": item_description, "user_content_preview_url": item_data_url, "user_content_data_url": item_preview_url}
+		content_dictionary[id] = {
+			"name": item_name,
+			"description": item_description,
+			"user_content_preview_url": item_data_url,
+			"user_content_data_url": item_preview_url
+		}
 
 		get_node(grid_path).add_item(id, item_name, item_preview_url)
 
@@ -131,7 +136,12 @@ func _parse_maps_result(p_result: Dictionary) -> Dictionary:
 		if map.has("user_content_data"):
 			item_data_url = GodotUro.get_base_url() + map["user_content_data"]
 
-		content_dictionary[id] = {"name": item_name, "description": item_description, "user_content_preview_url": item_data_url, "user_content_data_url": item_preview_url}
+		content_dictionary[id] = {
+			"name": item_name,
+			"description": item_description,
+			"user_content_preview_url": item_data_url,
+			"user_content_data_url": item_preview_url
+		}
 
 		get_node(grid_path).add_item(id, item_name, item_preview_url)
 

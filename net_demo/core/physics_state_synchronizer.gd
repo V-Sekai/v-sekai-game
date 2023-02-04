@@ -123,7 +123,11 @@ class PhysicsState:
 			return
 
 		if _rigid_body_node:
-			if multiplayer.has_multiplayer_peer() and not is_multiplayer_authority() and not _rigid_body_node.pending_authority_request:
+			if (
+				multiplayer.has_multiplayer_peer()
+				and not is_multiplayer_authority()
+				and not _rigid_body_node.pending_authority_request
+			):
 				var physics_state: PhysicsState = PhysicsState.decode_physics_state(value)
 
 				_rigid_body_node.transform = Transform3D(Basis(physics_state.rotation), physics_state.origin)

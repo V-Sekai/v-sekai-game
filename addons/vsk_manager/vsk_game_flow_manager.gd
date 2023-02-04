@@ -27,7 +27,11 @@ var signal_table: Array = [
 	{"singleton": "BackgroundLoader", "signal": "thread_started", "method": "quit_callback_increment"},
 	{"singleton": "BackgroundLoader", "signal": "thread_ended", "method": "quit_callback_decrement"},
 	{"singleton": "ScreenshotManager", "signal": "screenshot_requested", "method": "_screenshot_requested"},
-	{"singleton": "SpatialGameViewportManager", "signal": "viewport_updated", "method": "_spatial_game_viewport_updated"}
+	{
+		"singleton": "SpatialGameViewportManager",
+		"signal": "viewport_updated",
+		"method": "_spatial_game_viewport_updated"
+	}
 ]
 
 ##
@@ -102,7 +106,13 @@ var multiplayer_request: MultiplayerRequest = null
 ##
 ## Enum determining what state the apps gameflow is in.
 ##
-enum { GAMEFLOW_STATE_UNDEFINED, GAMEFLOW_STATE_PRELOADING, GAMEFLOW_STATE_TITLE, GAMEFLOW_STATE_INTERSTITIAL, GAMEFLOW_STATE_INGAME }  # Unknown gameflow state  # When we are in the preloading screen before the title  # When we are in the title  # When we are in the loading screen  # When we are connected to a server
+enum {
+	GAMEFLOW_STATE_UNDEFINED,
+	GAMEFLOW_STATE_PRELOADING,
+	GAMEFLOW_STATE_TITLE,
+	GAMEFLOW_STATE_INTERSTITIAL,
+	GAMEFLOW_STATE_INGAME
+}  # Unknown gameflow state  # When we are in the preloading screen before the title  # When we are in the title  # When we are in the loading screen  # When we are connected to a server
 
 ##
 ## Enum indicating an error from another subsystem telling us what kind
@@ -318,7 +328,14 @@ func go_to_interstitial_screen() -> void:
 ## on a master server
 ##
 func host_server(
-	p_server_name: String, p_map_path: String, p_game_mode_path: String, p_port: int, p_max_players: int, p_dedicated_server: bool, p_advertise_server: bool, p_max_retries: int
+	p_server_name: String,
+	p_map_path: String,
+	p_game_mode_path: String,
+	p_port: int,
+	p_max_players: int,
+	p_dedicated_server: bool,
+	p_advertise_server: bool,
+	p_max_retries: int
 ) -> void:
 	if quit_flag:
 		return
@@ -573,12 +590,20 @@ func request_quit() -> void:
 ## Assigns custom inputs and callbacks to the InputManager singleton.
 ##
 func _setup_input_manager() -> void:
-	InputManager.add_new_axes("move_vertical", "move_forwards", "move_backwards", 0.0, 0.0, 1.0, false, InputManager.InputAxis.TYPE_ACTION, 0)
-	InputManager.add_new_axes("move_horizontal", "move_right", "move_left", 0.0, 0.0, 1.0, false, InputManager.InputAxis.TYPE_ACTION, 0)
+	InputManager.add_new_axes(
+		"move_vertical", "move_forwards", "move_backwards", 0.0, 0.0, 1.0, false, InputManager.InputAxis.TYPE_ACTION, 0
+	)
+	InputManager.add_new_axes(
+		"move_horizontal", "move_right", "move_left", 0.0, 0.0, 1.0, false, InputManager.InputAxis.TYPE_ACTION, 0
+	)
 	InputManager.add_new_axes("mouse_x", "", "", 0.0, 0.0, 0.01, false, InputManager.InputAxis.TYPE_MOUSE_MOTION, 0)
 	InputManager.add_new_axes("mouse_y", "", "", 0.0, 0.0, 0.01, false, InputManager.InputAxis.TYPE_MOUSE_MOTION, 1)
-	InputManager.add_new_axes("look_vertical", "look_up", "look_down", 0.0, 0.0, 0.1, false, InputManager.InputAxis.TYPE_ACTION)
-	InputManager.add_new_axes("look_horizontal", "look_right", "look_left", 0.0, 0.0, 0.1, false, InputManager.InputAxis.TYPE_ACTION)
+	InputManager.add_new_axes(
+		"look_vertical", "look_up", "look_down", 0.0, 0.0, 0.1, false, InputManager.InputAxis.TYPE_ACTION
+	)
+	InputManager.add_new_axes(
+		"look_horizontal", "look_right", "look_left", 0.0, 0.0, 0.1, false, InputManager.InputAxis.TYPE_ACTION
+	)
 
 	InputManager.assign_get_settings_value_funcref(VSKUserPreferencesManager, "get_value")
 	InputManager.assign_set_settings_value_funcref(VSKUserPreferencesManager, "set_value")

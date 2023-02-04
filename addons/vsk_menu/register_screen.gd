@@ -60,7 +60,9 @@ func set_status_by_server_message(p_message: String) -> void:
 		status_label.set_text(p_message)
 
 
-func check_if_registration_input_valid(p_username: String, p_email, p_password: String, p_password_confirmation: String) -> bool:
+func check_if_registration_input_valid(
+	p_username: String, p_email, p_password: String, p_password_confirmation: String
+) -> bool:
 	if p_username.length() == 0:
 		set_status_by_code(status_codes_const.STATUS_CODE_NO_USERNAME)
 		return false
@@ -84,13 +86,17 @@ func registration_submission_complete(p_result, p_message) -> void:
 	set_status_by_server_message(p_message)
 
 
-func attempt_registration(p_username: String, p_email, p_password: String, p_password_confirmation: String, p_email_notifications) -> void:
+func attempt_registration(
+	p_username: String, p_email, p_password: String, p_password_confirmation: String, p_email_notifications
+) -> void:
 	if check_if_registration_input_valid(p_username, p_email, p_password, p_password_confirmation):
 		pending_registration = true
 		set_status_by_code(status_codes_const.STATUS_CODE_PENDING)
 		update_registration_button()
 
-		await VSKAccountManager.register(p_username, p_email, p_password, p_password_confirmation, p_email_notifications)
+		await VSKAccountManager.register(
+			p_username, p_email, p_password, p_password_confirmation, p_email_notifications
+		)
 
 
 func cancel_registration() -> void:
