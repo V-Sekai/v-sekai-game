@@ -82,9 +82,9 @@ class MultiplayerRequest:
 ##
 class MultiplayerRequestHost:
 	extends MultiplayerRequest
-	var map_path: String = ""
-	var game_mode_path: String = ""
-	var server_name: String = ""
+	var map_path: String
+	var game_mode_path: String
+	var server_name: String
 	var max_players: int = -1
 	var dedicated_server: bool = false
 	var advertise_server: bool = false
@@ -95,7 +95,7 @@ class MultiplayerRequestHost:
 ##
 class MultiplayerRequestJoin:
 	extends MultiplayerRequest
-	var ip: String = ""
+	var ip: String
 
 
 ##
@@ -182,26 +182,28 @@ func set_gameflow_state(p_new_gameflow_state: int) -> void:
 
 	EntityManager.stop()
 
-	if gameflow_state != p_new_gameflow_state:
-		var ingame_state_change: int = NO_INGAME_STATE_CHANGED
+	if gameflow_state == p_new_gameflow_state:
+		return
 
-		if gameflow_state == GAMEFLOW_STATE_INGAME:
-			ingame_state_change = INGAME_ENDED
-		else:
-			if p_new_gameflow_state == GAMEFLOW_STATE_INGAME:
-				ingame_state_change = INGAME_STARTED
-				EntityManager.start()
+	var ingame_state_change: int = NO_INGAME_STATE_CHANGED
 
-		gameflow_state = p_new_gameflow_state
+	if gameflow_state == GAMEFLOW_STATE_INGAME:
+		ingame_state_change = INGAME_ENDED
+	else:
+		if p_new_gameflow_state == GAMEFLOW_STATE_INGAME:
+			ingame_state_change = INGAME_STARTED
+			EntityManager.start()
 
-		gameflow_state_changed.emit(gameflow_state)
-		match ingame_state_change:
-			INGAME_STARTED:
-				ingame_started.emit()
-			INGAME_ENDED:
-				ingame_ended.emit()
+	gameflow_state = p_new_gameflow_state
 
-		_entering_game_state(gameflow_state)
+	gameflow_state_changed.emit(gameflow_state)
+	match ingame_state_change:
+		INGAME_STARTED:
+			ingame_started.emit()
+		INGAME_ENDED:
+			ingame_ended.emit()
+
+	_entering_game_state(gameflow_state)
 
 
 signal gameflow_state_changed(p_state)
