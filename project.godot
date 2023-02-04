@@ -10,10 +10,9 @@ config_version=5
 
 [application]
 
-config/name="V-Sekai"
+config/name="V-Sekai Game"
 run/main_scene="res://vsk_default/scenes/main_scene.tscn"
 config/use_custom_user_dir=true
-config/custom_user_dir_name="groups_4_000"
 config/features=PackedStringArray("4.0", "Double Precision")
 run/flush_stdout_on_print.debug=false
 boot_splash/bg_color=Color(0.227451, 0.054902, 0.054902, 1)
@@ -126,7 +125,6 @@ window/vsync/vsync_via_compositor=true
 
 [editor]
 
-run/main_run_args="--xr-mode off"
 movie_writer/mjpeg_quality=1.0
 movie_writer/movie_file="../export.avi"
 import/use_multiple_threads=false
