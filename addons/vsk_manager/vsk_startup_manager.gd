@@ -10,19 +10,17 @@ const vsk_version_const = preload("res://addons/vsk_version/vsk_version.gd")
 ## The startup manager is the entrypoint for VSK game-related stuff
 ##
 
-# Flag which tells if the application should attempt to host with
-# the default map, if no
+# Attempt to host the game with the default map
 var default_autohost: bool = false
 
 const commandline_arguments_const = preload("commandline_arguments.gd")
 var managers_requiring_preloading: Array = []
 
-# Startup data...
 var is_dedicated: bool = false
 var is_public: bool = false
 var map: String = ""
 var game_mode: String = ""
-# FIXME: hardcoding constants
+
 var server_name: String = VSKNetworkManager.DEFAULT_SERVER_NAME
 var ip: String = ""
 var port: int = -1
@@ -105,9 +103,6 @@ func startup() -> void:
 	setup_vsk_singletons()
 
 	if !Engine.is_editor_hint():
-		#var upnp_result : int = yield(ConnectionMediator.upnp_discover_async(), "completed")
-		#print("UPNP_discoery result %s!" % ConnectionMediator.get_string_for_upnp_result(upnp_result))
-
 		assert(VSKPreloadManager.all_preloading_done.connect(self._startup_complete, CONNECT_ONE_SHOT) == OK)
 
 		VSKGameFlowManager.go_to_preloading()
@@ -202,12 +197,6 @@ func _ready() -> void:
 	get_project_settings()
 
 
-########
-# Node #
-########
-
-
-# Startup script...
 func _init():
 	if !Engine.is_editor_hint():
 		if OS.get_name() == "Server":
