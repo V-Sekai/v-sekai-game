@@ -769,26 +769,27 @@ func _notification(p_notification: int) -> void:
 
 
 func setup() -> void:
-	if !Engine.is_editor_hint():
-		get_tree().set_auto_accept_quit(false)
-		get_tree().set_quit_on_go_back(false)
+	if Engine.is_editor_hint():
+		return
+	get_tree().set_auto_accept_quit(false)
+	get_tree().set_quit_on_go_back(false)
 
-		VSKAccountManager.call("start_session")
+	VSKAccountManager.call("start_session")
 
-		_setup_input_manager()
-		_setup_graphics_manager()
-		_setup_vr_manager()
-		_setup_mocap_manager()
-		connection_util_const.connect_signal_table(signal_table, self)
+	_setup_input_manager()
+	_setup_graphics_manager()
+	_setup_vr_manager()
+	_setup_mocap_manager()
+	connection_util_const.connect_signal_table(signal_table, self)
 
-		_setup_viewports()
-		_assign_gameroots()
-		_connect_pre_quitting_signals()
+	_setup_viewports()
+	_assign_gameroots()
+	_connect_pre_quitting_signals()
 
-		_setup_entity_manager()
+	_setup_entity_manager()
 
-		if has_node("/root/MocapManager"):
-			mocap_manager = get_node_or_null("/root/MocapManager")
+	if has_node("/root/MocapManager"):
+		mocap_manager = get_node_or_null("/root/MocapManager")
 
 
 func _ready():
