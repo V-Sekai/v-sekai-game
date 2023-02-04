@@ -96,7 +96,7 @@ func menu_button_pressed() -> void:
 
 
 func update_vr_flat_menu_visibility():
-	if outgame_root_vr_instance.is_inside_tree() and VRManager.vr_user_preferences.vr_hmd_mirroring == VRManager.vr_user_preferences.vr_hmd_mirroring_enum.HMD_MIRROR_FLAT_UI:
+	if outgame_root_vr_instance.is_inside_tree() and (VRManager.vr_user_preferences.vr_hmd_mirroring == VRManager.vr_user_preferences.vr_hmd_mirroring_enum.HMD_MIRROR_FLAT_UI):
 		FlatViewport.texture_rect_menu.show()
 	else:
 		FlatViewport.texture_rect_menu.hide()
@@ -260,7 +260,7 @@ func setup_ingame() -> void:
 
 func setup_outgame() -> void:
 	if outgame_root_vr_instance == null:
-		outgame_root_vr_instance = outgame_root_vr_const.instantiate();
+		outgame_root_vr_instance = outgame_root_vr_const.instantiate()
 		VSKGameFlowManager.gameroot.add_child(outgame_root_vr_instance, true)
 
 

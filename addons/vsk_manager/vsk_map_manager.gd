@@ -189,17 +189,14 @@ func destroy_map() -> void:
 func request_map_load(p_map_path: String, p_bypass_whitelist: bool, p_skip_validation: bool) -> void:
 	_current_map_path = p_map_path
 
-	await (
-		super
-		. request_user_content_load(
-			p_map_path,
-			VSKAssetManager.user_content_type.USER_CONTENT_MAP,
-			p_bypass_whitelist,
-			p_skip_validation,
-			validator_map.valid_external_path_whitelist,
-			validator_map.valid_resource_whitelist
-		)
-	)
+	await (super.request_user_content_load(
+		p_map_path,
+		VSKAssetManager.user_content_type.USER_CONTENT_MAP,
+		p_bypass_whitelist,
+		p_skip_validation,
+		validator_map.valid_external_path_whitelist,
+		validator_map.valid_resource_whitelist
+	))
 
 
 func cancel_map_load() -> void:

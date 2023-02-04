@@ -291,11 +291,8 @@ func add_player_scene(p_master_id: int) -> Node:
 	print("Adding player scene for {master_id}...".format({"master_id": str(p_master_id)}))
 
 	if !player_instances.has(p_master_id):
-		var instantiate: Node = (
-			EntityManager
-			. instantiate_entity_and_setup(
-				player_scene, {"avatar_path": VSKPlayerManager.avatar_path}, "NetEntity_Player_{master_id}".format({"master_id": str(p_master_id)}), p_master_id
-			)
+		var instantiate: Node = EntityManager.instantiate_entity_and_setup(
+			player_scene, {"avatar_path": VSKPlayerManager.avatar_path}, "NetEntity_Player_{master_id}".format({"master_id": str(p_master_id)}), p_master_id
 		)
 
 		player_instances[p_master_id] = instantiate
@@ -686,7 +683,7 @@ func _requested_server_info(p_network_id: int) -> void:
 
 	var server_info: Dictionary = NetworkManager.get_default_server_info()
 
-	server_info["version"] = vsk_network_manager_const.get_vsk_network_version_string() + "_" + NetworkManager.get_network_version_string()
+	server_info["version"] = (vsk_network_manager_const.get_vsk_network_version_string() + "_" + NetworkManager.get_network_version_string())
 	server_info["map_path"] = VSKMapManager.get_current_map_path()
 	server_info["game_mode_path"] = VSKGameModeManager.get_current_game_mode_path()
 
@@ -912,22 +909,18 @@ func _peer_became_active(p_network_id: int) -> void:
 		# Send info about server host as a regular peer
 		# if the server is not dedicated
 		if !NetworkManager.server_dedicated:
-			(
-				NetworkManager
-				. server_send_client_info(
-					p_network_id,
-					NetworkManager.network_constants_const.SERVER_MASTER_PEER_ID,
-					{"display_name": VSKPlayerManager.display_name, "avatar_path": VSKPlayerManager.avatar_path}
-				)
+			NetworkManager.server_send_client_info(
+				p_network_id,
+				NetworkManager.network_constants_const.SERVER_MASTER_PEER_ID,
+				{"display_name": VSKPlayerManager.display_name, "avatar_path": VSKPlayerManager.avatar_path}
 			)
 
 		# Send info about all the other active peers to the new
 		# peer
 		for active_peer in NetworkManager.active_peers:
 			if p_network_id != active_peer:
-				(
-					NetworkManager
-					. server_send_client_info(p_network_id, active_peer, {"display_name": player_display_names[active_peer], "avatar_path": player_avatar_paths[active_peer]})
+				NetworkManager.server_send_client_info(
+					p_network_id, active_peer, {"display_name": player_display_names[active_peer], "avatar_path": player_avatar_paths[active_peer]}
 				)
 
 

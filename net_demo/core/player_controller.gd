@@ -94,7 +94,7 @@ func _process_movement(p_delta: float, p_movement_vector: Vector2, p_is_sprintin
 			((camera_pivot_node.global_transform.basis.x * p_movement_vector.x) + (camera_pivot_node.global_transform.basis.z * -p_movement_vector.y)) * speed_modifier
 		)
 	else:
-		target_velocity = Basis().rotated(Vector3.UP, y_rotation).z * p_movement_vector.normalized().length() * speed_modifier
+		target_velocity = (Basis().rotated(Vector3.UP, y_rotation).z * p_movement_vector.normalized().length() * speed_modifier)
 
 	var speed: float = deacceleration
 	if is_moving:

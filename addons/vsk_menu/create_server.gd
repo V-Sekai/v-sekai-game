@@ -83,18 +83,15 @@ func _on_HostButton_pressed() -> void:
 	else:
 		next_map_path = map_browse_line_edit.text
 
-	(
-		host_server_callable
-		. call_deferred(
-			server_name_line_edit.text,
-			next_map_path,
-			next_game_mode_path,
-			int(port_input.value),
-			int(max_players_input.value),
-			dedicated_server_toggle.button_pressed,
-			public_server_toggle.button_pressed,
-			VSKNetworkManager.DEFAULT_MAX_RETRIES
-		)
+	host_server_callable.call_deferred(
+		server_name_line_edit.text,
+		next_map_path,
+		next_game_mode_path,
+		int(port_input.value),
+		int(max_players_input.value),
+		dedicated_server_toggle.button_pressed,
+		public_server_toggle.button_pressed,
+		VSKNetworkManager.DEFAULT_MAX_RETRIES
 	)
 
 

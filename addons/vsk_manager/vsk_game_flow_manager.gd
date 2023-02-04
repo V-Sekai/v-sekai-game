@@ -431,19 +431,16 @@ func _process_multiplayer_request() -> void:
 	if gameflow_state == GAMEFLOW_STATE_INTERSTITIAL:
 		if multiplayer_request:
 			if multiplayer_request is MultiplayerRequestHost:
-				await (
-					VSKNetworkManager
-					. host_game(
-						multiplayer_request.server_name,
-						multiplayer_request.map_path,
-						multiplayer_request.game_mode_path,
-						multiplayer_request.port,
-						multiplayer_request.max_players,
-						multiplayer_request.dedicated_server,
-						multiplayer_request.advertise_server,
-						multiplayer_request.max_retries
-					)
-				)
+				await (VSKNetworkManager.host_game(
+					multiplayer_request.server_name,
+					multiplayer_request.map_path,
+					multiplayer_request.game_mode_path,
+					multiplayer_request.port,
+					multiplayer_request.max_players,
+					multiplayer_request.dedicated_server,
+					multiplayer_request.advertise_server,
+					multiplayer_request.max_retries
+				))
 			elif multiplayer_request is MultiplayerRequestJoin:
 				VSKNetworkManager.join_game(multiplayer_request.ip, multiplayer_request.port)
 

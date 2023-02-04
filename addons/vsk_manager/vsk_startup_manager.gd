@@ -137,9 +137,9 @@ func parse_commandline_args() -> void:
 		if commandline_argument_dictionary.has("display_name"):
 			display_name_override = commandline_argument_dictionary["display_name"]
 		if commandline_argument_dictionary.has("use_flat"):
-			VRManager.vr_user_preferences.vr_mode_override = VRManager.vr_user_preferences.vr_mode_override_enum.VR_MODE_USE_FLAT
+			VRManager.vr_user_preferences.vr_mode_override = (VRManager.vr_user_preferences.vr_mode_override_enum.VR_MODE_USE_FLAT)
 		if commandline_argument_dictionary.has("use_vr"):
-			VRManager.vr_user_preferences.vr_mode_override = VRManager.vr_user_preferences.vr_mode_override_enum.VR_MODE_USE_VR
+			VRManager.vr_user_preferences.vr_mode_override = (VRManager.vr_user_preferences.vr_mode_override_enum.VR_MODE_USE_VR)
 		if commandline_argument_dictionary.has("dedicated"):
 			is_dedicated = true
 		if commandline_argument_dictionary.has("public"):

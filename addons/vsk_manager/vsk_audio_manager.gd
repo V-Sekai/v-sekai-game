@@ -412,7 +412,7 @@ func process_input_audio(p_delta: float):
 
 		voice_id += current_skipped
 
-		voice_timeslice = (get_ticks_since_recording_started() / PACKET_TICK_TIMESLICE) - (copied_voice_buffers.size() + current_skipped)
+		voice_timeslice = ((get_ticks_since_recording_started() / PACKET_TICK_TIMESLICE) - (copied_voice_buffers.size() + current_skipped))
 
 		if copied_voice_buffers.size() > 0:
 			loudness = 0.0
@@ -510,7 +510,7 @@ func setup() -> void:
 		godot_speech.set_audio_input_stream_player(audio_input_stream_player)
 		godot_speech.set_streaming_bus(MIC_BUS_NAME)
 		godot_speech.set_error_cancellation_bus(AEC_BUS_NAME)
-		
+
 		spatial_node = Node3D.new()
 		spatial_node.set_name("SpatialNode")
 		add_child(spatial_node, true)

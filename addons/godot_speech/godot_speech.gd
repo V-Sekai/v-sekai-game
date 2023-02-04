@@ -1,19 +1,20 @@
 extends Speech
 
-var audio_stats_timer : Timer = Timer.new()
+var audio_stats_timer: Timer = Timer.new()
 
-func print_audio_stats():	
-	var performance_monitor : Node = get_node("/root/PerformanceMonitor")
+
+func print_audio_stats():
+	var performance_monitor: Node = get_node("/root/PerformanceMonitor")
 	if not performance_monitor:
 		return
-	var performance_monitor_gui : Node = performance_monitor.get("performance_monitor_gui")
-	var audio_stats_path : NodePath = performance_monitor_gui.get("audio_stats_path")
-	var audio_stats_label : Label = performance_monitor_gui.get_node(audio_stats_path)
-	var audio_stats_string : String = var_to_str(get_stats())
-	audio_stats_string = audio_stats_string.replacen("{","")
-	audio_stats_string = audio_stats_string.replacen("}","")
-	audio_stats_string = audio_stats_string.replacen(",","")
-	audio_stats_string = audio_stats_string.replacen("\"","")
+	var performance_monitor_gui: Node = performance_monitor.get("performance_monitor_gui")
+	var audio_stats_path: NodePath = performance_monitor_gui.get("audio_stats_path")
+	var audio_stats_label: Label = performance_monitor_gui.get_node(audio_stats_path)
+	var audio_stats_string: String = var_to_str(get_stats())
+	audio_stats_string = audio_stats_string.replacen("{", "")
+	audio_stats_string = audio_stats_string.replacen("}", "")
+	audio_stats_string = audio_stats_string.replacen(",", "")
+	audio_stats_string = audio_stats_string.replacen('"', "")
 	audio_stats_label.set_text(audio_stats_string)
 
 

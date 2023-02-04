@@ -41,6 +41,7 @@ func _enter_tree():
 	add_autoload_singleton("GameManager", "res://net_demo/core/game_manager.gd")
 	add_autoload_singleton("MultiplayerPhysicsOwnershipTracker", "res://net_demo/core/multiplayer_physics_ownership_tracker.gd")
 
+
 func _notification(p_notification: int):
 	match p_notification:
 		NOTIFICATION_PREDELETE:
