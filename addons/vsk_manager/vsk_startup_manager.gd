@@ -104,13 +104,14 @@ func startup() -> void:
 
 	if Engine.is_editor_hint():
 		return
-	assert(VSKPreloadManager.all_preloading_done.connect(self._startup_complete, CONNECT_ONE_SHOT) == OK)
 
 	VSKGameFlowManager.go_to_preloading()
 	if !VSKPreloadManager.request_preloading_tasks():
 		LogManager.fatal_error("Could not request preloading tasks!")
 
 	await VSKFadeManager.execute_fade(true).fade_complete
+	await VSKPreloadManager.all_preloading_done
+	_startup_complete()
 
 
 ##
