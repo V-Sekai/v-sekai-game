@@ -27,15 +27,7 @@ var port: int = -1
 var max_players: int = VSKNetworkManager.DEFAULT_MAX_PLAYERS
 var max_retries: int = VSKNetworkManager.DEFAULT_MAX_RETRIES
 var test_audio: String = ""
-var headless_flag: bool = false
 var display_name_override: String = ""
-
-
-##
-## Returns true if we are running as a headless server
-##
-func is_headless() -> bool:
-	return headless_flag
 
 
 ##
@@ -126,8 +118,7 @@ func parse_commandline_args() -> void:
 	display_name_override = ""
 	if Engine.is_editor_hint():
 		return
-	# Check if we're running in headless mode
-	if is_headless():
+	if not DisplayServer.window_can_draw():
 		VSKGameFlowManager.autoquit = true
 
 	if commandline_argument_dictionary.has("port"):
@@ -204,8 +195,6 @@ func _ready() -> void:
 func _init():
 	if Engine.is_editor_hint():
 		return
-	if OS.get_name() == "Server":
-		headless_flag = true
 
 	parse_commandline_args()
 
