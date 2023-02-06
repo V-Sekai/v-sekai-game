@@ -1,4 +1,4 @@
-extends "movement_controller.gd"
+extends Node3D
 
 const godot_math_extensions_const = preload("res://addons/math_util/math_funcs.gd")
 
