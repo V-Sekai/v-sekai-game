@@ -510,6 +510,7 @@ config/shard_heartbeat_frequency=10.0
 config/default_port=7777
 config/network_fps=60
 config/default_map_path="uro://bb7d83a8-a92d-4ba4-8e3f-233468c3e9db"
+config/default_map_path.web=""
 config/default_autohost=false
 config/use_threaded_host_state_initalisation_func=false
 config/use_threaded_received_server_state_func=false
@@ -534,6 +535,7 @@ quality/depth_prepass/disable_for_vendors="PowerVR,Mali,Apple"
 quality/godrays/sample_number=50
 quality/godrays/use_pcf5=false
 quality/godrays/dither_amount=1.0
+driver/threads/thread_model.web=1
 
 [services]
 
