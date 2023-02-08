@@ -57,14 +57,14 @@ static func copy_kusudama(p_bone_name_from : String, p_bone_name_to : PackedStri
 			"UpperChest": Vector2(deg_to_rad(355), deg_to_rad(30)),
 			"Head": Vector2(deg_to_rad(0), deg_to_rad(10)),
 			"Neck": Vector2(deg_to_rad(356), deg_to_rad(10)),
+			"LeftEye": Vector2(deg_to_rad(180), deg_to_rad(5)),
 			"LeftShoulder": Vector2(deg_to_rad(-250), deg_to_rad(-40)),
 			"LeftUpperArm": Vector2(deg_to_rad(-120), deg_to_rad(-60)),
 			"LeftLowerArm": Vector2(deg_to_rad(-75), deg_to_rad(-60)),
 			"LeftHand": Vector2(deg_to_rad(-275), deg_to_rad(-20)),
-			"LeftUpperLeg": Vector2(deg_to_rad(160), deg_to_rad(40)),
-			"LeftLowerLeg": Vector2(deg_to_rad(90), deg_to_rad(20)),
-			"LeftFoot": Vector2(deg_to_rad(180), deg_to_rad(5)),
-			"LeftEye": Vector2(deg_to_rad(180), deg_to_rad(5)),
+#			"LeftUpperLeg": Vector2(deg_to_rad(160), deg_to_rad(40)),
+#			"LeftLowerLeg": Vector2(deg_to_rad(90), deg_to_rad(20)),
+#			"LeftFoot": Vector2(deg_to_rad(180), deg_to_rad(5)),
 		},
 		"bone_name_cones": {
 			"Hips": [{"center": Vector3(0, -1, 0), "radius": deg_to_rad(10)}],
@@ -84,13 +84,12 @@ static func copy_kusudama(p_bone_name_from : String, p_bone_name_to : PackedStri
 				{"center": Vector3(0, 0.8, 0), "radius": deg_to_rad(20)},
 			],
 			"LeftHand":  [{"center": Vector3(0, 1, 0), "radius": deg_to_rad(20)}],
-
-			"LeftLowerLeg":  [
-				{"center": Vector3(0, 1, 0), "radius": deg_to_rad(20)},
-				{"center": Vector3(0, 0.8, -1), "radius": deg_to_rad(40)},
-			],
-			"LeftFoot":  [{"center": Vector3(0, -1, 0), "radius": deg_to_rad(20)}],
-			"LeftToes":  [{"center": Vector3(1, 0, 0), "radius": deg_to_rad(5)}],
+#			"LeftLowerLeg":  [
+#				{"center": Vector3(0, 1, 0), "radius": deg_to_rad(20)},
+#				{"center": Vector3(0, 0.8, -1), "radius": deg_to_rad(40)},
+#			],
+#			"LeftFoot":  [{"center": Vector3(0, -1, 0), "radius": deg_to_rad(20)}],
+#			"LeftToes":  [{"center": Vector3(1, 0, 0), "radius": deg_to_rad(5)}],
 		},
 	}
 
@@ -126,11 +125,11 @@ func _run():
 	var bone_name_from_to_twist = config["bone_name_from_to_twist"]
 	var bone_name_cones = config["bone_name_cones"]
 	
-		
-	for bone_name in targets.keys():
-		var bone_i = skeleton.find_bone(bone_name)
+	for bone_i in skeleton.get_bone_count():
+		var bone_name = skeleton.get_bone_name(bone_i)
+		if bone_name.find("Skirt") != -1 and not new_ik.get_pin_bone_name(bone_i).is_empty():
+			new_ik.set_pin_weight(bone_i, 0)
 		new_ik.set_kusudama_twist(bone_i, Vector2(0, TAU))
-		new_ik.set_kusudama_limit_cone_count(bone_i, 0)
 		var twist_keys : Array = bone_name_from_to_twist.keys()
 		if twist_keys.has(bone_name):
 			var twist : Vector2 = bone_name_from_to_twist[bone_name]
@@ -167,6 +166,8 @@ func tune_bone(new_ik : ManyBoneIK3D, skeleton : Skeleton3D, bone_name : String,
 	node_3d.gizmo_extents = 0.01
 	node_3d.name = bone_name
 	var bone_i = skeleton.find_bone(bone_name)
+	if bone_i == -1:
+		return
 	var children : Array[Node] = owner.find_children("*", "")
 	var parent : Node = null
 	for node in children:
@@ -188,8 +189,6 @@ func tune_bone(new_ik : ManyBoneIK3D, skeleton : Skeleton3D, bone_name : String,
 	if bone_name in ["RightHand"]:
 		if is_thumbs_up:
 			node_3d.global_transform.basis = Basis.from_euler(Vector3(0, 0, PI / 2))
-	if bone_name.ends_with("Distal"):
-		new_ik.set_pin_direction_priorities(bone_i, Vector3())
 	if bone_name in ["LeftFoot", "RightFoot"]:
 		node_3d.global_transform.origin = node_3d.global_transform.origin + Vector3(0, -0.1, 0)
 		node_3d.global_transform.basis = Basis.from_euler(Vector3(0, PI, 0))
