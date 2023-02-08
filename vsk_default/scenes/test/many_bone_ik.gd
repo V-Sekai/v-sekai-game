@@ -13,7 +13,8 @@ var is_humanoid : bool = true
 var is_thumbs_up : bool = false
 	
 @export var targets : Dictionary = {
-	"Hips": "ManyBoneIK3D",
+	"Root": "ManyBoneIK3D",
+	"Hips": "Root",
 	"Head": "Hips",
 	"LeftFoot": "Hips", 
 	"RightFoot": "Hips", 
