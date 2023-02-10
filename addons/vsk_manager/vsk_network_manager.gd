@@ -679,7 +679,8 @@ func _unthreaded_host_state_initialization_func() -> void:
 	print("_unthreaded_host_state_initialization_func")
 
 	var instanced_nodes: Dictionary = _host_state_instance()
-	await _host_state_complete(instanced_nodes)  # FIXME: changed to await
+	await get_tree().process_frame
+	_host_state_complete(instanced_nodes)
 
 	_host_state_task_decrement()
 
