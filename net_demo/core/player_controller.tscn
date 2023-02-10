@@ -38,10 +38,6 @@ axis_lock_angular_z = true
 floor_max_angle = 0.698132
 script = ExtResource("1_u1u4j")
 camera_holder = NodePath("CameraHolder")
-walk_speed = null
-sprint_speed = null
-acceleration = null
-deacceleration = null
 
 [node name="PlayerSnapshotInterpolation" type="Node" parent="."]
 script = ExtResource("2_7x5fr")

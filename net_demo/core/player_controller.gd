@@ -1,4 +1,4 @@
-extends Node3D
+extends "res://net_demo/core/movement_controller.gd"
 
 const godot_math_extensions_const = preload("res://addons/math_util/math_funcs.gd")
 
@@ -84,7 +84,9 @@ func _process_rotation(p_movement_vector: Vector2) -> void:
 
 # Calculates kinetic movement for an input vector
 func _process_movement(p_delta: float, p_movement_vector: Vector2, p_is_sprinting: bool) -> void:
-	var applied_gravity: float = -gravity if !is_on_floor() else 0.0
+	var applied_gravity: float = 0.0
+	if !is_on_floor():
+		applied_gravity = -PhysicsServer3D.AREA_PARAM_GRAVITY
 
 	var applied_gravity_vector: Vector3 = Vector3(applied_gravity, applied_gravity, applied_gravity) * up_direction
 
@@ -139,18 +141,16 @@ func network_transform_update(p_origin: Vector3, p_y_rotation: float) -> void:
 func _physics_process(p_delta: float) -> void:
 	if !multiplayer.has_multiplayer_peer() or is_multiplayer_authority():
 		# Get the movement vector
-		var movement_vector: Vector2 = (
-			Vector2(
+		var movement_vector: Vector2
+		if not $"/root/GameManager".is_movement_locked():
+			movement_vector = Vector2(
 				Input.get_action_strength("move_right") - Input.get_action_strength("move_left"),
 				Input.get_action_strength("move_forwards") - Input.get_action_strength("move_backwards")
 			)
-			if !$"/root/GameManager".is_movement_locked()
-			else Vector2()
-		)
 
 		# Calculate the player's rotation
 		_process_rotation(movement_vector)
-
+		
 		# Calculate the player's movement
 		_process_movement(p_delta, movement_vector, InputMap.has_action("sprint") and Input.is_action_pressed("sprint"))
 
@@ -160,9 +160,7 @@ func _physics_process(p_delta: float) -> void:
 	$CharacterModelHolder.transform.basis = Basis().rotated(Vector3.UP, y_rotation)
 
 
-func _ready() -> void:
-	super._ready()
-
+func _enter_tree() -> void:
 	collision_layer = 0
 	if multiplayer.has_multiplayer_peer() and !is_multiplayer_authority():
 		set_collision_layer_value(2, false)

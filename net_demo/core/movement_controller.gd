@@ -13,10 +13,6 @@ func apply_intertia(p_delta: float) -> void:
 				kinematic_collision.get_collider(j).apply_central_impulse(-kinematic_collision.get_normal(j) * p_delta)
 
 
-func get_platform_velocity() -> Vector3:
-	return Vector3()
-
-
 func kinematic_movement(p_delta: float) -> void:
 	if move_and_slide():
 		apply_intertia(p_delta)

@@ -186,6 +186,7 @@ func _ready() -> void:
 	_update_window_title()
 
 	player_spawner = player_spawner_const.instantiate()
+	player_spawner.spawn_function = Callable(player_spawner, "_spawn_custom")
 	player_spawner.name = "PlayerSpawner"
 	add_child(player_spawner)
 
