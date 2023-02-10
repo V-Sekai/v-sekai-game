@@ -730,9 +730,9 @@ func _threaded_requested_server_state_complete(p_thread: Thread, p_network_id: i
 	print("_threaded_requested_server_state_complete")
 
 	if is_session_alive():
-		if player_instance:
-			player_instance.transform = get_random_spawn_transform()
-			EntityManager.scene_tree_execution_command(scene_tree_execution_table_const.ADD_ENTITY, player_instance)
+		player_instance.transform = get_random_spawn_transform()
+
+		EntityManager.scene_tree_execution_command(scene_tree_execution_table_const.ADD_ENTITY, player_instance)
 
 		EntityManager.scene_tree_execution_table._execute_scene_tree_execution_table_unsafe()
 
