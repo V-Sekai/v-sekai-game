@@ -169,11 +169,13 @@ static func instance_embedded_map_entities(p_map_instance: Node, p_invalid_scene
 				var packed_scene: PackedScene = NetworkManager.network_replication_manager.get_packed_scene_for_path(
 					scene_path
 				)
-				assert(packed_scene)
+				if not packed_scene:
+					continue
 
 				var map_entity_instance: Node = packed_scene.instantiate()
 				var logic_node: Node = map_entity_instance.get_node(map_entity_instance.simulation_logic_node_path)
-				assert(logic_node)
+				if not logic_node:
+					continue
 
 				var logic_node_property_list = runtime_entity_const.get_custom_logic_node_properties(logic_node)
 
