@@ -173,17 +173,17 @@ static func instance_embedded_map_entities(p_map_instance: Node, p_invalid_scene
 
 				var map_entity_instance: Node = packed_scene.instantiate()
 				var logic_node: Node = map_entity_instance.get_node(map_entity_instance.simulation_logic_node_path)
-				
-				if logic_node:
-					var logic_node_property_list = runtime_entity_const.get_custom_logic_node_properties(logic_node)
+				assert(logic_node)
 
-					var logic_node_property_names: Array = []
-					for property in logic_node_property_list:
-						logic_node_property_names.push_back(property.name)
+				var logic_node_property_list = runtime_entity_const.get_custom_logic_node_properties(logic_node)
 
-					for key in properties.keys():
-						if logic_node_property_names.has(key):
-							logic_node.set(key, properties[key])
+				var logic_node_property_names: Array = []
+				for property in logic_node_property_list:
+					logic_node_property_names.push_back(property.name)
+
+				for key in properties.keys():
+					if logic_node_property_names.has(key):
+						logic_node.set(key, properties[key])
 
 				p_map_instance.add_child(map_entity_instance, true)
 				map_entity_instance.transform = map_entity_instance_info.transform
