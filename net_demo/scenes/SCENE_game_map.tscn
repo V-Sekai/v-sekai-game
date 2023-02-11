@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://dqhmviole3j0p"]
 
-[ext_resource type="PackedScene" uid="uid://cdlkb6ohd5ceo" path="res://net_demo/core/physics_object.tscn" id="1_le5bp"]
+[ext_resource type="PackedScene" path="res://net_demo/core/physics_object.tscn" id="1_le5bp"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_mwhfn"]
 

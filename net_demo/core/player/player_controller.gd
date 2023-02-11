@@ -67,9 +67,9 @@ func _process_rotation(p_movement_vector: Vector2) -> void:
 			last_rotation[0],
 			y_rotation + clamped_rotation_difference,
 			1.0,
+			-(get_process_delta_time() + last_rotation[1]),
 			last_rotation[1],
-			0,
-			get_process_delta_time()
+			get_process_delta_time() + last_rotation[1]
 		)
 
 		# Limit rotation range
