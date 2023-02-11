@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://d0o3glckp482r"]
 
-[ext_resource type="Theme" uid="uid://3ehnjbt2mvio" path="res://addons/emote_theme/emote_theme.tres" id="1_l38pv"]
+[ext_resource type="Theme" uid="uid://bsqrhr15k2kar" path="res://addons/emote_theme/emote_theme.tres" id="1_l38pv"]
 [ext_resource type="Script" path="res://addons/vsk_menu/vsk_user_content_selector.gd" id="2"]
 [ext_resource type="PackedScene" uid="uid://bwn0ka3su58we" path="res://addons/vsk_menu/vsk_user_content_sub_selector.tscn" id="2_ip71e"]
 
@@ -17,66 +17,49 @@ local_files_button_path = NodePath("Main/ToolBar/LocalFilesButton")
 load_content_on_creation = true
 
 [node name="Main" type="VBoxContainer" parent="."]
-anchors_preset = 15
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
 [node name="TabContainer" type="TabContainer" parent="Main"]
-offset_right = 1024.0
-offset_bottom = 536.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 tab_alignment = 1
 
 [node name="Public" type="Control" parent="Main/TabContainer"]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 6.0
-offset_top = 41.0
-offset_right = -6.0
-offset_bottom = -6.0
+layout_mode = 2
 
 [node name="PublicContent" parent="Main/TabContainer/Public" instance=ExtResource("2_ip71e")]
-layout_mode = 3
-anchors_preset = 15
+layout_mode = 1
 grow_horizontal = 2
 grow_vertical = 2
 load_content_on_creation = true
 
 [node name="Personal" type="Control" parent="Main/TabContainer"]
 visible = false
-layout_mode = 3
-anchors_preset = 0
+layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="PersonalContent" parent="Main/TabContainer/Personal" instance=ExtResource("2_ip71e")]
-layout_mode = 3
-anchors_preset = 15
+layout_mode = 1
 grow_horizontal = 2
 grow_vertical = 2
 load_content_on_creation = true
 public_content = false
 
 [node name="ToolBar" type="HBoxContainer" parent="Main"]
-offset_top = 542.0
-offset_right = 1024.0
-offset_bottom = 576.0
+layout_mode = 2
 alignment = 1
 
 [node name="LocalFilesButton" type="Button" parent="Main/ToolBar"]
-offset_left = 327.0
-offset_right = 528.0
-offset_bottom = 34.0
+layout_mode = 2
 text = "TR_MENU_LOCAL_FILES"
 
 [node name="RefreshButton" type="Button" parent="Main/ToolBar"]
-offset_left = 534.0
-offset_right = 697.0
-offset_bottom = 34.0
+layout_mode = 2
 text = "TR_MENU_REFRESH"
 
 [node name="FileSelector" type="FileDialog" parent="."]

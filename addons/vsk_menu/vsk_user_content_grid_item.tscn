@@ -1,12 +1,12 @@
-[gd_scene load_steps=4 format=3 uid="uid://d4ciww4a7houm"]
+[gd_scene load_steps=3 format=3 uid="uid://d4ciww4a7houm"]
 
 [ext_resource type="Script" path="res://addons/textureRectUrl/node_textureRectUrl.gd" id="1"]
 [ext_resource type="Script" path="res://addons/vsk_menu/vsk_user_content_grid_item.gd" id="2"]
-[ext_resource type="Texture2D" uid="uid://cqaruhjo1pgb5" path="res://addons/godot_uro/uro_logo_64.png" id="3"]
 
 [node name="VSKUserContentItem" type="Button"]
 clip_contents = true
 custom_minimum_size = Vector2(640, 360)
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_right = -640.0
@@ -42,8 +42,7 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 2
-texture = ExtResource("3")
-ignore_texture_size = true
+expand_mode = 1
 stretch_mode = 6
 script = ExtResource("1")
 everCache = true
