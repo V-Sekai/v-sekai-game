@@ -1,8 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://cdlkb6ohd5ceo"]
+[gd_scene load_steps=7 format=3]
 
-[ext_resource type="Script" path="res://net_demo/core/physics_object.gd" id="1_3rtga"]
-[ext_resource type="Script" path="res://net_demo/core/physics_state_synchronizer.gd" id="2_swk7l"]
-[ext_resource type="Script" path="res://net_demo/core/physics_object_multiplayer_synchronizer.gd" id="3_6j57q"]
+[ext_resource type="Script" path="res://net_demo/core/physics_object.gd" id="1_8ehnx"]
+[ext_resource type="Script" path="res://net_demo/core/entity/physics_state_synchronizer.gd" id="2_6f51u"]
+[ext_resource type="Script" path="res://net_demo/core/entity/physics_object_multiplayer_synchronizer.gd" id="3_8fs0y"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_723tu"]
 size = Vector3(0.25, 0.25, 0.25)
@@ -36,10 +36,10 @@ collision_mask = 11
 continuous_cd = true
 max_contacts_reported = 1
 contact_monitor = true
-script = ExtResource("1_3rtga")
+script = ExtResource("1_8ehnx")
 
 [node name="PhysicsStateSynchronizer" type="Node" parent="."]
-script = ExtResource("2_swk7l")
+script = ExtResource("2_6f51u")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("BoxMesh_723tu")
@@ -51,7 +51,7 @@ shape = SubResource("BoxShape3D_dmqq1")
 replication_interval = 0.1
 replication_config = SubResource("SceneReplicationConfig_pwbj6")
 visibility_update_mode = 1
-script = ExtResource("3_6j57q")
+script = ExtResource("3_8fs0y")
 
 [node name="Label3D" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.550303, 0)

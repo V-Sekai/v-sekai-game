@@ -40,7 +40,7 @@ func _enter_tree():
 	editor_interface = get_editor_interface()
 	add_autoload_singleton("GameManager", "res://net_demo/core/game_manager.gd")
 	add_autoload_singleton(
-		"MultiplayerPhysicsOwnershipTracker", "res://net_demo/core/multiplayer_physics_ownership_tracker.gd"
+		"MultiplayerPhysicsOwnershipTracker", "res://net_demo/core/entity/multiplayer_physics_ownership_tracker.gd"
 	)
 
 

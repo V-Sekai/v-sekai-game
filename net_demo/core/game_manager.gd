@@ -3,7 +3,7 @@ extends Node
 # The node which all the player scenes are parented to
 var player_parent_scene: Node3D = null
 
-const player_spawner_const = preload("player_spawner.tscn")
+const player_spawner_const = preload("entity/player_spawner.tscn")
 var player_spawner: MultiplayerSpawner = null
 
 # This list of active players in this session (including self and peers)

@@ -1,9 +1,9 @@
 extends MultiplayerSpawner
 
-const PLAYER_SCENE_PATH: String = "res://net_demo/core/player_controller.tscn"
+const PLAYER_SCENE_PATH: String = "res://net_demo/core/player/player_controller.tscn"
 const PLAYER_SCENE: PackedScene = preload(PLAYER_SCENE_PATH)
 
-const quantization_const = preload("quantization.gd")
+const quantization_const = preload("../quantization.gd")
 
 
 func get_player_spawn_buffer(p_authority: int, p_transform: Transform3D) -> PackedByteArray:

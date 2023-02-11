@@ -34,7 +34,6 @@ func player_unspawned(p_peer_id: int) -> void:
 			if physics_body.get_multiplayer_authority() == p_peer_id:
 				physics_body.set_multiplayer_authority(GameManager.get_session_authority())
 				physics_body.pending_authority_request = false
-				physics_body.update_color_id_and_material()
 
 
 func _ready():

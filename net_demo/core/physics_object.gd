@@ -1,6 +1,6 @@
 extends RigidBody3D
 
-const physics_state_sync_const = preload("res://net_demo/core/physics_state_synchronizer.gd")
+const physics_state_sync_const = preload("res://net_demo/core/entity/physics_state_synchronizer.gd")
 
 @onready var original_transfrom = transform
 
