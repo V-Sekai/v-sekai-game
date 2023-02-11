@@ -55,7 +55,7 @@ func _object_configuration_remove(object, config: Variant) -> int:
 	return base_multiplayer.object_configuration_remove(object, config)
 
 
-func _set_multiplayer_peer(p_peer: MultiplayerPeer):
+func _set_multiplayer_peer(p_peer: MultiplayerPeer) -> void:
 	base_multiplayer.multiplayer_peer = p_peer
 
 

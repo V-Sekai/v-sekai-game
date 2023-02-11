@@ -5,7 +5,7 @@ func _update_menu_visibility() -> void:
 	$ToggleMenu.show()
 
 
-func _ready():
+func _ready() -> void:
 	if (
 		multiplayer
 		and multiplayer.has_multiplayer_peer()
@@ -16,5 +16,5 @@ func _ready():
 		$PeerBoxContainer/PeerIDLabel.set_text("Peer ID: UNASSIGNED")
 
 
-func _on_disconnect_button_pressed():
+func _on_disconnect_button_pressed() -> void:
 	GameManager.close_connection()

@@ -7,7 +7,7 @@ extends MultiplayerSynchronizer
 		MultiplayerPhysicsOwnershipTracker.request_authority(self, sender_id)
 
 
-@rpc("any_peer", "call_local") func assign_authority(p_peer_id: int):
+@rpc("any_peer", "call_local") func assign_authority(p_peer_id: int) -> void:
 	var sender_id: int = multiplayer.get_remote_sender_id()
 	if GameManager.is_session_authority(sender_id):
 		var physics_body: PhysicsBody3D = get_node(root_path)

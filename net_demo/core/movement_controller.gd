@@ -18,7 +18,7 @@ func kinematic_movement(p_delta: float) -> void:
 		apply_intertia(p_delta)
 
 
-func _ready():
+func _ready() -> void:
 	y_rotation = transform.basis.get_euler().y
 	transform.basis = Basis()
 

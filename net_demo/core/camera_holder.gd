@@ -40,13 +40,13 @@ var distance_velocity: float = 0.0
 @export var sprint_bobbing_rate: float = 22.0
 
 
-func zoom_in():
+func zoom_in() -> void:
 	distance -= 0.1
 	if distance < distance_min:
 		distance = distance_min
 
 
-func zoom_out():
+func zoom_out() -> void:
 	distance += 0.1
 	if distance > distance_max:
 		distance = distance_max
