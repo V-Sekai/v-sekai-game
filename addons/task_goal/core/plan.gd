@@ -9,22 +9,13 @@ extends Node
 
 const domain_const = preload("domain.gd")
 
-#"""
-#GTPyhop is an automated planning system that can plan for both tasks and
-#goals. It requires Python 3. 
-#
-#Accompanying this file are a README.md file giving an overview of GTPyhop,
-#and several examples of how to use GTPyhop. To run them, try importing any
-#of the modules in the Examples directory.
-#"""
-
-# For use in debugging:
-# from IPython import embed
-# from IPython.terminal.debugger import set_trace
+# Task Goal is an automated planning system that can plan for both tasks and
+#goals.
 
 ################################################################################
 # How much information to print while the program is running
 
+@export
 var verbose: int = 3
 #"""
 #verbose is a global value whose initial value is 1. Its value determines how
