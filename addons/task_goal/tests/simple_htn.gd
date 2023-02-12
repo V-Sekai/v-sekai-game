@@ -79,28 +79,21 @@ func is_a(variable, type):
 # Actions:
 
 
-func walk(state, args):
-	var p = args[0]  
-	var x = args[1]  
-	var y = args[2] 
+func walk(state, p, x, y):
 	if is_a(p, "person") and is_a(x, "location") and is_a(y, "location") and x != y:
 		if state.loc[p] == x:
 			state.loc[p] = y
 			return state
 
 
-func call_taxi(state, args):
-	var p = args[0]  
-	var x = args[1] 
+func call_taxi(state, p, x):
 	if is_a(p, "person") and is_a(x, "location"):
 		state.loc["taxi1"] = x
 		state.loc[p] = "taxi1"
 		return state
 
 
-func ride_taxi(state, args):
-	var p = args[0]  
-	var y = args[1] 
+func ride_taxi(state, p, y):
 	# if p is a person, p is in a taxi, and y is a location:
 	if is_a(p, "person") and is_a(state.loc[p], "taxi") and is_a(y, "location"):
 		var taxi = state.loc[p]
@@ -111,9 +104,7 @@ func ride_taxi(state, args):
 			return state
 
 
-func pay_driver(state, args):
-	var p = args[0]  
-	var y = args[1] 
+func pay_driver(state, p, y):
 	if is_a(p, "person"):
 		if state.cash[p] >= state.owe[p]:
 			state.cash[p] = state.cash[p] - state.owe[p]
@@ -127,10 +118,7 @@ func pay_driver(state, args):
 
 
 # this does the same thing as the action model
-func c_walk(state, args):
-	var p = args[0] 
-	var x = args[1] 
-	var y = args[2] 
+func c_walk(state, p, x, y):
 	if is_a(p, "person") and is_a(x, "location") and is_a(y, "location"):
 		if state.loc[p] == x:
 			state.loc[p] = y
@@ -139,9 +127,7 @@ func c_walk(state, args):
 
 # c_call_taxi, version used in simple_tasks1
 # this is like the action model except that the taxi doesn't always arrive
-func c_call_taxi(state, args):
-	var p = args[0] 
-	var x = args[1] 
+func c_call_taxi(state, p, x):
 	if is_a(p, "person") and is_a(x, "location"):
 		var rand : RandomNumberGenerator = RandomNumberGenerator.new()
 		if rand.randfrange(2) > 0:
@@ -155,9 +141,7 @@ func c_call_taxi(state, args):
 
 # c_ride_taxi, version used in simple_tasks1
 # this does the same thing as the action model
-func c_ride_taxi(state, args):
-	var p = args[0] 
-	var y = args[1] 
+func c_ride_taxi(state, p, y):
 	# if p is a person, p is in a taxi, and y is a location:
 	if is_a(p, "person") and is_a(state.loc[p], "taxi") and is_a(y, "location"):
 		var taxi = state.loc[p]
@@ -169,8 +153,8 @@ func c_ride_taxi(state, args):
 
 
 # this does the same thing as the action model
-func c_pay_driver(state, args):
-	return pay_driver(state, args)
+func c_pay_driver(state, p, y):
+	return pay_driver(state, p, y)
 
 
 
@@ -179,27 +163,21 @@ func c_pay_driver(state, args):
 # Methods:
 
 
-func do_nothing(state, args):
-	var p = args[0] 
-	var y = args[1] 
+func do_nothing(state, p, y):
 	if is_a(p, "person") and is_a(y, "location"):
 		var x = state.loc[p]
 		if x == y:
 			return []
 
 
-func travel_by_foot(state, args):
-	var p = args[0] 
-	var y = args[1] 
+func travel_by_foot(state, p, y):
 	if is_a(p, "person") and is_a(y, "location"):
 		var x = state.loc[p]
 		if x != y and distance(x, y) <= 2:
 			return [["walk", p, x, y]]
 
 
-func travel_by_taxi(state, args):
-	var p = args[0] 
-	var y = args[1] 
+func travel_by_taxi(state, p, y):
 	if is_a(p, "person") and is_a(y, "location"):
 		var x = state.loc[p]
 		if x != y and state.cash[p] >= taxi_rate(distance(x, y)):

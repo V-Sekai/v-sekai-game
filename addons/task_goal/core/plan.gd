@@ -362,7 +362,7 @@ var verify_goals = true
 # Applying actions, commands, and methods
 
 
-func _apply_action_and_continue(state, task1, todo_list, plan, depth):
+func _apply_action_and_continue(state, task1, todo_list, plan, depth) -> Variant:
 #	"""
 #	_apply_action_and_continue is called only when task1's name matches an
 #	action name. It applies the action by retrieving the action's function
@@ -371,9 +371,8 @@ func _apply_action_and_continue(state, task1, todo_list, plan, depth):
 #	"""
 	if verbose >= 3:
 		print("Depth %s action %s: " % [depth, task1])
-	var action = current_domain._action_dict[task1[0]]
-	var typed_action : Callable = action
-	var newstate = typed_action.call(state.duplicate(true), task1.slice(1))
+	var action : Callable = current_domain._action_dict[task1[0]]
+	var newstate = action.get_object().callv(action.get_method(), [state] + task1.slice(1))
 	if newstate:
 		if verbose >= 3:
 			print("Applied")
@@ -384,7 +383,7 @@ func _apply_action_and_continue(state, task1, todo_list, plan, depth):
 	return false
 
 
-func _refine_task_and_continue(state, task1, todo_list, plan, depth):
+func _refine_task_and_continue(state, task1, todo_list, plan, depth) -> Variant:
 ##	"""
 ##	If task1 is in the task-method dictionary, then iterate through the list
 ##	of relevant methods to find one that's applicable, apply it to get
@@ -393,38 +392,28 @@ func _refine_task_and_continue(state, task1, todo_list, plan, depth):
 ##
 ##	If the call to seek_plan fails, go on to the next method in the list.
 ##	"""
-	var relevant = current_domain._task_method_dict[task1[0]]
+	var relevant : Array = current_domain._task_method_dict[task1[0]]
 	if verbose >= 3:
 		var string_array : PackedStringArray = []
 		for m in relevant:
 			string_array.push_back(m.get_method())
 		print("Depth %s task %s methods %s" % [depth, task1, string_array])
 	for method in relevant:
-		var typed_method : Callable = method
 		if verbose >= 3:
 			print("Depth %s trying %s: " % [depth, method.get_method()])
-		var subtasks = typed_method.call(state, task1.slice(1))
-		# Can't just say "if subtasks:", because that's wrong if subtasks == []
-		if subtasks is bool and subtasks == false:
+		var subtasks : Variant = method.get_object().callv(method.get_method(), [state] + task1.slice(1))
+		if subtasks is Array:
 			if verbose >= 3:
-				print("Not applicable")
-			continue
-		if subtasks == null:
-			if verbose >= 3:
-				print("Not applicable")
-			continue
-		if verbose >= 3:
-			print("Applicable")
-			print("Depth %s subtasks: %s" % [depth, subtasks])
-		var result = seek_plan(state, subtasks + todo_list, plan, depth + 1)
-		if result == null and result == false:
-			continue
-		return result
+				print("Applicable")
+				print("Depth %s subtasks: %s" % [depth, subtasks])
+			var result : Variant = seek_plan(state, subtasks + todo_list, plan, depth + 1)
+			if result is Array:
+				return result
 	if verbose >= 3:
 		print("Depth %s could not accomplish task %s" % [depth, task1])
 	return false
 
-func _refine_unigoal_and_continue(state, goal1, todo_list, plan, depth):
+func _refine_unigoal_and_continue(state, goal1, todo_list, plan, depth) -> Variant:
 ##	"""
 ##	If goal1 is in the unigoal-method dictionary, then iterate through the
 ##	list of relevant methods to find one that's applicable, apply it to get
@@ -436,9 +425,9 @@ func _refine_unigoal_and_continue(state, goal1, todo_list, plan, depth):
 ##	"""
 	if verbose >= 3:
 		print("Depth %s goal %s: " % [depth, goal1])
-	var state_var_name = goal1[0]
-	var arg = goal1[1]
-	var val = goal1[2]
+	var state_var_name : String = goal1[0]
+	var arg : String = goal1[1]
+	var val : Variant = goal1[2]
 	if state.get(state_var_name).get(arg) == val:
 		if verbose >= 3:
 			print("Already achieved")
@@ -450,34 +439,29 @@ func _refine_unigoal_and_continue(state, goal1, todo_list, plan, depth):
 			string_array.push_back(m.get_method())
 		print("Methods %s " % string_array)
 	for method in relevant:
-		var method_typed : Callable = method
 		if verbose >= 3:
 			print("Depth %s trying method %s: " % [depth, method.get_method()])
-		print("Method_typed %s" % [method_typed])
-		var subgoals = method_typed.call(state, arg, val)
-		if subgoals != null and subgoals.size():
+		print("Method %s" % [method])
+		var subgoals : Variant = method.get_object().callv(method.get_method(), [state] + [arg, val])
+		if subgoals is Array:
 			if verbose >= 3:
-				print("Applicable")
 				print("Depth %s subgoals: %s" % [depth, subgoals])
 			var verification = []
 			if verify_goals:
 				verification = [
-					[Callable(domain_const, "_verify_g"), method.get_method(), state_var_name, arg, val, depth]
+					["_verify_g", method.get_method(), state_var_name, arg, val, depth]
 				]
 			else:
 				verification = []
 			todo_list = subgoals + verification + todo_list
-			var result = seek_plan(state, todo_list, plan, depth + 1)
-			if result != null and result.size():
+			var result : Variant = seek_plan(state, todo_list, plan, depth + 1)
+			if result is Array:
 				return result
-		else:
-			if verbose >= 3:
-				print("Not applicable")    
 	if verbose >= 3:
 		print("Depth %s could not achieve goal %s" % [depth, goal1])
-	return []
+	return false
 
-func _refine_multigoal_and_continue(state, goal1 : Multigoal, todo_list, plan, depth):
+func _refine_multigoal_and_continue(state : Dictionary, goal1 : Multigoal, todo_list: Array, plan: Array, depth: int) -> Array:
 ##	"""
 ##	If goal1 is a multigoal, then iterate through the list of multigoal
 ##	methods to find one that's applicable, apply it to get additional
@@ -489,30 +473,28 @@ func _refine_multigoal_and_continue(state, goal1 : Multigoal, todo_list, plan, d
 ##	"""
 	if verbose >= 3:
 		print("Depth %s multigoal %s: " % [depth, goal1])
-	var relevant = current_domain._multigoal_method_list
+	var relevant : Array = current_domain._multigoal_method_list
 	if verbose >= 3:
 		var string_array : PackedStringArray= PackedStringArray()
 		for m in relevant:
 			string_array.push_back(m.get_method())
 		print("Methods %s" % string_array)
 	for method in relevant:
-		var method_typed : Callable = method
 		if verbose >= 3: 
 			print("Depth %s trying method %s: " % [depth, method.get_method()])
-		var subgoals = method_typed.call(state, goal1)
-		# Can't just say "if subgoals:", because that's wrong if subgoals == []
-		if subgoals.size() and subgoals != null:
+		var subgoals: Variant = method.get_object().callv(method.get_method(), [state, goal1])
+		if subgoals is Array:
 			if verbose >= 3:
 				print('Applicable')
 				print('Depth %s subgoals: %s' % [depth, subgoals])
 			var verification = []
 			if verify_goals:
-				verification = [[Callable(domain_const, "_verify_mg"), method.get_method(), goal1, depth]]
+				verification = [["_verify_mg", method.get_method(), goal1, depth]]
 			else:
 				verification = []
 			todo_list = subgoals + verification + todo_list
-			var result = seek_plan(state, todo_list, plan, depth+1)
-			if result.size() and result != null:
+			var result : Variant = seek_plan(state, todo_list, plan, depth+1)
+			if result is Array:
 				return result
 		else:
 			if verbose >= 3:
@@ -527,7 +509,7 @@ func _refine_multigoal_and_continue(state, goal1 : Multigoal, todo_list, plan, d
 # The planning algorithm
 
 
-func find_plan(state: Dictionary, todo_list : Array) -> Array:
+func find_plan(state: Dictionary, todo_list : Array) -> Variant:
 #	"""
 #	find_plan tries to find a plan that accomplishes the items in todo_list,
 #	starting from the given state, using whatever methods and actions you
@@ -543,13 +525,13 @@ func find_plan(state: Dictionary, todo_list : Array) -> Array:
 		var todo_string = "[" + ", ".join(todo_array) + "]"
 		print("FP> find_plan, verbose=%s:" % verbose)
 		print("    state = %s\n    todo_list = %s" % [state, todo_string])
-	var result = seek_plan(state, todo_list, [], 0)
+	var result : Variant = seek_plan(state, todo_list, [], 0)
 	if verbose >= 1:
 		print("FP> result = ", result, "\n")
 	return result
 
 
-func seek_plan(state : Dictionary, todo_list : Array, plan : Array, depth : int) -> Array:
+func seek_plan(state : Dictionary, todo_list : Array, plan : Array, depth : int) -> Variant:
 #	"""
 #	Workhorse for find_plan. Arguments:
 #	 - state is the current state
@@ -567,22 +549,22 @@ func seek_plan(state : Dictionary, todo_list : Array, plan : Array, depth : int)
 		if verbose >= 3:
 			print("depth %s no more tasks or goals, return plan" % [depth])
 		return plan
-	var item1 = todo_list[0]
+	var item1 = todo_list.front()
+	todo_list.pop_front()
 	
 	if item1 is Multigoal:
-		return _refine_multigoal_and_continue(state, item1, todo_list.slice(1), plan, depth)
+		return _refine_multigoal_and_continue(state, item1, todo_list, plan, depth)
 	elif item1 is Array:
 		if item1[0] in current_domain._action_dict.keys():
-			return _apply_action_and_continue(state, item1, todo_list.slice(1), plan, depth)
+			return _apply_action_and_continue(state, item1, todo_list, plan, depth)
 		if item1[0] in current_domain._task_method_dict.keys():
-			return _refine_task_and_continue(state, item1, todo_list.slice(1), plan, depth)
+			return _refine_task_and_continue(state, item1, todo_list, plan, depth)
 		if item1[0] in current_domain._unigoal_method_dict.keys():
 			return _refine_unigoal_and_continue(
-				state, item1, todo_list.slice(1), plan, depth
+				state, item1, todo_list, plan, depth
 			)
-
-	if item1 == null:
-		print("Depth %s: %s isn't an action, task, unigoal, or multigoal\n" % [depth, item1])
+	assert(false)
+	print("Depth %s: %s isn't an action, task, unigoal, or multigoal\n" % [depth, item1])
 	return []
 
 
