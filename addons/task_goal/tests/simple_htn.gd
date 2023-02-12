@@ -5,9 +5,7 @@ extends Node
 #-- Dana Nau <nau@umd.edu>, July 20, 2021
 #"""
 
-# Rather than hard-coding the domain name, use the name of the current file.
-# This makes the code more portable.
-var domain_name = scene_file_path
+var domain_name = "simple_htn"
 var the_domain = preload("../core/domain.gd").new("plan")
 
 var planner = preload("../core/plan.gd").new()

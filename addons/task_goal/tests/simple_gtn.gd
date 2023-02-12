@@ -5,7 +5,7 @@ extends Node
 #-- Dana Nau <nau@umd.edu>, July 20, 2021
 #"""
 
-var domain_name = scene_file_path
+var domain_name = "simple_gtn"
 var the_domain = preload("../core/domain.gd").new(domain_name)
 
 var planner = preload("../core/plan.gd").new()
