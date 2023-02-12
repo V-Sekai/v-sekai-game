@@ -523,11 +523,11 @@ func find_plan(state: Dictionary, todo_list : Array) -> Variant:
 		for x in todo_list:
 			todo_array.push_back(x)
 		var todo_string = "[" + ", ".join(todo_array) + "]"
-		print("FP> find_plan, verbose=%s:" % verbose)
+		print("FindPath> find_plan, verbose=%s:" % verbose)
 		print("    state = %s\n    todo_list = %s" % [state, todo_string])
 	var result : Variant = seek_plan(state, todo_list, [], 0)
 	if verbose >= 1:
-		print("FP> result = ", result, "\n")
+		print("FindPath> result = ", result, "\n")
 	return result
 
 
@@ -596,17 +596,17 @@ func run_lazy_lookahead(state, todo_list, max_tries=10):
 #	"""
 
 	if verbose >= 1:
-		print("RLL> run_lazy_lookahead, verbose = %s, max_tries = %s" % [verbose, max_tries])
-		print("RLL> initial state: %s" % [state.keys()])
-		print("RLL> To do:", todo_list)
+		print("RunLazyLookahead> run_lazy_lookahead, verbose = %s, max_tries = %s" % [verbose, max_tries])
+		print("RunLazyLookahead> initial state: %s" % [state.keys()])
+		print("RunLazyLookahead> To do:", todo_list)
 
 	for tries in range(1, max_tries + 1):
 		if verbose >= 1:
 			var ordinals = {1: "st", 2: "nd", 3: "rd"}
 			if ordinals.get(tries):
-				print("RLL> %s%s call to find_plan:" % [tries, ordinals.get(tries)])
+				print("RunLazyLookahead> %s%s call to find_plan:" % [tries, ordinals.get(tries)])
 			else:
-				print("RLL> %s call to find_plan:" % [tries])
+				print("RunLazyLookahead> %s call to find_plan:" % [tries])
 		var plan = find_plan(state, todo_list)
 		if (plan is Array and not plan.size()) or (plan is bool and plan == false) or plan == null:
 			if verbose >= 1:
@@ -615,7 +615,7 @@ func run_lazy_lookahead(state, todo_list, max_tries=10):
 		if plan == []:
 			if verbose >= 1:
 				print(
-					"RLL> Empty plan => success\n" +  "after {tries} calls to find_plan."
+					"RunLazyLookahead> Empty plan => success\n" +  "after {tries} calls to find_plan."
 				)
 			if verbose >= 2:
 				state.display("> final state")
@@ -626,17 +626,17 @@ func run_lazy_lookahead(state, todo_list, max_tries=10):
 			if command_func == null:
 				if verbose >= 1:
 					print(
-						"RLL> %s not defined, using {action[0]} instead\n" % [command_name]
+						"RunLazyLookahead> %s not defined, using {action[0]} instead\n" % [command_name]
 					)
 				command_func = current_domain._action_dict.get(action[0])
 
 			if verbose >= 1:
-				print("RLL> Command: %s" % [[command_name] + action.slice(1)])
+				print("RunLazyLookahead> Command: %s" % [[command_name] + action.slice(1)])
 			var new_state = _apply_command_and_continue(state, command_func, action.slice(1))
 			if new_state == false:
 				if verbose >= 1:
 					print(
-						"RLL> WARNING: command %s failed; will call find_plan." % [command_name]
+						"RunLazyLookahead> WARNING: command %s failed; will call find_plan." % [command_name]
 					)
 					break
 			else:
@@ -645,12 +645,12 @@ func run_lazy_lookahead(state, todo_list, max_tries=10):
 				state = new_state
 		# if state != False then we're here because the plan ended
 		if verbose >= 1 and state:
-			print("RLL> Plan ended; will call find_plan again.")
+			print("RunLazyLookahead> Plan ended; will call find_plan again.")
 
 	if verbose >= 1:
-		print("RLL> Too many tries, giving up.")
+		print("RunLazyLookahead> Too many tries, giving up.")
 	if verbose >= 2:
-		state.display("RLL> final state")
+		state.display("RunLazyLookahead> final state")
 	return state
 
 
