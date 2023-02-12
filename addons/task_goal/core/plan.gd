@@ -551,8 +551,7 @@ func seek_plan(state: Dictionary, todo_list: Array, plan: Array, depth: int) -> 
 			return _refine_task_and_continue(state, item1, todo_list, plan, depth)
 		if item1[0] in current_domain._unigoal_method_dict.keys():
 			return _refine_unigoal_and_continue(state, item1, todo_list, plan, depth)
-	assert(false)
-	print("Depth %s: %s isn't an action, task, unigoal, or multigoal\n" % [depth, item1])
+	assert(false, "Depth %s: %s isn't an action, task, unigoal, or multigoal\n" % [depth, item1])
 	return []
 
 
