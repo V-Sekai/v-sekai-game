@@ -544,7 +544,7 @@ func seek_plan(state : Dictionary, todo_list : Array, plan : Array, depth : int)
 		for x in todo_list:
 			todo_array.push_back(_item_to_string(x))
 		var todo_string = "[" + ", ".join(todo_array) + "]"
-		print("depth %s todo_list %s" % [depth, todo_string])
+		print("Depth %s todo_list %s" % [depth, todo_string])
 	if todo_list.is_empty():
 		if verbose >= 3:
 			print("depth %s no more tasks or goals, return plan" % [depth])
