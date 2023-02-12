@@ -50,12 +50,16 @@ func distance(x, y):
 	the distance from x to y and the distance from y to x.
 	"""
 	var result = dist.get([x, y])
+	if result == null:
+		return INF
 	if result > 0:
 		return result
 	result = dist.get([y, x])
+	if result == null:
+		return INF
 	if result > 0:
 		return result
-	return 0
+	return INF
 
 
 func is_a(variable, type):

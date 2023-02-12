@@ -56,13 +56,15 @@ func distance(x: String, y: String):
 #	"""
 	var result = dist.get([x, y])
 	if result == null:
-		return 0
+		return INF
 	if result > 0:
 		return result
 	result = dist.get([y, x])
+	if result == null:
+		return INF
 	if result > 0:
 		return result
-	return 0
+	return INF
 
 
 func is_a(variable, type):
