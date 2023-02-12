@@ -11,8 +11,8 @@ func _main(argv: Array, data) -> Dictionary:
 
 	if not out.is_empty():
 		output(out)
-
-	return {"data": null if out.is_empty() else out}
+		data = out
+	return {"data": data}
 
 
 func _get_manual() -> String:

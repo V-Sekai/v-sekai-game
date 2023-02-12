@@ -8,7 +8,7 @@ func _init():
 	COMMAND_AUTO_ALIASES = {"true": "bool -t", "false": "bool -f", "random": "bool -r"}
 
 
-func _main(argv: Array, data) -> Dictionary:
+func _main(argv: Array, _data) -> Dictionary:
 	if not argv.size() > 1:
 		return TRUE
 

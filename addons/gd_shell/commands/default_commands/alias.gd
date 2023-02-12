@@ -7,7 +7,7 @@ func _init():
 	}
 
 
-func _main(argv: Array, data) -> Dictionary:
+func _main(argv: Array, _data) -> Dictionary:
 	var success: bool
 
 	if not argv.size() > 2:

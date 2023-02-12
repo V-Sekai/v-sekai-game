@@ -29,7 +29,7 @@ func get_command_path(command_name: String) -> String:
 
 
 func get_all_command_names() -> Array[String]:
-	var commands: Array[String]
+	var commands: Array[String] = []
 	for key in _commands.keys():
 		commands.push_back(key)
 	return commands
