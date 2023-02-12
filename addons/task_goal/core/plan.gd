@@ -581,10 +581,6 @@ func seek_plan(state : Dictionary, todo_list : Array, plan : Array, depth : int)
 	if item1 is Multigoal:
 		return _refine_multigoal_and_continue(state, item1, todo_list.slice(1), plan, depth)
 	elif item1 is Array:
-		print(item1)
-		print(current_domain._action_dict)
-		print(current_domain._task_method_dict)
-		print(current_domain._unigoal_method_dict)
 		if item1[0] in current_domain._action_dict.keys():
 			return _apply_action_and_continue(state, item1, todo_list.slice(1), plan, depth)
 		if item1[0] in current_domain._task_method_dict.keys():
