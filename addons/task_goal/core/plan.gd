@@ -1,4 +1,4 @@
-extends Node
+extends Resource
 
 # SPDX-FileCopyrightText: 2021 University of Maryland
 # SPDX-License-Identifier: BSD-3-Clause-Clear
@@ -62,7 +62,7 @@ func print_domain(domain: Object =null) -> void:
 #	"""
 	if domain == null:
 		domain = current_domain
-	print("Domain name: %s" % name)
+	print("Domain name: %s" % resource_name)
 	print_actions(domain)
 	print_commands(domain)
 	print_methods(domain)
