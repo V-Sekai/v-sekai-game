@@ -46,10 +46,6 @@
 	path = addons/network_manager
 	url = https://github.com/V-Sekai/network_manager
 	branch = godot4
-[submodule "addons/performance_monitor"]
-	path = addons/performance_monitor
-	url = https://github.com/V-Sekai/performance_monitor
-	branch = godot4
 [submodule "addons/sar1_debug_manager"]
 	path = addons/sar1_debug_manager
 	url = https://github.com/V-Sekai/sar1_debug_manager

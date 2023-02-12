@@ -21,6 +21,7 @@ func _main(p_argv: Array, p_data) -> Dictionary:
 		"physics_2d_island_count": Performance.get_monitor(Performance.PHYSICS_2D_ISLAND_COUNT),
 		"video_memory_used": ceil(Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED) * 0.001),
 		"texture_memory_used": ceil(Performance.get_monitor(Performance.RENDER_TEXTURE_MEM_USED) * 0.001),
+		"audio": GodotSpeech.get_stats(),
 	}
 	if not p_argv.size() > 1:
 		output(data)
