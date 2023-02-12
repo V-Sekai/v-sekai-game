@@ -446,7 +446,7 @@ func _refine_unigoal_and_continue(state, goal1, todo_list, plan, depth) -> Varia
 				return result
 	if verbose >= 3:
 		print("Depth %s could not achieve goal %s" % [depth, goal1])
-	return false
+	return []
 
 
 func _refine_multigoal_and_continue(
@@ -563,7 +563,7 @@ func _item_to_string(item):
 # An actor
 
 
-func run_lazy_lookahead(state, todo_list, max_tries = 10):
+func run_lazy_lookahead(state: Dictionary, todo_list: Array, max_tries: int = 10):
 #	"""
 #	An adaptation of the run_lazy_lookahead algorithm from Ghallab et al.
 #	(2016), Automated Planning and Acting. It works roughly like this:
@@ -603,7 +603,7 @@ func run_lazy_lookahead(state, todo_list, max_tries = 10):
 			if verbose >= 1:
 				print("RunLazyLookahead> Empty plan => success\n" + "after {tries} calls to find_plan.")
 			if verbose >= 2:
-				state.display("> final state")
+				print("> final state %s" % [state])
 			return state
 		for action in plan:
 			var command_name = "c_" + action[0]
@@ -616,26 +616,26 @@ func run_lazy_lookahead(state, todo_list, max_tries = 10):
 			if verbose >= 1:
 				print("RunLazyLookahead> Command: %s" % [[command_name] + action.slice(1)])
 			var new_state = _apply_command_and_continue(state, command_func, action.slice(1))
-			if new_state == null:
+			if new_state is Dictionary:
+				if verbose >= 2:
+					print(new_state)
+				state = new_state
+			else:
 				if verbose >= 1:
 					print("RunLazyLookahead> WARNING: command %s failed; will call find_plan." % [command_name])
 					break
-			else:
-				if verbose >= 2:
-					new_state.display()
-				state = new_state
 		# if state != False then we're here because the plan ended
-		if verbose >= 1 and state:
+		if verbose >= 1 and state != null:
 			print("RunLazyLookahead> Plan ended; will call find_plan again.")
 
 	if verbose >= 1:
 		print("RunLazyLookahead> Too many tries, giving up.")
 	if verbose >= 2:
-		state.display("RunLazyLookahead> final state")
+		print("RunLazyLookahead> final state %s" % state)
 	return state
 
 
-func _apply_command_and_continue(state, command: Callable, args) -> Variant:
+func _apply_command_and_continue(state: Dictionary, command: Callable, args: Array) -> Variant:
 #	"""
 #	_apply_command_and_continue applies 'command' by retrieving its
 #	function definition and calling it on the arguments.
@@ -646,7 +646,7 @@ func _apply_command_and_continue(state, command: Callable, args) -> Variant:
 	if next_state:
 		if verbose >= 3:
 			print("Applied")
-			next_state.display()
+			print(next_state)
 		return next_state
 	else:
 		if verbose >= 3:

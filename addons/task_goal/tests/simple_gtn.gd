@@ -49,12 +49,14 @@ func taxi_rate(taxi_dist):
 	return 1.5 + 0.5 * taxi_dist
 
 
-func distance(x, y):
+func distance(x: String, y: String):
 #	"""
 #	If rigid.dist[(x,y)] = d, this function figures out that d is both
 #	the distance from x to y and the distance from y to x.
 #	"""
 	var result = dist.get([x, y])
+	if result == null:
+		return 0
 	if result > 0:
 		return result
 	result = dist.get([y, x])
@@ -106,7 +108,7 @@ func ride_taxi(state, p, y):
 			return state
 
 
-func pay_driver(state, p, y):
+func pay_driver(state: Dictionary, p: String, y: String):
 	if is_a(p, "person"):
 		if state.cash[p] >= state.owe[p]:
 			state.cash[p] = state.cash[p] - state.owe[p]
@@ -153,7 +155,7 @@ func c_ride_taxi(state, p, y):
 
 
 # this does the same thing as the action model
-func c_pay_driver(state, p, y):
+func c_pay_driver(state: Dictionary, p: String, y: String):
 	return pay_driver(state, p, y)
 
 
