@@ -41,11 +41,11 @@ func _init(multigoal_name, state_variables: Dictionary):
 	_state = state_variables
 
 
-func get_string():
+func get_string() -> String:
 	return "<Multigoal %s>" % get_name()
 
 
-func display(heading = null):
+func display(heading: String = "") -> void:
 #		"""
 #		Print the multigoal's state-variables and their values.
 #		 - heading (optional) is a heading to print beforehand.
@@ -54,7 +54,7 @@ func display(heading = null):
 	print(_state)
 
 
-func state_vars():
+func state_vars() -> Array:
 #		"""Return a list of all state-variable names in the multigoal"""
 	var variable_list: Array = []
 	var properties: Array = _state.keys()

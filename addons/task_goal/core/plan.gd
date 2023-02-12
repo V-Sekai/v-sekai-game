@@ -85,7 +85,7 @@ func print_commands(domain: Object = null) -> void:
 		print("-- There are no commands --")
 
 
-func _print_task_methods(domain):
+func _print_task_methods(domain) -> void:
 #	"""Print a table of the task_methods for each task"""
 	if domain._task_method_dict:
 		print("")
@@ -100,7 +100,7 @@ func _print_task_methods(domain):
 		print("-- There are no task methods --")
 
 
-func _print_unigoal_methods(domain):
+func _print_unigoal_methods(domain: Resource) -> void:
 #	"""Print a table of the unigoal_methods for each state_variable_name"""
 	if domain._unigoal_method_dict:
 		print("Blackboard var name:    Relevant unigoal methods:")
@@ -115,7 +115,7 @@ func _print_unigoal_methods(domain):
 		print("-- There are no unigoal methods --")
 
 
-func _print_multigoal_methods(domain):
+func _print_multigoal_methods(domain: Resource) -> void:
 #	"""Print the names of all the multigoal_methods"""
 	if domain._multigoal_method_list:
 		var string_array: PackedStringArray = PackedStringArray()
@@ -129,7 +129,7 @@ func _print_multigoal_methods(domain):
 		print("-- There are no multigoal methods --")
 
 
-func print_methods(domain = null):
+func print_methods(domain: Resource = null) -> void:
 #	"""Print tables showing what all the methods are"""
 	if domain == null:
 		domain = current_domain

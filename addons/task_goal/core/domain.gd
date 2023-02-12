@@ -40,7 +40,7 @@ func _m_verify_g(
 
 
 # helper function for m_split_multigoal above:
-static func _goals_not_achieved(state, multigoal):
+static func _goals_not_achieved(state: Dictionary, multigoal: Multigoal) -> Dictionary:
 #	"""
 #	_goals_not_achieved takes two arguments: a state s and a multigoal g.
 #	It returns a dictionary of the goals in g that aren't true in s.
@@ -63,7 +63,7 @@ static func _goals_not_achieved(state, multigoal):
 	return unachieved
 
 
-func _m_verify_mg(state, method, multigoal, depth):
+func _m_verify_mg(state: Dictionary, method: String, multigoal: Multigoal, depth: int) -> Array:
 #	"""
 #	_m_verify_g is a method that GTPyhop uses to check whether a multigoal
 #	method has achieved the multigoal for which it was used.
@@ -97,15 +97,15 @@ var _unigoal_method_dict = {}
 var _multigoal_method_list = []
 
 
-func _init(domain_name):
+func _init(domain_name: String) -> void:
 #		"""domain_name is the name to use for the domain."""
 	set_name(domain_name)
 
 
-func get_string():
+func get_string() -> String:
 	return "<Domain %s>" % get_name()
 
 
-func display():
+func display() -> void:
 #	"""Print the domain's actions, commands, and methods."""
 	print(self)
