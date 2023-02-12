@@ -36,3 +36,36 @@ func _main(p_argv: Array, p_data) -> Dictionary:
 		output(out)
 		return {"data": out}
 	return DEFAULT_COMMAND_RESULT
+
+func _get_manual() -> String:
+	return (
+		"""
+[b]NAME[/b]
+	{COMMAND_NAME}
+
+[b]AUTO ALIASES[/b]
+	{COMMAND_AUTO_ALIASES}
+
+[b]SYNOPSIS[/b]
+	monitor [COMMAND]
+
+[b]DESCRIPTION[/b]
+	Prints the manual of the given COMMAND.
+	
+[b]EXAMPLES[/b]
+	[i]monitor list[/i]
+		-Print the monitors
+	
+	[i]monitor audio[/i]
+		-Print the audio monitor
+		
+	[i]monitor MONITOR[/i]
+		-Print the a monitor from the list
+"""
+		. format(
+			{
+				"COMMAND_NAME": COMMAND_NAME,
+				"COMMAND_AUTO_ALIASES": COMMAND_AUTO_ALIASES,
+			}
+		)
+	)
