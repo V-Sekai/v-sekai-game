@@ -21,7 +21,7 @@ var planner = preload("../core/plan.gd").new()
 	"location": ["home_a", "home_b", "park", "station"],
 	"taxi": ["taxi1", "taxi2"],
 }
-@export var dist : Dictionary = {
+@export var dist: Dictionary = {
 	["home_a", "park"]: 8,
 	["home_b", "park"]: 2,
 	["station", "home_a"]: 1,
@@ -31,12 +31,11 @@ var planner = preload("../core/plan.gd").new()
 }
 
 # prototypical initial state
-var state0 : Dictionary = {
-	"loc":  {"alice": "home_a", "bob": "home_b", "taxi1": "park", "taxi2": "station"},
+var state0: Dictionary = {
+	"loc": {"alice": "home_a", "bob": "home_b", "taxi1": "park", "taxi2": "station"},
 	"cash": {"alice": 20, "bob": 15},
-	"owe":  {"alice": 0, "bob": 0}
+	"owe": {"alice": 0, "bob": 0}
 }
-
 
 ###############################################################################
 # Helper functions:
@@ -56,7 +55,7 @@ func distance(x, y):
 	if result > 0:
 		return result
 	result = dist.get([y, x])
-	if result > 0 :
+	if result > 0:
 		return result
 	return 0
 
@@ -129,7 +128,7 @@ func c_walk(state, p, x, y):
 # this is like the action model except that the taxi doesn't always arrive
 func c_call_taxi(state, p, x):
 	if is_a(p, "person") and is_a(x, "location"):
-		var rand : RandomNumberGenerator = RandomNumberGenerator.new()
+		var rand: RandomNumberGenerator = RandomNumberGenerator.new()
 		if rand.randfrange(2) > 0:
 			state.loc["taxi1"] = x
 			state.loc[p] = "taxi1"
@@ -155,8 +154,6 @@ func c_ride_taxi(state, p, y):
 # this does the same thing as the action model
 func c_pay_driver(state, p, y):
 	return pay_driver(state, p, y)
-
-
 
 
 ###############################################################################
@@ -187,23 +184,20 @@ func travel_by_taxi(state, p, y):
 func _ready():
 	planner._domains.push_back(the_domain)
 	planner.current_domain = the_domain
-	planner.declare_actions([
-		Callable(self, "walk"), 
-		Callable(self, "call_taxi"), 
-		Callable(self, "ride_taxi"), 
-		Callable(self, "pay_driver")
-		])
-	planner.declare_commands([
-			Callable(self, "c_walk"), 
-			Callable(self, "c_call_taxi"), 
+	planner.declare_actions(
+		[Callable(self, "walk"), Callable(self, "call_taxi"), Callable(self, "ride_taxi"), Callable(self, "pay_driver")]
+	)
+	planner.declare_commands(
+		[
+			Callable(self, "c_walk"),
+			Callable(self, "c_call_taxi"),
 			Callable(self, "c_ride_taxi"),
 			Callable(self, "c_pay_driver")
-		])
+		]
+	)
 	planner.declare_task_methods(
-		"travel", 
-		[Callable(self, "do_nothing"), 
-		Callable(self, "travel_by_foot"), 
-		Callable(self, "travel_by_taxi")])
+		"travel", [Callable(self, "do_nothing"), Callable(self, "travel_by_foot"), Callable(self, "travel_by_taxi")]
+	)
 
 	###############################################################################
 	# Running the examples
@@ -258,21 +252,22 @@ We'll do it several times with different values for 'verbose'.
 	print("Result %s" % [result])
 	assert(result == expected)
 
-	print(
-		"Find a plan that will first get Alice to the park, then get Bob to the park."
-	)
+	print("Find a plan that will first get Alice to the park, then get Bob to the park.")
 	planner.verbose = 2
-	var plan = planner.find_plan(
-		state1, [["travel", "alice", "park"], ["travel", "bob", "park"]]
-	)
+	var plan = planner.find_plan(state1, [["travel", "alice", "park"], ["travel", "bob", "park"]])
 
 	print("Plan %s" % [plan])
-	assert(plan == [
-			["call_taxi", "alice", "home_a"],
-			["ride_taxi", "alice", "park"],
-			["pay_driver", "alice", "park"],
-			["walk", "bob", "home_b", "park"],
-	])
+	assert(
+		(
+			plan
+			== [
+				["call_taxi", "alice", "home_a"],
+				["ride_taxi", "alice", "park"],
+				["pay_driver", "alice", "park"],
+				["walk", "bob", "home_b", "park"],
+			]
+		)
+	)
 
 	print(
 		"""Next, we'll use run_lazy_lookahead to try to get Alice to the park. With

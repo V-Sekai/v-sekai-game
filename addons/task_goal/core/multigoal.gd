@@ -2,7 +2,7 @@ extends Resource
 
 class_name Multigoal
 
-var _state : Dictionary = {}
+var _state: Dictionary = {}
 
 @export var state: Dictionary = {}:
 	get:
@@ -37,15 +37,15 @@ func _init(multigoal_name, state_variables: Dictionary):
 #		multigoal_name is the name to use for the multigoal. The keyword
 #		args are the names and desired values of state variables.
 #		"""
-	set_name(multigoal_name)
+	resource_name = multigoal_name
 	_state = state_variables
-		
+
 
 func get_string():
 	return "<Multigoal %s>" % get_name()
 
 
-func display(heading=null):
+func display(heading = null):
 #		"""
 #		Print the multigoal's state-variables and their values.
 #		 - heading (optional) is a heading to print beforehand.
@@ -53,10 +53,11 @@ func display(heading=null):
 	print(heading)
 	print(_state)
 
+
 func state_vars():
 #		"""Return a list of all state-variable names in the multigoal"""
-	var variable_list : Array = []
-	var properties : Array = _state.keys()
+	var variable_list: Array = []
+	var properties: Array = _state.keys()
 	for v in properties:
 		for p in v.keys():
 			if p != get_name():

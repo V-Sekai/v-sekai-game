@@ -16,23 +16,26 @@ extends Resource
 #	use for the new domain.
 #	"""
 
-const verbose : int = 1
+const verbose: int = 1
 
-func _m_verify_g(state : Dictionary, method : String, state_var : String, arg: String, desired_val: Variant, depth: int) -> Array:
+
+func _m_verify_g(
+	state: Dictionary, method: String, state_var: String, arg: String, desired_val: Variant, depth: int
+) -> Array:
 #	"""
 #	_m_verify_g is a method that GTPyhop uses to check whether a
 #	unigoal method has achieved the goal for which it was used.
 #	"""
 	if state[state_var][arg] != desired_val:
 		print(
-			"Depth %s: method %s didn't achieve\n" % [depth, method] +
-			"Goal %s [%s] = %s" % [state_var, arg, desired_val],)
+			(
+				"Depth %s: method %s didn't achieve\n" % [depth, method]
+				+ "Goal %s [%s] = %s" % [state_var, arg, desired_val]
+			),
+		)
 		assert(false)
 	if verbose >= 3:
-		print(
-			"Depth %s: method %s achieved\n" % [depth, method] +
-			"Goal %s[%s] = %s" % [state_var, arg, desired_val]
-		)
+		print("Depth %s: method %s achieved\n" % [depth, method] + "Goal %s[%s] = %s" % [state_var, arg, desired_val])
 	return []  # i.e., don't create any subtasks or subgoals
 
 
@@ -48,7 +51,7 @@ static func _goals_not_achieved(state, multigoal):
 #	Then _goals_not_achieved(s, g) will return
 #		{'loc': {'c1': 'room3', 'c2': 'room4'}}
 #	"""
-	var unachieved : Dictionary = {}
+	var unachieved: Dictionary = {}
 	for n in multigoal.state:
 		for arg in multigoal.state.get(n):
 			var val = multigoal.state.get(n).get(arg)
@@ -58,6 +61,7 @@ static func _goals_not_achieved(state, multigoal):
 					unachieved[n] = {}
 				unachieved.get(n)[arg] = val
 	return unachieved
+
 
 func _m_verify_mg(state, method, multigoal, depth):
 #	"""
@@ -69,9 +73,10 @@ func _m_verify_mg(state, method, multigoal, depth):
 		print("Depth {depth}: method %s " % method + "didn't achieve %s" % multigoal)
 		return []
 	if verbose >= 3:
-		print("Depth %s: method %s achieved %s" %[depth, method, multigoal])
+		print("Depth %s: method %s achieved %s" % [depth, method, multigoal])
 	return []
-	
+
+
 # dictionary that maps each action name to the corresponding function
 var _action_dict = {}
 
@@ -90,6 +95,8 @@ var _unigoal_method_dict = {}
 
 # list of all methods for multigoals
 var _multigoal_method_list = []
+
+
 func _init(domain_name):
 #		"""domain_name is the name to use for the domain."""
 

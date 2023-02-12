@@ -5,12 +5,10 @@ extends Node
 #-- Dana Nau <nau@umd.edu>, July 20, 2021
 #"""
 
-
 var domain_name = scene_file_path
 var the_domain = preload("../core/domain.gd").new(domain_name)
 
 var planner = preload("../core/plan.gd").new()
-
 
 # These types are used by the 'is_a' helper function, later in this file
 @export var types = {
@@ -18,7 +16,7 @@ var planner = preload("../core/plan.gd").new()
 	"location": ["home_a", "home_b", "park", "station"],
 	"taxi": ["taxi1", "taxi2"],
 }
-@export var dist : Dictionary = {
+@export var dist: Dictionary = {
 	["home_a", "park"]: 8,
 	["home_b", "park"]: 2,
 	["station", "home_a"]: 1,
@@ -28,21 +26,20 @@ var planner = preload("../core/plan.gd").new()
 }
 
 # prototypical initial state
-var state0 : Dictionary = {
-	"loc":  {"alice": "home_a", "bob": "home_b", "taxi1": "park", "taxi2": "station"},
+var state0: Dictionary = {
+	"loc": {"alice": "home_a", "bob": "home_b", "taxi1": "park", "taxi2": "station"},
 	"cash": {"alice": 20, "bob": 15},
-	"owe":  {"alice": 0, "bob": 0}
+	"owe": {"alice": 0, "bob": 0}
 }
 
 # initial goal
-var goal1 : Multigoal = Multigoal.new("goal1", {"loc": {'alice':'park'}})
+var goal1: Multigoal = Multigoal.new("goal1", {"loc": {"alice": "park"}})
 
 # another initial goal
-var goal2 = Multigoal.new("goal2", {"loc": {'bob':'park'}})
+var goal2 = Multigoal.new("goal2", {"loc": {"bob": "park"}})
 
 # bigger initial goal
-var goal3 = Multigoal.new("goal3", {"loc": {'alice':'park', 'bob':'park'}})
-
+var goal3 = Multigoal.new("goal3", {"loc": {"alice": "park", "bob": "park"}})
 
 # Helper functions:
 
@@ -63,7 +60,7 @@ func distance(x, y):
 	result = dist.get([y, x])
 	if result > 0:
 		return result
-	return 0 
+	return 0
 
 
 func is_a(variable, type):
@@ -82,6 +79,7 @@ func is_a(variable, type):
 
 ###############################################################################
 # Actions:
+
 
 func walk(state, p, x, y):
 	if is_a(p, "person") and is_a(x, "location") and is_a(y, "location") and x != y:
@@ -116,6 +114,7 @@ func pay_driver(state, p, y):
 			state.loc[p] = y
 			return state
 
+
 ###############################################################################
 # Commands:
 
@@ -132,13 +131,14 @@ func c_walk(state, p, x, y):
 # this is like the action model except that the taxi doesn't always arrive
 func c_call_taxi(state, p, x):
 	if is_a(p, "person") and is_a(x, "location"):
-		var random_generator : RandomNumberGenerator = RandomNumberGenerator.new()
+		var random_generator: RandomNumberGenerator = RandomNumberGenerator.new()
 		var taxi = "taxi%s" % [1 + random_generator.randfn(2)]
 		print("Action> the taxi is chosen randomly. This time it is %s." % [taxi])
 		state.loc[taxi] = x
 		state.loc[p] = taxi
 		return state
-		
+
+
 # c_ride_taxi, version used in simple_tasks1
 # this does the same thing as the action model
 func c_ride_taxi(state, p, y):
@@ -155,8 +155,6 @@ func c_ride_taxi(state, p, y):
 # this does the same thing as the action model
 func c_pay_driver(state, p, y):
 	return pay_driver(state, p, y)
-
-
 
 
 ###############################################################################
@@ -190,18 +188,17 @@ func _ready():
 	goal1.state["loc"] = {"alice": "park"}
 	goal2.state["loc"] = {"bob": "park"}
 	goal3.state["loc"] = {"alice": "park", "bob": "park"}
-	planner.declare_actions([
-			Callable(self, "walk"), 
-			Callable(self, "call_taxi"),
-			Callable(self, "ride_taxi"), 
-			Callable(self, "pay_driver")
-			])
-	planner.declare_commands([
-			Callable(self, "c_walk"), 
-			Callable(self, "c_call_taxi"), 
-			Callable(self, "c_ride_taxi"), 
+	planner.declare_actions(
+		[Callable(self, "walk"), Callable(self, "call_taxi"), Callable(self, "ride_taxi"), Callable(self, "pay_driver")]
+	)
+	planner.declare_commands(
+		[
+			Callable(self, "c_walk"),
+			Callable(self, "c_call_taxi"),
+			Callable(self, "c_ride_taxi"),
 			Callable(self, "c_pay_driver")
-			])
+		]
+	)
 
 	print("-----------------------------------------------------------------------")
 	print("Created the domain '%s'. To run the examples, type this:" % domain_name)
@@ -227,7 +224,7 @@ func _ready():
 	# If we've changed to some other domain, this will change us back.
 	planner.current_domain = the_domain
 	planner.print_domain()
-	
+
 	print("The initial state is")
 	print(state0.duplicate(true))
 
@@ -300,13 +297,17 @@ matter whether they're both at the park at the same time.
 	var state1 = state0.duplicate(true)
 	var plan = planner.find_plan(state1, [["loc", "alice", "park"], ["loc", "bob", "park"]])
 
-	assert(plan == 
-	[
-		["call_taxi", "alice", "home_a"],
-		["ride_taxi", "alice", "park"],
-		["pay_driver", "alice", "park"],
-		["walk", "bob", "home_b", "park"],
-	])
+	assert(
+		(
+			plan
+			== [
+				["call_taxi", "alice", "home_a"],
+				["ride_taxi", "alice", "park"],
+				["pay_driver", "alice", "park"],
+				["walk", "bob", "home_b", "park"],
+			]
+		)
+	)
 
 	print(state1)
 
@@ -335,10 +336,17 @@ method has achieved all of the values specified in the multigoal.
 	state1 = state0.duplicate(true)
 	plan = planner.find_plan(state1, [goal3])
 	print("Plan %s" % [plan])
-	assert(plan == [["call_taxi", "alice", "home_a"],
-			["ride_taxi", "alice", "park"],
-			["pay_driver", "alice", "park"],
-			["walk", "bob", "home_b", "park"]])
+	assert(
+		(
+			plan
+			== [
+				["call_taxi", "alice", "home_a"],
+				["ride_taxi", "alice", "park"],
+				["pay_driver", "alice", "park"],
+				["walk", "bob", "home_b", "park"]
+			]
+		)
+	)
 	print("Call run_lazy_lookahead with verbose=1:")
 
 	planner.verbose = 1
