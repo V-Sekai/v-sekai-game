@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://hph54h1jt214"]
+
+[ext_resource type="Script" path="res://addons/task_goal/tests/simple_htn.gd" id="1_iyt86"]
+
+[node name="Node" type="Node"]
+script = ExtResource("1_iyt86")

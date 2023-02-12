@@ -7,9 +7,9 @@ extends Node
 
 
 var domain_name = "simple_gtn"
-var the_domain = preload("domain.gd").new(domain_name)
+var the_domain = preload("../core/domain.gd").new(domain_name)
 
-var planner = preload("plan.gd").new()
+var planner = preload("../core/plan.gd").new()
 
 
 # These types are used by the 'is_a' helper function, later in this file

@@ -8,9 +8,9 @@ extends Node
 # Rather than hard-coding the domain name, use the name of the current file.
 # This makes the code more portable.
 var domain_name = "plan"
-var the_domain = preload("domain.gd").new("plan")
+var the_domain = preload("../core/domain.gd").new("plan")
 
-var planner = preload("plan.gd").new()
+var planner = preload("../core/plan.gd").new()
 
 ################################################################################
 # states and rigid relations
