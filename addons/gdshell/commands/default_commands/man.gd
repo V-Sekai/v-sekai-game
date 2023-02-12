@@ -16,6 +16,13 @@ func _main(argv: Array, data) -> Dictionary:
 	var command_db: GDShellCommandDB = _PARENT_PROCESS._PARENT_GDSHELL.command_db
 
 	var command_name: String = argv[1]
+	
+	if command_name == "list":
+		var commands: PackedStringArray
+		commands.append_array(command_db._aliases.keys())
+		output(commands)
+		return {"data": commands}
+
 	while true:
 		if not command_name in command_db._aliases:
 			break
@@ -61,6 +68,9 @@ func _get_manual() -> String:
 	
 	[i]man man[/i]
 		-Prints the manual for the [i]man[/i] command
+
+	[i]man list[/i]
+		-Prints all possible commands
 """
 		. format(
 			{
