@@ -523,11 +523,11 @@ func find_plan(state: Dictionary, todo_list : Array) -> Variant:
 		for x in todo_list:
 			todo_array.push_back(x)
 		var todo_string = "[" + ", ".join(todo_array) + "]"
-		print("FindPath> find_plan, verbose=%s:" % verbose)
+		print("FindPlan> find_plan, verbose=%s:" % verbose)
 		print("    state = %s\n    todo_list = %s" % [state, todo_string])
 	var result : Variant = seek_plan(state, todo_list, [], 0)
 	if verbose >= 1:
-		print("FindPath> result = ", result, "\n")
+		print("FindPlan> result = ", result, "\n")
 	return result
 
 

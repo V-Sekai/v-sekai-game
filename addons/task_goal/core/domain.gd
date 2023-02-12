@@ -25,13 +25,13 @@ func _m_verify_g(state : Dictionary, method : String, state_var : String, arg: S
 #	"""
 	if state[state_var][arg] != desired_val:
 		print(
-			"depth %s: method %s didn't achieve\n" % [depth, method] +
-			"goal %s [%s] = %s" % [state_var, arg, desired_val],)
+			"Depth %s: method %s didn't achieve\n" % [depth, method] +
+			"Goal %s [%s] = %s" % [state_var, arg, desired_val],)
 		assert(false)
 	if verbose >= 3:
 		print(
-			"depth %s: method %s achieved\n" % [depth, method] +
-			"goal %s[%s] = %s" % [state_var, arg, desired_val]
+			"Depth %s: method %s achieved\n" % [depth, method] +
+			"Goal %s[%s] = %s" % [state_var, arg, desired_val]
 		)
 	return []  # i.e., don't create any subtasks or subgoals
 
@@ -66,10 +66,10 @@ func _m_verify_mg(state, method, multigoal, depth):
 #	"""
 	var goal_dict = _goals_not_achieved(state, multigoal)
 	if goal_dict:
-		print("depth {depth}: method %s " % method + "didn't achieve %s" % multigoal)
+		print("Depth {depth}: method %s " % method + "didn't achieve %s" % multigoal)
 		return []
 	if verbose >= 3:
-		print("depth %s: method %s achieved %s" %[depth, method, multigoal])
+		print("Depth %s: method %s achieved %s" %[depth, method, multigoal])
 	return []
 	
 # dictionary that maps each action name to the corresponding function
