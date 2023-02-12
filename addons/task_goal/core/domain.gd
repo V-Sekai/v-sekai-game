@@ -27,8 +27,13 @@ func _m_verify_g(
 #	unigoal method has achieved the goal for which it was used.
 #	"""
 	if state[state_var][arg] != desired_val:
-		assert(false, "Depth %s: method %s didn't achieve\n" % [depth, method]
-				+ "Goal %s [%s] = %s" % [state_var, arg, desired_val])
+		assert(
+			false,
+			(
+				"Depth %s: method %s didn't achieve\n" % [depth, method]
+				+ "Goal %s [%s] = %s" % [state_var, arg, desired_val]
+			)
+		)
 	if verbose >= 3:
 		print("Depth %s: method %s achieved\n" % [depth, method] + "Goal %s[%s] = %s" % [state_var, arg, desired_val])
 	return []  # i.e., don't create any subtasks or subgoals

@@ -286,6 +286,6 @@ it has tried too many times."""
 
 	plan = planner.find_plan(new_state, [["travel", "alice", "park"]])
 	print("Plan %s" % [plan])
-#	assert(plan == [])
+	assert(plan == [])
 
 	print("No more examples")

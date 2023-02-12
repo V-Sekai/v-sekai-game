@@ -282,9 +282,8 @@ If verbose=3, the planner prints even more information.
 	planner.verbose = 3
 	result = planner.find_plan(state0.duplicate(true), [["loc", "alice", "park"]])
 	print(result)
-#	th.check_result(result, expected)
+	assert(result == expected)
 
-#	th.pause(do_pauses)
 	print(
 		"""
 Next, we give find_plan a sequence of two goals: first for Alice to be at the
