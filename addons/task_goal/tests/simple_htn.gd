@@ -127,7 +127,7 @@ func c_walk(state, p, x, y):
 func c_call_taxi(state, p, x):
 	if is_a(p, "person") and is_a(x, "location"):
 		var rand: RandomNumberGenerator = RandomNumberGenerator.new()
-		if rand.randfrange(2) > 0:
+		if rand.randf_range(2, 0) > 0:
 			state.loc["taxi1"] = x
 			state.loc[p] = "taxi1"
 			print("Action> c_call_taxi succeeded.  This happens with Pr = 1/2.")
@@ -226,33 +226,33 @@ We'll do it several times with different values for 'verbose'.
 
 	print("-- If verbose=0, the planner will return the solution but print nothing.")
 	planner.verbose = 0
-	var result = planner.find_plan(state1, [["travel", "alice", "park"]])
+	var result = planner.find_plan(state1.duplicate(true), [["travel", "alice", "park"]])
 	print("Result %s" % [result])
 	assert(result == expected)
 
 	print("-- If verbose=1, the planner will print the problem and solution,")
 	print("-- and then return the solution.\n")
 	planner.verbose = 1
-	result = planner.find_plan(state1, [["travel", "alice", "park"]])
+	result = planner.find_plan(state1.duplicate(true), [["travel", "alice", "park"]])
 	print("Result %s" % [result])
 	assert(result == expected)
 
 	print("-- If verbose=2, the planner will print the problem, a note at each")
 	print("-- recursive call, and the solution. Then it will return the solution.")
 	planner.verbose = 2
-	result = planner.find_plan(state1, [["travel", "alice", "park"]])
+	result = planner.find_plan(state1.duplicate(true), [["travel", "alice", "park"]])
 	print("Result %s" % [result])
 	assert(result == expected)
 
 	print("-- If verbose=3, the planner will print even more information.")
 	planner.verbose = 3
-	result = planner.find_plan(state1, [["travel", "alice", "park"]])
+	result = planner.find_plan(state1.duplicate(true), [["travel", "alice", "park"]])
 	print("Result %s" % [result])
 	assert(result == expected)
 
 	print("Find a plan that will first get Alice to the park, then get Bob to the park.")
 	planner.verbose = 2
-	var plan = planner.find_plan(state1, [["travel", "alice", "park"], ["travel", "bob", "park"]])
+	var plan = planner.find_plan(state1.duplicate(true), [["travel", "alice", "park"], ["travel", "bob", "park"]])
 
 	print("Plan %s" % [plan])
 	assert(
@@ -276,7 +276,7 @@ it has tried too many times."""
 	)
 
 	planner.verbose = 1
-	var new_state = planner.run_lazy_lookahead(state1, [["travel", "alice", "park"]])
+	var new_state = planner.run_lazy_lookahead(state1.duplicate(true), [["travel", "alice", "park"]])
 
 	print("")
 	print("If run_lazy_lookahead succeeded, then Alice is now at the park,")

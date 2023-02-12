@@ -451,7 +451,7 @@ func _refine_unigoal_and_continue(state, goal1, todo_list, plan, depth) -> Varia
 
 func _refine_multigoal_and_continue(
 	state: Dictionary, goal1: Multigoal, todo_list: Array, plan: Array, depth: int
-) -> Array:
+) -> Variant:
 ##	"""
 ##	If goal1 is a multigoal, then iterate through the list of multigoal
 ##	methods to find one that's applicable, apply it to get additional
@@ -492,7 +492,7 @@ func _refine_multigoal_and_continue(
 
 	if verbose >= 3:
 		print("Depth %s could not achieve multigoal %s" % [depth, goal1])
-	return []
+	return false
 
 
 ############################################################
@@ -552,7 +552,7 @@ func seek_plan(state: Dictionary, todo_list: Array, plan: Array, depth: int) -> 
 		if item1[0] in current_domain._unigoal_method_dict.keys():
 			return _refine_unigoal_and_continue(state, item1, todo_list, plan, depth)
 	assert(false, "Depth %s: %s isn't an action, task, unigoal, or multigoal\n" % [depth, item1])
-	return []
+	return false
 
 
 func _item_to_string(item):
@@ -616,7 +616,7 @@ func run_lazy_lookahead(state, todo_list, max_tries = 10):
 			if verbose >= 1:
 				print("RunLazyLookahead> Command: %s" % [[command_name] + action.slice(1)])
 			var new_state = _apply_command_and_continue(state, command_func, action.slice(1))
-			if new_state == false:
+			if new_state == null:
 				if verbose >= 1:
 					print("RunLazyLookahead> WARNING: command %s failed; will call find_plan." % [command_name])
 					break
