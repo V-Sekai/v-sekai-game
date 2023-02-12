@@ -6,7 +6,7 @@ extends Node
 #"""
 
 
-var domain_name = "simple_gtn"
+var domain_name = scene_file_path
 var the_domain = preload("../core/domain.gd").new(domain_name)
 
 var planner = preload("../core/plan.gd").new()
@@ -35,16 +35,15 @@ var state0 : Dictionary = {
 }
 
 # initial goal
-var goal1 : Multigoal = Multigoal.new("goal1")
+var goal1 : Multigoal = Multigoal.new("goal1", {"loc": {'alice':'park'}})
 
 # another initial goal
-var goal2 = Multigoal.new("goal2")
+var goal2 = Multigoal.new("goal2", {"loc": {'bob':'park'}})
 
 # bigger initial goal
-var goal3 = Multigoal.new("goal3")
+var goal3 = Multigoal.new("goal3", {"loc": {'alice':'park', 'bob':'park'}})
 
 
-###############################################################################
 # Helper functions:
 
 
@@ -189,22 +188,18 @@ func do_nothing(state, args):
 			return []
 
 
-func travel_by_foot(state, args):
-	var p = args[0] 
-	var y = args[1] 
+func travel_by_foot(state, p, y):
 	if is_a(p, "person") and is_a(y, "location"):
 		var x = state.loc[p]
 		if x != y and distance(x, y) <= 2:
-			return [["walk", p, x, y]]
+			return [[Callable(self, "walk"), p, x, y]]
 
 
-func travel_by_taxi(state, args):
-	var p = args[0] 
-	var y = args[1] 
+func travel_by_taxi(state, p, y):
 	if is_a(p, "person") and is_a(y, "location"):
 		var x = state.loc[p]
 		if x != y and state.cash[p] >= taxi_rate(distance(x, y)):
-			return [["call_taxi", p, x], ["ride_taxi", p, y], ["pay_driver", p, y]]
+			return [[Callable(self, "call_taxi"), p, x], [Callable(self, "ride_taxi"), p, y], [Callable(self, "pay_driver"), p, y]]
 
 
 func _ready():
@@ -225,9 +220,6 @@ func _ready():
 			Callable(self, "c_ride_taxi"), 
 			Callable(self, "c_pay_driver")
 			])
-
-	###############################################################################
-	# Running the examples
 
 	print("-----------------------------------------------------------------------")
 	print("Created the domain '%s'. To run the examples, type this:" % domain_name)
@@ -250,19 +242,12 @@ func _ready():
 
 	planner.declare_multigoal_methods([planner.m_split_multigoal])
 
-#	"""
-#	Run various examples.
-#	main() will pause occasionally to let you examine the output.
-#	main(False) will run straight through to the end, without stopping.
-#	"""
-
 	# If we've changed to some other domain, this will change us back.
 	planner.current_domain = the_domain
 	planner.print_domain()
-
-	var state1 = state0.duplicate(true)
-
-	#    state1.display(heading='\nThe initial state is')
+	
+	print("The initial state is")
+	print(state0.duplicate(true))
 
 	print(
 		"""
@@ -278,16 +263,16 @@ We do it several times with different values for 'verbose'.
 	)
 
 	var expected = [
-		["call_taxi", "alice", "home_a"],
-		["ride_taxi", "alice", "park"],
-		["pay_driver", "alice", "park"],
+		[Callable(self, "call_taxi"), "alice", "home_a"],
+		[Callable(self, "ride_taxi"), "alice", "park"],
+		[Callable(self, "pay_driver"), "alice", "park"],
 	]
 
 	print("If verbose=0, the planner returns the solution but prints nothing:")
 	planner.verbose = 0
-	var result = planner.find_plan(state1, [["loc", "alice", "park"]])
+	var result = planner.find_plan(state0.duplicate(true), [["loc", "alice", "park"]])
 	print(result)
-#	th.check_result(result, expected)
+	assert(result == expected)
 
 	print(
 		"""If verbose=1, then in addition to returning the solution, the planner prints
@@ -295,9 +280,9 @@ both the problem and the solution"
 """
 	)
 	planner.verbose = 1
-	result = planner.find_plan(state1, [["loc", "alice", "park"]])
+	result = planner.find_plan(state0.duplicate(true), [["loc", "alice", "park"]])
 	print(result)
-#	th.check_result(result, expected)
+	assert(result == expected)
 
 	print(
 		"""If verbose=2, the planner also prints a note at each recursive call.  Below,
@@ -306,10 +291,9 @@ achieved its goal.
 """
 	)
 	planner.verbose = 2
-	result = planner.find_plan(state1, [["loc", "alice", "park"]])
+	result = planner.find_plan(state0.duplicate(true), [["loc", "alice", "park"]])
 	print(result)
-#	th.check_result(result, expected)
-#	th.pause(do_pauses)
+	assert(result == expected)
 
 	print(
 		"""
@@ -317,7 +301,7 @@ If verbose=3, the planner prints even more information.
 """
 	)
 	planner.verbose = 3
-	result = planner.find_plan(state1, [["loc", "alice", "park"]])
+	result = planner.find_plan(state0.duplicate(true), [["loc", "alice", "park"]])
 	print(result)
 #	th.check_result(result, expected)
 
@@ -331,21 +315,16 @@ matter whether they're both at the park at the same time.
 	)
 
 	planner.verbose = 2
+	var state1 = state0.duplicate(true)
 	var plan = planner.find_plan(state1, [["loc", "alice", "park"], ["loc", "bob", "park"]])
 
-#	th.check_result(
-#		plan,
-#		[
-#			["call_taxi", "alice", "home_a"],
-#			["ride_taxi", "alice", "park"],
-#			["pay_driver", "alice", "park"],
-#			["walk", "bob", "home_b", "park"],
-#		],
-#	)
-#
-#	th.pause(do_pauses)
-
-#	state1.display(heading="\nInitial state")
+	assert(plan == 
+	[
+		[Callable(self, "call_taxi"), "alice", "home_a"],
+		[Callable(self, "ride_taxi"), "alice", "park"],
+		[Callable(self, "pay_driver"), "alice", "park"],
+		[Callable(self, "walk"), "bob", "home_b", "park"],
+	])
 
 	print(state1)
 
@@ -360,9 +339,7 @@ Below, goal3 is the goal of having Alice and Bob at the park at the same time.
 """
 	)
 
-#	goal3.display()
-	
-	print(goal3.state)
+	print("Goal 3 state %s" % [goal3.state])
 
 	print(
 		"""
@@ -371,33 +348,23 @@ _verify_mg is a task used by the planner to check whether a multigoal
 method has achieved all of the values specified in the multigoal.
 """
 	)
-#	th.pause(do_pauses)
 
 	planner.verbose = 2
 	plan = planner.find_plan(state1, [goal3])
-#	th.check_result(
-#		plan,
-#		[
-#			("call_taxi", "alice", "home_a"),
-#			("ride_taxi", "alice", "park"),
-#			("pay_driver", "alice", "park"),
-#			("walk", "bob", "home_b", "park"),
-#		],
-#	)
-	print(plan)
-#	th.pause(do_pauses)
+	print("Plan %s" % [plan])
+	assert(plan == [["call_taxi", "alice", "home_a"],
+			["ride_taxi", "alice", "park"],
+			["pay_driver", "alice", "park"],
+			["walk", "bob", "home_b", "park"]])
 	print("Call run_lazy_lookahead with verbose=1:")
 
 	planner.verbose = 1
 	var new_state = planner.run_lazy_lookahead(state1, [["loc", "alice", "park"]])
 	print("")
-
-#	th.pause(do_pauses)
-
 	print("Alice is now at the park, so the planner will return an empty plan:")
 
 	planner.verbose = 1
 	plan = planner.find_plan(new_state, [["loc", "alice", "park"]])
-#	th.check_result(plan, [])
+	assert(plan == [])
 
 	print("No more examples")

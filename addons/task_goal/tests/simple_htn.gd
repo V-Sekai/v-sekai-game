@@ -7,7 +7,7 @@ extends Node
 
 # Rather than hard-coding the domain name, use the name of the current file.
 # This makes the code more portable.
-var domain_name = "plan"
+var domain_name = scene_file_path
 var the_domain = preload("../core/domain.gd").new("plan")
 
 var planner = preload("../core/plan.gd").new()
@@ -233,13 +233,7 @@ func _ready():
 	print("-----------------------------------------------------------------------")
 	print("Created the domain '%s'. To run the examples, type this:" % domain_name)
 	print("%s.main()" % domain_name)
-	#	"""
-	#	Run various examples.
-	#	main() will pause occasionally to let you examine the output.
-	#	main(False) will run straight through to the end, without stopping.
-	#	"""
 
-	# If we've changed to some other domain, this will change us back.
 	planner.current_domain = the_domain
 	planner.print_domain()
 
@@ -263,28 +257,28 @@ We'll do it several times with different values for 'verbose'.
 	print("-- If verbose=0, the planner will return the solution but print nothing.")
 	planner.verbose = 0
 	var result = planner.find_plan(state1, [["travel", "alice", "park"]])
-	print(result)
-#	(result == expected)
+	print("Result %s" % [result])
+	assert(result == expected)
 
 	print("-- If verbose=1, the planner will print the problem and solution,")
 	print("-- and then return the solution.\n")
 	planner.verbose = 1
 	result = planner.find_plan(state1, [["travel", "alice", "park"]])
-	print(result)
-#	(result == expected)
+	print("Result %s" % [result])
+	assert(result == expected)
 
 	print("-- If verbose=2, the planner will print the problem, a note at each")
 	print("-- recursive call, and the solution. Then it will return the solution.")
 	planner.verbose = 2
 	result = planner.find_plan(state1, [["travel", "alice", "park"]])
-	print(result)
-#	(result == expected)
+	print("Result %s" % [result])
+	assert(result == expected)
 
 	print("-- If verbose=3, the planner will print even more information.")
 	planner.verbose = 3
 	result = planner.find_plan(state1, [["travel", "alice", "park"]])
-	print(result)
-#	(result == expected)
+	print("Result %s" % [result])
+	assert(result == expected)
 
 	print(
 		"Find a plan that will first get Alice to the park, then get Bob to the park."
@@ -294,19 +288,16 @@ We'll do it several times with different values for 'verbose'.
 		state1, [["travel", "alice", "park"], ["travel", "bob", "park"]]
 	)
 
-	print(plan)
-#	(plan ==
-#		[
-#			["call_taxi", "alice", "home_a"],
-#			["ride_taxi", "alice", "park"],
-#			["pay_driver", "alice", "park"],
-#			["walk", "bob", "home_b", "park"],
-#		],
-#	)
+	print("Plan %s" % [plan])
+	assert(plan == [
+			["call_taxi", "alice", "home_a"],
+			["ride_taxi", "alice", "park"],
+			["pay_driver", "alice", "park"],
+			["walk", "bob", "home_b", "park"],
+	])
 
 	print(
-		"""
-Next, we'll use run_lazy_lookahead to try to get Alice to the park. With
+		"""Next, we'll use run_lazy_lookahead to try to get Alice to the park. With
 Pr = 1/2, the taxi won't arrive. In this case, run_lazy_lookahead will call
 find_plan again, and find_plan will return the same plan as before. This will
 happen repeatedly until either the taxi arrives or run_lazy_lookahead decides
@@ -321,7 +312,7 @@ it has tried too many times."""
 	print("so the planner will return an empty plan: ")
 
 	plan = planner.find_plan(new_state, [["travel", "alice", "park"]])
-	print(plan)
+	print("Plan %s" % [plan])
 #	assert(plan == [])
 
 	print("No more examples")

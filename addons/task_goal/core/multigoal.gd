@@ -11,7 +11,6 @@ var _state : Dictionary = {}
 		_state = value
 
 
-
 #	"""
 #	g = Multigoal(goal_name, **kwargs) creates an object that represents
 #	a conjunctive goal, i.e., the goal of reaching a state that contains
@@ -33,12 +32,14 @@ var _state : Dictionary = {}
 #		Third:
 #		   g = Multigoal('goal1',loc={'b':'room2', 'c':'room3'})
 #	"""
-func _init(multigoal_name):
+func _init(multigoal_name, state_variables: Dictionary):
 #		"""
 #		multigoal_name is the name to use for the multigoal. The keyword
 #		args are the names and desired values of state variables.
 #		"""
 	set_name(multigoal_name)
+	_state = state_variables
+		
 
 func get_string():
 	return "<Multigoal %s>" % get_name()
@@ -50,11 +51,12 @@ func display(heading=null):
 #		 - heading (optional) is a heading to print beforehand.
 #		"""
 	print(heading)
+	print(_state)
 
 func state_vars():
 #		"""Return a list of all state-variable names in the multigoal"""
 	var variable_list : Array = []
-	var properties : Array = get_property_list()
+	var properties : Array = _state.keys()
 	for v in properties:
 		for p in v.keys():
 			if p != get_name():
