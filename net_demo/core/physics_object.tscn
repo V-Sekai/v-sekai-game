@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=7 format=3 uid="uid://bii5j5f4q5ma4"]
 
 [ext_resource type="Script" path="res://net_demo/core/physics_object.gd" id="1_8ehnx"]
 [ext_resource type="Script" path="res://net_demo/core/entity/physics_state_synchronizer.gd" id="2_6f51u"]
