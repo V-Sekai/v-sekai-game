@@ -172,7 +172,7 @@ func declare_actions(actions):
 #		current_domain.display()
 #	"""
 	if current_domain == null:
-		print("cannot declare actions until a domain has been created.")
+		print("Cannot declare actions until a domain has been created.")
 		return []
 	for action in actions:
 		current_domain._action_dict[action.get_method()] = action
@@ -194,7 +194,7 @@ func declare_commands(commands):
 #
 #	"""
 	if current_domain == null:
-		print("cannot declare commands until a domain has been created.")
+		print("Cannot declare commands until a domain has been created.")
 		return []
 	var command_array : PackedStringArray = PackedStringArray()
 	for cmd in commands:
@@ -223,7 +223,7 @@ func declare_task_methods(task_name, methods):
 #	called several times to declare more methods for the same task.
 #	"""
 	if current_domain == null:
-		print("cannot declare methods until a domain has been created.")
+		print("Cannot declare methods until a domain has been created.")
 		return []
 	if task_name in current_domain._task_method_dict:
 		var old_methods = current_domain._task_method_dict[task_name]
@@ -261,7 +261,7 @@ func declare_unigoal_methods(state_var_name, methods):
 #		current_domain.display()
 #	"""
 	if current_domain == null:
-		print("cannot declare methods until a domain has been created.")
+		print("Cannot declare methods until a domain has been created.")
 		return []
 	if state_var_name not in current_domain._unigoal_method_dict.keys():
 		print("Methods %s" % [methods])
@@ -294,7 +294,7 @@ func declare_multigoal_methods(methods):
 #	For more information, see the docstring for the Multigoal class.
 #	"""
 	if current_domain == null:
-		print("cannot declare methods until a domain has been created.")
+		print("Cannot declare methods until a domain has been created.")
 		return []
 	var method_array : Array = []
 	for m in methods:
@@ -379,17 +379,17 @@ func _apply_action_and_continue(state, task1, todo_list, plan, depth):
 #	recursively on todo_list.
 #	"""
 	if verbose >= 3:
-		print("depth %s action %s: " % [depth, task1])
+		print("Depth %s action %s: " % [depth, task1])
 	var action = current_domain._action_dict[task1[0]]
 	var typed_action : Callable = action
 	var newstate = typed_action.call(state.duplicate(true), task1.slice(1))
 	if newstate:
 		if verbose >= 3:
-			print("applied")
+			print("Applied")
 			print(newstate)
 		return seek_plan(newstate, todo_list, plan + [task1], depth + 1)
 	if verbose >= 3:
-		print("not applicable")
+		print("Not applicable")
 	return false
 
 
@@ -407,30 +407,30 @@ func _refine_task_and_continue(state, task1, todo_list, plan, depth):
 		var string_array : PackedStringArray = []
 		for m in relevant:
 			string_array.push_back(m.get_method())
-		print("depth %s task %s methods %s" % [depth, task1, string_array])
+		print("Depth %s task %s methods %s" % [depth, task1, string_array])
 	for method in relevant:
 		var typed_method : Callable = method
 		if verbose >= 3:
-			print("depth %s trying %s: " % [depth, method.get_method()])
+			print("Depth %s trying %s: " % [depth, method.get_method()])
 		var subtasks = typed_method.call(state, task1.slice(1))
 		# Can't just say "if subtasks:", because that's wrong if subtasks == []
 		if subtasks is bool and subtasks == false:
 			if verbose >= 3:
-				print("not applicable")
+				print("Not applicable")
 			continue
 		if subtasks == null:
 			if verbose >= 3:
-				print("not applicable")
+				print("Not applicable")
 			continue
 		if verbose >= 3:
-			print("applicable")
-			print("depth %s subtasks: %s" % [depth, subtasks])
+			print("Applicable")
+			print("Depth %s subtasks: %s" % [depth, subtasks])
 		var result = seek_plan(state, subtasks + todo_list, plan, depth + 1)
 		if result == null and result == false:
 			continue
 		return result
 	if verbose >= 3:
-		print("depth %s could not accomplish task %s" % [depth, task1])
+		print("Depth %s could not accomplish task %s" % [depth, task1])
 	return false
 
 func _refine_unigoal_and_continue(state, goal1, todo_list, plan, depth):
@@ -444,30 +444,30 @@ func _refine_unigoal_and_continue(state, goal1, todo_list, plan, depth):
 ##	If the call to seek_plan fails, go on to the next method in the list.
 ##	"""
 	if verbose >= 3:
-		print("depth %s goal %s: " % [depth, goal1])
+		print("Depth %s goal %s: " % [depth, goal1])
 	var state_var_name = goal1[0]
 	var arg = goal1[1]
 	var val = goal1[2]
 	if state.get(state_var_name).get(arg) == val:
 		if verbose >= 3:
-			print("already achieved")
+			print("Already achieved")
 		return seek_plan(state, todo_list, plan, depth + 1)
 	var relevant = current_domain._unigoal_method_dict[state_var_name]
 	if verbose >= 3:
 		var string_array : PackedStringArray = []
 		for m in relevant:
 			string_array.push_back(m.get_method())
-		print("methods %s " % string_array)
+		print("Methods %s " % string_array)
 	for method in relevant:
 		var method_typed : Callable = method
 		if verbose >= 3:
-			print("depth %s trying method %s: " % [depth, method.get_method()])
-		print("method_typed %s" % [method_typed])
+			print("Depth %s trying method %s: " % [depth, method.get_method()])
+		print("Method_typed %s" % [method_typed])
 		var subgoals = method_typed.call(state, arg, val)
 		if subgoals != null and subgoals.size():
 			if verbose >= 3:
-				print("applicable")
-				print("depth %s subgoals: %s" % [depth, subgoals])
+				print("Applicable")
+				print("Depth %s subgoals: %s" % [depth, subgoals])
 			var verification = []
 			if verify_goals:
 				verification = [
@@ -483,7 +483,7 @@ func _refine_unigoal_and_continue(state, goal1, todo_list, plan, depth):
 			if verbose >= 3:
 				print("Not applicable")    
 	if verbose >= 3:
-		print("depth %s could not achieve goal %s" % [depth, goal1])
+		print("Depth %s could not achieve goal %s" % [depth, goal1])
 	return []
 
 func _refine_multigoal_and_continue(state, goal1 : Multigoal, todo_list, plan, depth):
@@ -497,23 +497,23 @@ func _refine_multigoal_and_continue(state, goal1 : Multigoal, todo_list, plan, d
 ##	If the call to seek_plan fails, go on to the next method in the list.
 ##	"""
 	if verbose >= 3:
-		print("depth %s multigoal %s: " % [depth, goal1])
+		print("Depth %s multigoal %s: " % [depth, goal1])
 	var relevant = current_domain._multigoal_method_list
 	if verbose >= 3:
 		var string_array : PackedStringArray= PackedStringArray()
 		for m in relevant:
 			string_array.push_back(m.get_method())
-		print("methods %s" % string_array)
+		print("Methods %s" % string_array)
 	for method in relevant:
 		var method_typed : Callable = method
 		if verbose >= 3: 
-			print("depth %s trying method %s: " % [depth, method.get_method()])
+			print("Depth %s trying method %s: " % [depth, method.get_method()])
 		var subgoals = method_typed.call(state, goal1)
 		# Can't just say "if subgoals:", because that's wrong if subgoals == []
 		if subgoals.size() and subgoals != null:
 			if verbose >= 3:
-				print('applicable')
-				print('depth %s subgoals: %s' % [depth, subgoals])
+				print('Applicable')
+				print('Depth %s subgoals: %s' % [depth, subgoals])
 			var verification = []
 			if verify_goals:
 				verification = [[Callable(domain_const, "_verify_mg"), method.get_method(), goal1, depth]]
@@ -528,7 +528,7 @@ func _refine_multigoal_and_continue(state, goal1 : Multigoal, todo_list, plan, d
 				print('Not applicable')
 
 	if verbose >= 3:
-		print("depth %s could not achieve multigoal %s" % [depth, goal1])
+		print("Depth %s could not achieve multigoal %s" % [depth, goal1])
 	return []
 
 
@@ -574,7 +574,7 @@ func seek_plan(state : Dictionary, todo_list : Array, plan : Array, depth : int)
 		print("depth %s todo_list %s" % [depth, todo_string])
 	if todo_list.is_empty():
 		if verbose >= 3:
-			print("depth %s no more tasks or goals, return plan" % depth)
+			print("depth %s no more tasks or goals, return plan" % [depth])
 		return plan
 	var item1 = todo_list[0]
 	
@@ -591,7 +591,7 @@ func seek_plan(state : Dictionary, todo_list : Array, plan : Array, depth : int)
 			)
 
 	if item1 == null:
-		print("depth {depth}: {item1} isn't an action, task, unigoal, or multigoal\n")
+		print("Depth %s: %s isn't an action, task, unigoal, or multigoal\n" % [depth, item1])
 	return []
 
 
@@ -692,11 +692,11 @@ func _apply_command_and_continue(state, command : Callable, args):
 	var next_state = command.call(state.duplicate(true), args)
 	if next_state:
 		if verbose >= 3:
-			print("applied")
+			print("Applied")
 			next_state.display()
 		return next_state
 	else:
 		if verbose >= 3:
-			print("not applicable")
+			print("Not applicable")
 		return false
 
