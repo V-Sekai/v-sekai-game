@@ -2,49 +2,10 @@
 extends GDShellUIHandler
 # The default ui extends a PanelContainer instead of a plain Control
 
-const DEFAULT_FONT: Font = preload("res://addons/gdshell/ui/fonts/roboto_mono/RobotoMono-Regular.ttf")
-const BOLD_FONT: Font = preload("res://addons/gdshell/ui/fonts/roboto_mono/RobotoMono-Bold.ttf")
-const ITALICS_FONT: Font = preload("res://addons/gdshell/ui/fonts/roboto_mono/RobotoMono-Italic.ttf")
-const BOLD_ITALICS_FONT: Font = preload("res://addons/gdshell/ui/fonts/roboto_mono/RobotoMono-BoldItalic.ttf")
-
 # This looks scary, doesn't it?
 @export_category("GDShell UI")
 
 @export_group("Fonts")
-@export var default_font: Font = DEFAULT_FONT:
-	set(value):
-		if not value:
-			value = DEFAULT_FONT
-		default_font = value
-		if not is_inside_tree():
-			await ready
-		%OutputRichTextLabel.add_theme_font_override("normal_font", default_font)
-		%InputPromptLabel.add_theme_font_override("font", default_font)
-		%InputLineEdit.add_theme_font_override("font", default_font)
-@export var bold_font: Font = BOLD_FONT:
-	set(value):
-		if not value:
-			value = BOLD_FONT
-		bold_font = value
-		if not is_inside_tree():
-			await ready
-		%OutputRichTextLabel.add_theme_font_override("bold_font", bold_font)
-@export var italics_font: Font = ITALICS_FONT:
-	set(value):
-		if not value:
-			value = ITALICS_FONT
-		italics_font = value
-		if not is_inside_tree():
-			await ready
-		%OutputRichTextLabel.add_theme_font_override("italics_font", italics_font)
-@export var bold_italics_font: Font = BOLD_ITALICS_FONT:
-	set(value):
-		if not value:
-			value = BOLD_ITALICS_FONT
-		bold_italics_font = value
-		if not is_inside_tree():
-			await ready
-		%OutputRichTextLabel.add_theme_font_override("bold_italics_font", bold_italics_font)
 
 @export_group("Input Bar")
 @export var input_prompt: String = "gdshell@{PROJECT_NAME}:~$ ":
