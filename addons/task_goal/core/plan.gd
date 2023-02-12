@@ -635,15 +635,14 @@ func run_lazy_lookahead(state, todo_list, max_tries = 10):
 	return state
 
 
-func _apply_command_and_continue(state, command: Callable, args):
-	return false
+func _apply_command_and_continue(state, command: Callable, args) -> Variant:
 #	"""
 #	_apply_command_and_continue applies 'command' by retrieving its
 #	function definition and calling it on the arguments.
 #	"""
 	if verbose >= 3:
-		print("_apply_command_and_continue {command.__name__}, args = {args}")
-	var next_state = command.call(state.duplicate(true), args)
+		print("_apply_command_and_continue %s, args = %s" % [command.get_method(), args])
+	var next_state = command.get_object().callv(command.get_method(), [state] + args)
 	if next_state:
 		if verbose >= 3:
 			print("Applied")
