@@ -64,14 +64,14 @@ static func copy_kusudama(p_bone_name_from : String, p_bone_name_to : PackedStri
 			"LeftFoot": Vector2(deg_to_rad(180), deg_to_rad(5)),
 		},
 		"bone_name_cones": {
-			"Hips": [{"center": Vector3(0, -1, 0), "radius": deg_to_rad(10)}],
+			"Hips": [{"center": Vector3(0, -1, 0), "radius": deg_to_rad(20)}],
 			"Spine": [{"center": Vector3(0, 1, 0), "radius": deg_to_rad(10)}],
 			"UpperChest": [{"center": Vector3(0, 1, 0), "radius": deg_to_rad(5)}],
 			"Chest": [{"center": Vector3(0, 1, 0), "radius": deg_to_rad(10)}],
 			"Neck": [{"center": Vector3(0, 1, 0), "radius": deg_to_rad(15)}],
 			"Head": [{"center": Vector3(0, 1, 0), "radius": deg_to_rad(15)}],
 			"LeftEye": [{"center": Vector3(0, 1, 0), "radius": deg_to_rad(10)}],
-			"LeftShoulder": [{"center": Vector3(1, 0,  0), "radius": deg_to_rad(30)}],
+			"LeftShoulder": [{"center": Vector3(1, 0,  0), "radius": deg_to_rad(40)}],
 			"LeftUpperArm":  [
 				{"center": Vector3(0.2, 1, -0.5), "radius": deg_to_rad(60)},
 				{"center": Vector3(1, 0, 0), "radius": deg_to_rad(20)},
@@ -81,6 +81,9 @@ static func copy_kusudama(p_bone_name_from : String, p_bone_name_to : PackedStri
 				{"center": Vector3(0, 0.8, 0), "radius": deg_to_rad(20)},
 			],
 			"LeftHand":  [{"center": Vector3(0, 1, 0), "radius": deg_to_rad(20)}],
+			"LeftUpperLeg":  [
+				{"center": Vector3(0, -1, 1), "radius": deg_to_rad(25)},
+			],
 			"LeftLowerLeg":  [
 				{"center": Vector3(0, 1, 0), "radius": deg_to_rad(20)},
 				{"center": Vector3(0, 0.8, -1), "radius": deg_to_rad(40)},
@@ -184,6 +187,7 @@ func tune_bone(new_ik : ManyBoneIK3D, skeleton : Skeleton3D, bone_name : String,
 		if is_thumbs_up:
 			node_3d.global_transform.basis = Basis.from_euler(Vector3(0, 0, PI / 2))
 	if bone_name in ["LeftFoot", "RightFoot"]:
+		new_ik.set_pin_passthrough_factor(bone_i, 1)
 		node_3d.global_transform.origin = node_3d.global_transform.origin + Vector3(0, -0.1, 0)
 		node_3d.global_transform.basis = Basis.from_euler(Vector3(0, PI, 0))
 	node_3d.owner = new_ik.owner
