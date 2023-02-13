@@ -71,7 +71,7 @@ static func copy_kusudama(p_bone_name_from : String, p_bone_name_to : PackedStri
 			"Neck": [{"center": Vector3(0, 1, 0), "radius": deg_to_rad(15)}],
 			"Head": [{"center": Vector3(0, 1, 0), "radius": deg_to_rad(15)}],
 			"LeftEye": [{"center": Vector3(0, 1, 0), "radius": deg_to_rad(10)}],
-			"LeftShoulder": [{"center": Vector3(1, 0,  0), "radius": deg_to_rad(40)}],
+			"LeftShoulder": [{"center": Vector3(1, 0,  0), "radius": deg_to_rad(30)}],
 			"LeftUpperArm":  [
 				{"center": Vector3(0.2, 1, -0.5), "radius": deg_to_rad(60)},
 				{"center": Vector3(1, 0, 0), "radius": deg_to_rad(20)},
@@ -177,9 +177,6 @@ func tune_bone(new_ik : ManyBoneIK3D, skeleton : Skeleton3D, bone_name : String,
 	node_3d.global_transform = skeleton.global_transform.affine_inverse() * skeleton.get_bone_global_pose_no_override(bone_i)
 	if not children.size():
 		new_ik.add_child(node_3d, true)
-	if bone_name in ["Head"]:
-		# Move slightly higher to avoid the crunching into the body effect.
-		node_3d.transform.origin = node_3d.get_parent_node_3d().global_transform.affine_inverse() * node_3d.global_transform.origin + Vector3(0, 0.1, 0)
 	if bone_name in ["LeftHand"]:
 		if is_thumbs_up:
 			node_3d.global_transform.basis = Basis.from_euler(Vector3(0, 0, -PI / 2))
