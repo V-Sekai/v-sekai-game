@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dynje08wj0a8t"]
+
+[ext_resource type="Script" path="res://addons/task_goal/tests/logistics.gd" id="1_mx146"]
+
+[node name="Node" type="Node"]
+script = ExtResource("1_mx146")

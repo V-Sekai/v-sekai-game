@@ -430,7 +430,6 @@ func _refine_unigoal_and_continue(state, goal1, todo_list, plan, depth) -> Varia
 	for method in relevant:
 		if verbose >= 3:
 			print("Depth %s trying method %s: " % [depth, method.get_method()])
-		print("Method %s" % [method])
 		var subgoals: Variant = method.get_object().callv(method.get_method(), [state] + [arg, val])
 		if subgoals is Array:
 			if verbose >= 3:
