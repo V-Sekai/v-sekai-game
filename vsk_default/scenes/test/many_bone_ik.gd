@@ -19,20 +19,20 @@ var is_thumbs_up : bool = false
 	"LeftFoot": "Hips", 
 	"RightFoot": "Hips", 
 	"LeftHand": "Hips",
-#	"LeftLowerArm": "Hips",
+	"LeftLowerArm": "Hips",
 	"RightHand": "Hips",
-#	"RightLowerArm": "Hips",
-#	"LeftIndexDistal": "LeftHand",
-#	"LeftLittleDistal": "LeftHand", 
-#	"LeftMiddleDistal": "LeftHand", 
-#	"LeftRingDistal": "LeftHand", 
-#	"LeftThumbDistal": "LeftHand",
-#	"RightIndexDistal": "RightHand", 
-#	"RightLittleDistal": "RightHand", 
-#	"RightMiddleDistal": "RightHand", 
-#	"RightRingDistal": "RightHand", 
-#	"RightThumbDistal": "RightHand", 
-	}
+	"RightLowerArm": "Hips",
+	"LeftIndexDistal": "LeftHand",
+	"LeftLittleDistal": "LeftHand", 
+	"LeftMiddleDistal": "LeftHand", 
+	"LeftRingDistal": "LeftHand", 
+	"LeftThumbDistal": "LeftHand",
+	"RightIndexDistal": "RightHand", 
+	"RightLittleDistal": "RightHand", 
+	"RightMiddleDistal": "RightHand", 
+	"RightRingDistal": "RightHand", 
+	"RightThumbDistal": "RightHand", 
+}
 
 
 static func copy_kusudama(p_bone_name_from : String, p_bone_name_to : PackedStringArray, p_ik : ManyBoneIK3D, p_mirror : Vector3):
