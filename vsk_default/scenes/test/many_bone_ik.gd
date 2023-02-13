@@ -9,29 +9,26 @@ extends EditorScript
 # 3. UpperChest to Hands
 # 4. Hips to Legs
 
-var is_humanoid : bool = true
-var is_thumbs_up : bool = false
+var is_thumbs_up : bool = true
 	
 @export var targets : Dictionary = {
 	"Root": "ManyBoneIK3D",
-	"Hips": "Root",
-	"Head": "Hips",
-	"LeftFoot": "Hips", 
-	"RightFoot": "Hips", 
-	"LeftHand": "Hips",
-	"LeftLowerArm": "Hips",
-	"RightHand": "Hips",
-	"RightLowerArm": "Hips",
-	"LeftIndexDistal": "LeftHand",
-	"LeftLittleDistal": "LeftHand", 
-	"LeftMiddleDistal": "LeftHand", 
-	"LeftRingDistal": "LeftHand", 
-	"LeftThumbDistal": "LeftHand",
-	"RightIndexDistal": "RightHand", 
-	"RightLittleDistal": "RightHand", 
-	"RightMiddleDistal": "RightHand", 
-	"RightRingDistal": "RightHand", 
-	"RightThumbDistal": "RightHand", 
+	"Hips": "ManyBoneIK3D",
+	"Head": "ManyBoneIK3D",
+	"LeftFoot": "ManyBoneIK3D", 
+	"RightFoot": "ManyBoneIK3D", 
+	"LeftHand": "ManyBoneIK3D",
+	"RightHand": "ManyBoneIK3D",
+#	"LeftIndexDistal": "ManyBoneIK3D",
+#	"LeftLittleDistal": "ManyBoneIK3D", 
+#	"LeftMiddleDistal": "ManyBoneIK3D", 
+#	"LeftRingDistal": "ManyBoneIK3D", 
+#	"LeftThumbDistal": "ManyBoneIK3D",
+#	"RightIndexDistal": "ManyBoneIK3D", 
+#	"RightLittleDistal": "ManyBoneIK3D", 
+#	"RightMiddleDistal": "ManyBoneIK3D", 
+#	"RightRingDistal": "ManyBoneIK3D", 
+#	"RightThumbDistal": "ManyBoneIK3D", 
 }
 
 
@@ -60,11 +57,11 @@ static func copy_kusudama(p_bone_name_from : String, p_bone_name_to : PackedStri
 			"LeftEye": Vector2(deg_to_rad(180), deg_to_rad(5)),
 			"LeftShoulder": Vector2(deg_to_rad(-250), deg_to_rad(-40)),
 			"LeftUpperArm": Vector2(deg_to_rad(-120), deg_to_rad(-60)),
-			"LeftLowerArm": Vector2(deg_to_rad(-75), deg_to_rad(-60)),
-			"LeftHand": Vector2(deg_to_rad(-275), deg_to_rad(-20)),
-#			"LeftUpperLeg": Vector2(deg_to_rad(160), deg_to_rad(40)),
-#			"LeftLowerLeg": Vector2(deg_to_rad(90), deg_to_rad(20)),
-#			"LeftFoot": Vector2(deg_to_rad(180), deg_to_rad(5)),
+			"LeftLowerArm": Vector2(deg_to_rad(-75), deg_to_rad(120)),
+			"LeftHand": Vector2(deg_to_rad(30), deg_to_rad(-20)),
+			"LeftUpperLeg": Vector2(deg_to_rad(270), deg_to_rad(20)),
+			"LeftLowerLeg": Vector2(deg_to_rad(90), deg_to_rad(20)),
+			"LeftFoot": Vector2(deg_to_rad(180), deg_to_rad(5)),
 		},
 		"bone_name_cones": {
 			"Hips": [{"center": Vector3(0, -1, 0), "radius": deg_to_rad(10)}],
@@ -74,9 +71,9 @@ static func copy_kusudama(p_bone_name_from : String, p_bone_name_to : PackedStri
 			"Neck": [{"center": Vector3(0, 1, 0), "radius": deg_to_rad(15)}],
 			"Head": [{"center": Vector3(0, 1, 0), "radius": deg_to_rad(15)}],
 			"LeftEye": [{"center": Vector3(0, 1, 0), "radius": deg_to_rad(10)}],
-			"LeftShoulder": [{"center": Vector3(1, 0,  0), "radius": deg_to_rad(15)}],
+			"LeftShoulder": [{"center": Vector3(1, 0,  0), "radius": deg_to_rad(30)}],
 			"LeftUpperArm":  [
-				{"center": Vector3(0.2, 1, -0.5), "radius": deg_to_rad(40)},
+				{"center": Vector3(0.2, 1, -0.5), "radius": deg_to_rad(60)},
 				{"center": Vector3(1, 0, 0), "radius": deg_to_rad(20)},
 			],
 			"LeftLowerArm":  [
@@ -84,12 +81,12 @@ static func copy_kusudama(p_bone_name_from : String, p_bone_name_to : PackedStri
 				{"center": Vector3(0, 0.8, 0), "radius": deg_to_rad(20)},
 			],
 			"LeftHand":  [{"center": Vector3(0, 1, 0), "radius": deg_to_rad(20)}],
-#			"LeftLowerLeg":  [
-#				{"center": Vector3(0, 1, 0), "radius": deg_to_rad(20)},
-#				{"center": Vector3(0, 0.8, -1), "radius": deg_to_rad(40)},
-#			],
-#			"LeftFoot":  [{"center": Vector3(0, -1, 0), "radius": deg_to_rad(20)}],
-#			"LeftToes":  [{"center": Vector3(1, 0, 0), "radius": deg_to_rad(5)}],
+			"LeftLowerLeg":  [
+				{"center": Vector3(0, 1, 0), "radius": deg_to_rad(20)},
+				{"center": Vector3(0, 0.8, -1), "radius": deg_to_rad(40)},
+			],
+			"LeftFoot":  [{"center": Vector3(0, -1, 0), "radius": deg_to_rad(20)}],
+			"LeftToes":  [{"center": Vector3(1, 0, 0), "radius": deg_to_rad(5)}],
 		},
 	}
 
@@ -127,9 +124,6 @@ func _run():
 	
 	for bone_i in skeleton.get_bone_count():
 		var bone_name = skeleton.get_bone_name(bone_i)
-		if bone_name.find("Skirt") != -1 and not new_ik.get_pin_bone_name(bone_i).is_empty():
-			new_ik.set_pin_weight(bone_i, 0)
-		new_ik.set_kusudama_twist(bone_i, Vector2(0, TAU))
 		var twist_keys : Array = bone_name_from_to_twist.keys()
 		if twist_keys.has(bone_name):
 			var twist : Vector2 = bone_name_from_to_twist[bone_name]
