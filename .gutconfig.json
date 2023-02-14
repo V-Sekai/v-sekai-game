@@ -1,5 +1,5 @@
 {
-    "dirs":["res://net_demo/test/unit","res://net_demo/test/integration"],
+    "dirs":["res://net_demo/test/unit","res://net_demo/test/integration", "res://vsk_default/test/unit","res://vsk_default/test/integration"],
     "double_strategy":"partial",
     "ignore_pause":false,
     "include_subdirs":true,
