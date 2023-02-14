@@ -1,14 +1,14 @@
 extends Resource
 
-## SPDX-FileCopyrightText: 2021 University of Maryland
-## [br]
-## SPDX-License-Identifier: BSD-3-Clause-Clear
-## [br]
-## Author: Dana Nau <nau@umd.edu>, July 7, 2021
-## [br]
-## Author: K. S. Ernest (iFire) Lee <ernest.lee@chibifire.com>, August 28, 2022
-## [br]
-##
+# SPDX-FileCopyrightText: 2021 University of Maryland
+# [br]
+# SPDX-License-Identifier: BSD-3-Clause-Clear
+# [br]
+# Author: Dana Nau <nau@umd.edu>, July 7, 2021
+# [br]
+# Author: K. S. Ernest (iFire) Lee <ernest.lee@chibifire.com>, August 28, 2022
+# [br]
+#
 ## A class for holding planning-and-acting domains.
 ##
 ## [br]
