@@ -209,6 +209,14 @@ func _ready():
 	Goal 3: package1 is at location1 (no actions needed)
 	----------
 	""")
+
 	planner.find_plan(state1.duplicate(true), [['at', 'package1', 'location1']])
+	print("""
+	
+	----------
+	Goal 4: package1 is at location2
+	----------
+	""")
+	planner.find_plan(state1.duplicate(true), [['at', 'package1', 'location2']])
 
 	print("No more examples")
