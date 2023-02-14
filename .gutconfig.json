@@ -1,16 +1,22 @@
 {
-    "dirs":["res://net_demo/test/unit","res://net_demo/test/integration", "res://vsk_default/test/unit","res://vsk_default/test/integration"],
-    "double_strategy":"partial",
-    "ignore_pause":false,
-    "include_subdirs":true,
-    "inner_class":"",
-    "log_level":3,
-    "opacity":100,
-    "prefix":"test_",
-    "selected":"",
-    "should_exit":true,
-    "should_maximize":true,
-    "suffix":".gd",
-    "tests":[],
-    "unit_test_name":"",
-  }
+	"dirs": [
+		"res://net_demo/test",
+		"res://vsk_default/test",
+		"res://addons/task_goal"
+	],
+	"double_strategy": "partial",
+	"ignore_pause": false,
+	"include_subdirs": true,
+	"inner_class": "",
+	"log_level": 3,
+	"opacity": 100,
+	"prefix": "test_",
+	"selected": "",
+	"should_exit": true,
+	"should_maximize": true,
+	"suffix": ".gd",
+	"tests": [
+
+	],
+	"unit_test_name": ""
+}

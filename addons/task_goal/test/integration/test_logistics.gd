@@ -1,5 +1,4 @@
-extends Node
-
+extends GutTest
 
 """
 This file is based on the logistics-domain examples included with HGNpyhop:
@@ -11,9 +10,9 @@ section of Some_GTPyhop_Details.md in the top-level directory.
 
 var domain_name = "logistics"
 
-var the_domain = preload("../core/domain.gd").new(domain_name)
+var the_domain = preload("res://addons/task_goal/core/domain.gd").new(domain_name)
 
-var planner = preload("../core/plan.gd").new()
+var planner = preload("res://addons/task_goal/core/plan.gd").new()
 
 
 ################################################################################
@@ -146,7 +145,10 @@ func move_between_city(state, o, l):
 	return false
 
 
-func _ready():
+var state1 : Dictionary
+
+func before_each():
+	state1.clear()
 	planner._domains.push_back(the_domain)
 	print('-----------------------------------------------------------------------')
 	print("Created the domain '{domain_name}'. To run the examples, type this:")
@@ -164,7 +166,6 @@ func _ready():
 
 	planner.print_domain()
 	
-	var state1 : Dictionary
 	state1.packages = ['package1', 'package2']
 	state1.trucks = ['truck1', 'truck6']
 	state1.airplanes = ['plane2']
@@ -188,35 +189,22 @@ func _ready():
 					'location10': 'city2',
 					'airport2': 'city2'}
 
+	
+func test_move_goal_1():
 	planner.verbose = 1
-
-	print("""
-	----------
-	Goal 1: package1 is at location2; package2 is at location3 (transport within the same city)
-	----------
-	""")
 	planner.find_plan(state1.duplicate(true), [['at', 'package1', 'location2'], ['at', 'package2', 'location3']])
-
-	print("""
-	----------
-	Goal 2: package1 is at location10 (transport to a different city)
-	----------
-	""")
+	
+##	Goal 2: package1 is at location10 (transport to a different city)
+func test_move_goal_2():
+	planner.verbose = 1
 	planner.find_plan(state1.duplicate(true), [['at', 'package1', 'location10']])
 
-	print("""
-	----------
-	Goal 3: package1 is at location1 (no actions needed)
-	----------
-	""")
-
+## Goal 3: package1 is at location1 (no actions needed)
+func test_move_goal_3():
+	planner.verbose = 1
 	planner.find_plan(state1.duplicate(true), [['at', 'package1', 'location1']])
-	print("""
 	
-	----------
-	Goal 4: package1 is at location2
-	----------
-	""")
+##	Goal 4: package1 is at location2
+func test_move_goal_4():
+	planner.verbose = 1
 	planner.find_plan(state1.duplicate(true), [['at', 'package1', 'location2']])
-
-	print("No more examples")
