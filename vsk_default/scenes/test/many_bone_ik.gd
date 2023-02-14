@@ -130,6 +130,7 @@ func _run():
 	var bone_name_cones = config["bone_name_cones"]
 	
 	for bone_i in skeleton.get_bone_count():
+		new_ik.set_pin_passthrough_factor(bone_i, 1)
 		var bone_name = skeleton.get_bone_name(bone_i)
 		var twist_keys : Array = bone_name_from_to_twist.keys()
 		if twist_keys.has(bone_name):
