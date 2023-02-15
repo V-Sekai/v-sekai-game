@@ -8,20 +8,15 @@ extends EditorScript
 # 3. UpperChest to Hands
 # 4. Hips to Legs
 
-var is_thumbs_up: bool = true
+var is_thumbs_up: bool = false
 
 @export var targets: Dictionary = {
 	"Root": "ManyBoneIK3D",
-	"Hips": "ManyBoneIK3D",
-	"Head": "Hips",
-	"LeftLowerLeg": "Hips",
-	"LeftFoot": "LeftLowerLeg",
-	"RightLowerLeg": "Hips",
-	"RightFoot": "RightLowerLeg",
-	"LeftUpperArm": "Hips",
-	"LeftHand": "LeftUpperArm",
-	"RightUpperArm": "Hips",
-	"RightHand": "RightUpperArm",
+	"Head": "ManyBoneIK3D",
+	"LeftFoot": "ManyBoneIK3D",
+	"RightFoot": "ManyBoneIK3D",
+	"LeftHand": "ManyBoneIK3D",
+	"RightHand": "ManyBoneIK3D",
 	#	"LeftIndexDistal": "ManyBoneIK3D",
 	#	"LeftLittleDistal": "ManyBoneIK3D",
 	#	"LeftMiddleDistal": "ManyBoneIK3D",
