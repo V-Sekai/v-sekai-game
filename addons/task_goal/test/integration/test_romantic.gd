@@ -102,6 +102,13 @@ func trigger_goal(state: Dictionary, ideal_state, goal: Array) -> Variant:
 	return []
 
 
+func advance_time(state: Dictionary, time: int) -> Variant:
+	var actions: Array = state.state1.unigoal_methods
+	var future_actions: Array
+	future_actions.push_back(actions.pick_random())
+	return actions
+
+
 var state1: Dictionary
 var novel_goal: Multigoal = Multigoal.new(
 	"novel_goal", {"world": {"met_mia": true, "concert_tonight": true, "band_problems": true, "mia_girlfriend": false}}
