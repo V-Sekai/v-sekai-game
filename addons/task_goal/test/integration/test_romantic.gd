@@ -101,12 +101,11 @@ func trigger_goal(state: Dictionary, ideal_state, goal: Array) -> Variant:
 		return result
 	return []
 
+func seb_meet_mia(state: Dictionary) -> Variant:
+	return [Multigoal.new("entities_together", {"at": {"seb": "coffee_shop", "mia": "coffee_shop"}})]
 
-func advance_time(state: Dictionary, time: int) -> Variant:
-	var actions: Array = state.state1.unigoal_methods
-	var future_actions: Array
-	future_actions.push_back(actions.pick_random())
-	return actions
+func seb_travel_bar(state: Dictionary) -> Variant:
+	return [["at", "seb", "bar"]]
 
 
 var state1: Dictionary
@@ -121,35 +120,38 @@ func before_each():
 
 	# If we've changed to some other domain, this will change us back.
 	planner.current_domain = the_domain
-	(
-		planner
-		. declare_actions(
-			[
-				Callable(self, "travel_location"),
-				Callable(self, "practice_piano"),
-				Callable(self, "prepare_for_concert"),
-				Callable(self, "meet_person"),
-				Callable(self, "seb_met_person"),
-			]
-		)
+	planner.declare_actions(
+		[
+			Callable(self, "travel_location"),
+			Callable(self, "practice_piano"),
+			Callable(self, "prepare_for_concert"),
+			Callable(self, "meet_person"),
+			Callable(self, "seb_met_person"),
+		]
 	)
-	(
-		planner
-		. declare_task_methods(
-			"entity_met_entity",
-			[
-				Callable(self, "has_entity_met_entity"),
-			]
-		)
+	planner.declare_task_methods(
+		"entity_met_entity",
+		[
+			Callable(self, "has_entity_met_entity"),
+		]
 	)
-	(
-		planner
-		. declare_task_methods(
-			"trigger_goal",
-			[
-				Callable(self, "trigger_goal"),
-			]
-		)
+	planner.declare_task_methods(
+		"trigger_goal",
+		[
+			Callable(self, "trigger_goal"),
+		]
+	)
+	planner.declare_task_methods(
+		"seb_meet_mia",
+		[
+			Callable(self, "seb_meet_mia"),
+		]
+	)
+	planner.declare_task_methods(
+		"seb_travel_bar",
+		[
+			Callable(self, "seb_travel_bar"),
+		]
 	)
 	planner.declare_unigoal_methods("at", [Callable(self, "m_travel_location")])
 	planner.declare_unigoal_methods("world", [Callable(self, "m_practice_piano")])
@@ -160,7 +162,7 @@ func before_each():
 
 	state1.locations = ["coffee_shop", "home", "groceries", "bar", "sports", "club"]
 	state1.entities = ["seb", "mia", "jazz"]
-	state1.unigoal_methods = planner.current_domain._unigoal_method_dict.keys()
+	state1.unigoal_methods = ["seb_meet_mia", ]
 
 	state1.at = {"seb": "home", "mia": "groceries", "jazz": "groceries"}
 
@@ -211,12 +213,20 @@ func test_trigger_goal():
 
 
 func test_trigger_goal_empty():
-	planner.verbose = 2
+	planner.verbose = 1
 	var plan = planner.find_plan(
 		state1.duplicate(true), [["trigger_goal", state1.duplicate(true), ["world", "mia_girlfriend", true]]]
 	)
 	assert_eq(plan, [], "")
 
+
+func test_advance_time():
+	planner.verbose = 2
+	var plan = planner.find_plan(
+		state1.duplicate(true), [["seb_meet_mia"], ["seb_travel_bar"]]
+	)
+	assert_eq(plan, [["travel_location", "seb", "coffee_shop"], ["travel_location", "mia", "coffee_shop"], ["travel_location", "seb", "bar"]], "")
+	
 #func test_novel_goal():
 #	planner.verbose = 1
 #	planner.find_plan(state1.duplicate(true), [novel_goal])
