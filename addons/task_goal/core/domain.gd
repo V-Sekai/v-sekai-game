@@ -65,11 +65,10 @@ static func _goals_not_achieved(state: Dictionary, multigoal: Multigoal) -> Dict
 
 ##	_m_verify_g is a method that GTPyhop uses to check whether a multigoal
 ##	method has achieved the multigoal for which it was used.
-func _m_verify_mg(state: Dictionary, method: String, multigoal: Multigoal, depth: int) -> Array:
+func _m_verify_mg(state: Dictionary, method: String, multigoal: Multigoal, depth: int) -> Variant:
 	var goal_dict = _goals_not_achieved(state, multigoal)
 	if goal_dict:
-		print("Depth {depth}: method %s " % method + "didn't achieve %s" % multigoal)
-		return []
+		assert(false, "Depth {depth}: method %s " % method + "didn't achieve %s" % multigoal)
 	if verbose >= 3:
 		print("Depth %s: method %s achieved %s" % [depth, method, multigoal])
 	return []
