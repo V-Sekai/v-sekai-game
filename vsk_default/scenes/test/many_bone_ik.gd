@@ -8,7 +8,7 @@ extends EditorScript
 # 3. UpperChest to Hands
 # 4. Hips to Legs
 
-var is_thumbs_up: bool = false
+var is_thumbs_up: bool = true
 
 @export var targets: Dictionary = {
 	"Root": "ManyBoneIK3D",
