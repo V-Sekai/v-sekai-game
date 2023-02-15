@@ -17,7 +17,6 @@ extends Resource
 ## and methods for a planning-and-acting domain. 'domain_name' is the name to
 ## use for the new domain.
 
-
 const verbose: int = 1
 
 

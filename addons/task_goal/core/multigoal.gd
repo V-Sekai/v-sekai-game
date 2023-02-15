@@ -23,7 +23,6 @@ class_name Multigoal
 ##		   g = Multigoal('goal1',loc={'b':'room2', 'c':'room3'})
 ##  [/codeblock]
 
-
 var _state: Dictionary = {}
 
 @export var state: Dictionary = {}:
@@ -31,6 +30,7 @@ var _state: Dictionary = {}
 		return _state
 	set(value):
 		_state = value
+
 
 ##		multigoal_name is the name to use for the multigoal. The keyword
 ##		args are the names and desired values of state variables.
@@ -44,6 +44,7 @@ func _init(multigoal_name, state_variables: Dictionary):
 func display(heading: String = "") -> void:
 	print(heading)
 	print(_state)
+
 
 ## Return a list of all state-variable names in the multigoal.
 func state_vars() -> Array:

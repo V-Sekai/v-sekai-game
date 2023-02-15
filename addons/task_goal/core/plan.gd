@@ -12,7 +12,6 @@ extends Resource
 
 const domain_const = preload("domain.gd")
 
-
 ## How much information to print while the program is running
 ##
 ## verbose is a global value whose initial value is 1. Its value determines how
@@ -304,6 +303,7 @@ func m_split_multigoal(state, multigoal):
 ##final plan; it just will verify whether m did what it was supposed to do.
 var verify_goals = true
 
+
 #	_apply_action_and_continue is called only when task1's name matches an
 #	action name. It applies the action by retrieving the action's function
 #	definition and calling it on the arguments, then calls seek_plan
@@ -442,11 +442,12 @@ func _refine_multigoal_and_continue(
 		print("Depth %s could not achieve multigoal %s" % [depth, goal1])
 	return false
 
+
 ##	find_plan tries to find a plan that accomplishes the items in todo_list,
 ##	starting from the given state, using whatever methods and actions you
 ##	declared previously. If successful, it returns the plan. Otherwise it
 ##	returns the empty array. Arguments:
-##	
+##
 ## 'state' is a state;
 ##
 ## 	'todo_list' is a list of goals, tasks, and actions.
@@ -462,6 +463,7 @@ func find_plan(state: Dictionary, todo_list: Array) -> Variant:
 	if verbose >= 1:
 		print("FindPlan> result = ", result, "\n")
 	return result
+
 
 ##	Workhorse for find_plan. Arguments:
 ##	 - state is the current state
@@ -497,6 +499,7 @@ func seek_plan(state: Dictionary, todo_list: Array, plan: Array, depth: int) -> 
 
 func _item_to_string(item):
 	return str(item)
+
 
 ##	An adaptation of the run_lazy_lookahead algorithm from Ghallab et al.
 ##	(2016), Automated Planning and Acting. It works roughly like this:
