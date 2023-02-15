@@ -189,7 +189,7 @@ func declare_task_methods(task_name, methods):
 		for m in methods:
 			if not old_methods.has(m):
 				method_arrays.push_back(m)
-		current_domain._task_method_dict[task_name].extend(method_arrays)
+		current_domain._task_method_dict[task_name].append_array(method_arrays)
 	else:
 		current_domain._task_method_dict[task_name] = methods
 	return current_domain._task_method_dict
@@ -342,6 +342,7 @@ func _refine_task_and_continue(state, task1, todo_list, plan, depth) -> Variant:
 		if verbose >= 3:
 			print("Depth %s trying %s: " % [depth, method.get_method()])
 		var subtasks: Variant = method.get_object().callv(method.get_method(), [state] + task1.slice(1))
+		# Can't just say "if subtasks:", because that's wrong if subtasks == []
 		if subtasks is Array:
 			if verbose >= 3:
 				print("Applicable")
@@ -386,7 +387,7 @@ func _refine_unigoal_and_continue(state, goal1, todo_list, plan, depth) -> Varia
 				print("Depth %s subgoals: %s" % [depth, subgoals])
 			var verification = []
 			if verify_goals:
-				verification = [["_verify_g", method.get_method(), state_var_name, arg, val, depth]]
+				verification = [["_verify_g", str(method.get_method()), state_var_name, arg, val, depth]]
 			else:
 				verification = []
 			todo_list = subgoals + verification + todo_list
@@ -395,7 +396,7 @@ func _refine_unigoal_and_continue(state, goal1, todo_list, plan, depth) -> Varia
 				return result
 	if verbose >= 3:
 		print("Depth %s could not achieve goal %s" % [depth, goal1])
-	return []
+	return false
 
 
 ##	If goal1 is a multigoal, then iterate through the list of multigoal
@@ -426,7 +427,7 @@ func _refine_multigoal_and_continue(
 				print("Depth %s subgoals: %s" % [depth, subgoals])
 			var verification = []
 			if verify_goals:
-				verification = [["_verify_mg", method.get_method(), goal1, depth]]
+				verification = [["_verify_mg", str(method.get_method()), goal1, depth]]
 			else:
 				verification = []
 			todo_list = subgoals + verification + todo_list
@@ -486,9 +487,9 @@ func seek_plan(state: Dictionary, todo_list: Array, plan: Array, depth: int) -> 
 	elif item1 is Array:
 		if item1[0] in current_domain._action_dict.keys():
 			return _apply_action_and_continue(state, item1, todo_list, plan, depth)
-		if item1[0] in current_domain._task_method_dict.keys():
+		elif item1[0] in current_domain._task_method_dict.keys():
 			return _refine_task_and_continue(state, item1, todo_list, plan, depth)
-		if item1[0] in current_domain._unigoal_method_dict.keys():
+		elif item1[0] in current_domain._unigoal_method_dict.keys():
 			return _refine_unigoal_and_continue(state, item1, todo_list, plan, depth)
 	assert(false, "Depth %s: %s isn't an action, task, unigoal, or multigoal\n" % [depth, item1])
 	return false
