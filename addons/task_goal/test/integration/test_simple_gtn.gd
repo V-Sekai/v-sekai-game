@@ -221,6 +221,7 @@ func _ready():
 
 	planner.declare_multigoal_methods([planner.m_split_multigoal])
 
+
 func test_simple_gtn():
 	# If we've changed to some other domain, this will change us back.
 	planner.current_domain = the_domain
@@ -256,7 +257,7 @@ func test_simple_gtn():
 # If verbose=2, the planner also prints a note at each recursive call.  Below,
 # _verify_g is a task used by the planner to check whether a method has
 # achieved its goal.
-# If verbose=3, the planner prints even more information. 
+# If verbose=3, the planner prints even more information.
 
 #	print(
 #		"""
@@ -268,12 +269,15 @@ func test_simple_gtn():
 	var state1 = state0.duplicate(true)
 	var plan = planner.find_plan(state1, [["loc", "alice", "park"], ["loc", "bob", "park"]])
 
-	assert_eq(plan, [
-				["call_taxi", "alice", "home_a"],
-				["ride_taxi", "alice", "park"],
-				["pay_driver", "alice", "park"],
-				["walk", "bob", "home_b", "park"],
-			])
+	assert_eq(
+		plan,
+		[
+			["call_taxi", "alice", "home_a"],
+			["ride_taxi", "alice", "park"],
+			["pay_driver", "alice", "park"],
+			["walk", "bob", "home_b", "park"],
+		]
+	)
 
 #	print(state1)
 
@@ -300,12 +304,14 @@ func test_simple_gtn():
 	state1 = state0.duplicate(true)
 	plan = planner.find_plan(state1, [goal3])
 #	print("Plan %s" % [plan])
-	assert_eq(plan,[
-				["call_taxi", "alice", "home_a"],
-				["ride_taxi", "alice", "park"],
-				["pay_driver", "alice", "park"],
-				["walk", "bob", "home_b", "park"]
-			]
+	assert_eq(
+		plan,
+		[
+			["call_taxi", "alice", "home_a"],
+			["ride_taxi", "alice", "park"],
+			["pay_driver", "alice", "park"],
+			["walk", "bob", "home_b", "park"]
+		]
 	)
 	var new_state = planner.run_lazy_lookahead(state1, [["loc", "alice", "park"]])
 #	print("Alice is now at the park, so the planner will return an empty plan:")

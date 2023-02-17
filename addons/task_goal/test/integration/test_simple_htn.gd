@@ -247,12 +247,13 @@ func test_simple_gtn():
 
 #	print("Plan %s" % [plan])
 	assert_eq(
-			plan, [
-				["call_taxi", "alice", "home_a"],
-				["ride_taxi", "alice", "park"],
-				["pay_driver", "alice", "park"],
-				["walk", "bob", "home_b", "park"],
-			]
+		plan,
+		[
+			["call_taxi", "alice", "home_a"],
+			["ride_taxi", "alice", "park"],
+			["pay_driver", "alice", "park"],
+			["walk", "bob", "home_b", "park"],
+		]
 	)
 #
 #	print(

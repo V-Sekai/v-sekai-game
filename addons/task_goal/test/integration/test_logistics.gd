@@ -14,6 +14,7 @@ var planner = preload("res://addons/task_goal/core/plan.gd").new()
 
 ## Actions
 
+
 func drive_truck(state, t, l):
 	state.truck_at[t] = l
 	return state
@@ -207,14 +208,43 @@ func before_each():
 
 
 func test_move_goal_1():
-	var plan = planner.find_plan(state1.duplicate(true), [["at", "package1", "location2"], ["at", "package2", "location3"]])
-	assert_eq(plan, [["drive_truck", "truck1", "location1"], ["load_truck", "package1", "truck1"], ["drive_truck", "truck1", "location2"], ["unload_truck", "package1", "location2"], ["load_truck", "package2", "truck1"], ["drive_truck", "truck1", "location3"], ["unload_truck", "package2", "location3"]])
+	var plan = planner.find_plan(
+		state1.duplicate(true), [["at", "package1", "location2"], ["at", "package2", "location3"]]
+	)
+	assert_eq(
+		plan,
+		[
+			["drive_truck", "truck1", "location1"],
+			["load_truck", "package1", "truck1"],
+			["drive_truck", "truck1", "location2"],
+			["unload_truck", "package1", "location2"],
+			["load_truck", "package2", "truck1"],
+			["drive_truck", "truck1", "location3"],
+			["unload_truck", "package2", "location3"]
+		]
+	)
 
 
 ##	Goal 2: package1 is at location10 (transport to a different city)
 func test_move_goal_2():
 	var plan = planner.find_plan(state1.duplicate(true), [["at", "package1", "location10"]])
-	assert_eq(plan, [["drive_truck", "truck1", "location1"], ["load_truck", "package1", "truck1"], ["drive_truck", "truck1", "airport1"], ["unload_truck", "package1", "airport1"], ["fly_plane", "plane2", "airport1"], ["load_plane", "package1", "plane2"], ["fly_plane", "plane2", "airport2"], ["unload_plane", "package1", "airport2"], ["drive_truck", "truck6", "airport2"], ["load_truck", "package1", "truck6"], ["drive_truck", "truck6", "location10"], ["unload_truck", "package1", "location10"]])
+	assert_eq(
+		plan,
+		[
+			["drive_truck", "truck1", "location1"],
+			["load_truck", "package1", "truck1"],
+			["drive_truck", "truck1", "airport1"],
+			["unload_truck", "package1", "airport1"],
+			["fly_plane", "plane2", "airport1"],
+			["load_plane", "package1", "plane2"],
+			["fly_plane", "plane2", "airport2"],
+			["unload_plane", "package1", "airport2"],
+			["drive_truck", "truck6", "airport2"],
+			["load_truck", "package1", "truck6"],
+			["drive_truck", "truck6", "location10"],
+			["unload_truck", "package1", "location10"]
+		]
+	)
 
 
 ## Goal 3: package1 is at location1 (no actions needed)
@@ -226,4 +256,12 @@ func test_move_goal_3():
 ##	Goal 4: package1 is at location2
 func test_move_goal_4():
 	var plan = planner.find_plan(state1.duplicate(true), [["at", "package1", "location2"]])
-	assert_eq(plan,  [["drive_truck", "truck1", "location1"], ["load_truck", "package1", "truck1"], ["drive_truck", "truck1", "location2"], ["unload_truck", "package1", "location2"]])
+	assert_eq(
+		plan,
+		[
+			["drive_truck", "truck1", "location1"],
+			["load_truck", "package1", "truck1"],
+			["drive_truck", "truck1", "location2"],
+			["unload_truck", "package1", "location2"]
+		]
+	)
