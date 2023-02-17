@@ -45,35 +45,6 @@ func m_bar_concert_night(state, variable, value):
 	return false
 
 
-#
-#func increment_time(state):
-#	state.world['time'] = state.world['time'] + 1
-#	return state
-#
-#func increment_time(state):
-#	var future_time: int = state.world["day"] % 7 + state.world["day"]
-#	print(future_time)
-#	var travel: Array = []
-#	for i in range(future_time):
-#		travel.push_back(["m_time_travel_to_concert_night", state.world["time"], future_time + i])
-#	var random_actions: Array = state.actions
-#	random_actions.shuffle()
-#	for action in random_actions:
-#		if action == "travel_location":
-#			var random_entities: Array = state.entities
-#			random_entities.shuffle()
-#			var random_locations: Array = state.locations
-#			random_locations.shuffle()
-#			return [[action, random_entities.front(), random_locations.front()], ["increment_time"]] + travel
-#		return [[action, null, null], ["increment_time"]] + travel
-#	return false
-#
-#func m_time_travel_to_concert_night(state: Dictionary, variable: String, value: Variant) -> Variant:
-#	if variable in state.world and variable == "day" and (state.world["day"] % 7 == 1 or state.world["day"] % 7 == 2):
-#		return [['bar_concert_night', null, null]]
-#	return false
-
-
 func prepare_for_concert(state: Dictionary) -> Variant:
 	state.world["band_problems"] = true
 	state.world["concert_tonight"] = true
