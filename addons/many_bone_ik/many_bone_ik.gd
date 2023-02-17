@@ -10,28 +10,7 @@ extends EditorScript
 
 var is_thumbs_up: bool = true
 
-@export var targets: Dictionary = {
-	"Root": "ManyBoneIK3D",
-	"Head": "ManyBoneIK3D",
-	"LeftLowerLeg": "ManyBoneIK3D",
-	"LeftFoot": "ManyBoneIK3D",
-	"RightLowerLeg": "ManyBoneIK3D",
-	"RightFoot": "ManyBoneIK3D",
-	"RightLowerArm": "ManyBoneIK3D",
-	"RightHand": "ManyBoneIK3D",
-	"LeftLowerArm": "ManyBoneIK3D",
-	"LeftHand": "ManyBoneIK3D",
-#	"LeftIndexDistal": "ManyBoneIK3D",
-#	"LeftLittleDistal": "ManyBoneIK3D",
-#	"LeftMiddleDistal": "ManyBoneIK3D",
-#	"LeftRingDistal": "ManyBoneIK3D",
-#	"LeftThumbDistal": "ManyBoneIK3D",
-#	"RightIndexDistal": "ManyBoneIK3D",
-#	"RightLittleDistal": "ManyBoneIK3D",
-#	"RightMiddleDistal": "ManyBoneIK3D",
-#	"RightRingDistal": "ManyBoneIK3D",
-#	"RightThumbDistal": "ManyBoneIK3D",
-}
+@export var targets: Dictionary
 
 
 static func copy_kusudama(p_bone_name_from: String, p_bone_name_to: PackedStringArray, p_ik: ManyBoneIK3D, p_mirror: Vector3):
@@ -130,6 +109,21 @@ func _run():
 	for profile_i in humanoid_profile.bone_size:
 		var bone_name: String = humanoid_profile.get_bone_name(profile_i)
 		humanoid_bones.push_back(bone_name)
+		if bone_name.find("Toe") != -1:
+			continue
+		if bone_name.find("Thumb") != -1:
+			continue
+		if bone_name.find("Middle") != -1:
+			continue
+		if bone_name.find("Little") != -1:
+			continue
+		if bone_name.find("Index") != -1:
+			continue
+		if bone_name.find("Ring") != -1:
+			continue
+		if bone_name.find("Eye") != -1:
+			continue
+		targets[bone_name] = "ManyBoneIK3D"
 
 	var skeleton_profile = SkeletonProfileHumanoid.new()
 	var human_bones: Array
@@ -177,13 +171,10 @@ func tune_bone(new_ik: ManyBoneIK3D, skeleton: Skeleton3D, bone_name: String, bo
 	node_3d.bone_name = bone_name
 	node_3d.set_use_external_skeleton(true)
 	node_3d.set_external_skeleton("../../")
-	if bone_name in ["Root", "Head", "LeftFoot", "RightFoot"]:
+	if bone_name in ["Root", "Head", "LeftFoot", "RightFoot", "LeftHand", "RightHand"]:
 		node_3d.queue_free()
 		node_3d = Node3D.new()
-	var smoothing: Node3D = load("res://addons/smoothing/smoothing.gd").new()
 	node_3d.name = bone_name
-	smoothing.name = bone_name + "Smoothing"
-	smoothing.target = bone_name
 	if bone_i == -1:
 		return
 	var children: Array[Node] = owner.find_children("*", "")
@@ -193,15 +184,11 @@ func tune_bone(new_ik: ManyBoneIK3D, skeleton: Skeleton3D, bone_name: String, bo
 			print(node.name)
 			node.add_child(node_3d, true)
 			node_3d.owner = owner
-			node.add_child(smoothing,true)
-			smoothing.owner = owner
 			parent = node
 			break
 	node_3d.global_transform = (
 		skeleton.global_transform.affine_inverse() * skeleton.get_bone_global_pose_no_override(bone_i)
 	)
-	if not children.size():
-		new_ik.add_child(node_3d, true)
 	if bone_name in ["LeftHand"]:
 		if is_thumbs_up:
 			node_3d.global_transform.basis = Basis.from_euler(Vector3(0, 0, -PI / 2))
