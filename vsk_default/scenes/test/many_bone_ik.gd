@@ -12,11 +12,16 @@ var is_thumbs_up: bool = true
 
 @export var targets: Dictionary = {
 	"Root": "ManyBoneIK3D",
+	"Hips": "ManyBoneIK3D",
 	"Head": "ManyBoneIK3D",
+	"LeftUpperLeg": "ManyBoneIK3D",
 	"LeftFoot": "ManyBoneIK3D",
+	"RightUpperLeg": "ManyBoneIK3D",
 	"RightFoot": "ManyBoneIK3D",
-	"LeftHand": "ManyBoneIK3D",
+	"RightUpperArm": "ManyBoneIK3D",
 	"RightHand": "ManyBoneIK3D",
+	"LeftUpperArm": "ManyBoneIK3D",
+	"LeftHand": "ManyBoneIK3D",
 	#	"LeftIndexDistal": "ManyBoneIK3D",
 	#	"LeftLittleDistal": "ManyBoneIK3D",
 	#	"LeftMiddleDistal": "ManyBoneIK3D",
@@ -188,6 +193,12 @@ func tune_bone(new_ik: ManyBoneIK3D, skeleton: Skeleton3D, bone_name: String, bo
 	)
 	if not children.size():
 		new_ik.add_child(node_3d, true)
+	if bone_name.find("Hips") != -1:
+		new_ik.set_pin_direction_priorities(bone_i, Vector3())
+	if bone_name.find("Lower") != -1:
+		new_ik.set_pin_direction_priorities(bone_i, Vector3())
+	if bone_name.find("Upper") != -1:
+		new_ik.set_pin_direction_priorities(bone_i, Vector3())
 	if bone_name in ["LeftHand"]:
 		if is_thumbs_up:
 			node_3d.global_transform.basis = Basis.from_euler(Vector3(0, 0, -PI / 2))
