@@ -217,7 +217,6 @@ func declare_unigoal_methods(state_var_name, methods):
 		print("Cannot declare methods until a domain has been created.")
 		return []
 	if not state_var_name in current_domain._unigoal_method_dict.keys():
-		print("Methods %s" % [methods])
 		current_domain._unigoal_method_dict[state_var_name] = methods
 	else:
 		var old_methods = current_domain._unigoal_method_dict[state_var_name]
