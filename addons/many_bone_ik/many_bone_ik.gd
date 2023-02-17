@@ -172,8 +172,7 @@ func tune_bone(new_ik: ManyBoneIK3D, skeleton: Skeleton3D, bone_name: String, bo
 	node_3d.set_use_external_skeleton(true)
 	node_3d.set_external_skeleton("../../")
 	if bone_name in ["Root", "Head", "LeftFoot", "RightFoot", "LeftHand", "RightHand"]:
-		node_3d.queue_free()
-		node_3d = Node3D.new()
+		node_3d.set_use_external_skeleton(false)
 	node_3d.name = bone_name
 	if bone_i == -1:
 		return
