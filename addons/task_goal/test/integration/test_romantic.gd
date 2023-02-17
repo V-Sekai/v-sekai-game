@@ -161,25 +161,21 @@ func before_each():
 
 
 func test_move_to_home():
-	planner.verbose = 1
 	var plan = planner.find_plan(state1.duplicate(true), [["at", "seb", "coffee_shop"]])
 	assert_eq(plan, [["travel_location", "seb", "coffee_shop"]], "")
 
 
 func test_move_to_band_practice():
-	planner.verbose = 1
 	var plan = planner.find_plan(state1.duplicate(true), [["at", "seb", "bar"]])
 	assert_eq(plan, [["travel_location", "seb", "bar"]], "")
 
 
 func test_together_goal():
-	planner.verbose = 1
 	var plan = planner.find_plan(state1.duplicate(true), [["entity_met_entity", "seb", "mia", "coffee_shop"]])
 	assert_eq(plan, [["travel_location", "seb", "coffee_shop"], ["travel_location", "mia", "coffee_shop"]], "")
 
 
 func test_play_game():
-	planner.verbose = 2
 	var plan = planner.find_plan(state1.duplicate(true), [["play_game"]])
 	assert_eq(
 		plan,

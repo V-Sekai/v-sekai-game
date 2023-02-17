@@ -61,6 +61,5 @@ func before_each():
 
 
 func test_together_goal():
-	planner.verbose = 1
 	var plan = planner.find_plan(state1.duplicate(true), [["entity_met_entity", "seb", "mia", "coffee_shop"]])
 	assert_eq(plan, [["travel_location", "seb", "coffee_shop"], ["travel_location", "mia", "coffee_shop"]], "")

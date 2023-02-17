@@ -17,7 +17,7 @@ extends Resource
 ## and methods for a planning-and-acting domain. 'domain_name' is the name to
 ## use for the new domain.
 
-const verbose: int = 1
+const verbose: int = 0
 
 
 ##	_m_verify_g is a method that GTPyhop uses to check whether a

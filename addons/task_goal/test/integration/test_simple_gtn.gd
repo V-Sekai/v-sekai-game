@@ -189,6 +189,7 @@ func travel_by_taxi(state, p, y):
 func _ready():
 	planner._domains.push_back(the_domain)
 	planner.current_domain = the_domain
+	planner.verbose = 0
 	goal1.state["loc"] = {"alice": "park"}
 	goal2.state["loc"] = {"bob": "park"}
 	goal3.state["loc"] = {"alice": "park", "bob": "park"}
@@ -252,42 +253,16 @@ We do it several times with different values for 'verbose'.
 		["pay_driver", "alice", "park"],
 	]
 
-	print("If verbose=0, the planner returns the solution but prints nothing:")
-	planner.verbose = 0
+## If verbose=0, the planner returns the solution but prints nothing.
 	var result = planner.find_plan(state0.duplicate(true), [["loc", "alice", "park"]])
 	print(result)
-	assert(result == expected)
+	assert_eq(result, expected)
 
-	print(
-		"""If verbose=1, then in addition to returning the solution, the planner prints
-both the problem and the solution"
-"""
-	)
-	planner.verbose = 1
-	result = planner.find_plan(state0.duplicate(true), [["loc", "alice", "park"]])
-	print(result)
-	assert(result == expected)
-
-	print(
-		"""If verbose=2, the planner also prints a note at each recursive call.  Below,
-_verify_g is a task used by the planner to check whether a method has
-achieved its goal.
-"""
-	)
-	planner.verbose = 2
-	result = planner.find_plan(state0.duplicate(true), [["loc", "alice", "park"]])
-	print(result)
-	assert(result == expected)
-
-	print(
-		"""
-If verbose=3, the planner prints even more information. 
-"""
-	)
-	planner.verbose = 3
-	result = planner.find_plan(state0.duplicate(true), [["loc", "alice", "park"]])
-	print(result)
-	assert(result == expected)
+## If verbose=1, then in addition to returning the solution, the planner prints both the problem and the solution"
+## If verbose=2, the planner also prints a note at each recursive call.  Below,
+## _verify_g is a task used by the planner to check whether a method has
+## achieved its goal.
+## If verbose=3, the planner prints even more information. 
 
 	print(
 		"""
@@ -296,22 +271,15 @@ park, then for Bob to be at the park. Since this is a sequence, it doesn't
 matter whether they're both at the park at the same time.
 """
 	)
-
-	planner.verbose = 2
 	var state1 = state0.duplicate(true)
 	var plan = planner.find_plan(state1, [["loc", "alice", "park"], ["loc", "bob", "park"]])
 
-	assert(
-		(
-			plan
-			== [
+	assert_eq(plan, [
 				["call_taxi", "alice", "home_a"],
 				["ride_taxi", "alice", "park"],
 				["pay_driver", "alice", "park"],
 				["walk", "bob", "home_b", "park"],
-			]
-		)
-	)
+			])
 
 	print(state1)
 
@@ -335,30 +303,19 @@ _verify_mg is a task used by the planner to check whether a multigoal
 method has achieved all of the values specified in the multigoal.
 """
 	)
-
-	planner.verbose = 2
 	state1 = state0.duplicate(true)
 	plan = planner.find_plan(state1, [goal3])
 	print("Plan %s" % [plan])
-	assert(
-		(
-			plan
-			== [
+	assert_eq(plan,[
 				["call_taxi", "alice", "home_a"],
 				["ride_taxi", "alice", "park"],
 				["pay_driver", "alice", "park"],
 				["walk", "bob", "home_b", "park"]
 			]
-		)
 	)
-	print("Call run_lazy_lookahead with verbose=1:")
-
-	planner.verbose = 1
 	var new_state = planner.run_lazy_lookahead(state1, [["loc", "alice", "park"]])
 	print("Alice is now at the park, so the planner will return an empty plan:")
-
-	planner.verbose = 1
 	plan = planner.find_plan(new_state, [["loc", "alice", "park"]])
-	assert(plan == [])
+	assert_eq(plan, [])
 
 	print("No more examples")

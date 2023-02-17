@@ -20,7 +20,7 @@ const domain_const = preload("domain.gd")
 ## - verbose = 1: print the initial parameters and the answer
 ## - verbose = 2: also print a message on each recursive call
 ## - verbose = 3: also print some info about intermediate computations
-@export var verbose: int = 3
+@export var verbose: int = 0
 
 ## Sequence number to use when making copies of states.
 var _next_state_number: int = 0
