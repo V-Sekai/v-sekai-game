@@ -17,4 +17,4 @@ func _ready() -> void:
 
 
 func _on_disconnect_button_pressed() -> void:
-	GameManager.close_connection()
+	$"/root/GameManager".close_connection()
