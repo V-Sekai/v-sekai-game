@@ -16,6 +16,6 @@
 	"tests": [
 	],
 	"junit_xml_file": "user://results.xml",
-    "junit_xml_timestamp": false,
+	"junit_xml_timestamp": false,
 	"unit_test_name": ""
 }
