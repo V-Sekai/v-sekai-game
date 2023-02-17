@@ -12,26 +12,25 @@ var is_thumbs_up: bool = true
 
 @export var targets: Dictionary = {
 	"Root": "ManyBoneIK3D",
-	"Hips": "ManyBoneIK3D",
 	"Head": "ManyBoneIK3D",
-	"LeftUpperLeg": "ManyBoneIK3D",
+	"LeftLowerLeg": "ManyBoneIK3D",
 	"LeftFoot": "ManyBoneIK3D",
-	"RightUpperLeg": "ManyBoneIK3D",
+	"RightLowerLeg": "ManyBoneIK3D",
 	"RightFoot": "ManyBoneIK3D",
-	"RightUpperArm": "ManyBoneIK3D",
+	"RightLowerArm": "ManyBoneIK3D",
 	"RightHand": "ManyBoneIK3D",
-	"LeftUpperArm": "ManyBoneIK3D",
+	"LeftLowerArm": "ManyBoneIK3D",
 	"LeftHand": "ManyBoneIK3D",
-	#	"LeftIndexDistal": "ManyBoneIK3D",
-	#	"LeftLittleDistal": "ManyBoneIK3D",
-	#	"LeftMiddleDistal": "ManyBoneIK3D",
-	#	"LeftRingDistal": "ManyBoneIK3D",
-	#	"LeftThumbDistal": "ManyBoneIK3D",
-	#	"RightIndexDistal": "ManyBoneIK3D",
-	#	"RightLittleDistal": "ManyBoneIK3D",
-	#	"RightMiddleDistal": "ManyBoneIK3D",
-	#	"RightRingDistal": "ManyBoneIK3D",
-	#	"RightThumbDistal": "ManyBoneIK3D",
+#	"LeftIndexDistal": "ManyBoneIK3D",
+#	"LeftLittleDistal": "ManyBoneIK3D",
+#	"LeftMiddleDistal": "ManyBoneIK3D",
+#	"LeftRingDistal": "ManyBoneIK3D",
+#	"LeftThumbDistal": "ManyBoneIK3D",
+#	"RightIndexDistal": "ManyBoneIK3D",
+#	"RightLittleDistal": "ManyBoneIK3D",
+#	"RightMiddleDistal": "ManyBoneIK3D",
+#	"RightRingDistal": "ManyBoneIK3D",
+#	"RightThumbDistal": "ManyBoneIK3D",
 }
 
 
@@ -73,7 +72,7 @@ static func copy_kusudama(p_bone_name_from: String, p_bone_name_to: PackedString
 	{
 		"Hips": [{"center": Vector3(0, -1, 0), "radius": deg_to_rad(20)}],
 		"Spine": [{"center": Vector3(0, 1, 0), "radius": deg_to_rad(10)}],
-		"UpperChest": [{"center": Vector3(0, 1, 0), "radius": deg_to_rad(5)}],
+		"UpperChest": [{"center": Vector3(0, 1, 0), "radius": deg_to_rad(10)}],
 		"Chest": [{"center": Vector3(0, 1, 0), "radius": deg_to_rad(10)}],
 		"Neck": [{"center": Vector3(0, 1, 0), "radius": deg_to_rad(15)}],
 		"Head": [{"center": Vector3(0, 1, 0), "radius": deg_to_rad(15)}],
@@ -173,9 +172,11 @@ func _run():
 
 
 func tune_bone(new_ik: ManyBoneIK3D, skeleton: Skeleton3D, bone_name: String, bone_name_parent: String, owner):
-	var node_3d: Marker3D = Marker3D.new()
+	var node_3d: Node3D = Marker3D.new()
+	var smoothing: Node3D = load("res://addons/smoothing/smoothing.gd").new()
 	node_3d.gizmo_extents = 0.01
 	node_3d.name = bone_name
+	smoothing.target = bone_name
 	var bone_i = skeleton.find_bone(bone_name)
 	if bone_i == -1:
 		return
@@ -185,20 +186,16 @@ func tune_bone(new_ik: ManyBoneIK3D, skeleton: Skeleton3D, bone_name: String, bo
 		if str(node.name) == bone_name_parent:
 			print(node.name)
 			node.add_child(node_3d, true)
-			parent = node
 			node_3d.owner = owner
+			node.add_child(smoothing,true)
+			smoothing.owner = owner
+			parent = node
 			break
 	node_3d.global_transform = (
 		skeleton.global_transform.affine_inverse() * skeleton.get_bone_global_pose_no_override(bone_i)
 	)
 	if not children.size():
 		new_ik.add_child(node_3d, true)
-	if bone_name.find("Hips") != -1:
-		new_ik.set_pin_direction_priorities(bone_i, Vector3())
-	if bone_name.find("Lower") != -1:
-		new_ik.set_pin_direction_priorities(bone_i, Vector3())
-	if bone_name.find("Upper") != -1:
-		new_ik.set_pin_direction_priorities(bone_i, Vector3())
 	if bone_name in ["LeftHand"]:
 		if is_thumbs_up:
 			node_3d.global_transform.basis = Basis.from_euler(Vector3(0, 0, -PI / 2))
