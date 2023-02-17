@@ -172,12 +172,18 @@ func _run():
 
 
 func tune_bone(new_ik: ManyBoneIK3D, skeleton: Skeleton3D, bone_name: String, bone_name_parent: String, owner):
-	var node_3d: Node3D = Marker3D.new()
-	var smoothing: Node3D = load("res://addons/smoothing/smoothing.gd").new()
-	node_3d.gizmo_extents = 0.01
-	node_3d.name = bone_name
-	smoothing.target = bone_name
+	var node_3d = BoneAttachment3D.new()
 	var bone_i = skeleton.find_bone(bone_name)
+	node_3d.bone_name = bone_name
+	node_3d.set_use_external_skeleton(true)
+	node_3d.set_external_skeleton("../../")
+	if bone_name in ["Root", "Head", "LeftFoot", "RightFoot"]:
+		node_3d.queue_free()
+		node_3d = Node3D.new()
+	var smoothing: Node3D = load("res://addons/smoothing/smoothing.gd").new()
+	node_3d.name = bone_name
+	smoothing.name = bone_name + "Smoothing"
+	smoothing.target = bone_name
 	if bone_i == -1:
 		return
 	var children: Array[Node] = owner.find_children("*", "")
