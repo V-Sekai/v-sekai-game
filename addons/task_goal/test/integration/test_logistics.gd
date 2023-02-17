@@ -184,7 +184,7 @@ func before_each():
 		]
 	)
 
-	planner.print_domain()
+#	planner.print_domain()
 
 	state1.packages = ["package1", "package2"]
 	state1.trucks = ["truck1", "truck6"]

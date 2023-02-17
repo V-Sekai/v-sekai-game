@@ -137,7 +137,7 @@ func before_each():
 	planner.declare_unigoal_methods("at", [Callable(self, "m_travel_location")])
 	planner.declare_unigoal_methods("world", [Callable(self, "m_met_mia")])
 	planner.declare_multigoal_methods([planner.m_split_multigoal])
-	planner.print_domain()
+#	planner.print_domain()
 
 	state1.locations = ["coffee_shop", "home", "groceries", "bar", "sports", "club"]
 	state1.entities = ["seb", "mia", "jazz"]
