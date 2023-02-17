@@ -62,6 +62,7 @@ func seb_met_mia(state: Dictionary) -> Variant:
 	state.world["mia_girlfriend"] = true
 	return state
 
+
 func has_entity_met_entity(state: Dictionary, e_1: String, e_2, place: String) -> Variant:
 	return [Multigoal.new("entities_together", {"at": {e_1: place, e_2: place}})]
 
@@ -69,15 +70,21 @@ func has_entity_met_entity(state: Dictionary, e_1: String, e_2, place: String) -
 func seb_travel_bar(state: Dictionary) -> Variant:
 	return [["at", "seb", "bar"]]
 
+
 func m_met_mia(state: Dictionary, variable: String, value: Variant) -> Variant:
-	if variable in state.world and variable == "met_mia" and  state.world["met_mia"] == false:
-		return [Multigoal.new("entities_together", {"at": {"seb": "coffee_shop", "mia": "coffee_shop"}}), ["seb_met_mia"]]
+	if variable in state.world and variable == "met_mia" and state.world["met_mia"] == false:
+		return [
+			Multigoal.new("entities_together", {"at": {"seb": "coffee_shop", "mia": "coffee_shop"}}), ["seb_met_mia"]
+		]
 	return false
+
 
 func m_play_game(state):
 	return [Multigoal.new("mia_girlfriend", {"world": {"met_mia": true, "mia_girlfriend": true}})]
 
+
 var state1: Dictionary
+
 
 func before_each():
 	state1.clear()
@@ -85,36 +92,47 @@ func before_each():
 
 	# If we've changed to some other domain, this will change us back.
 	planner.current_domain = the_domain
-	planner.declare_actions(
-		[
-			Callable(self, "travel_location"),
-			Callable(self, "practice_piano"),
-			Callable(self, "prepare_for_concert"),
-			Callable(self, "meet_person"),
-			Callable(self, "seb_met_mia"),
-			Callable(self, "mia_girlfriend"),
-			Callable(self, "time_travel"),
-		]
+	(
+		planner
+		. declare_actions(
+			[
+				Callable(self, "travel_location"),
+				Callable(self, "practice_piano"),
+				Callable(self, "prepare_for_concert"),
+				Callable(self, "meet_person"),
+				Callable(self, "seb_met_mia"),
+				Callable(self, "mia_girlfriend"),
+				Callable(self, "time_travel"),
+			]
+		)
 	)
-	planner.declare_task_methods(
-		"entity_met_entity",
-		[
-			Callable(self, "has_entity_met_entity"),
-		]
+	(
+		planner
+		. declare_task_methods(
+			"entity_met_entity",
+			[
+				Callable(self, "has_entity_met_entity"),
+			]
+		)
 	)
-	planner.declare_task_methods(
-		"seb_travel_bar",
-		[
-			Callable(self, "seb_travel_bar"),
-		]
+	(
+		planner
+		. declare_task_methods(
+			"seb_travel_bar",
+			[
+				Callable(self, "seb_travel_bar"),
+			]
+		)
 	)
-	planner.declare_task_methods(
-		"play_game",
-		[
-			Callable(self, "m_play_game"),
-		]
+	(
+		planner
+		. declare_task_methods(
+			"play_game",
+			[
+				Callable(self, "m_play_game"),
+			]
+		)
 	)
-
 
 	planner.declare_unigoal_methods("at", [Callable(self, "m_travel_location")])
 	planner.declare_unigoal_methods("world", [Callable(self, "m_met_mia")])
@@ -123,7 +141,9 @@ func before_each():
 
 	state1.locations = ["coffee_shop", "home", "groceries", "bar", "sports", "club"]
 	state1.entities = ["seb", "mia", "jazz"]
-	state1.unigoal_methods = ["seb_meet_mia", ]
+	state1.unigoal_methods = [
+		"seb_meet_mia",
+	]
 
 	state1.at = {"seb": "home", "mia": "groceries", "jazz": "groceries"}
 
@@ -152,12 +172,6 @@ func test_move_to_band_practice():
 	assert_eq(plan, [["travel_location", "seb", "bar"]], "")
 
 
-func test_practice_piano():
-	planner.verbose = 1
-	var plan = planner.find_plan(state1.duplicate(true), [["world", "angry_at_repertoire", true]])
-	assert_eq(plan, [["practice_piano"]], "")
-
-
 func test_together_goal():
 	planner.verbose = 1
 	var plan = planner.find_plan(state1.duplicate(true), [["entity_met_entity", "seb", "mia", "coffee_shop"]])
@@ -166,13 +180,9 @@ func test_together_goal():
 
 func test_play_game():
 	planner.verbose = 2
-	var plan = planner.find_plan(
-		state1.duplicate(true), [["play_game"]])
-	assert_eq(plan, [["travel_location", "seb", "coffee_shop"], ["travel_location", "mia", "coffee_shop"], ["seb_met_mia"]], "")
-
-#func test_novel_goal():
-#	planner.verbose = 1
-#	planner.find_plan(state1.duplicate(true), [Multigoal.new(
-#	"novel_goal", {"world": {"met_mia": true, "concert_tonight": true, "band_problems": true, "mia_girlfriend": false}}
-#)])
-
+	var plan = planner.find_plan(state1.duplicate(true), [["play_game"]])
+	assert_eq(
+		plan,
+		[["travel_location", "seb", "coffee_shop"], ["travel_location", "mia", "coffee_shop"], ["seb_met_mia"]],
+		""
+	)

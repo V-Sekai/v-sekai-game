@@ -1,4 +1,5 @@
-extends Node
+extends GutTest
+
 #"""
 #An expanded version of the "travel from home to the park" example in
 #my lectures.
@@ -6,9 +7,9 @@ extends Node
 #"""
 
 var domain_name = "simple_htn"
-var the_domain = preload("../core/domain.gd").new("plan")
+var the_domain = preload("../../core/domain.gd").new("plan")
 
-var planner = preload("../core/plan.gd").new()
+var planner = preload("../../core/plan.gd").new()
 
 ################################################################################
 # states and rigid relations
@@ -183,7 +184,7 @@ func travel_by_taxi(state, p, y):
 			return [["call_taxi", p, x], ["ride_taxi", p, y], ["pay_driver", p, y]]
 
 
-func _ready():
+func test_simple_gtn():
 	planner._domains.push_back(the_domain)
 	planner.current_domain = the_domain
 	planner.declare_actions(

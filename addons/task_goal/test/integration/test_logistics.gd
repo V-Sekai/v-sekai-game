@@ -1,12 +1,10 @@
 extends GutTest
 
-"""
-This file is based on the logistics-domain examples included with HGNpyhop:
-	https://github.com/ospur/hgn-pyhop
-For a discussion of the adaptations that were needed, see the relevant
-section of Some_GTPyhop_Details.md in the top-level directory.
--- Dana Nau <nau@umd.edu>, July 20, 2021
-"""
+#This file is based on the logistics-domain examples included with HGNpyhop:
+#	https://github.com/ospur/hgn-pyhop
+#For a discussion of the adaptations that were needed, see the relevant
+#section of Some_GTPyhop_Details.md in the top-level directory.
+#-- Dana Nau <nau@umd.edu>, July 20, 2021
 
 var domain_name = "logistics"
 
@@ -14,9 +12,7 @@ var the_domain = preload("res://addons/task_goal/core/domain.gd").new(domain_nam
 
 var planner = preload("res://addons/task_goal/core/plan.gd").new()
 
-################################################################################
-# Actions
-
+## Actions
 
 func drive_truck(state, t, l):
 	state.truck_at[t] = l
@@ -52,8 +48,7 @@ func unload_plane(state, o, a):
 		return state
 
 
-################################################################################
-# Helper functions for the methods
+## Helper functions for the methods
 
 
 # Find a truck in the same city as the package
@@ -82,8 +77,7 @@ func find_airport(state, l):
 	return false
 
 
-################################################################################
-# Methods to call the actions
+## Methods to call the actions
 
 
 func m_drive_truck(state, t, l):
@@ -116,8 +110,7 @@ func m_unload_plane(state, o, a):
 		return [["unload_plane", o, a]]
 
 
-################################################################################
-# Other methods
+## Other methods
 
 
 func move_within_city(state, o, l):
@@ -156,9 +149,6 @@ var state1: Dictionary
 func before_each():
 	state1.clear()
 	planner._domains.push_back(the_domain)
-	print("-----------------------------------------------------------------------")
-	print("Created the domain '{domain_name}'. To run the examples, type this:")
-	print("{domain_name}.main()")
 
 	# If we've changed to some other domain, this will change us back.
 	planner.current_domain = the_domain

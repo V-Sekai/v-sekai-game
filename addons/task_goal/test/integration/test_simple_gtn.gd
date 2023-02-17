@@ -1,4 +1,4 @@
-extends Node
+extends GutTest
 #"""
 #An expanded version of the "travel from home to the park" example in
 #my lectures, modified to use goals instead of tasks.
@@ -6,9 +6,9 @@ extends Node
 #"""
 
 var domain_name = "simple_gtn"
-var the_domain = preload("../core/domain.gd").new(domain_name)
+var the_domain = preload("res://addons/task_goal/core/domain.gd").new(domain_name)
 
-var planner = preload("../core/plan.gd").new()
+var planner = preload("res://addons/task_goal/core/plan.gd").new()
 
 # These types are used by the 'is_a' helper function, later in this file
 @export var types = {
@@ -225,6 +225,7 @@ func _ready():
 
 	planner.declare_multigoal_methods([planner.m_split_multigoal])
 
+func test_simple_gtn():
 	# If we've changed to some other domain, this will change us back.
 	planner.current_domain = the_domain
 	planner.print_domain()
@@ -353,7 +354,6 @@ method has achieved all of the values specified in the multigoal.
 	print("Call run_lazy_lookahead with verbose=1:")
 
 	planner.verbose = 1
-	state1 = state0.duplicate(true)
 	var new_state = planner.run_lazy_lookahead(state1, [["loc", "alice", "park"]])
 	print("Alice is now at the park, so the planner will return an empty plan:")
 

@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://c40hgfju7fuix"]
-
-[ext_resource type="Script" path="res://addons/task_goal/tests/simple_gtn.gd" id="1_ndjcj"]
-
-[node name="Node" type="Node"]
-script = ExtResource("1_ndjcj")
