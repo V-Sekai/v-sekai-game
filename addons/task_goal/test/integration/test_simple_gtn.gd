@@ -204,10 +204,6 @@ func _ready():
 		]
 	)
 
-	print("-----------------------------------------------------------------------")
-	print("Created the domain '%s'. To run the examples, type this:" % domain_name)
-	print("%s.main()" % domain_name)
-
 	planner.declare_unigoal_methods("loc", [Callable(self, "travel_by_foot"), Callable(self, "travel_by_taxi")])
 
 	# GTPyhop provides a built-in multigoal method called m_split_multigoal to

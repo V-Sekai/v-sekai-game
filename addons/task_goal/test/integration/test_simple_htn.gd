@@ -135,10 +135,11 @@ func c_call_taxi(state, p, x):
 		if rand.randf_range(2, 0) > 0:
 			state.loc["taxi1"] = x
 			state.loc[p] = "taxi1"
-			print("Action> c_call_taxi succeeded.  This happens with Pr = 1/2.")
+#			print("Action> c_call_taxi succeeded.  This happens with Pr = 1/2.")
 			return state
 		else:
-			print("Action> c_call_taxi failed.  This happens with Pr = 1/2.")
+#			print("Action> c_call_taxi failed.  This happens with Pr = 1/2.")
+			pass
 
 
 # c_ride_taxi, version used in simple_tasks1
