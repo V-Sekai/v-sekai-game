@@ -76,7 +76,7 @@ static func copy_kusudama(p_bone_name_from: String, p_bone_name_to: PackedString
 		"LeftShoulder": [{"center": Vector3(1, 0, 0), "radius": deg_to_rad(30)}],
 		"LeftUpperArm":
 		[
-			{"center": Vector3(0.2, 1, -0.5), "radius": deg_to_rad(60)},
+			{"center": Vector3(0.2, 1, -0.5), "radius": deg_to_rad(30)},
 			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(20)},
 		],
 		"LeftLowerArm":
@@ -131,7 +131,7 @@ func _run():
 	var human_bones: Array
 	var bone_name_from_to_twist = config["bone_name_from_to_twist"]
 	var bone_name_cones = config["bone_name_cones"]
-
+	new_ik.stabilization_passes = 0
 	for bone_i in skeleton.get_bone_count():
 		new_ik.set_pin_passthrough_factor(bone_i, 1)
 		var bone_name = skeleton.get_bone_name(bone_i)
