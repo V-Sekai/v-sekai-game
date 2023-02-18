@@ -65,31 +65,31 @@ jobs:
             artifact: true
             platform: windows
 
-          # - name: Editor with doubles and GCC sanitizers (target=editor, tests=yes, dev_build=yes, precision=double, use_asan=yes, use_ubsan=yes, linker=gold)
-          #   cache-name: linux-editor-double-sanitizers
-          #   target: editor
-          #   tests: false
-          #   sconsflags: dev_build=yes precision=double use_asan=yes use_ubsan=yes linker=gold
-          #   proj-test: false
-          #   # Can be turned off for PRs that intentionally break compat with godot-cpp,
-          #   # until both the upstream PR and the matching godot-cpp changes are merged.
-          #   godot-cpp-test: false
-          #   bin: "./bin/godot.linuxbsd.editor.dev.double.x86_64.san"
-          #   build-mono: false
-          #   # Skip 2GiB artifact speeding up action.
-          #   artifact: false
-          #   platform: linuxbsd
-          # 
-          # - name: Editor with clang sanitizers (target=editor, tests=yes, dev_build=yes, use_asan=yes, use_ubsan=yes, use_llvm=yes, linker=gold)
-          #   cache-name: linux-editor-llvm-sanitizers
-          #   target: editor
-          #   tests: false
-          #   sconsflags: dev_build=yes use_asan=yes use_ubsan=yes use_llvm=yes linker=gold
-          #   bin: "./bin/godot.linuxbsd.editor.dev.x86_64.llvm.san"
-          #   build-mono: false
-          #   # Skip 2GiB artifact speeding up action.
-          #   artifact: false
-          #   platform: linuxbsd
+          - name: Editor with doubles and GCC sanitizers (target=editor, tests=yes, dev_build=yes, precision=double, use_asan=yes, use_ubsan=yes, linker=gold)
+            cache-name: linux-editor-double-sanitizers
+            target: editor
+            tests: false
+            sconsflags: dev_build=yes precision=double use_asan=yes use_ubsan=yes linker=gold
+            proj-test: false
+            # Can be turned off for PRs that intentionally break compat with godot-cpp,
+            # until both the upstream PR and the matching godot-cpp changes are merged.
+            godot-cpp-test: false
+            bin: "./bin/godot.linuxbsd.editor.dev.double.x86_64.san"
+            build-mono: false
+            # Skip 2GiB artifact speeding up action.
+            artifact: false
+            platform: linuxbsd
+          
+          - name: Editor with clang sanitizers (target=editor, tests=yes, dev_build=yes, use_asan=yes, use_ubsan=yes, use_llvm=yes, linker=gold)
+            cache-name: linux-editor-llvm-sanitizers
+            target: editor
+            tests: false
+            sconsflags: dev_build=yes use_asan=yes use_ubsan=yes use_llvm=yes linker=gold
+            bin: "./bin/godot.linuxbsd.editor.dev.x86_64.llvm.san"
+            build-mono: false
+            # Skip 2GiB artifact speeding up action.
+            artifact: false
+            platform: linuxbsd
 
           - name: Minimal template (target=template_release, everything disabled, linker=gold)
             cache-name: linux-template-minimal
