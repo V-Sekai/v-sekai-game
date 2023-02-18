@@ -111,6 +111,8 @@ func _run():
 		humanoid_bones.push_back(bone_name)
 		if bone_name.find("Toe") != -1:
 			continue
+		if bone_name.find("Upper") != -1:
+			continue
 		if bone_name.find("Thumb") != -1:
 			continue
 		if bone_name.find("Middle") != -1:
@@ -166,16 +168,16 @@ func _run():
 
 
 func tune_bone(new_ik: ManyBoneIK3D, skeleton: Skeleton3D, bone_name: String, bone_name_parent: String, owner):
-	var node_3d = BoneAttachment3D.new()
 	var bone_i = skeleton.find_bone(bone_name)
+	if bone_i == -1:
+		return
+	var node_3d = BoneAttachment3D.new()
+	node_3d.name = bone_name
 	node_3d.bone_name = bone_name
 	node_3d.set_use_external_skeleton(true)
 	node_3d.set_external_skeleton("../../")
 	if bone_name in ["Root", "Head", "LeftFoot", "RightFoot", "LeftHand", "RightHand"]:
 		node_3d.set_use_external_skeleton(false)
-	node_3d.name = bone_name
-	if bone_i == -1:
-		return
 	var children: Array[Node] = owner.find_children("*", "")
 	var parent: Node = null
 	for node in children:
