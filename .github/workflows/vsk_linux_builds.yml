@@ -21,7 +21,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: Editor Linux (target=editor, linker=gold)
+          - name: Editor Linux (target=editor)
             cache-name: linux-editor
             target: editor
             tests: false
@@ -32,13 +32,35 @@ jobs:
             artifact: true
             platform: linuxbsd
 
-          - name: Editor Windows (target=editor, linker=gold)
+          - name: Editor Linux Libgodot (target=editor)
+            cache-name: linux-editor
+            target: editor
+            tests: false
+            sconsflags: use_llvm=yes custom_modules=../vsk_modules precision=double linker=gold deprecate=no library_type=shared_library
+            doc-test: false
+            bin: "./bin/libgodot.linuxbsd.editor.double.x86_64.llvm.so"
+            proj-conv: false
+            artifact: true
+            platform: linuxbsd
+
+          - name: Editor Windows (target=editor)
             cache-name: windows-editor
             target: editor
             tests: false
-            sconsflags: use_llvm=yes use_mingw=yes custom_modules=../vsk_modules precision=double linker=gold deprecate=no
+            sconsflags: use_llvm=yes use_mingw=yes custom_modules=../vsk_modules precision=double deprecate=no
             doc-test: false
             bin: "./bin/godot.windows.editor.double.x86_64.llvm.exe"
+            proj-conv: false
+            artifact: true
+            platform: windows
+
+          - name: Editor Windows Libgodot (target=editor)
+            cache-name: windows-editor
+            target: editor
+            tests: false
+            sconsflags: use_llvm=yes use_mingw=yes custom_modules=../vsk_modules precision=double linker=gold deprecate=no library_type=shared_library
+            doc-test: false
+            bin: "./bin/godot.windows.editor.double.x86_64.llvm.dll"
             proj-conv: false
             artifact: true
             platform: windows
@@ -86,7 +108,11 @@ jobs:
         run: |
           sudo rm -f /etc/apt/sources.list.d/microsoft-prod.list
           sudo add-apt-repository ppa:kisak/kisak-mesa
-          sudo apt-get install -qq mesa-vulkan-drivers
+          sudo apt-get install -qq mesa-vulkan-drivers binutils
+
+      - name: Linux dependencies for gold linker
+        run: |
+          sudo apt-get install -qq binutils
 
       - name: Setup Godot build cache
         uses: ./.github/actions/godot-cache
@@ -208,8 +234,10 @@ jobs:
       - name: Prepare artifact
         if: ${{ matrix.artifact }}
         run: |
-          strip godot/bin/godot.*
-          chmod +x godot/bin/godot.*
+          strip godot/bin/godot.* || true
+          strip godot/bin/libgodot.* || true
+          chmod +x godot/bin/godot.* || true
+          chmod +x godot/bin/libgodot.* || true
 
       - name: Upload artifact
         uses: ./.github/actions/upload-artifact
