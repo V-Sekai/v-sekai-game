@@ -79,7 +79,7 @@ jobs:
           #   # Skip 2GiB artifact speeding up action.
           #   artifact: false
           #   platform: linuxbsd
-          # 
+          #
           # - name: Editor with clang sanitizers (target=editor, tests=yes, dev_build=yes, use_asan=yes, use_ubsan=yes, use_llvm=yes, linker=gold)
           #   cache-name: linux-editor-llvm-sanitizers
           #   target: editor
@@ -90,6 +90,17 @@ jobs:
           #   # Skip 2GiB artifact speeding up action.
           #   artifact: false
           #   platform: linuxbsd
+
+          - name: Editor with clang sanitizers (target=editor, tests=yes, dev_build=yes, use_asan=yes, use_ubsan=yes, use_llvm=yes, linker=gold)
+            cache-name: linux-editor-llvm-sanitizers
+            target: editor
+            tests: true
+            sconsflags: dev_build=yes use_asan=yes use_ubsan=yes use_llvm=yes linker=gold
+            bin: "./bin/godot.linuxbsd.editor.dev.x86_64.llvm.san"
+            build-mono: false
+            # Skip 2GiB artifact speeding up action.
+            artifact: false
+            platform: linuxbsd
 
           - name: Minimal template (target=template_release, everything disabled, linker=gold)
             cache-name: linux-template-minimal
@@ -127,7 +138,7 @@ jobs:
         uses: actions/setup-dotnet@v2
         if: ${{ matrix.build-mono }}
         with:
-          dotnet-version: '6.0.x'
+          dotnet-version: "6.0.x"
 
       - name: Setup GCC problem matcher
         uses: ammaraskar/gcc-problem-matcher@master
@@ -139,7 +150,7 @@ jobs:
           platform: ${{ matrix.platform }}
           target: ${{ matrix.target }}
           tests: ${{ matrix.tests }}
-          
+
       - name: Generate C# glue
         if: ${{ matrix.build-mono }}
         run: |
@@ -212,8 +223,8 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: godotengine/godot-cpp
-          submodules: 'recursive'
-          path: 'godot-cpp'
+          submodules: "recursive"
+          path: "godot-cpp"
 
       # Dump GDExtension interface and API
       - name: Dump GDExtension interface and API for godot-cpp build
