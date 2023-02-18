@@ -18,3 +18,4 @@ _sentinel_file.png*
 .dagger_storage
 .github/dagger/storage/
 fire
+vsk_default/test/results/

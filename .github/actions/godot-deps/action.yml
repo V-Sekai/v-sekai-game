@@ -1,0 +1,50 @@
+name: Setup python and scons
+description: Setup python, install the pip version of scons.
+inputs:
+  python-version:
+    description: The python version to use.
+    default: "3.x"
+  python-arch:
+    description: The python architecture.
+    default: "x64"
+runs:
+  using: "composite"
+  steps:
+    # Use python 3.x release (works cross platform)
+    - name: Set up Python 3.x
+      uses: actions/setup-python@v4
+      with:
+        # Semantic version range syntax or exact version of a Python version
+        python-version: ${{ inputs.python-version }}
+        # Optional - x64 or x86 architecture, defaults to x64
+        architecture: ${{ inputs.python-arch }}
+
+    - name: Setup scons
+      shell: bash
+      run: |
+        python -c "import sys; print(sys.version)"
+        python -m pip install scons
+        scons --version
+
+    - name: Install latest nightly
+      uses: actions-rs/toolchain@v1
+      with:
+          toolchain: nightly
+          override: true
+          target: x86_64-pc-windows-gnu
+          components: rustfmt, clippy
+
+    - name: Checkout modules repo
+      uses: actions/checkout@v3
+      with:
+        repository: v-sekai/godot-modules-groups
+        path: vsk_modules
+        submodules: recursive
+        ref: 3fc4c76c6df95526fc29a2054132d6c64e6007ab
+
+    - name: Checkout godot engine repo
+      uses: actions/checkout@v3
+      with:
+        repository: v-sekai/godot
+        path: godot
+        ref: groups-4.x.2023-02-16T003047Z 
