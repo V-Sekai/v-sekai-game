@@ -529,7 +529,7 @@ func _validate_hook_script(path):
 
 	if(FileAccess.file_exists(path)):
 		var inst = load(path).new()
-		if(inst and inst is _utils.HookScript):
+		if(inst and inst == _utils.HookScript):
 			result.instance = inst
 			result.valid = true
 		else:
