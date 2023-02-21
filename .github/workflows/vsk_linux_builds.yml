@@ -33,7 +33,7 @@ jobs:
             platform: linuxbsd
 
           - name: Editor Linux Libgodot (target=editor)
-            cache-name: linux-editor
+            cache-name: linux-editor-shared-library
             target: editor
             tests: false
             sconsflags: use_llvm=yes custom_modules=../vsk_modules precision=double linker=gold deprecate=no library_type=shared_library
@@ -55,7 +55,7 @@ jobs:
             platform: windows
 
           - name: Editor Windows Libgodot (target=editor)
-            cache-name: windows-editor
+            cache-name: windows-editor-shared-library
             target: editor
             tests: false
             sconsflags: use_llvm=yes use_mingw=yes custom_modules=../vsk_modules precision=double linker=gold deprecate=no library_type=shared_library
