@@ -74,7 +74,7 @@ const PARAM_PREFIX = 'p_'
 var _supported_defaults = []
 
 func _init():
-	for _i in range(TYPE_MAX):
+	for _i in range(int(TYPE_MAX)):
 		_supported_defaults.append(null)
 
 	# These types do not require a prefix for defaults
