@@ -25,6 +25,8 @@ our [custom engine modules](https://github.com/V-Sekai/godot-modules-groups) und
 [official documentation](https://docs.godotengine.org/en/latest/contributing/development/compiling/). You must also add the `custom_modules` path when
 invoking scons. More information about custom modules can be found [here](https://docs.godotengine.org/en/latest/contributing/development/core_and_modules/custom_modules_in_cpp.html)
 
+We also provide (integration tests builds](https://nightly.link/V-Sekai/v-sekai-game/workflows/vsk_linux_builds/main).
+
 ## How do I get involved?
 
 We're happy to accept pull requests for features and bug fixes. Please join our [official Discord server](https://discord.gg/7BQDHesck8) for more information.
