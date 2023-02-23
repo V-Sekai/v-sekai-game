@@ -69,8 +69,10 @@ func _update_session(
 
 	if signed_in:
 		godot_uro.cfg.set_value("api", "renewal_token", GodotUroData.renewal_token)
+		if godot_uro.cfg.save(godot_uro.get_uro_editor_config_path()) != OK:
+			printerr("Could not save editor token!")
 		if godot_uro.cfg.save(godot_uro.get_uro_config_path()) != OK:
-			printerr("Could not save token!")
+			printerr("Could not save game token!")
 
 	if token_changed:
 		token_refresh_in_progress = false
