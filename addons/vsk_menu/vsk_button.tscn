@@ -9,7 +9,7 @@ offset_right = 12.0
 offset_bottom = 25.0
 
 [node name="ButtonAudio" type="Node" parent="."]
-script = ExtResource( "2" )
+script = ExtResource("2")
 button_nodepath = NodePath("..")
-focused_sound = ExtResource( "4" )
-pressed_sound = ExtResource( "3" )
+focused_sound = ExtResource("4")
+pressed_sound = ExtResource("3")

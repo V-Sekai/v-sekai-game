@@ -9,6 +9,9 @@ rough = true
 bounce = 0.5
 
 [node name="Beachball" instance=ExtResource("2")]
+simulation_logic_node/hit_velocity = 0.5
+simulation_logic_node/physics_material = SubResource("PhysicsMaterial_ie8ae")
+simulation_logic_node/mass = 0.624
 
 [node name="PropSimulationLogic" parent="." index="2"]
 hit_velocity = 0.5

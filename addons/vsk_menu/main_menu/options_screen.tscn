@@ -5,15 +5,19 @@
 [ext_resource type="PackedScene" uid="uid://tt3cnvs3qqlq" path="res://addons/vsk_menu/vsk_large_button.tscn" id="4"]
 
 [node name="OptionsScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource("3")
 
 [node name="Panel" type="Panel" parent="."]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 
 [node name="CenterContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 10.0
@@ -24,63 +28,46 @@ theme_override_constants/separation = 20
 alignment = 1
 
 [node name="Control" type="HBoxContainer" parent="CenterContainer"]
-offset_right = 1004.0
-offset_bottom = 528.0
+layout_mode = 2
 size_flags_vertical = 3
 alignment = 1
 
 [node name="ButtonsCenterContainer" type="HBoxContainer" parent="CenterContainer/Control"]
-offset_left = 377.0
-offset_right = 626.0
-offset_bottom = 528.0
+layout_mode = 2
 alignment = 1
 
 [node name="ButtonsVerticalContainer" type="VBoxContainer" parent="CenterContainer/Control/ButtonsCenterContainer"]
-offset_right = 249.0
-offset_bottom = 528.0
+layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 alignment = 1
 
 [node name="PlayerButton" parent="CenterContainer/Control/ButtonsCenterContainer/ButtonsVerticalContainer" instance=ExtResource("4")]
-offset_top = 172.0
-offset_right = 249.0
-offset_bottom = 204.0
+layout_mode = 2
 text = "TR_MENU_OPTIONS_PLAYER"
 
 [node name="AudioButton" parent="CenterContainer/Control/ButtonsCenterContainer/ButtonsVerticalContainer" instance=ExtResource("4")]
-offset_top = 210.0
-offset_right = 249.0
-offset_bottom = 242.0
+layout_mode = 2
 text = "TR_MENU_OPTIONS_AUDIO"
 
 [node name="GraphicsButton" parent="CenterContainer/Control/ButtonsCenterContainer/ButtonsVerticalContainer" instance=ExtResource("4")]
-offset_top = 248.0
-offset_right = 249.0
-offset_bottom = 280.0
+layout_mode = 2
 disabled = true
 text = "TR_MENU_OPTIONS_GRAPHICS"
 
 [node name="InputButton" parent="CenterContainer/Control/ButtonsCenterContainer/ButtonsVerticalContainer" instance=ExtResource("4")]
-offset_top = 286.0
-offset_right = 249.0
-offset_bottom = 318.0
+layout_mode = 2
 text = "TR_MENU_OPTIONS_INPUT"
 
 [node name="VRButton" parent="CenterContainer/Control/ButtonsCenterContainer/ButtonsVerticalContainer" instance=ExtResource("4")]
-offset_top = 324.0
-offset_right = 249.0
-offset_bottom = 356.0
+layout_mode = 2
 text = "TR_MENU_OPTIONS_VR"
 
 [node name="BottomContainer" type="HBoxContainer" parent="CenterContainer"]
-offset_top = 548.0
-offset_right = 1004.0
-offset_bottom = 580.0
+layout_mode = 2
 
 [node name="BackButton" parent="CenterContainer/BottomContainer" instance=ExtResource("2")]
-offset_right = 134.0
-offset_bottom = 32.0
+layout_mode = 2
 text = "TR_MENU_BACK"
 
 [connection signal="pressed" from="CenterContainer/Control/ButtonsCenterContainer/ButtonsVerticalContainer/PlayerButton" to="." method="_on_PlayerButton_pressed"]

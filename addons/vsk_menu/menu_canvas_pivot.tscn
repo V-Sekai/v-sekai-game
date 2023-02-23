@@ -4,12 +4,12 @@
 [ext_resource type="Script" path="res://addons/canvas_plane/canvas_plane.gd" id="2"]
 
 [node name="MenuCanvasPivot" type="Node3D"]
-script = ExtResource( "1" )
+script = ExtResource("1")
 canvas_plane_nodepath = NodePath("CanvasPlane")
 
 [node name="CanvasPlane" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0147672, 0.180189, -2.98075)
-script = ExtResource( "2" )
+script = ExtResource("2")
 canvas_anchor_y = 1.0
 canvas_width = 1280.0
 canvas_height = 720.0

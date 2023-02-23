@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=3 format=3 uid="uid://dlm4icthfsqro"]
 
 [ext_resource type="PackedScene" uid="uid://t83gvfjjmupb" path="res://vsk_default/art/import/basketball_reexport/basketball.gltf" id="1"]
 

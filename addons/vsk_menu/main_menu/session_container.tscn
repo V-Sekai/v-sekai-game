@@ -6,51 +6,34 @@
 [node name="SessionContainer" type="HBoxContainer"]
 offset_right = 192.0
 offset_bottom = 33.0
-script = ExtResource( "1" )
+script = ExtResource("1")
 sign_in_container_nodepath = NodePath("SignInContainer")
 sign_out_container_nodepath = NodePath("SignOutContainer")
 reconnect_container_nodepath = NodePath("ReconnectContainer")
 session_info_nodepath = NodePath("SessionInfo")
 
 [node name="SessionInfo" type="Label" parent="."]
-offset_top = 10.0
-offset_right = 13.0
-offset_bottom = 37.0
+layout_mode = 2
 
 [node name="ReconnectContainer" type="PanelContainer" parent="."]
-offset_left = 19.0
-offset_right = 219.0
-offset_bottom = 47.0
+layout_mode = 2
 
-[node name="ReconnectButton" parent="ReconnectContainer" instance=ExtResource( "2" )]
-offset_left = 9.0
-offset_top = 7.5
-offset_right = 191.0
-offset_bottom = 39.5
+[node name="ReconnectButton" parent="ReconnectContainer" instance=ExtResource("2")]
+layout_mode = 2
 text = "TR_MENU_RECONNECT"
 
 [node name="SignInContainer" type="PanelContainer" parent="."]
-offset_left = 225.0
-offset_right = 406.0
-offset_bottom = 47.0
+layout_mode = 2
 
-[node name="SignInButton" parent="SignInContainer" instance=ExtResource( "2" )]
-offset_left = 9.0
-offset_top = 7.5
-offset_right = 172.0
-offset_bottom = 39.5
+[node name="SignInButton" parent="SignInContainer" instance=ExtResource("2")]
+layout_mode = 2
 text = "TR_MENU_SIGN_IN"
 
 [node name="SignOutContainer" type="PanelContainer" parent="."]
-offset_left = 412.0
-offset_right = 602.0
-offset_bottom = 47.0
+layout_mode = 2
 
-[node name="SignOutButton" parent="SignOutContainer" instance=ExtResource( "2" )]
-offset_left = 9.0
-offset_top = 7.5
-offset_right = 181.0
-offset_bottom = 39.5
+[node name="SignOutButton" parent="SignOutContainer" instance=ExtResource("2")]
+layout_mode = 2
 text = "TR_MENU_SIGN_OUT"
 
 [connection signal="pressed" from="ReconnectContainer/ReconnectButton" to="." method="_on_reconnect_button_pressed"]

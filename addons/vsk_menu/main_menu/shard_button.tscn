@@ -24,21 +24,17 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 
 [node name="NameLabel" type="Label" parent="HBoxContainer" index="0"]
 layout_mode = 2
-offset_right = 1123.0
-offset_bottom = 50.0
 size_flags_horizontal = 3
 size_flags_vertical = 7
 clip_text = true
 
 [node name="PlayerCountLabel" type="Label" parent="HBoxContainer" index="1"]
 layout_mode = 2
-offset_left = 1127.0
-offset_top = 12.0
-offset_right = 1152.0
-offset_bottom = 38.0
 size_flags_vertical = 6
 text = "0/0"

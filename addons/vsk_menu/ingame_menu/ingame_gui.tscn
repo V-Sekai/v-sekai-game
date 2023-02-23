@@ -11,17 +11,19 @@ _data = [Vector2(0, 0), 0.0, 33.0546, 0, 1, Vector2(0.00990099, 0.327273), 0.0, 
 point_count = 5
 
 [node name="IngameGUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
-script = ExtResource( "1" )
+script = ExtResource("1")
 audio_icon_path = NodePath("AudioIcon")
 audio_icon_state_path = NodePath("AudioIcon/AudioIconState")
 audio_icon_loudness_path = NodePath("AudioIcon/AudioIconLoudness")
-mic_muted_texture_icon = ExtResource( "2" )
-mic_on_texture_icon = ExtResource( "3" )
-mic_off_texture_icon = ExtResource( "4" )
-loudness_visualisation_curve = SubResource( "1" )
+mic_muted_texture_icon = ExtResource("2")
+mic_on_texture_icon = ExtResource("3")
+mic_off_texture_icon = ExtResource("4")
+loudness_visualisation_curve = SubResource("1")
 
 [node name="AudioIcon" type="Node2D" parent="."]
 position = Vector2(1024, 0)
@@ -29,10 +31,10 @@ scale = Vector2(0.25, 0.25)
 
 [node name="AudioIconLoudness" type="Sprite2D" parent="AudioIcon"]
 modulate = Color(1, 1, 1, 0.501961)
-texture = ExtResource( "5" )
+texture = ExtResource("5")
 
 [node name="AudioIconState" type="Sprite2D" parent="AudioIcon"]
 modulate = Color(1, 1, 1, 0.501961)
-texture = ExtResource( "2" )
+texture = ExtResource("2")
 
 [connection signal="resized" from="." to="." method="_on_resized"]
