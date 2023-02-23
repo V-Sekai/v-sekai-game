@@ -42,10 +42,6 @@
 	path = addons/network_manager
 	url = https://github.com/V-Sekai/network_manager
 	branch = godot4
-[submodule "addons/sar1_debug_manager"]
-	path = addons/sar1_debug_manager
-	url = https://github.com/V-Sekai/sar1_debug_manager
-	branch = godot4
 [submodule "addons/sar1_graphics_manager"]
 	path = addons/sar1_graphics_manager
 	url = https://github.com/V-Sekai/sar1_graphics_manager
