@@ -1,4 +1,4 @@
-var _utils = load('res://addons/gut/utils.gd').get_instance()
+var _utils = load("res://addons/gut/utils.gd").get_instance()
 var _lgr = _utils.get_logger()
 
 var return_val = null
@@ -28,26 +28,29 @@ var parameter_defaults = null
 var _parameter_override_only = true
 # --
 
-const NOT_SET = '|_1_this_is_not_set_1_|'
+const NOT_SET = "|_1_this_is_not_set_1_|"
 
-func _init(target=null,method=null,subpath=null):
+
+func _init(target = null, method = null, subpath = null):
 	stub_target = target
 	target_subpath = subpath
 	stub_method = method
 
-	if(typeof(method) == TYPE_DICTIONARY):
+	if typeof(method) == TYPE_DICTIONARY:
 		_load_metadata(method)
+
 
 func _load_metadata(meta):
 	stub_method = meta.name
 	var values = meta.default_args.duplicate()
-	while (values.size() < meta.args.size()):
+	while values.size() < meta.args.size():
 		values.push_front(null)
 
 	param_defaults(values)
 
+
 func to_return(val):
-	if(stub_method == '_init'):
+	if stub_method == "_init":
 		_lgr.error("You cannot stub _init to do nothing.  Super's _init is always called.")
 	else:
 		return_val = val
@@ -62,7 +65,7 @@ func to_do_nothing():
 
 
 func to_call_super():
-	if(stub_method == '_init'):
+	if stub_method == "_init":
 		_lgr.error("You cannot stub _init to call super.  Super's _init is always called.")
 	else:
 		call_super = true
@@ -70,11 +73,22 @@ func to_call_super():
 	return self
 
 
-func when_passed(p1=NOT_SET,p2=NOT_SET,p3=NOT_SET,p4=NOT_SET,p5=NOT_SET,p6=NOT_SET,p7=NOT_SET,p8=NOT_SET,p9=NOT_SET,p10=NOT_SET):
-	parameters = [p1,p2,p3,p4,p5,p6,p7,p8,p9,p10]
+func when_passed(
+	p1 = NOT_SET,
+	p2 = NOT_SET,
+	p3 = NOT_SET,
+	p4 = NOT_SET,
+	p5 = NOT_SET,
+	p6 = NOT_SET,
+	p7 = NOT_SET,
+	p8 = NOT_SET,
+	p9 = NOT_SET,
+	p10 = NOT_SET
+):
+	parameters = [p1, p2, p3, p4, p5, p6, p7, p8, p9, p10]
 	var idx = 0
-	while(idx < parameters.size()):
-		if(str(parameters[idx]) == NOT_SET):
+	while idx < parameters.size():
+		if str(parameters[idx]) == NOT_SET:
 			parameters.remove_at(idx)
 		else:
 			idx += 1
@@ -98,33 +112,33 @@ func has_param_override():
 
 func is_param_override_only():
 	var to_return = false
-	if(has_param_override()):
+	if has_param_override():
 		to_return = _parameter_override_only
 	return to_return
 
 
 func to_s():
 	var base_string = str(stub_target)
-	if(target_subpath != null):
-		base_string += str('[', target_subpath, '].')
+	if target_subpath != null:
+		base_string += str("[", target_subpath, "].")
 	else:
-		base_string += '.'
+		base_string += "."
 	base_string += stub_method
 
-	if(has_param_override()):
-		base_string += str(' (param count override=', parameter_count, ' defaults=', parameter_defaults)
-		if(is_param_override_only()):
+	if has_param_override():
+		base_string += str(" (param count override=", parameter_count, " defaults=", parameter_defaults)
+		if is_param_override_only():
 			base_string += " ONLY"
-		if(is_script_default):
+		if is_script_default:
 			base_string += " script default"
-		base_string += ') '
+		base_string += ") "
 
-	if(call_super):
+	if call_super:
 		base_string += " to call SUPER"
 
-	if(parameters != null):
-		base_string += str(' with params (', parameters, ') returns ', return_val)
+	if parameters != null:
+		base_string += str(" with params (", parameters, ") returns ", return_val)
 	else:
-		base_string += str(' returns ', return_val)
+		base_string += str(" returns ", return_val)
 
 	return base_string
