@@ -16,7 +16,7 @@ func _main(argv: Array, _data) -> Dictionary:
 	var command_db: GDShellCommandDB = _PARENT_PROCESS._PARENT_GDSHELL.command_db
 
 	var command_name: String = argv[1]
-	
+
 	if command_name == "list":
 		var commands: PackedStringArray = []
 		commands.append_array(command_db._aliases.keys())

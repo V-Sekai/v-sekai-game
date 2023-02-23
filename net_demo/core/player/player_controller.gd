@@ -150,7 +150,7 @@ func _physics_process(p_delta: float) -> void:
 
 		# Calculate the player's rotation
 		_process_rotation(movement_vector)
-		
+
 		# Calculate the player's movement
 		_process_movement(p_delta, movement_vector, InputMap.has_action("sprint") and Input.is_action_pressed("sprint"))
 

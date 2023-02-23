@@ -173,7 +173,9 @@ static func instance_embedded_map_entities(p_map_instance: Node, p_invalid_scene
 					continue
 
 				var map_entity_instance: Node = packed_scene.instantiate()
-				var logic_node: Node = map_entity_instance.get_node_or_null(map_entity_instance.simulation_logic_node_path)
+				var logic_node: Node = map_entity_instance.get_node_or_null(
+					map_entity_instance.simulation_logic_node_path
+				)
 				if not logic_node:
 					continue
 

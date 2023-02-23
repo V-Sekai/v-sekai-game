@@ -25,7 +25,7 @@ func _main(p_argv: Array, _p_data) -> Dictionary:
 	}
 	if not p_argv.size() > 1:
 		output(data)
-		return {"data": data}	
+		return {"data": data}
 	var command_name: String = p_argv[1]
 	var keys = data.keys()
 	if command_name == "list":
@@ -36,6 +36,7 @@ func _main(p_argv: Array, _p_data) -> Dictionary:
 		output(out)
 		return {"data": out}
 	return DEFAULT_COMMAND_RESULT
+
 
 func _get_manual() -> String:
 	return (
