@@ -38,7 +38,7 @@ func _init():
 	}
 
 
-func _main(argv: Array, data) -> Dictionary:
+func _main(argv: Array, _data) -> Dictionary:
 	var info: Dictionary = get_info()
 
 	if not ("-s" in argv or "--silent" in argv):
@@ -49,7 +49,7 @@ func _main(argv: Array, data) -> Dictionary:
 
 func construct_output(graphics: String, info: Dictionary, skip_lines: int = 3) -> String:
 	var out: String = ""
-	var unused_info_keys: Array[String]
+	var unused_info_keys: Array[String] = []
 	unused_info_keys.append_array(info.keys())
 
 	for line in graphics.split("\n", false):

@@ -1,7 +1,7 @@
 extends GDShellCommand
 
 
-func _main(p_argv: Array, p_data) -> Dictionary:
+func _main(p_argv: Array, _p_data) -> Dictionary:
 	var data: Dictionary = {
 		"ms_per_frame": 1000.0 / Performance.get_monitor(Performance.TIME_FPS),
 		"frames_per_second": Performance.get_monitor(Performance.TIME_FPS),

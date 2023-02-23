@@ -8,7 +8,7 @@ func _init():
 	}
 
 
-func _main(argv: Array, data) -> Dictionary:
+func _main(argv: Array, _data) -> Dictionary:
 	if not argv.size() > 1:
 		output("What manual page do you want?\nFor example, try '%s %s'" % [COMMAND_NAME, COMMAND_NAME])
 		return DEFAULT_COMMAND_RESULT
@@ -18,7 +18,7 @@ func _main(argv: Array, data) -> Dictionary:
 	var command_name: String = argv[1]
 	
 	if command_name == "list":
-		var commands: PackedStringArray
+		var commands: PackedStringArray = []
 		commands.append_array(command_db._aliases.keys())
 		output(commands)
 		return {"data": commands}
