@@ -44,37 +44,38 @@ func _update_session(
 	p_user_privilege_rulesets: Dictionary,
 	p_signed_in: bool
 ) -> void:
-	if godot_uro:
-		signed_in = p_signed_in
+	if not godot_uro:
+		signed_in = false
+		return
+	signed_in = p_signed_in
 
-		var token_changed: bool = false
+	var token_changed: bool = false
 
-		if GodotUroData.renewal_token != p_renewal_token:
-			GodotUroData.renewal_token = p_renewal_token
-			token_changed = true
-		if GodotUroData.access_token != p_access_token:
-			GodotUroData.access_token = p_access_token
-			token_changed = true
+	if GodotUroData.renewal_token != p_renewal_token:
+		GodotUroData.renewal_token = p_renewal_token
+		token_changed = true
+	if GodotUroData.access_token != p_access_token:
+		GodotUroData.access_token = p_access_token
+		token_changed = true
 
-		account_id = p_id
-		account_username = p_username
-		account_display_name = p_display_name
+	account_id = p_id
+	account_username = p_username
+	account_display_name = p_display_name
 
-		is_admin = p_user_privilege_rulesets.get("is_admin", false)
-		can_upload_avatars = p_user_privilege_rulesets.get("can_upload_avatars", false)
-		can_upload_maps = p_user_privilege_rulesets.get("can_upload_maps", false)
-		can_upload_props = p_user_privilege_rulesets.get("can_upload_props", false)
+	is_admin = p_user_privilege_rulesets.get("is_admin", false)
+	can_upload_avatars = p_user_privilege_rulesets.get("can_upload_avatars", false)
+	can_upload_maps = p_user_privilege_rulesets.get("can_upload_maps", false)
+	can_upload_props = p_user_privilege_rulesets.get("can_upload_props", false)
 
+	if signed_in:
 		godot_uro.cfg.set_value("api", "renewal_token", GodotUroData.renewal_token)
 		if godot_uro.cfg.save(godot_uro.get_uro_config_path()) != OK:
 			printerr("Could not save token!")
 
-		if token_changed:
-			token_refresh_in_progress = false
-			if not GodotUroData.renewal_token.is_empty():
-				token_refresh_timer.start(REFRESH_TIMER)
-	else:
-		signed_in = false
+	if token_changed:
+		token_refresh_in_progress = false
+		if not GodotUroData.renewal_token.is_empty():
+			token_refresh_timer.start(REFRESH_TIMER)
 
 
 func _load_session() -> void:
