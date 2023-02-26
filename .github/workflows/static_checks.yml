@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           repository: v-sekai/godot
-          ref: groups-4.x.2023-02-16T003047Z 
+          ref: groups-4.x.2023-02-16T003047Z
 
       - name: Install dependencies
         run: |
