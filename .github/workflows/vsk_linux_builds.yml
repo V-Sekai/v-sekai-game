@@ -259,21 +259,32 @@ jobs:
           workflow_conclusion: success
           name: linux-editor
 
+      - name: Download linux-editor-shared-library artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: vsk_linux_builds.yml
+          workflow_conclusion: success
+          name: linux-editor-shared-library
+
       - name: Export Linux v-sekai-game
         run: |
           mkdir -p .godot/editor .godot/imported export_linuxbsd
           cp godot.linuxbsd.editor.double.x86_64.llvm v_sekai_linux.x86_64
           chmod +x godot.linuxbsd.editor.double.x86_64.llvm
           ./godot.linuxbsd.editor.double.x86_64.llvm --headless --xr-mode off --export-pack Linux/X11  `pwd`/v_sekai_linux.x86_64.pck --path .
+          ./godot.linuxbsd.editor.double.x86_64.llvm --headless --xr-mode off --dump-extension-api --dump-gdextension-interface
 
       - name: Upload Godot Artifact Export Linux
         uses: actions/upload-artifact@v3
         with:
           name: v_sekai_game_linux_x86_64
           path: |
+            libgodot.linuxbsd.editor.double.x86_64.llvm.so
             v_sekai_linux.x86_64
             v_sekai_linux.x86_64.pck
             .itch.toml
+            extension_api.json
+            gdextension_interface.h
           retention-days: 14
 
   deploy-packages-windows:
@@ -298,21 +309,33 @@ jobs:
           workflow_conclusion: success
           name: windows-editor
 
+      - name: Download windows-editor-shared-library artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: vsk_linux_builds.yml
+          workflow_conclusion: success
+          name: windows-editor-shared-library
+
       - name: Export Windows v-sekai-game
         run: |
           mkdir -p .godot/editor .godot/imported export_windows
           cp godot.windows.editor.double.x86_64.llvm.exe v_sekai_windows_x86_64.exe
+          cp libgodot.windows.editor.double.x86_64.llvm.so libgodot.windows.editor.double.x86_64.llvm.dll
           chmod +x godot.linuxbsd.editor.double.x86_64.llvm
           ./godot.linuxbsd.editor.double.x86_64.llvm --headless --xr-mode off --export-pack Windows\ Desktop `pwd`/v_sekai_windows_x86_64.pck --path .
+          ./godot.linuxbsd.editor.double.x86_64.llvm --headless --xr-mode off --dump-extension-api --dump-gdextension-interface
 
       - name: Upload Godot Artifact Export Windows
         uses: actions/upload-artifact@v3
         with:
           name: v_sekai_game_windows_x86_64
           path: |
+            libgodot.windows.editor.double.x86_64.llvm.dll
             v_sekai_windows_x86_64.exe
             v_sekai_windows_x86_64.pck
             .itch.toml
+            extension_api.json
+            gdextension_interface.h
           retention-days: 14
           
   deploy-packages-sdk:
