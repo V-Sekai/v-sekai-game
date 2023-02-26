@@ -15,7 +15,7 @@
 	"suffix": ".gd",
 	"tests": [
 	],
-	"junit_xml_file": "res://vsk_default/test/results/TEST.xml",
+	"junit_xml_file": "res://TEST.xml",
 	"junit_xml_timestamp": true,
 	"unit_test_name": ""
 }
