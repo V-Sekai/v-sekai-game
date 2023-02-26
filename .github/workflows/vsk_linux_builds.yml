@@ -365,6 +365,11 @@ jobs:
           workflow_conclusion: success
           name: web-template
 
+      - name: Export v-sekai-godot for gdextension
+        run: |
+          chmod +x godot.linuxbsd.editor.double.x86_64.llvm
+          ./godot.linuxbsd.editor.double.x86_64.llvm --headless --xr-mode off --dump-extension-api --dump-gdextension-interface
+
       - name: Upload Godot Artifact Export Windows
         uses: actions/upload-artifact@v3
         with:
