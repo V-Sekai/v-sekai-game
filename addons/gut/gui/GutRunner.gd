@@ -38,8 +38,6 @@ func run_tests(show_gui = true):
 	if _gut == null:
 		get_gut()
 
-	_setup_gui(show_gui)
-
 	_gut.add_children_to = self
 	if _gut_config.options.gut_on_top:
 		_gut_layer.add_child(_gut)
@@ -55,30 +53,6 @@ func run_tests(show_gui = true):
 	var run_rest_of_scripts = _gut_config.options.unit_test_name == ""
 
 	_gut.test_scripts(run_rest_of_scripts)
-
-
-func _setup_gui(show_gui):
-	if show_gui:
-		_gui.gut = _gut
-		var printer = _gut.logger.get_printer("gui")
-		printer.set_textbox(_gui.get_textbox())
-	else:
-		_gut.logger.disable_printer("gui", true)
-		_gui.visible = false
-
-	var opts = _gut_config.options
-	_gui.set_font_size(opts.font_size)
-	_gui.set_font(opts.font_name)
-	if opts.font_color != null and opts.font_color.is_valid_html_color():
-		_gui.set_default_font_color(Color(opts.font_color))
-	if opts.background_color != null and opts.background_color.is_valid_html_color():
-		_gui.set_background_color(Color(opts.background_color))
-
-	#_tester.set_modulate(Color(1.0, 1.0, 1.0, min(1.0, float(opts.opacity) / 100)))
-	# if(opts.should_maximize):
-	# 	_tester.maximize()
-	#if(opts.compact_mode):
-	#	_tester.get_gui().compact_mode(true)
 
 
 func _write_results():
