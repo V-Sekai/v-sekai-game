@@ -12,11 +12,6 @@ const VALID_LAUNCH_ARGUMENTS: Dictionary = {
 	"use_vr": 0,
 	"test_audio": 1,
 	"autoquit": 0,
-	"simulate_network_conditions": 0,
-	"min_latency": 1,
-	"max_latency": 1,
-	"drop_rate": 1,
-	"dup_rate": 1,
 }
 
 const ARGUMENT_PREFIX = "--"
