@@ -160,6 +160,18 @@ func parse_commandline_args() -> void:
 	if commandline_argument_dictionary.has("autoquit"):
 		VSKGameFlowManager.autoquit = true
 
+	# Network Latency Simulator
+	if commandline_argument_dictionary.has("simulate_network_conditions"):
+		NetworkManager.network_flow_manager.simulate_network_conditions = true
+	if commandline_argument_dictionary.has("min_latency"):
+		NetworkManager.network_flow_manager.min_latency = commandline_argument_dictionary["min_latency"][0]
+	if commandline_argument_dictionary.has("max_latency"):
+		NetworkManager.network_flow_manager.max_latency = commandline_argument_dictionary["max_latency"][0]
+	if commandline_argument_dictionary.has("drop_rate"):
+		NetworkManager.network_flow_manager.drop_rate = commandline_argument_dictionary["drop_rate"][0]
+	if commandline_argument_dictionary.has("dup_rate"):
+		NetworkManager.network_flow_manager.dup_rate = commandline_argument_dictionary["dup_rate"][0]
+
 
 func apply_project_settings() -> void:
 	if not Engine.is_editor_hint():
