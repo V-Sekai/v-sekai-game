@@ -25,9 +25,9 @@ jobs:
             cache-name: linux-editor
             target: editor
             tests: false
-            sconsflags: use_llvm=yes custom_modules=../vsk_modules precision=double linker=gold deprecate=no
+            sconsflags: use_llvm=yes custom_modules=../vsk_modules precision=double linker=gold deprecate=no dev_build=yes
             doc-test: false
-            bin: "./bin/godot.linuxbsd.editor.double.x86_64.llvm"
+            bin: "./bin/godot.linuxbsd.editor.dev.double.x86_64.llvm"
             proj-conv: false
             artifact: true
             platform: linuxbsd
@@ -232,16 +232,22 @@ jobs:
           cd ../..
 
       - name: Export Linux v-sekai-game
-        if: ${{ matrix.godot-cpp-test }}
+        if: ${{ matrix.cache-name == 'linux-editor' }}
         run: |
-          XDG_DATA_HOME=`pwd`/.local/share/ ./godot/${{ matrix.bin }} --headless --xr-mode off --export-release \"Windows Desktop\" `pwd`/export_windows/v_sekai_windows.exe --path g
-          cp g/.itch.toml `pwd`/export_windows/ || [ -f \"`pwd`/export_windows/v_sekai_windows.exe\"]
+          mkdir -p .godot/editor
+          mkdir -p .godot/imported
+          mkdir export_windows
+          XDG_DATA_HOME=`pwd`/.local/share/ ./godot/${{ matrix.bin }} --headless --xr-mode off --export-release \"Windows Desktop\" `pwd`/export_windows/v_sekai_windows.exe --path .
+          cp .itch.toml `pwd`/export_windows/ || [ -f \"`pwd`/export_windows/v_sekai_windows.exe\"]
 
       - name: Export Windows v-sekai-game
-        if: ${{ matrix.godot-cpp-test }}
+        if: ${{ matrix.cache-name == 'linux-editor' }}
         run: |
-          XDG_DATA_HOME=`pwd`/.local/share/ ./godot/${{ matrix.bin }} --headless --xr-mode off --export-release \"Linux/X11\" `pwd`/v_sekai_linuxbsd/v_sekai_linuxbsd --path g
-          cp g/.itch.toml `pwd`/v_sekai_linuxbsd/ || [ -f \"`pwd`/v_sekai_linuxbsd/v_sekai_linuxbsd\"]
+          mkdir -p .godot/editor
+          mkdir -p .godot/imported
+          mkdir export_windows
+          XDG_DATA_HOME=`pwd`/.local/share/ ./godot/${{ matrix.bin }} --headless --xr-mode off --export-release \"Linux/X11\" `pwd`/export_linuxbsd/v_sekai_linuxbsd --path .
+          cp .itch.toml `pwd`/export_linuxbsd/ || [ -f \"`pwd`/export_linuxbsd/v_sekai_linuxbsd\"]
 
       - name: Prepare artifact
         if: ${{ matrix.artifact }}
