@@ -244,3 +244,111 @@ jobs:
         if: ${{ matrix.artifact }}
         with:
           name: ${{ matrix.cache-name }}
+
+  deploy-packages-linux:
+    needs: [build-linux]
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Download linux-editor artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: vsk_linux_builds.yml
+          workflow_conclusion: success
+          name: linux-editor
+
+      - name: Export Linux v-sekai-game
+        run: |
+          mkdir -p .godot/editor .godot/imported export_linuxbsd
+          cp godot.linuxbsd.editor.double.x86_64.llvm v_sekai_linux.x86_64
+          chmod +x godot.linuxbsd.editor.double.x86_64.llvm
+          ./godot.linuxbsd.editor.double.x86_64.llvm --headless --xr-mode off --export-pack Linux/X11  `pwd`/v_sekai_linux.x86_64.pck --path .
+
+      - name: Upload Godot Artifact Export Linux
+        uses: actions/upload-artifact@v3
+        with:
+          name: v_sekai_game_linux_x86_64
+          path: |
+            v_sekai_linux.x86_64
+            v_sekai_linux.x86_64.pck
+            .itch.toml
+          retention-days: 14
+
+  deploy-packages-windows:
+    needs: [build-linux]
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Download linux-editor artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: vsk_linux_builds.yml
+          workflow_conclusion: success
+          name: linux-editor
+
+      - name: Download windows-editor artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: vsk_linux_builds.yml
+          workflow_conclusion: success
+          name: windows-editor
+
+      - name: Export Windows v-sekai-game
+        run: |
+          mkdir -p .godot/editor .godot/imported export_windows
+          cp godot.windows.editor.double.x86_64.llvm.exe v_sekai_windows_x86_64.exe
+          chmod +x godot.linuxbsd.editor.double.x86_64.llvm
+          ./godot.linuxbsd.editor.double.x86_64.llvm --headless --xr-mode off --export-pack Windows\ Desktop `pwd`/v_sekai_windows_x86_64.pck --path .
+
+      - name: Upload Godot Artifact Export Windows
+        uses: actions/upload-artifact@v3
+        with:
+          name: v_sekai_game_windows_x86_64
+          path: |
+            v_sekai_windows_x86_64.exe
+            v_sekai_windows_x86_64.pck
+            .itch.toml
+          retention-days: 14
+          
+  deploy-packages-sdk:
+    runs-on: ubuntu-20.04
+    needs: [build-linux]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Download linux-editor artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: vsk_linux_builds.yml
+          workflow_conclusion: success
+          name: linux-editor
+
+      - name: Download windows-editor artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: vsk_linux_builds.yml
+          workflow_conclusion: success
+          name: windows-editor
+
+      - name: Download web artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: vsk_web_builds.yml
+          workflow_conclusion: success
+          name: web-template
+
+      - name: Upload Godot Artifact Export Windows
+        uses: actions/upload-artifact@v3
+        with:
+          name: v_sekai_game_sdk
+          path: |
+            .
+          retention-days: 14
