@@ -233,8 +233,6 @@ jobs:
       - name: Prepare artifact
         if: ${{ matrix.artifact }}
         run: |
-          strip godot/bin/godot.* || true
-          strip godot/bin/libgodot.* || true
           chmod +x godot/bin/godot.* || true
           chmod +x godot/bin/libgodot.* || true
 
