@@ -96,10 +96,6 @@
 	path = addons/vrm
 	url = https://github.com/V-Sekai/godot-vrm
 	branch = only-addon
-[submodule "addons/splerger"]
-	path = addons/splerger
-	url = https://github.com/V-Sekai/godot-splerger.git
-	branch = main
 [submodule "addons/xr_vignette"]
 	path = addons/xr_vignette
 	url = https://github.com/V-Sekai/godot_xr_vignette
