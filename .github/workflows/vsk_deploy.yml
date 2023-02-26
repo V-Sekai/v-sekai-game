@@ -70,3 +70,39 @@ jobs:
             v_sekai_windows_x86_64.pck
             .itch.toml
           retention-days: 14
+
+  deploy-packages-sdk:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Download linux-editor artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: vsk_linux_builds.yml
+          workflow_conclusion: success
+          name: linux-editor
+
+      - name: Download windows-editor artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: vsk_linux_builds.yml
+          workflow_conclusion: success
+          name: windows-editor
+
+      - name: Download web artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: vsk_web_builds.yml
+          workflow_conclusion: success
+          name: web-template
+
+      - name: Upload Godot Artifact Export Windows
+        uses: actions/upload-artifact@v3
+        with:
+          name: v_sekai_game_sdk
+          path: |
+            .
+          retention-days: 14
