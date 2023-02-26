@@ -47,4 +47,5 @@ runs:
       with:
         repository: v-sekai/godot
         path: godot
-        ref: 17f8158e2863cdaf624f7eed1b1e7114e6d27a29
+        # date --iso=min --utc # 2023-02-26T00:19+00:00
+        ref: 84a80721c5308df36c7295949c76a622c5e0edb9 
