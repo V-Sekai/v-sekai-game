@@ -231,6 +231,18 @@ jobs:
           scons target=template_debug dev_build=yes
           cd ../..
 
+      - name: Export Linux v-sekai-game
+        if: ${{ matrix.godot-cpp-test }}
+        run: |
+          XDG_DATA_HOME=`pwd`/.local/share/ ./godot/${{ matrix.bin }} --headless --xr-mode off --export-release \"Windows Desktop\" `pwd`/export_windows/v_sekai_windows.exe --path g
+          cp g/.itch.toml `pwd`/export_windows/ || [ -f \"`pwd`/export_windows/v_sekai_windows.exe\"]
+
+      - name: Export Windows v-sekai-game
+        if: ${{ matrix.godot-cpp-test }}
+        run: |
+          XDG_DATA_HOME=`pwd`/.local/share/ ./godot/${{ matrix.bin }} --headless --xr-mode off --export-release \"Linux/X11\" `pwd`/v_sekai_linuxbsd/v_sekai_linuxbsd --path g
+          cp g/.itch.toml `pwd`/v_sekai_linuxbsd/ || [ -f \"`pwd`/v_sekai_linuxbsd/v_sekai_linuxbsd\"]
+
       - name: Prepare artifact
         if: ${{ matrix.artifact }}
         run: |

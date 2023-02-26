@@ -14,8 +14,4 @@ _temp_*
 _sentinel_file.png*
 *asset_database.tres
 
-.github/dagger/cue.mod/
-.dagger_storage
-.github/dagger/storage/
-fire
 vsk_default/test/results/
