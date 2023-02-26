@@ -240,7 +240,7 @@ func quit_callback_decrement() -> void:
 	quit_callback_counter -= 1
 
 	if quit_callback_counter < 0:
-		LogManager.fatal_error("quit callback underflow!")
+		assert(false, "quit callback underflow!")
 
 	if quit_flag and quit_callback_counter == 0:
 		force_quit()
@@ -517,7 +517,7 @@ func _map_load_callback(p_callback: int, p_callback_dictionary: Dictionary) -> v
 		_:
 			set_callback_state(CALLBACK_STATE_MAP_UNKNOWN_FAILURE, p_callback_dictionary)
 			return_to_menu = true
-			LogManager.error("Unknown map_load_callback")
+			assert(false, "Unknown map_load_callback")
 
 	if return_to_menu:
 		await go_to_title(false)

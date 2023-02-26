@@ -12,10 +12,10 @@ var noclip_mode: bool = false
 func toggle_noclip() -> void:
 	noclip_mode = !noclip_mode
 	if developer_mode:
-		LogManager.printl("Noclip mode: %s" % noclip_mode)
+		print("Noclip mode: %s" % noclip_mode)
 		noclip_changed.emit()
 	else:
-		LogManager.printl("Requires developer mode to be enabled!")
+		print("Requires developer mode to be enabled!")
 
 
 func set_settings_values():

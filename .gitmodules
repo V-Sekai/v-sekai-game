@@ -46,10 +46,6 @@
 	path = addons/sar1_graphics_manager
 	url = https://github.com/V-Sekai/sar1_graphics_manager
 	branch = godot4
-[submodule "addons/sar1_log_manager"]
-	path = addons/sar1_log_manager
-	url = https://github.com/V-Sekai/sar1_log_manager
-	branch = godot4
 [submodule "addons/sar1_mocap_manager"]
 	path = addons/sar1_mocap_manager
 	url = https://github.com/V-Sekai/sar1_mocap_manager

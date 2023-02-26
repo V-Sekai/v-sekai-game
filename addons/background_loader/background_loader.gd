@@ -262,7 +262,7 @@ func _start_loading_thread() -> void:
 	var callable: Callable = Callable(self, "_threaded_loading_method")
 	var err: int = _loading_thread.start(callable)
 	if err != OK:
-		LogManager.fatal_error("_start_loading_thread (failure)" + str(err))
+		printerr("_start_loading_thread (failure)" + str(err))
 		thread_ended.emit()
 
 

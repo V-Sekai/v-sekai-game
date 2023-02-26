@@ -35,20 +35,20 @@ func set_avatar_path(p_path: String) -> void:
 
 func set_display_name_cmd(p_name: String) -> void:
 	set_display_name(p_name)
-	LogManager.printl("Display name changed to '%s'" % p_name)
+	print("Display name changed to '%s'" % p_name)
 
 
 func set_avatar_path_cmd(p_path: String) -> void:
 	set_avatar_path(p_path)
-	LogManager.printl("Avatar path changed to '%s'" % p_path)
+	print("Avatar path changed to '%s'" % p_path)
 
 
 func print_display_name_cmd() -> void:
-	LogManager.printl(display_name)
+	print(display_name)
 
 
 func print_avatar_path_cmd() -> void:
-	LogManager.printl(avatar_path)
+	print(avatar_path)
 
 
 func set_settings_values() -> void:

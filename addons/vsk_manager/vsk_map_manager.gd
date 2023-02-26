@@ -70,7 +70,7 @@ func _set_loading_stage_count(p_url: String, p_stage_count: int):
 
 func _set_loading_stage(p_url: String, p_stage: int):
 	if p_url == _current_map_path:
-		LogManager.printl(
+		print(
 			"Loading map {stage}/{stage_count}".format(
 				{"stage": str(p_stage), "stage_count": str(_loading_stage_count)}
 			)
@@ -80,14 +80,14 @@ func _set_loading_stage(p_url: String, p_stage: int):
 
 
 func _set_current_map_unsafe(p_map_instance: Node) -> void:
-	LogManager.printl("Setting current map...")
+	print("Setting current map...")
 	gameroot.add_child(p_map_instance, true)
 	current_map = p_map_instance
-	LogManager.printl("Current map set!")
+	print("Current map set!")
 
 
 func _unload_current_map_unsafe() -> void:
-	LogManager.printl("Unloading current map...")
+	print("Unloading current map...")
 
 	_set_instanced_map(null)
 
@@ -106,34 +106,34 @@ func set_current_map(p_map_instance: Node) -> void:
 
 func _set_instanced_map(p_map: Node) -> void:
 	var _mutex_lock = mutex_lock_const.new(_instance_map_mutex)
-	LogManager.printl("Assigning instanced map...")
+	print("Assigning instanced map...")
 	_instanced_map = p_map
 	if p_map:
-		LogManager.printl("Instanced map assigned!")
+		print("Instanced map assigned!")
 	else:
-		LogManager.printl("Map cleared!")
+		print("Map cleared!")
 
 
 func instance_map(_p_strip_all_entities: bool) -> Node:
-	LogManager.printl("Instance map...")
+	print("Instance map...")
 	# Destroy old current scene
 	unload_current_map()
 
 	if _current_map_packed:
 		# Add new current scene
-		LogManager.printl("Instancing map...")
+		print("Instancing map...")
 		var map_instance: Node = _current_map_packed.instantiate()
 
 		if (
 			map_instance.get_script() != vsk_map_definition_const
 			and map_instance.get_script() != vsk_map_definition_runtime_const
 		):
-			LogManager.error("Map does not have a map definition script at root!")
+			assert(false, "Map does not have a map definition script at root!")
 			map_instance.queue_free()
 
 			return null
 		_set_instanced_map(map_instance)
-		LogManager.printl("Map instanced!")
+		print("Map instanced!")
 		return map_instance
 
 	return null
@@ -233,7 +233,7 @@ func get_map_id_for_resource(p_resource: Resource) -> int:
 
 
 func get_resource_for_map_id(p_id: int) -> Resource:
-	LogManager.printl("get_resource_for_map_id %s" % str(p_id))
+	print("get_resource_for_map_id %s" % str(p_id))
 	if _instanced_map:
 		if p_id >= 0 and p_id < _instanced_map.map_resources.size():
 			return _instanced_map.map_resources[p_id]
@@ -250,11 +250,11 @@ func setup() -> void:
 	VSKResourceManager.assign_get_resource_for_map_id_function(self, "get_resource_for_map_id")
 
 	if connect("user_content_load_done", self._user_content_load_done) != OK:
-		LogManager.error("Could not connect _user_content_load_done")
+		assert(false, "Could not connect _user_content_load_done")
 	if connect("user_content_background_load_stage", self._set_loading_stage) != OK:
-		LogManager.error("Could not connect user_content_background_load_stage")
+		assert(false, "Could not connect user_content_background_load_stage")
 	if connect("user_content_background_load_stage_count", self._set_loading_stage_count) != OK:
-		LogManager.error("Could not connect user_content_background_load_stage_count")
+		assert(false, "Could not connect user_content_background_load_stage_count")
 
 
 func apply_project_settings() -> void:

@@ -27,7 +27,7 @@ func _finished_background_load_request(p_task_path : String) -> void:
 		if BackgroundLoader.task_set_stage_count.is_connected(self._background_loader_task_stage_count):
 			BackgroundLoader.task_set_stage_count.disconnect(self._background_loader_task_stage_count)
 	elif background_loading_tasks_in_progress < 0:
-		LogManager.fatal_error("Background load request underflow!")
+		assert(false, "Background load request underflow!")
 
 func _background_loader_task_done(p_task_path: String, p_err: int, p_resource: Resource) -> void:
 	if background_loading_tasks.has(p_task_path):
@@ -61,7 +61,7 @@ func finished_asset_request() -> void:
 		VSKAssetManager.request_cancelled.disconnect(self._user_content_asset_request_cancelled)
 		VSKAssetManager.request_started.disconnect(self._user_content_asset_request_started)
 	elif asset_requests_in_progress < 0:
-		LogManager.fatal_error("Asset request underflow!")
+		assert(false, "Asset request underflow!")
 
 func _user_content_asset_request_complete(p_url: String, p_request_object: Dictionary, p_response_code: int) -> void:
 	if user_content_urls.has(p_url):
@@ -176,7 +176,7 @@ func log_validation_result(p_url: String, p_user_content_type_name: String, p_va
 	var info: String = p_validation_result["info"]
 
 	if code != VSKImporter.ImporterResult.OK:
-		LogManager.error(
+		assert(false,
 "{user_content_type_name} at url '{user_content_url}' failed validation check with error '{code_string}'.
 The following information was provided:
 {info}".format(

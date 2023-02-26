@@ -44,7 +44,7 @@ func _next_preloading_task() -> void:
 		if BackgroundLoader.request_loading_task_bypass_whitelist(preloading_tasks.keys()[0]) == false:
 			printerr("request_loading_task failed!")
 	else:
-		LogManager.fatal_error("Preloading task queue underflow!")
+		assert(false, "Preloading task queue underflow!")
 
 
 ##
@@ -177,7 +177,7 @@ func request_preloading_tasks() -> bool:
 
 func _process(_delta: float) -> void:
 	if preloading_failed_flag:
-		LogManager.fatal_error("preloading failure flag triggered!")
+		assert(false, "preloading failure flag triggered!")
 
 
 func setup() -> void:

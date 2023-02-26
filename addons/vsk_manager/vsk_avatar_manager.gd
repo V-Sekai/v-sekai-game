@@ -75,7 +75,7 @@ func _set_loading_stage_count(p_url: String, p_stage_count: int):
 
 
 func _set_loading_stage(p_url: String, p_stage: int):
-	LogManager.printl(
+	print(
 		"Loading avatar {stage}/{stage_count}".format(
 			{"stage": str(p_stage), "stage_count": str(avatar_stage_map[p_url])}
 		)
@@ -123,12 +123,12 @@ func set_settings_values_and_save() -> void:
 
 func set_avatar_physics_cmd(p_is_true: bool) -> void:
 	use_avatar_physics = p_is_true
-	LogManager.printl("use_avatar_physics: %s" % use_avatar_physics)
+	print("use_avatar_physics: %s" % use_avatar_physics)
 
 
 func set_show_nametags_cmd(p_is_true: bool) -> void:
 	show_nametags = p_is_true
-	LogManager.printl("show_nametags: %s" % show_nametags)
+	print("show_nametags: %s" % show_nametags)
 	nametag_visibility_updated.emit()
 
 
@@ -140,11 +140,11 @@ func setup():
 	get_settings_values()
 
 	if connect("user_content_load_done", self._user_content_load_done) != OK:
-		LogManager.error("Could not connect user_content_load_succeeded")
+		assert(false, "Could not connect user_content_load_succeeded")
 	if connect("user_content_background_load_stage", self._set_loading_stage) != OK:
-		LogManager.error("Could not connect user_content_background_load_stage")
+		assert(false, "Could not connect user_content_background_load_stage")
 	if connect("user_content_background_load_stage_count", self._set_loading_stage_count) != OK:
-		LogManager.error("Could not connect user_content_background_load_stage_count")
+		assert(false, "Could not connect user_content_background_load_stage_count")
 
 
 func _ready():

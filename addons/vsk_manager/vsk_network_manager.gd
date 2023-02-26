@@ -118,7 +118,7 @@ func _host_state_task_increment() -> void:
 func _host_state_task_decrement() -> void:
 	host_state_tasks -= 1
 	if host_state_tasks < 0:
-		LogManager.fatal_error("host state task underflow!")
+		assert(false, "host state task underflow!")
 
 	if host_state_tasks == 0 and kill_flag:
 		NetworkManager.request_network_kill()
@@ -607,7 +607,7 @@ func _host_setup_map(p_instances: Dictionary, p_fade_skipped: bool) -> void:
 			NetworkManager.confirm_server_state_ready()
 			session_ready.emit(p_fade_skipped)
 		else:
-			LogManager.error("Could not instantiate map!")
+			assert(false, "Could not instantiate map!")
 			network_callback.emit(INVALID_MAP, {})
 
 
@@ -852,7 +852,7 @@ func _client_state_initialization_fade_complete(p_instance: Node, p_skipped: boo
 			NetworkManager.confirm_server_ready_for_sync()
 			session_ready.emit(p_skipped)
 		else:
-			LogManager.error("Could not instantiate map!")
+			assert(false, "Could not instantiate map!")
 			network_callback.emit(INVALID_MAP, {})
 
 
@@ -865,7 +865,7 @@ func _client_state_initialization_complete(p_instance: Node) -> void:
 		if is_session_alive():
 			_client_state_initialization_fade_complete(p_instance, skipped)
 	else:
-		LogManager.error("Could not instantiate map!")
+		assert(false, "Could not instantiate map!")
 		network_callback.emit(INVALID_MAP, {})
 
 	_host_state_task_decrement()
@@ -1123,9 +1123,6 @@ func setup() -> void:
 		NetworkManager.network_voice_manager.should_send_audio = VSKAudioManager.should_send_audio
 		if !NetworkManager.network_voice_manager.should_send_audio.is_valid():
 			printerr("Could not register should_send_audio callfunc")
-
-		NetworkLogger.assign_printl_func(LogManager, "printl")
-		NetworkLogger.assign_error_func(LogManager, "error")
 
 		if use_threaded_host_state_initalisation_func:
 			state_initialization_thread = Thread.new()
