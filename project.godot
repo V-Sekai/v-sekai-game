@@ -118,6 +118,8 @@ settings/enabled=true
 
 [display]
 
+window/size/viewport_width=1280
+window/size/viewport_height=768
 window/size/resizable=false
 window/vsync/vsync_mode=2
 window/stretch/mode="viewport"
