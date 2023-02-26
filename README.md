@@ -16,7 +16,7 @@ V-Sekai is still currently in a pre-release state. We do not currently offer pre
 It is also highly experimental and due to its focus on providing native user-generated content support, is still being
 evaluated for security. Use at your own risk.
 
-[nightly.link provided downloads for the editor.](https://nightly.link/V-Sekai/v-sekai-game/workflows/build-project/main)
+We also provide (integration tests builds](https://nightly.link/V-Sekai/v-sekai-game/workflows/vsk_linux_builds/main).
 
 ## How do I build it?
 
@@ -24,8 +24,6 @@ V-Sekai requires our [custom Godot Engine fork](https://github.com/v-sekai/godot
 our [custom engine modules](https://github.com/V-Sekai/godot-modules-groups) under the `main`. For information about building the Godot Engine, see the
 [official documentation](https://docs.godotengine.org/en/latest/contributing/development/compiling/). You must also add the `custom_modules` path when
 invoking scons. More information about custom modules can be found [here](https://docs.godotengine.org/en/latest/contributing/development/core_and_modules/custom_modules_in_cpp.html)
-
-We also provide (integration tests builds](https://nightly.link/V-Sekai/v-sekai-game/workflows/vsk_linux_builds/main).
 
 ## How do I get involved?
 
