@@ -16,7 +16,7 @@ V-Sekai is still currently in a pre-release state. We do not currently offer pre
 It is also highly experimental and due to its focus on providing native user-generated content support, is still being
 evaluated for security. Use at your own risk.
 
-We also provide (integration tests builds](https://nightly.link/V-Sekai/v-sekai-game/workflows/vsk_linux_builds/main).
+We also provide [integration tests builds](https://nightly.link/V-Sekai/v-sekai-game/workflows/vsk_linux_builds/main).
 
 ## How do I build it?
 
