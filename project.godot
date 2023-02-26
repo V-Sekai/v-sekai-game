@@ -108,6 +108,7 @@ GDShell="*res://addons/gd_shell/scripts/gdshell_main.gd"
 gdscript/warnings/exclude_addons=false
 gdscript/warnings/unreachable_code=false
 gdscript/warnings/integer_division=false
+gdscript/warnings/assert_always_false=0
 gdscript/warnings/redundant_await=false
 gdscript/warnings/static_called_on_instance=0
 gdscript/warnings/native_method_override=0

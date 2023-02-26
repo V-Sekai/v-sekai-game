@@ -154,7 +154,7 @@ static func instance_embedded_map_entities(p_map_instance: Node, p_invalid_scene
 				push_warning("Map entity id %s: invalid property info" % str(i))
 				continue
 
-			var properties: Dictionary = p_map_instance.entity_instance_properties_list[
+			var _properties: Dictionary = p_map_instance.entity_instance_properties_list[
 				map_entity_instance_info.properties_id
 			]
 
