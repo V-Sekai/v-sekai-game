@@ -519,8 +519,8 @@ config/network_fps=60
 config/default_map_path="uro://69ba151f-a0ca-41e4-b918-f7d7e7399d79"
 config/default_map_path.web=""
 config/default_autohost=false
-config/use_threaded_host_state_initalisation_func=false
-config/use_threaded_received_server_state_func=false
+config/use_threaded_host_state_initalisation_func=true
+config/use_threaded_received_server_state_func=true
 
 [rendering]
 
