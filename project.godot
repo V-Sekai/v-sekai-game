@@ -128,6 +128,7 @@ window/vsync/vsync_via_compositor=true
 
 [editor]
 
+run/main_run_args="--xr-mode off"
 movie_writer/mjpeg_quality=1.0
 movie_writer/movie_file="../export.avi"
 import/use_multiple_threads=false
@@ -516,7 +517,7 @@ config/compression_mode=4
 config/shard_heartbeat_frequency=10.0
 config/default_port=7777
 config/network_fps=60
-config/default_map_path="uro://bb7d83a8-a92d-4ba4-8e3f-233468c3e9db"
+config/default_map_path="uro://69ba151f-a0ca-41e4-b918-f7d7e7399d79"
 config/default_map_path.web=""
 config/default_autohost=false
 config/use_threaded_host_state_initalisation_func=false
