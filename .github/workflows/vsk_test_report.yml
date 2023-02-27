@@ -1,0 +1,23 @@
+name: "Test Report"
+on:
+  workflow_run:
+    workflows: ["🐧 Linux Builds"]
+    types:
+      - completed
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download test artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: vsk_linux_builds.yml
+          workflow_conclusion: success
+          name: linux-test-junit
+
+      - uses: dorny/test-reporter@v1
+        with:
+          artifact: test-results
+          name: JEST Tests
+          path: "*.xml"
+          reporter: jest-junit

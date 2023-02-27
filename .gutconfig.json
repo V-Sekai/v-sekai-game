@@ -15,7 +15,7 @@
 	"suffix": ".gd",
 	"tests": [
 	],
-	"junit_xml_file": "user://VSK_GAME_TEST.xml",
-	"junit_xml_timestamp": true,
+	"junit_xml_file": "res://TEST.xml",
+	"junit_xml_timestamp": false,
 	"unit_test_name": ""
 }
