@@ -342,7 +342,23 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
+          path: v-sekai-game
           fetch-depth: 0
+          submodules: recursive
+          
+      - uses: actions/checkout@v3
+        with:
+          path: uro
+          repository: V-Sekai/uro
+          fetch-depth: 0
+          submodules: recursive
+
+      - uses: actions/checkout@v3
+        with:
+          path: godot
+          repository: V-Sekai/godot
+          fetch-depth: 0
+          ref: groups-4.x
           submodules: recursive
 
       - name: Download linux-editor artifact
