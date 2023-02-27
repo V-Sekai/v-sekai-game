@@ -245,9 +245,6 @@ jobs:
   deploy-test-upload-linux:
     needs: [build-linux]
     runs-on: ubuntu-20.04
-    permissions:
-      contents: write
-      checks: write
     steps:
       - uses: actions/checkout@v3
         with:
@@ -274,12 +271,20 @@ jobs:
         run: |
           ./godot.linuxbsd.editor.double.x86_64.llvm --headless --xr-mode off -s res://addons/gut/gut_cmdln.gd -gexit -d --xr-mode off
 
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: JEST Tests
+          path: TEST.xml
+          reporter: jest-junit
+
       - name: Upload Godot Artifact Export Linux
         uses: actions/upload-artifact@v3
         with:
           name: linux-test-junit
           path: |
-            TEST.xml
+            *.xml
           retention-days: 45
 
   deploy-packages-linux:
@@ -424,4 +429,24 @@ jobs:
           name: v_sekai_game_sdk
           path: |
             .
+          retention-days: 45
+
+  deploy-packages-sdk-godot:
+    runs-on: ubuntu-20.04
+    needs: [build-linux]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Setup python and scons
+        uses: ./.github/actions/godot-deps
+
+      - name: Upload Godot Artifact Export Windows
+        uses: actions/upload-artifact@v3
+        with:
+          name: v_sekai_godot_sdk
+          path: |
+            godot
+            vsk_modules
           retention-days: 45
