@@ -327,7 +327,7 @@ jobs:
           path: |
             libgodot.linuxbsd.editor.double.x86_64.llvm.so
             v_sekai_linux.x86_64
-            v_sekai_linux.x86_64.pck
+            v_sekai_linux.x86_64.zip
             .itch.toml
             extension_api.json
             gdextension_interface.h
@@ -381,7 +381,7 @@ jobs:
           path: |
             libgodot.windows.editor.double.x86_64.llvm.dll
             v_sekai_windows_x86_64.exe
-            v_sekai_windows_x86_64.pck
+            v_sekai_windows_x86_64.zip
             .itch.toml
             extension_api.json
             gdextension_interface.h
