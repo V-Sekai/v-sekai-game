@@ -15,3 +15,5 @@ _sentinel_file.png*
 *asset_database.tres
 
 vsk_default/test/results/
+
+TEST.xml
