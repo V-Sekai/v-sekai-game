@@ -450,3 +450,26 @@ jobs:
             godot
             vsk_modules
           retention-days: 45
+
+  deploy-packages-sdk-uro:
+    runs-on: ubuntu-20.04
+    needs: [build-linux]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Checkout uro
+        uses: actions/checkout@v3
+        with:
+          repository: v-sekai/uro
+          fetch-depth: 1
+          path: uro
+
+      - name: Upload Godot Artifact Export Windows
+        uses: actions/upload-artifact@v3
+        with:
+          name: v_sekai_uro_sdk
+          path: |
+            uro
+          retention-days: 45
