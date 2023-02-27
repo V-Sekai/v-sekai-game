@@ -357,7 +357,7 @@ jobs:
         with:
           path: godot
           repository: V-Sekai/godot
-          fetch-depth: 0
+          fetch-depth: 1
           ref: groups-4.x
           submodules: recursive
           
