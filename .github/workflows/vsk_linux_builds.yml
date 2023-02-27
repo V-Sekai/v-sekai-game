@@ -283,7 +283,7 @@ jobs:
             .itch.toml
             extension_api.json
             gdextension_interface.h
-          retention-days: 14
+          retention-days: 90
 
   deploy-packages-windows:
     needs: [build-linux]
@@ -334,7 +334,7 @@ jobs:
             .itch.toml
             extension_api.json
             gdextension_interface.h
-          retention-days: 14
+          retention-days: 90
           
   deploy-packages-sdk:
     runs-on: ubuntu-20.04
@@ -393,4 +393,4 @@ jobs:
           name: v_sekai_game_sdk
           path: |
             .
-          retention-days: 14
+          retention-days: 90
