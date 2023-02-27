@@ -317,7 +317,7 @@ jobs:
           mkdir -p .godot/editor .godot/imported export_linuxbsd
           cp godot.linuxbsd.editor.double.x86_64.llvm v_sekai_linux.x86_64
           chmod +x godot.linuxbsd.editor.double.x86_64.llvm
-          ./godot.linuxbsd.editor.double.x86_64.llvm --headless --xr-mode off --export-pack Linux/X11  `pwd`/v_sekai_linux.x86_64.zip --path .
+          ./godot.linuxbsd.editor.double.x86_64.llvm --headless --xr-mode off --export-pack Linux/X11  `pwd`/v_sekai_linux.x86_64.pck --path .
           ./godot.linuxbsd.editor.double.x86_64.llvm --headless --xr-mode off --dump-extension-api --dump-gdextension-interface
 
       - name: Upload Godot Artifact Export Linux
@@ -327,7 +327,7 @@ jobs:
           path: |
             libgodot.linuxbsd.editor.double.x86_64.llvm.so
             v_sekai_linux.x86_64
-            v_sekai_linux.x86_64.zip
+            v_sekai_linux.x86_64.pck
             .itch.toml
             extension_api.json
             gdextension_interface.h
@@ -371,7 +371,7 @@ jobs:
           cp godot.windows.editor.double.x86_64.llvm.exe v_sekai_windows_x86_64.exe
           cp libgodot.windows.editor.double.x86_64.llvm.so libgodot.windows.editor.double.x86_64.llvm.dll
           chmod +x godot.linuxbsd.editor.double.x86_64.llvm
-          ./godot.linuxbsd.editor.double.x86_64.llvm --headless --xr-mode off --export-pack Windows\ Desktop `pwd`/v_sekai_windows_x86_64.zip --path .
+          ./godot.linuxbsd.editor.double.x86_64.llvm --headless --xr-mode off --export-pack Windows\ Desktop `pwd`/v_sekai_windows_x86_64.pck --path .
           ./godot.linuxbsd.editor.double.x86_64.llvm --headless --xr-mode off --dump-extension-api --dump-gdextension-interface
 
       - name: Upload Godot Artifact Export Windows
@@ -381,7 +381,7 @@ jobs:
           path: |
             libgodot.windows.editor.double.x86_64.llvm.dll
             v_sekai_windows_x86_64.exe
-            v_sekai_windows_x86_64.zip
+            v_sekai_windows_x86_64.pck
             .itch.toml
             extension_api.json
             gdextension_interface.h
