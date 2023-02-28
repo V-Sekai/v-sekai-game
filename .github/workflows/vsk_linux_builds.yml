@@ -265,19 +265,11 @@ jobs:
           mkdir -p .godot/editor .godot/imported export_linuxbsd
           cp godot.linuxbsd.editor.double.x86_64.llvm v_sekai_linux.x86_64
           chmod +x godot.linuxbsd.editor.double.x86_64.llvm
-          ./godot.linuxbsd.editor.double.x86_64.llvm --headless --xr-mode off --export-pack Linux/X11  `pwd`/v_sekai_linux.x86_64.zip --path .
+          ./godot.linuxbsd.editor.double.x86_64.llvm --headless --xr-mode off --export-pack Linux/X11  `pwd`/v_sekai_linux.x86_64.pck --path .
 
       - name: Test Linux v-sekai-game
         run: |
           ./godot.linuxbsd.editor.double.x86_64.llvm --headless --xr-mode off -s res://addons/gut/gut_cmdln.gd -gexit -d --xr-mode off
-
-      - name: Test Report
-        uses: dorny/test-reporter@v1
-        if: success() || failure()
-        with:
-          name: JEST Tests
-          path: TEST.xml
-          reporter: jest-junit
 
       - name: Upload Godot Artifact Export Linux
         uses: actions/upload-artifact@v3
