@@ -1,0 +1,24 @@
+name: 'Test Report'
+on:
+  workflow_run:
+    workflows: [🐧 Linux Builds]                     # runs after CI workflow
+    types:
+      - completed
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:      
+      - name: Download windows-editor artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: vsk_linux_builds.yml
+          workflow_conclusion: success
+          name: linux-test-junit
+          
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: JEST Tests
+          path: TEST.xml
+          reporter: jest-junit
