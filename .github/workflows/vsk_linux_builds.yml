@@ -265,7 +265,7 @@ jobs:
           mkdir -p .godot/editor .godot/imported export_linuxbsd
           cp godot.linuxbsd.editor.double.x86_64.llvm v_sekai_linux.x86_64
           chmod +x godot.linuxbsd.editor.double.x86_64.llvm
-          ./godot.linuxbsd.editor.double.x86_64.llvm --headless --xr-mode off --export-pack Linux/X11  `pwd`/v_sekai_linux.x86_64.zip --path .
+          ./godot.linuxbsd.editor.double.x86_64.llvm --headless --xr-mode off --export-pack Linux/X11  `pwd`/v_sekai_linux.x86_64.pck --path .
 
       - name: Test Linux v-sekai-game
         run: |
