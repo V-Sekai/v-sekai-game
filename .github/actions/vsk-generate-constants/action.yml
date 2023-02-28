@@ -6,7 +6,7 @@ runs:
       - name: Generate build constants
         shell: bash
         run: |
-          export BUILD_LABEL="${{ github.repository }}-${{ github.sha }}"
+          export BUILD_LABEL="${{ github.repository }}/${{ github.sha }}"
           export BUILD_DATE_STR="$(date --utc --iso=seconds)"
           export BUILD_UNIX_TIME="$(date +%s)"
           export BUILD_URL="${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}"
