@@ -34,13 +34,20 @@ runs:
           target: x86_64-pc-windows-gnu
           components: rustfmt, clippy
 
+    - name: Setup mingw and mingw openssl
+      shell: bash
+      run: |
+        sudo add-apt-repository ppa:tobydox/mingw-w64
+        sudo apt update
+        sudo apt install -y openssl-mingw-w64 
+
     - name: Checkout modules repo
       uses: actions/checkout@v3
       with:
         repository: v-sekai/godot-modules-groups
         path: vsk_modules
         submodules: recursive
-        ref: aa767c745f84f8b06f740a30cc51abd83ff21c49
+        ref: b34ff3300fbc6d1e840bc40fe930a372041bd6e9
 
     - name: Checkout godot engine repo
       uses: actions/checkout@v3
