@@ -325,6 +325,15 @@ jobs:
             gdextension_interface.h
           retention-days: 45
 
+      - name: Upload Godot Artifact Export JSON api
+        uses: actions/upload-artifact@v3
+        with:
+          name: v_sekai_gdextension_api
+          path: |
+            extension_api.json
+            gdextension_interface.h
+          retention-days: 45
+
   deploy-packages-windows:
     needs: [build-linux]
     runs-on: ubuntu-20.04
