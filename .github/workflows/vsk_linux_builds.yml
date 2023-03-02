@@ -31,13 +31,13 @@ jobs:
             artifact: true
             platform: linuxbsd
 
-          - name: Editor Linux Libgodot (target=editor)
+          - name: Editor Linux Libgodot (target=template_release)
             cache-name: linux-editor-shared-library
             target: editor
             tests: false
-            sconsflags: use_llvm=yes custom_modules=../vsk_modules precision=double linker=gold deprecate=no library_type=shared_library
+            sconsflags: use_llvm=yes custom_modules=../vsk_modules precision=double linker=gold deprecate=no target=template_release library_type=shared_library
             doc-test: false
-            bin: "./bin/libgodot.linuxbsd.editor.double.x86_64.llvm.so"
+            bin: "./bin/libgodot.linuxbsd.template_release.double.x86_64.llvm.so"
             proj-conv: false
             artifact: true
             platform: linuxbsd
@@ -53,13 +53,13 @@ jobs:
             artifact: true
             platform: windows
 
-          - name: Editor Windows Libgodot (target=editor)
+          - name: Editor Windows Libgodot (target=template_release)
             cache-name: windows-editor-shared-library
             target: editor
             tests: false
-            sconsflags: use_llvm=yes use_mingw=yes custom_modules=../vsk_modules precision=double linker=gold deprecate=no library_type=shared_library
+            sconsflags: use_llvm=yes use_mingw=yes custom_modules=../vsk_modules precision=double linker=gold deprecate=no arget=template_release library_type=shared_library
             doc-test: false
-            bin: "./bin/godot.windows.editor.double.x86_64.llvm.dll"
+            bin: "./bin/godot.windows.template_release.double.x86_64.llvm.dll"
             proj-conv: false
             artifact: true
             platform: windows
@@ -310,14 +310,14 @@ jobs:
           cp godot.linuxbsd.editor.double.x86_64.llvm v_sekai_linux.x86_64
           chmod +x godot.linuxbsd.editor.double.x86_64.llvm
           ./godot.linuxbsd.editor.double.x86_64.llvm --headless --xr-mode off --export-pack Linux/X11  `pwd`/v_sekai_linux.x86_64.pck --path .
-          ./godot.linuxbsd.editor.double.x86_64.llvm --headless --xr-mode off --dump-extension-api --dump-gdextension-interface
+          ./godot.linuxbsd.template_release.double.x86_64.llvm --headless --xr-mode off --dump-extension-api --dump-gdextension-interface
 
       - name: Upload Godot Artifact Export Linux
         uses: actions/upload-artifact@v3
         with:
           name: v_sekai_game_linux_x86_64
           path: |
-            libgodot.linuxbsd.editor.double.x86_64.llvm.so
+            libgodot.linuxbsd.template_release.double.x86_64.llvm.so
             v_sekai_linux.x86_64
             v_sekai_linux.x86_64.pck
             .itch.toml
@@ -370,7 +370,7 @@ jobs:
         run: |
           mkdir -p .godot/editor .godot/imported export_windows
           cp godot.windows.editor.double.x86_64.llvm.exe v_sekai_windows_x86_64.exe
-          cp libgodot.windows.editor.double.x86_64.llvm.so libgodot.windows.editor.double.x86_64.llvm.dll
+          cp libgodot.windows.template_release.double.x86_64.llvm.so libgodot.windows.template_release.double.x86_64.llvm.dll
           chmod +x godot.linuxbsd.editor.double.x86_64.llvm
           ./godot.linuxbsd.editor.double.x86_64.llvm --headless --xr-mode off --export-pack Windows\ Desktop `pwd`/v_sekai_windows_x86_64.pck --path .
           ./godot.linuxbsd.editor.double.x86_64.llvm --headless --xr-mode off --dump-extension-api --dump-gdextension-interface
@@ -380,7 +380,7 @@ jobs:
         with:
           name: v_sekai_game_windows_x86_64
           path: |
-            libgodot.windows.editor.double.x86_64.llvm.dll
+            libgodot.windows.template_release.double.x86_64.llvm.dll
             v_sekai_windows_x86_64.exe
             v_sekai_windows_x86_64.pck
             .itch.toml
