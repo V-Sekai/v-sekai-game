@@ -4,11 +4,15 @@
 
 V-Sekai is an open-source project that aims to bring social VR/VRSNS/metaverse components to the [Godot Engine](https://godotengine.org), including:
 
-- A generic multiplayer framework with VOIP support.
-- Full VR integration with object interaction.
+- A generic multiplayer framework with VOIP support
 - Tools for loading and generating arbitrary user-generated content from the Godot Engine.
-- Sandboxed WASM scripting environment.
+- Avatar support with inverse kinematics.
+
+## Pending work
+
 - Full-body avatar support with inverse kinematics.
+- Sandboxed WASM scripting environment..
+- Full VR integration with object interaction.
 
 ## How do I get it?
 
