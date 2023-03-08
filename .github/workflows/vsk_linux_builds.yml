@@ -279,6 +279,21 @@ jobs:
             *.xml
           retention-days: 45
 
+      - name: Prepare artifacts
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          export TARGET=linux-test-junit
+          mkdir $TARGET
+          cp -r *.xml $TARGET/
+          7z a -r $TARGET.zip $TARGET
+        shell: bash
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: linux-test-junit.zip
+
   deploy-packages-linux:
     needs: [build-linux]
     runs-on: ubuntu-20.04
@@ -325,6 +340,26 @@ jobs:
             gdextension_interface.h
           retention-days: 45
 
+      - name: Prepare artifacts
+        run: |
+          export TARGET=v_sekai_game_linux_x86_64
+          mkdir $TARGET
+          cp libgodot.linuxbsd.editor.double.x86_64.llvm.so $TARGET/
+          cp v_sekai_linux.x86_64.exe $TARGET/
+          cp v_sekai_linux.x86_64.pck $TARGET/
+          cp .itch.toml $TARGET/
+          cp extension_api.json $TARGET/
+          cp gdextension_interface.h $TARGET/
+          cp -r uro $TARGET/
+          7z a -r $TARGET.zip $TARGET
+        shell: bash
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: v_sekai_game_linux_x86_64.zip
+
       - name: Upload Godot Artifact Export JSON api
         uses: actions/upload-artifact@v3
         with:
@@ -333,6 +368,22 @@ jobs:
             extension_api.json
             gdextension_interface.h
           retention-days: 45
+
+      - name: Prepare artifacts
+        run: |
+          export TARGET=v_sekai_gdextension_api
+          mkdir $TARGET
+          cp extension_api.json $TARGET/
+          cp gdextension_interface.h $TARGET/
+          cp -r uro $TARGET/
+          7z a -r $TARGET.zip $TARGET
+        shell: bash
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: v_sekai_gdextension_api.zip
 
   deploy-packages-windows:
     needs: [build-linux]
@@ -388,6 +439,26 @@ jobs:
             gdextension_interface.h
           retention-days: 45
 
+      - name: Prepare artifacts
+        run: |
+          export TARGET=v_sekai_game_windows_x86_64
+          mkdir $TARGET
+          cp libgodot.windows.editor.double.x86_64.llvm.dll $TARGET/
+          cp v_sekai_windows_x86_64.exe $TARGET/
+          cp v_sekai_windows_x86_64.pck $TARGET/
+          cp .itch.toml $TARGET/
+          cp extension_api.json $TARGET/
+          cp gdextension_interface.h $TARGET/
+          cp -r uro $TARGET/
+          7z a -r $TARGET.zip $TARGET
+        shell: bash
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: v_sekai_game_windows_x86_64.zip
+
   deploy-packages-sdk:
     runs-on: ubuntu-20.04
     needs: [build-linux]
@@ -430,8 +501,23 @@ jobs:
           name: v_sekai_game_sdk
           path: |
             .
-          retention-days: 45
 
+      - name: Prepare artifacts
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          export TARGET=v_sekai_game_sdk
+          mkdir $TARGET
+          cp -r . $TARGET/
+          rm -rf $TARGET/$TARGET
+          7z a -r $TARGET.zip $TARGET
+        shell: bash
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: v_sekai_game_sdk.zip
+          
   deploy-packages-sdk-uro:
     runs-on: ubuntu-20.04
     needs: [build-linux]
@@ -454,3 +540,17 @@ jobs:
           path: |
             uro
           retention-days: 45
+
+      - name: Prepare artifacts
+        run: |
+          export TARGET=v_sekai_uro_sdk
+          mkdir $TARGET
+          cp -r uro $TARGET/
+          7z a -r $TARGET.zip $TARGET
+        shell: bash
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: v_sekai_uro_sdk.zip
