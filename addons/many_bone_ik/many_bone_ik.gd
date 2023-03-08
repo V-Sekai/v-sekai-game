@@ -125,6 +125,14 @@ func _run():
 			continue
 		if bone_name.find("Eye") != -1:
 			continue
+		if bone_name.find("Hips") != -1:
+			continue
+		if bone_name.find("Chest") != -1:
+			continue
+		if bone_name.find("Spine") != -1:
+			continue
+		if bone_name.find("Neck") != -1:
+			continue
 		targets[bone_name] = "ManyBoneIK3D"
 
 	var skeleton_profile = SkeletonProfileHumanoid.new()
