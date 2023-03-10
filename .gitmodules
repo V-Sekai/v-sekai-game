@@ -58,9 +58,6 @@
 	path = addons/sar1_vr_manager
 	url = https://github.com/V-Sekai/sar1_vr_manager
 	branch = godot4
-[submodule "addons/unidot_importer"]
-	path = addons/unidot_importer
-	url = https://github.com/V-Sekai/unidot_importer
 [submodule "addons/vsk_avatar"]
 	path = addons/vsk_avatar
 	url = https://github.com/V-Sekai/vsk_avatar
