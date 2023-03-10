@@ -92,6 +92,3 @@
 [submodule "addons/xr_vignette"]
 	path = addons/xr_vignette
 	url = https://github.com/V-Sekai/godot_xr_vignette
-[submodule "addons/splerger"]
-	path = addons/splerger
-	url = https://github.com/V-Sekai/godot-splerger.git
