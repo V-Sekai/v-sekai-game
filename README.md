@@ -8,9 +8,7 @@ We're happy to accept pull requests for features and bug fixes. Please join our 
 - Twitter: [https://twitter.com/vsekaiofficial](https://twitter.com/vsekaiofficial)
 - Discord: [https://discord.gg/7BQDHesck8](https://discord.gg/7BQDHesck8)
 
-You can find our issues and suggestions at the [V-Sekai Manual Site](https://v-sekai.github.io/v-sekai/).
-
-See our [documentation website](https://v-sekai.github.io/manuals).
+You can find our issues and suggestions at the [documentation website](https://v-sekai.github.io/manuals).
 
 ## What is it?
 
