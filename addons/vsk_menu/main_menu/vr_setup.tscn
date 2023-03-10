@@ -11,7 +11,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1")
-vr_mode_enabled_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/VREnabledContainer/VREnabled")
 movement_orientation_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/MovementOrientationContainer/MovementOrientation")
 turning_mode_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/TurningMode/TurningMode")
 custom_player_height_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/PlayerHeightContainer/PlayerHeightSpinbox")
@@ -53,20 +52,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 alignment = 1
-
-[node name="VREnabledContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-alignment = 1
-
-[node name="VREnabledLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/VREnabledContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "TR_MENU_VR_ENABLED"
-
-[node name="VREnabled" type="CheckBox" parent="Panel/CenterContainer/Control/ButtonsContainer/VREnabledContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
 
 [node name="MovementOrientationContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer"]
 layout_mode = 2
@@ -150,6 +135,5 @@ layout_mode = 2
 layout_mode = 2
 text = "TR_MENU_BACK"
 
-[connection signal="pressed" from="Panel/CenterContainer/Control/ButtonsContainer/VREnabledContainer/VREnabled" to="." method="_on_VREnabled_pressed"]
 [connection signal="value_changed" from="Panel/CenterContainer/Control/ButtonsContainer/PlayerHeightContainer/PlayerHeightSpinbox" to="." method="_on_PlayerHeightSpinbox_value_changed"]
 [connection signal="pressed" from="Panel/CenterContainer/BottomContainer/BackButton" to="." method="_on_BackButton_pressed"]

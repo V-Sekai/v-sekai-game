@@ -1,8 +1,5 @@
 extends "res://addons/vsk_menu/setup_menu.gd"  # setup_menu.gd
 
-@export var vr_mode_enabled_nodepath: NodePath = NodePath()
-var vr_mode_enabled_checkbox: CheckBox = null
-
 @export var movement_orientation_nodepath: NodePath = NodePath()
 var movement_orientation_button: MenuButton = null
 
@@ -17,9 +14,6 @@ var movement_type_button: MenuButton = null
 
 
 func _ready() -> void:
-	vr_mode_enabled_checkbox = get_node_or_null(vr_mode_enabled_nodepath)
-	vr_mode_enabled_checkbox.button_pressed = VRManager.vr_user_preferences.vr_mode_enabled
-
 	movement_orientation_button = get_node_or_null(movement_orientation_nodepath)
 	setup_menu_button(
 		movement_orientation_button,
