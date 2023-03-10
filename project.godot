@@ -35,7 +35,7 @@ config/loading_avatar_path="res://addons/vsk_avatar/avatars/loading/loading_orb.
 
 [audio]
 
-buses/default_bus_layout="uid://q5teiau5gsxp"
+buses/default_bus_layout="res://vsk_default/art/audio/default_bus_layout.tres"
 driver/enable_input=true
 enable_audio_input=true
 mix_rate=48000
@@ -567,5 +567,6 @@ config/process_priority=255
 [xr]
 
 openxr/enabled=true
+openxr/default_action_map="res://vsk_default/core/openxr_action_map.tres"
 openxr/submit_depth_buffer=true
 shaders/enabled=true
