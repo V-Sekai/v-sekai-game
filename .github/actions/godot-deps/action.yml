@@ -40,7 +40,7 @@ runs:
         repository: v-sekai/godot-modules-groups
         path: vsk_modules
         submodules: recursive
-        ref: 236297039ec2470dbde8103e6ad6e9ef2f7f8570
+        ref: deeb0b66482654ae743c3a7c031c51da8834827d
 
     - name: Checkout godot engine repo
       uses: actions/checkout@v3
