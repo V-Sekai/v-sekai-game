@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://cr4xerufsmv43"
-path="res://.godot/imported/main_room.gltf-5fce7b44056610da7a5eedbddc705ce6.scn"
+path="res://.godot/imported/main_room.gltf-c9eddc5406fe2cf9263139ebeac94b1e.scn"
 
 [deps]
 
-source_file="res://vsk_default/art/import/sky_celebration/main_room.gltf"
-dest_files=["res://.godot/imported/main_room.gltf-5fce7b44056610da7a5eedbddc705ce6.scn"]
+source_file="res://vsk_default/art/sky_celebration/main_room.gltf"
+dest_files=["res://.godot/imported/main_room.gltf-c9eddc5406fe2cf9263139ebeac94b1e.scn"]
 
 [params]
 

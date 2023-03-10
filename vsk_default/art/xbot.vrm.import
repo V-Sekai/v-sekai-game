@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://cel8a3nj1waxy"
-path="res://.godot/imported/xbot.vrm-bdee71d873ffea966b27e308ff38241f.scn"
+path="res://.godot/imported/xbot.vrm-38d0e355ebb75bb85743c3a90680e762.scn"
 
 [deps]
 
-source_file="res://vsk_default/art/import/xbot/xbot.vrm"
-dest_files=["res://.godot/imported/xbot.vrm-bdee71d873ffea966b27e308ff38241f.scn"]
+source_file="res://vsk_default/art/xbot.vrm"
+dest_files=["res://.godot/imported/xbot.vrm-38d0e355ebb75bb85743c3a90680e762.scn"]
 
 [params]
 
