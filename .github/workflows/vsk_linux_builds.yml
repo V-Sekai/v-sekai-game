@@ -6,8 +6,6 @@ env:
   # Only used for the cache key. Increment version to force clean build.
   GODOT_BASE_BRANCH: master
   SCONSFLAGS: verbose=yes warnings=extra werror=yes module_text_server_fb_enabled=yes
-  DOTNET_NOLOGO: true
-  DOTNET_CLI_TELEMETRY_OPTOUT: true
 
 concurrency:
   group: ci-${{github.actor}}-${{github.head_ref || github.run_number}}-${{github.ref}}-deploy
@@ -35,38 +33,12 @@ jobs:
             cache-name: windows-editor
             target: editor
             tests: false
-            sconsflags: use_llvm=yes use_mingw=yes custom_modules=../vsk_modules precision=double deprecate=no
+            sconsflags: LINKFLAGS='-Wl,-pdb=' CCFLAGS='-Wall -Wno-tautological-compare -g -gcodeview' use_llvm=yes use_mingw=yes debug=false custom_modules=../vsk_modules precision=double deprecate=no
             doc-test: false
             bin: "./bin/godot.windows.editor.double.x86_64.llvm.exe"
             proj-conv: false
             artifact: true
             platform: windows
-
-          # - name: Editor with doubles and GCC sanitizers (target=editor, tests=yes, dev_build=yes, precision=double, use_asan=yes, use_ubsan=yes, linker=gold)
-          #   cache-name: linux-editor-double-sanitizers
-          #   target: editor
-          #   tests: false
-          #   sconsflags: dev_build=yes precision=double use_asan=yes use_ubsan=yes linker=gold
-          #   proj-test: false
-          #   # Can be turned off for PRs that intentionally break compat with godot-cpp,
-          #   # until both the upstream PR and the matching godot-cpp changes are merged.
-          #   godot-cpp-test: false
-          #   bin: "./bin/godot.linuxbsd.editor.dev.double.x86_64.san"
-          #   build-mono: false
-          #   # Skip 2GiB artifact speeding up action.
-          #   artifact: false
-          #   platform: linuxbsd
-          #
-          # - name: Editor with clang sanitizers (target=editor, tests=yes, dev_build=yes, use_asan=yes, use_ubsan=yes, use_llvm=yes, linker=gold)
-          #   cache-name: linux-editor-llvm-sanitizers
-          #   target: editor
-          #   tests: false
-          #   sconsflags: dev_build=yes use_asan=yes use_ubsan=yes use_llvm=yes linker=gold
-          #   bin: "./bin/godot.linuxbsd.editor.dev.x86_64.llvm.san"
-          #   build-mono: false
-          #   # Skip 2GiB artifact speeding up action.
-          #   artifact: false
-          #   platform: linuxbsd
 
           - name: Minimal template (target=template_release, everything disabled, linker=gold)
             cache-name: linux-template-minimal
@@ -99,12 +71,6 @@ jobs:
 
       - name: Setup python and scons
         uses: ./.github/actions/godot-deps
-
-      - name: Set up .NET Sdk
-        uses: actions/setup-dotnet@v2
-        if: ${{ matrix.build-mono }}
-        with:
-          dotnet-version: "6.0.x"
 
       - name: Setup GCC problem matcher
         uses: ammaraskar/gcc-problem-matcher@master
@@ -322,6 +288,7 @@ jobs:
         run: |
           mkdir -p .godot/editor .godot/imported export_windows
           cp godot.windows.editor.double.x86_64.llvm.exe v_sekai_windows_x86_64.exe
+          cp godot.windows.editor.double.x86_64.llvm.pdb v_sekai_windows_x86_64.pdb
           chmod +x godot.linuxbsd.editor.double.x86_64.llvm
           ./godot.linuxbsd.editor.double.x86_64.llvm --headless --xr-mode off --export-pack Windows\ Desktop `pwd`/v_sekai_windows_x86_64.pck --path .
           ./godot.linuxbsd.editor.double.x86_64.llvm --headless --xr-mode off --dump-extension-api --dump-gdextension-interface
@@ -332,6 +299,7 @@ jobs:
           name: v_sekai_game_windows_x86_64
           path: |
             v_sekai_windows_x86_64.exe
+            v_sekai_windows_x86_64.pdb
             v_sekai_windows_x86_64.pck
             .itch.toml
             extension_api.json
