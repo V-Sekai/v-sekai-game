@@ -33,7 +33,7 @@ jobs:
             cache-name: windows-editor
             target: editor
             tests: false
-            sconsflags: LINKFLAGS='-Wl,-pdb=' CCFLAGS='-Wall -Wno-tautological-compare -g -gcodeview' use_llvm=yes use_mingw=yes debug=false custom_modules=../vsk_modules precision=double deprecate=no
+            sconsflags: debug_symbols=no LINKFLAGS='-Wl,-pdb=' CCFLAGS='-Wall -Wno-tautological-compare -g -gcodeview' use_llvm=yes use_mingw=yes debug=false custom_modules=../vsk_modules precision=double deprecate=no
             doc-test: false
             bin: "./bin/godot.windows.editor.double.x86_64.llvm.exe"
             proj-conv: false
