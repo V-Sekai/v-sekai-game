@@ -10,6 +10,8 @@ inputs:
   platform:
     description: Target platform.
     required: false
+  scons-env:
+    default: ""
   sconsflags:
     default: ""
   scons-cache:
@@ -36,12 +38,13 @@ runs:
           SCONSFLAGS: ${{ inputs.sconsflags }}
           SCONS_CACHE: ${{ inputs.scons-cache }}
           SCONS_CACHE_LIMIT: ${{ inputs.scons-cache-limit }}
+          SCONS_ENV: ${{ inputs.scons-env }}
       run: |
         cd godot
         echo "Building with flags:" platform=${{ inputs.platform }} target=${{ inputs.target }} tests=${{ inputs.tests }} ${{ env.SCONSFLAGS }}
         if [ "${{ inputs.target }}" != "editor" ]; then rm -rf editor; fi  # Ensure we don't include editor code.
         export PATH="$PWD/../llvm-mingw/bin:$PATH"
-        scons platform=${{ inputs.platform }} target=${{ inputs.target }} tests=${{ inputs.tests }} ${{ env.SCONSFLAGS }}
+        ${{ input.scons-env }} scons platform=${{ inputs.platform }} target=${{ inputs.target }} tests=${{ inputs.tests }} ${{ env.SCONSFLAGS }}
         ls -l bin/
 
     # - name: Generate GUT tests

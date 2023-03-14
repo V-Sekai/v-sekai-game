@@ -23,6 +23,7 @@ jobs:
             target: editor
             tests: false
             sconsflags: use_llvm=yes custom_modules=../vsk_modules precision=double linker=gold deprecate=no
+            scons-env: 
             doc-test: false
             bin: "./bin/godot.linuxbsd.editor.double.x86_64.llvm"
             proj-conv: false
@@ -33,7 +34,8 @@ jobs:
             cache-name: windows-editor
             target: editor
             tests: false
-            sconsflags: debug_symbols=no LINKFLAGS='-Wl,-pdb=' CCFLAGS='-Wall -Wno-tautological-compare -g -gcodeview' use_llvm=yes use_mingw=yes debug=false custom_modules=../vsk_modules precision=double deprecate=no
+            sconsflags: debug_symbols=no LINKFLAGS="-Wl,-pdb=" CCFLAGS="-Wall -Wno-tautological-compare -g -gcodeview" use_llvm=yes use_mingw=yes debug=false custom_modules=../vsk_modules precision=double deprecate=no
+            scons-env: PATH=llvm-mingw/bin:$PATH
             doc-test: false
             bin: "./bin/godot.windows.editor.double.x86_64.llvm.exe"
             proj-conv: false
@@ -45,6 +47,7 @@ jobs:
             target: template_release
             tests: false
             sconsflags: modules_enabled_by_default=no disable_3d=yes disable_advanced_gui=yes deprecated=no minizip=no linker=gold
+            scons-env:
             artifact: true
             platform: linuxbsd
 
@@ -82,6 +85,7 @@ jobs:
           platform: ${{ matrix.platform }}
           target: ${{ matrix.target }}
           tests: ${{ matrix.tests }}
+          scons-env: ${{ matrix.scons-env }}
 
       # Execute unit tests for the editor
       - name: Unit tests

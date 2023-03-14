@@ -26,14 +26,6 @@ runs:
         python -m pip install scons==4.4.0
         scons --version
 
-    - name: Install latest nightly
-      uses: actions-rs/toolchain@v1
-      with:
-          toolchain: nightly
-          override: true
-          target: x86_64-pc-windows-gnu
-          components: rustfmt, clippy
-
     - name: Checkout modules repo
       uses: actions/checkout@v3
       with:
