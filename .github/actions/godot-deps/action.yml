@@ -39,4 +39,4 @@ runs:
       with:
         repository: v-sekai/godot
         path: godot
-        ref: 20d38d07477649f9260ce597c49d56cfed2f456b
+        ref: 5abba5b42003af993dc2b31e22abc1c894849b91
