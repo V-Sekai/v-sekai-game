@@ -12,8 +12,6 @@ You can find our issues and suggestions at the [documentation website](https://v
 
 V-Sekai is still in a pre-release state. It's highly experimental and still being evaluated for security. Use at your own risk.
 
-We provide [preview builds](https://nightly.link/V-Sekai/v-sekai-game/workflows/vsk_linux_builds/main).
-
 ## What is it?
 
 V-Sekai is an open-source project that aims to bring social VR/VRSNS/metaverse components to the [Godot Engine](https://godotengine.org), including:
