@@ -7,6 +7,15 @@ inputs:
   tests:
     description: Unit tests.
     default: false
+  deploy:
+    description: Deploy game.
+    default: false
+  deploy-platform:
+    description: Deploy game platform.
+    required: false
+  deploy-platform-target:
+    description: Deploy game target.
+    required: false
   platform:
     description: Target platform.
     required: false
@@ -29,29 +38,38 @@ runs:
         curl -LO https://github.com/mstorsjo/llvm-mingw/releases/download/20230130/llvm-mingw-20230130-ucrt-ubuntu-18.04-x86_64.tar.xz
         tar -xf llvm-mingw-20230130-ucrt-ubuntu-18.04-x86_64.tar.xz
         mv llvm-mingw-20230130-ucrt-ubuntu-18.04-x86_64 llvm-mingw
-      
+
     - name: Scons Build
       shell: sh
       env:
-          SCONSFLAGS: ${{ inputs.sconsflags }}
-          SCONS_CACHE: ${{ inputs.scons-cache }}
-          SCONS_CACHE_LIMIT: ${{ inputs.scons-cache-limit }}
+        SCONSFLAGS: ${{ inputs.sconsflags }}
+        SCONS_CACHE: ${{ inputs.scons-cache }}
+        SCONS_CACHE_LIMIT: ${{ inputs.scons-cache-limit }}
       run: |
+        mkdir -p bin modules/mono/glue 
         cd godot
         echo "Building with flags:" platform=${{ inputs.platform }} target=${{ inputs.target }} tests=${{ inputs.tests }} ${{ env.SCONSFLAGS }}
         if [ "${{ inputs.target }}" != "editor" ]; then rm -rf editor; fi  # Ensure we don't include editor code.
         export PATH="$PWD/../llvm-mingw/bin:$PATH"
         scons platform=${{ inputs.platform }} target=${{ inputs.target }} tests=${{ inputs.tests }} ${{ env.SCONSFLAGS }}
-        ls -l bin/
+        cp -r bin/* ../bin
+        cp -r modules/mono/glue/* ../modules/mono/glue
+        ls -l ../bin
 
-    # - name: Generate GUT tests
-    #   if: ${{ matrix.tests }}
-    #   shell: sh
-    #   run: |
-    #     godot/${{ matrix.bin }} --headless --path . -s res://addons/gut/gut_cmdln.gd --xr-mode off
-
-    # - name: Publish Test Report
-    #   uses: mikepenz/action-junit-report@v3
-    #   if: ${{ matrix.tests }}
-    #   with:
-    #     report_paths: '**/vsk_default/test/results/TEST_*.xml'
+    - name: Scons Build
+      if: ${{ matrix.deploy }}
+      shell: sh
+      env:
+        SCONSFLAGS: ${{ inputs.sconsflags }}
+        SCONS_CACHE: ${{ inputs.scons-cache }}
+        SCONS_CACHE_LIMIT: ${{ inputs.scons-cache-limit }}
+      run: |
+        mkdir -p bin
+        cd godot
+        echo "Building with flags:" platform=${{ inputs.deploy-platform }} target=${{ inputs.deploy-platform-target }} tests=${{ inputs.tests }} ${{ env.SCONSFLAGS }}
+        if [ "${{ inputs.target }}" != "editor" ]; then rm -rf editor; fi  # Ensure we don't include editor code.
+        export PATH="$PWD/../llvm-mingw/bin:$PATH"
+        scons platform=${{ inputs.deploy-platform }} target=${{ inputs.deploy-platform-target }} tests=${{ inputs.tests }} ${{ env.SCONSFLAGS }}
+        cp -r bin/* ../bin        
+        cp -r modules/mono/glue/* ../modules/mono/glue
+        ls -l ../bin
