@@ -20,6 +20,12 @@ V-Sekai is an open-source project that aims to bring social VR/VRSNS/metaverse c
 - Tools for loading and generating arbitrary user-generated content from the Godot Engine.
 - Avatar support with inverse kinematics.
 
+## How do I get it?
+
+V-Sekai is still in a pre-release state. We don't offer pre-packaged downloads yet. It's highly experimental and still being evaluated for security. Use at your own risk.
+
+We also provide [preview builds](https://nightly.link/V-Sekai/v-sekai-game/workflows/vsk_linux_builds/main).
+
 ## How do I build it?
 
 V-Sekai requires our [custom Godot Engine fork](https://github.com/v-sekai/godot) found under the `groups-4.x` branch, as well as our [custom engine modules](https://github.com/V-Sekai/godot-modules-groups) under the `main`. For information about building the Godot Engine, see the [official documentation](https://docs.godotengine.org/en/latest/contributing/development/compiling/). You must also add the `custom_modules` path when invoking scons. More information about custom modules can be found [here](https://docs.godotengine.org/en/latest/contributing/development/core_and_modules/custom_modules_in_cpp.html)
