@@ -24,7 +24,7 @@ V-Sekai is an open-source project that aims to bring social VR/VRSNS/metaverse c
 
 V-Sekai is still in a pre-release state. We don't offer pre-packaged downloads yet. It's highly experimental and still being evaluated for security. Use at your own risk.
 
-We also provide [preview builds](https://nightly.link/V-Sekai/v-sekai-game/workflows/vsk_linux_builds/main).
+We also provide [preview builds](https://nightly.link/V-Sekai/v-sekai-game/workflows/builds/main).
 
 ## How do I build it?
 
