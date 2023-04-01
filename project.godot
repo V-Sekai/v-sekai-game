@@ -12,7 +12,7 @@ config_version=5
 
 config/name="V-Sekai Game"
 run/main_scene="res://vsk_default/scenes/main_scene.tscn"
-config/features=PackedStringArray("4.1", "Double Precision")
+config/features=PackedStringArray("4.0", "Double Precision")
 run/flush_stdout_on_print.debug=false
 boot_splash/bg_color=Color(0.227451, 0.054902, 0.054902, 1)
 boot_splash/image="res://splash.png"
