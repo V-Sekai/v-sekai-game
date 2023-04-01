@@ -10,7 +10,7 @@ subdivide_depth = 1
 albedo_color = Color(0.8, 0.482353, 0.223529, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sqmki"]
-albedo_color = Color(0.0666667, 0.0588235, 0.027451, 1)
+albedo_color = Color(0.282353, 0.482353, 0.92549, 1)
 
 [node name="haven" type="Node3D"]
 
@@ -46,18 +46,18 @@ sides = 32
 material = SubResource("StandardMaterial3D_pweug")
 
 [node name="CSGCylinder3D2" type="CSGCylinder3D" parent="CSGCombiner3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23, 0, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -39, 0, 8)
 radius = 2.0
 sides = 32
 material = SubResource("StandardMaterial3D_pweug")
 
-[node name="CSGBox3D" type="CSGBox3D" parent="CSGCombiner3D"]
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23, 0, -4)
-size = Vector3(10, 10, 1)
+size = Vector3(10, 10, 1.95)
 material = SubResource("StandardMaterial3D_sqmki")
 
-[node name="Label3D" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25, 3, -3)
+[node name="Label3D" type="Label3D" parent="CSGBox3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 3, 1)
 text = "Experience adventures, create cozy spaces, and make friends in V-Sekai Central's virtual world. #virtualreality #friendship
 
 "
@@ -65,3 +65,20 @@ font_size = 52
 horizontal_alignment = 0
 autowrap_mode = 3
 width = 1000.0
+metadata/_edit_group_ = true
+metadata/_edit_lock_ = true
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="."]
+transform = Transform3D(6.12303e-17, 0, 1, 0, 1, 0, -1, 0, 6.12303e-17, -43, 0, 8)
+size = Vector3(10, 10, 1.95)
+material = SubResource("StandardMaterial3D_sqmki")
+
+[node name="Label3D" type="Label3D" parent="CSGBox3D2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 3, 1)
+text = "[[Bindings left controller]]  moves forward."
+font_size = 52
+horizontal_alignment = 0
+autowrap_mode = 3
+width = 1000.0
+metadata/_edit_group_ = true
+metadata/_edit_lock_ = true
