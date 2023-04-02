@@ -1,6 +1,21 @@
-[gd_scene load_steps=2 format=3 uid="uid://1nd2u7tkhxsm"]
+[gd_scene load_steps=5 format=3 uid="uid://1nd2u7tkhxsm"]
 
-[ext_resource type="Script" path="res://vsk_default/core/main_scene.gd" id="1_ddnla"]
+[ext_resource type="Script" path="res://addons/vsk_manager/vsk_startup_manager.gd" id="1_ilifs"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/compound_state.gd" id="2_q2hku"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/atomic_state.gd" id="2_qid2u"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/state_chart.gd" id="2_uhhyl"]
 
-[node name="MainScene" type="Node"]
-script = ExtResource("1_ddnla")
+[node name="Node" type="Node"]
+script = ExtResource("1_ilifs")
+
+[node name="StateChart" type="Node" parent="."]
+script = ExtResource("2_uhhyl")
+
+[node name="CompoundState" type="Node" parent="StateChart"]
+script = ExtResource("2_q2hku")
+initial_state = NodePath("Ready")
+
+[node name="Ready" type="Node" parent="StateChart/CompoundState"]
+script = ExtResource("2_qid2u")
+
+[connection signal="state_entered" from="StateChart/CompoundState/Ready" to="." method="startup"]
