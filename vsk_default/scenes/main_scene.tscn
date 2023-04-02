@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://1nd2u7tkhxsm"]
+[gd_scene load_steps=8 format=3 uid="uid://1nd2u7tkhxsm"]
 
 [ext_resource type="Script" path="res://addons/vsk_manager/vsk_startup_manager.gd" id="1_ilifs"]
 [ext_resource type="Script" path="res://addons/godot_state_charts/compound_state.gd" id="2_q2hku"]
@@ -6,7 +6,6 @@
 [ext_resource type="Script" path="res://addons/godot_state_charts/state_chart.gd" id="2_uhhyl"]
 [ext_resource type="Script" path="res://addons/godot_state_charts/transition.gd" id="5_mra2e"]
 [ext_resource type="Script" path="res://addons/godot_state_charts/expression_guard.gd" id="6_j6wmn"]
-[ext_resource type="Script" path="res://addons/godot_state_charts/utilities/state_chart_debugger.gd" id="7_wkodm"]
 
 [sub_resource type="Resource" id="Resource_rl0vi"]
 script = ExtResource("6_j6wmn")
@@ -14,15 +13,6 @@ expression = "Engine.is_editor_hint()"
 
 [node name="MainScene" type="Node"]
 script = ExtResource("1_ilifs")
-
-[node name="StateChartDebugger" type="Tree" parent="."]
-offset_left = 896.0
-offset_right = 1281.0
-offset_bottom = 768.0
-hide_folding = true
-hide_root = true
-script = ExtResource("7_wkodm")
-initial_node_to_watch = NodePath("../StateChart")
 
 [node name="StateChart" type="Node" parent="."]
 script = ExtResource("2_uhhyl")
