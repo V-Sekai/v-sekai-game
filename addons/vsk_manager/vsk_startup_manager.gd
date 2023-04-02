@@ -37,8 +37,7 @@ var display_name_override: String = ""
 ## join a server if an ip commandline argument was provided, or attempt
 ## to go the main menu
 ##
-func _startup_complete() -> void:	
-	await VSKPreloadManager.all_preloading_done
+func _startup_complete() -> void:
 	var _skipped: bool = await VSKFadeManager.execute_fade(false).fade_complete
 
 	if not ip.is_empty():
@@ -93,15 +92,18 @@ func startup() -> void:
 	assert(VSKVersion != null)  # VSKVersion must be moved up before VSKStartupManager in Autoloads
 	print("V-Sekai Build: %s" % vsk_version_const.get_build_label())
 
+	setup_vsk_singletons()
 
-func flow_preload() -> void:
+	if Engine.is_editor_hint():
+		return
+
 	VSKGameFlowManager.go_to_preloading()
 	if !VSKPreloadManager.request_preloading_tasks():
 		assert(false, "Could not request preloading tasks!")
-	
 
-func execute_fade() -> void:
 	await VSKFadeManager.execute_fade(true).fade_complete
+	await VSKPreloadManager.all_preloading_done
+	_startup_complete()
 
 
 ##
