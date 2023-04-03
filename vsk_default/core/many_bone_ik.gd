@@ -1,14 +1,7 @@
 @tool
 extends EditorScript
 
-# The order of tuning human bodies.
-# 0. Root
-# 1. Root to Hips
-# 2. Root to Head
-# 3. UpperChest to Hands
-# 4. Hips to Legs
-
-var is_thumbs_up: bool = true
+var is_thumbs_up: bool = false
 
 @export var targets: Dictionary
 
@@ -49,11 +42,11 @@ static func copy_kusudama(p_bone_name_from: String, p_bone_name_to: PackedString
 	},
 	"bone_name_cones":
 	{
-		"Hips": [{"center": Vector3(0, -1, 0), "radius": deg_to_rad(20)}],
+		"Hips": [{"center": Vector3(0, 1, 0), "radius": deg_to_rad(20)}],
 		"Spine": [{"center": Vector3(0, 1, 0), "radius": deg_to_rad(10)}],
 		"UpperChest": [{"center": Vector3(0, 1, 0), "radius": deg_to_rad(10)}],
 		"Chest": [{"center": Vector3(0, 1, 0), "radius": deg_to_rad(10)}],
-		"Neck": [{"center": Vector3(0, 1, 0), "radius": deg_to_rad(15)}],
+		"Neck": [{"center": Vector3(0, 1, 0), "radius": deg_to_rad(30)}],
 		"Head": [{"center": Vector3(0, 1, 0), "radius": deg_to_rad(15)}],
 		"LeftEye": [{"center": Vector3(0, 1, 0), "radius": deg_to_rad(10)}],
 		"LeftShoulder": [{"center": Vector3(1, 0, 0), "radius": deg_to_rad(30)}],
@@ -67,10 +60,10 @@ static func copy_kusudama(p_bone_name_from: String, p_bone_name_to: PackedString
 			{"center": Vector3(0, 0, 1), "radius": deg_to_rad(20)},
 			{"center": Vector3(0, 0.8, 0), "radius": deg_to_rad(20)},
 		],
-		"LeftHand": [{"center": Vector3(0, 1, 0), "radius": deg_to_rad(20)}],
+		"LeftHand": [{"center": Vector3(0, 1, 0), "radius": deg_to_rad(15)}],
 		"LeftUpperLeg":
 		[
-			{"center": Vector3(0, -1, 1), "radius": deg_to_rad(25)},
+			{"center": Vector3(0, -1, 1), "radius": deg_to_rad(45)},
 		],
 		"LeftLowerLeg":
 		[
@@ -85,6 +78,7 @@ static func copy_kusudama(p_bone_name_from: String, p_bone_name_to: PackedString
 
 func _run():
 	var root: Node3D = get_editor_interface().get_edited_scene_root()
+	root.update_in_editor = false
 	if root == null:
 		return
 	var properties: Array[Dictionary] = root.get_property_list()
@@ -100,53 +94,36 @@ func _run():
 	skeleton.add_child(new_ik, true)
 	new_ik.skeleton_node_path = ".."
 	new_ik.owner = root
-	new_ik.iterations_per_frame = 15
-	new_ik.queue_print_skeleton()
-#	new_ik.constraint_mode = true
+	new_ik.iterations_per_frame = 20
+#	new_ik.queue_print_skeleton()
+	new_ik.stabilization_passes = 4
 	skeleton.reset_bone_poses()
 	var humanoid_profile: SkeletonProfileHumanoid = SkeletonProfileHumanoid.new()
 	var humanoid_bones: PackedStringArray = []
-	for profile_i in humanoid_profile.bone_size:
-		var bone_name: String = humanoid_profile.get_bone_name(profile_i)
-		humanoid_bones.push_back(bone_name)
-		if bone_name.find("Toe") != -1:
-			continue
-		if bone_name.find("Upper") != -1:
-			continue
-		if bone_name.find("Thumb") != -1:
-			continue
-		if bone_name.find("Middle") != -1:
-			continue
-		if bone_name.find("Little") != -1:
-			continue
-		if bone_name.find("Index") != -1:
-			continue
-		if bone_name.find("Ring") != -1:
-			continue
-		if bone_name.find("Eye") != -1:
-			continue
-		if bone_name.find("Hips") != -1:
-			continue
-		if bone_name.find("Chest") != -1:
-			continue
-		if bone_name.find("Spine") != -1:
-			continue
-		if bone_name.find("Neck") != -1:
-			continue
-		targets[bone_name] = "ManyBoneIK3D"
+	targets["Root"] = "ManyBoneIK3D"
+	targets["Hips"] = "Root"
+	targets["Chest"] = "Hips"
+	targets["Head"] = "Chest"
+	targets["LeftHand"] = "Chest"
+	targets["RightHand"] = "Chest"
+	targets["LeftFoot"] = "Hips"
+	targets["RightFoot"] = "Hips"
 
 	var skeleton_profile = SkeletonProfileHumanoid.new()
 	var human_bones: Array
 	var bone_name_from_to_twist = config["bone_name_from_to_twist"]
 	var bone_name_cones = config["bone_name_cones"]
-	new_ik.stabilization_passes = 0
 	for bone_i in skeleton.get_bone_count():
-		new_ik.set_pin_passthrough_factor(bone_i, 1)
 		var bone_name = skeleton.get_bone_name(bone_i)
+		if bone_name in ["Root", "UpperChest"]:
+			new_ik.set_pin_passthrough_factor(bone_i, 1)
+		else:
+			new_ik.set_pin_passthrough_factor(bone_i, 0)
 		var twist_keys: Array = bone_name_from_to_twist.keys()
 		if twist_keys.has(bone_name):
 			var twist: Vector2 = bone_name_from_to_twist[bone_name]
 			new_ik.set_kusudama_twist(bone_i, twist)
+			
 		var cone_keys = bone_name_cones.keys()
 		if cone_keys.has(bone_name):
 			var cones: Array = bone_name_cones[bone_name]
@@ -157,11 +134,18 @@ func _run():
 					new_ik.set_kusudama_limit_cone_center(bone_i, cone_i, cone["center"])
 				if cone.keys().has("radius"):
 					new_ik.set_kusudama_limit_cone_radius(bone_i, cone_i, cone["radius"])
+		else:
+			new_ik.set_pin_weight(bone_i, 0)
+			new_ik.set_pin_direction_priorities(bone_i, Vector3())
+			new_ik.set_kusudama_limit_cone_count(bone_i, 1)
+			new_ik.set_kusudama_limit_cone_radius(bone_i, 0, deg_to_rad(5))
+			
 
 	var keys = targets.keys()
 	for target_i in keys.size():
 		tune_bone(new_ik, skeleton, keys[target_i], targets[keys[target_i]], root)
-
+	
+		
 	copy_kusudama("LeftUpperArm", ["RightUpperArm"], new_ik, Vector3(-1, 1, 1))
 	copy_kusudama("LeftShoulder", ["RightShoulder"], new_ik, Vector3(-1, 1, 1))
 	copy_kusudama("LeftLowerArm", ["RightLowerArm"], new_ik, Vector3(-1, 1, 1))
@@ -179,12 +163,18 @@ func tune_bone(new_ik: ManyBoneIK3D, skeleton: Skeleton3D, bone_name: String, bo
 	var bone_i = skeleton.find_bone(bone_name)
 	if bone_i == -1:
 		return
+	new_ik.set_kusudama_twist(bone_i, Vector2(deg_to_rad(180), deg_to_rad(1)))
+	new_ik.set_kusudama_limit_cone_count(bone_i, 0)
 	var node_3d = BoneAttachment3D.new()
 	node_3d.name = bone_name
 	node_3d.bone_name = bone_name
 	node_3d.set_use_external_skeleton(true)
 	node_3d.set_external_skeleton("../../")
-	if bone_name in ["Root", "Head", "LeftFoot", "RightFoot", "LeftHand", "RightHand"]:
+	node_3d.override_pose = true
+	new_ik.set_pin_weight(bone_i, 1)
+	if bone_name in ["Hips", "Chest"]:
+		new_ik.set_pin_passthrough_factor(bone_i, 1)
+	if bone_name in ["Root"]: # "Head", "LeftFoot", "RightFoot", "LeftHand", "RightHand"
 		node_3d.set_use_external_skeleton(false)
 	var children: Array[Node] = owner.find_children("*", "")
 	var parent: Node = null
@@ -198,6 +188,10 @@ func tune_bone(new_ik: ManyBoneIK3D, skeleton: Skeleton3D, bone_name: String, bo
 	node_3d.global_transform = (
 		skeleton.global_transform.affine_inverse() * skeleton.get_bone_global_pose_no_override(bone_i)
 	)
+	if bone_name.find("LeftUpper") != -1:
+		new_ik.set_pin_direction_priorities(bone_i, Vector3())
+	if bone_name.find("RightUpper") != -1:
+		new_ik.set_pin_direction_priorities(bone_i, Vector3())
 	if bone_name in ["LeftHand"]:
 		if is_thumbs_up:
 			node_3d.global_transform.basis = Basis.from_euler(Vector3(0, 0, -PI / 2))
