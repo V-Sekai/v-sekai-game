@@ -44,7 +44,8 @@ func push_view_controller(p_view_controller: ViewController, p_animated: bool) -
 
 	clear_view_node(current_view_node, false)
 
-	p_view_controller.will_appear()
+	if p_view_controller:
+		p_view_controller.will_appear()
 	current_view_node.add_child(get_top_view_controller(), true)
 
 

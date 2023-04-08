@@ -41,7 +41,7 @@ func _ready():
 
 func _gameflow_state_changed(p_gameflow_state: int):
 	if p_gameflow_state == VSKGameFlowManager.GAMEFLOW_STATE_INTERSTITIAL:
-		get_navigation_controller().push_view_controller(loading_screen.instantiate(), true)
+		get_navigation_controller().push_view_controller(loading_screen.instantiate() as ViewController, true)
 
 
 func will_appear() -> void:
