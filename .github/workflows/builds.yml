@@ -24,34 +24,34 @@ jobs:
       matrix:
         include:
           - name: Editor Linux (target=editor,deploy=true,deploy-platform=windows,deploy-platform-target=template_release)
-            cache-name: linux-editor-deploy-windows-template-release
+            cache-name: linux-editor-deploy-windows-editor
             target: editor
             tests: false
             sconsflags: use_llvm=yes linker=gold deprecate=no
             doc-test: false
             bin: "./bin/godot.linuxbsd.editor.x86_64.llvm"
-            deploy-bin: "./bin/godot.windows.template_release.x86_64.llvm.exe"
+            deploy-bin: "./bin/godot.windows.editor.x86_64.llvm.exe"
             proj-conv: false
             artifact: true
             platform: linuxbsd
             deploy: true
             deploy-platform: windows
-            deploy-platform-target: template_release
+            deploy-platform-target: editor
 
           - name: Editor Linux (target=editor,deploy=true,deploy-platform=linux,deploy-platform-target=template_release)
-            cache-name: linux-editor-deploy-linux-template-release
+            cache-name: linux-editor-deploy-linux-editor
             target: editor
             tests: false
             sconsflags: use_llvm=yes linker=gold deprecate=no
             doc-test: false
             bin: "./bin/godot.linuxbsd.editor.x86_64.llvm"
-            deploy-bin: "./bin/godot.linuxbsd.template_release.x86_64.llvm"
+            deploy-bin: "./bin/godot.linuxbsd.editor.x86_64.llvm"
             proj-conv: false
             artifact: true
             platform: linuxbsd
             deploy: true
             deploy-platform: linux
-            deploy-platform-target: template_release
+            deploy-platform-target: editor
 
     steps:
       - uses: actions/checkout@v3
