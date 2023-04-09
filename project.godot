@@ -63,7 +63,6 @@ InputManager="*res://addons/input_manager/input_manager.gd"
 GodotUroData="*res://addons/godot_uro/godot_uro_data.gd"
 GodotUro="*res://addons/godot_uro/godot_uro.gd"
 GodotMathExtension="*res://addons/math_util/math_funcs.gd"
-ModelFormat="*res://addons/model_format/model_format.gd"
 VSKVersion="*res://addons/vsk_version/vsk_version.gd"
 VSKExporter="*res://addons/vsk_importer_exporter/vsk_exporter.gd"
 VSKEditor="*res://addons/vsk_editor/vsk_editor.gd"
@@ -73,7 +72,6 @@ SpatialGameViewportManager="*res://addons/spatial_game_viewport_manager/spatial_
 SnappingSingleton="*res://addons/sar1_vr_manager/components/lasso_snapping/snapping_singleton.gd"
 VRManager="*res://addons/sar1_vr_manager/vr_manager.gd"
 GraphicsManager="*res://addons/sar1_graphics_manager/graphics_manager.gd"
-DebugManager="*res://addons/sar1_debug_manager/debug_manager.gd"
 VSKNetworkManager="*res://addons/vsk_manager/vsk_network_manager.gd"
 VSKAccountManager="*res://addons/vsk_manager/vsk_account_manager.gd"
 NetworkLogger="*res://addons/network_manager/network_logger.gd"
@@ -99,7 +97,6 @@ VSKEntityManager="*res://addons/entity_manager/entity_manager.gd"
 NetworkManager="*res://addons/network_manager/network_manager.gd"
 ScreenshotManager="*res://addons/sar1_screenshot_manager/screenshot_manager.gd"
 ConnectionUtil="*res://addons/gd_util/connection_util.gd"
-GDShell="*res://addons/gd_shell/scripts/gdshell_main.gd"
 
 [debug]
 
