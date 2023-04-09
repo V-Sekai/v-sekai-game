@@ -109,6 +109,9 @@ jobs:
           deploy-platform: ${{ matrix.deploy-platform }}
           deploy-platform-target: ${{ matrix.deploy-platform-target }}
 
+      - name: Generate build constants
+        uses: ./.github/actions/vsk-generate-constants
+
       - name: Export Game
         if: ${{ matrix.deploy }}
         run: |
