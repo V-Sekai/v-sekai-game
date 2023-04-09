@@ -74,7 +74,6 @@ SnappingSingleton="*res://addons/sar1_vr_manager/components/lasso_snapping/snapp
 VRManager="*res://addons/sar1_vr_manager/vr_manager.gd"
 GraphicsManager="*res://addons/sar1_graphics_manager/graphics_manager.gd"
 DebugManager="*res://addons/sar1_debug_manager/debug_manager.gd"
-PerformanceMonitor="*res://addons/performance_monitor/performance_monitor.gd"
 VSKNetworkManager="*res://addons/vsk_manager/vsk_network_manager.gd"
 VSKAccountManager="*res://addons/vsk_manager/vsk_account_manager.gd"
 NetworkLogger="*res://addons/network_manager/network_logger.gd"
