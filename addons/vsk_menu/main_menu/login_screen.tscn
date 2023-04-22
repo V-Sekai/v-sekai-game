@@ -78,12 +78,6 @@ text = "TR_MENU_LOGIN_PASSWORD"
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="PasswordLineEdit" parent="Panel/CenterContainer/Control/ButtonsContainer/PasswordContainer/PasswordInput" index="0"]
-layout_mode = 2
-
-[node name="PasswordHideToggle" parent="Panel/CenterContainer/Control/ButtonsContainer/PasswordContainer/PasswordInput" index="1"]
-layout_mode = 2
-
 [node name="StatusContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer"]
 layout_mode = 2
 size_flags_horizontal = 3

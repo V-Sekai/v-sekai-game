@@ -62,13 +62,9 @@ layout_mode = 2
 padded_decimals = 3
 
 [node name="SliderValue" parent="Panel/CenterContainer/Control/ButtonsContainer/MouseSensitivityContainer/MouseSensitivitySliderContainer" index="0"]
-layout_mode = 2
 max_value = 10.0
 step = 0.001
 value = 1.0
-
-[node name="SliderLabel" parent="Panel/CenterContainer/Control/ButtonsContainer/MouseSensitivityContainer/MouseSensitivitySliderContainer" index="1"]
-layout_mode = 2
 
 [node name="LookInvertContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer"]
 layout_mode = 2
