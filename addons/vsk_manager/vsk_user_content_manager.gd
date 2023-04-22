@@ -65,7 +65,6 @@ func finished_asset_request() -> void:
 
 func _user_content_asset_request_complete(p_url: String, p_request_object: Dictionary, p_response_code: int) -> void:
 	if p_url.is_empty():
-		assert(false, "Cannot load empty url.")
 		return
 	if not user_content_urls.has(p_url):
 		return
