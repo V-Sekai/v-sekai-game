@@ -549,10 +549,6 @@ services/services=PackedStringArray("res://addons/vsk_manager/services/uro_servi
 services/required_host_notify_services=PackedStringArray("res://addons/vsk_manager/services/uro_service.gd")
 uro/use_ssl=true
 
-[static_baker]
-
-autobake_all=false
-
 [ugc]
 
 config/sanitize_avatar_export=true
