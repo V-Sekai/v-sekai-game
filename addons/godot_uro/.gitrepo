@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/ingydotnet/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/V-Sekai/godot_uro
+	branch = main
+	commit = 66efcfa6c632801670649f814d949e4110062c5c
+	parent = febd0b5b1ddb8075d477a97b30f875acd5c9d818
+	method = merge
+	cmdver = 0.4.6

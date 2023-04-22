@@ -1,0 +1,12 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://dwvwb37tl3gt0"]
+
+[ext_resource type="Shader" path="res://addons/xr_vignette/vignette_cage.gdshader" id="1_6xfsy"]
+
+[resource]
+render_priority = 127
+shader = ExtResource("1_6xfsy")
+shader_parameter/cage_color = Color(1, 1, 1, 1)
+shader_parameter/current_fov = 100.0
+shader_parameter/current_fade_fov = 6.5
+shader_parameter/vignette_alpha = 1.0
+shader_parameter/floor_offset = 0.0

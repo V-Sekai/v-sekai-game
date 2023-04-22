@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://brbjttl8s6fh0"]
+
+[ext_resource type="PackedScene" uid="uid://dh64n52tbkca8" path="res://addons/vsk_avatar/import/error_handlers/avatar_forbidden.glb" id="1"]
+[ext_resource type="Script" path="res://addons/vsk_avatar/vsk_avatar_definition.gd" id="2"]
+
+[node name="Avatar" type="Node3D"]
+script = ExtResource("2")
+
+[node name="avatar_forbidden" parent="." instance=ExtResource("1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)

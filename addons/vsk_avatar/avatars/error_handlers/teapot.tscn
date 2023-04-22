@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://bh7nu12wl7q86"]
+
+[ext_resource type="Script" path="res://addons/vsk_avatar/vsk_avatar_definition.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://de7gsenf315o2" path="res://addons/vsk_avatar/import/error_handlers/teapot.glb" id="2"]
+
+[node name="Avatar" type="Node3D"]
+script = ExtResource("1")
+
+[node name="teapot" parent="." instance=ExtResource("2")]

@@ -1,0 +1,11 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://b5jl3c5snlfcx"]
+
+[ext_resource type="Texture2D" uid="uid://do2eb60jxbte7" path="res://addons/sar1_vr_manager/images/teleport_target.svg" id="1_21bup"]
+
+[resource]
+transparency = 1
+cull_mode = 2
+shading_mode = 0
+diffuse_mode = 1
+albedo_color = Color(0.176471, 0.313726, 0.862745, 1)
+albedo_texture = ExtResource("1_21bup")

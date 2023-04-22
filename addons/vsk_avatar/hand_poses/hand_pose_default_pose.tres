@@ -1,0 +1,21 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://b2tfx20l2i43i"]
+
+[ext_resource type="Script" path="res://addons/vsk_avatar/hand_pose.gd" id="1"]
+
+[resource]
+script = ExtResource( "1" )
+thumb_proximal = Transform3D(1, 1.3411e-07, -3.57628e-07, -1.3411e-07, 1, 8.94072e-08, 3.57628e-07, -8.94072e-08, 1, 0, 0, 0)
+thumb_intermediate = Transform3D(1, -2.28613e-12, -5.45697e-12, 2.28613e-12, 1, -1.36424e-12, 5.45697e-12, 1.36424e-12, 1, 0, 0, 0)
+thumb_distal = Transform3D(1, 3.32219e-13, -4.26326e-14, -3.32219e-13, 1, -6.82122e-13, 4.26326e-14, 6.82122e-13, 1, 0, 0, 0)
+index_proximal = Transform3D(1, 1.33848e-12, -2.72848e-12, -1.33848e-12, 1, 6.82122e-13, 2.72848e-12, -6.82122e-13, 1, 0, 0, 0)
+index_intermediate = Transform3D(1, 6.50814e-13, 0, -6.50814e-13, 1, 0, 0, 0, 1, 0, 0, 0)
+index_distal = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+middle_proximal = Transform3D(1, -1.29115e-20, 0, 1.29115e-20, 1, 0, 0, 0, 1, 0, 0, 0)
+middle_intermediate = Transform3D(1, -7.2516e-14, 0, 7.2516e-14, 1, 0, 0, 0, 1, 0, 0, 0)
+middle_distal = Transform3D(1, -3.24678e-13, 0, 3.24678e-13, 1, 0, 0, 0, 1, 0, 0, 0)
+ring_proximal = Transform3D(1, 2.87486e-21, 0, -2.87486e-21, 1, 0, 0, 0, 1, 0, 0, 0)
+ring_intermediate = Transform3D(1, 9.29676e-14, 0, -9.29676e-14, 1, 0, 0, 0, 1, 0, 0, 0)
+ring_distal = Transform3D(1, 4.24374e-14, 0, -4.24374e-14, 1, 0, 0, 0, 1, 0, 0, 0)
+little_proximal = Transform3D(1, 3.87121e-21, -1.34309e-38, -3.87121e-21, 1, -5.20417e-18, -6.71548e-39, 5.20417e-18, 1, 0, 0, 0)
+little_intermediate = Transform3D(1, 1.19654e-13, 0, -1.19654e-13, 1, 0, 0, 0, 1, 0, 0, 0)
+little_distal = Transform3D(1, -7.04646e-13, 0, 7.04646e-13, 1, 0, 0, 0, 1, 0, 0, 0)

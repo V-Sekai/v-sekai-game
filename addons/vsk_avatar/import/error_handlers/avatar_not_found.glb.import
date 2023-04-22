@@ -1,0 +1,43 @@
+[remap]
+
+importer="scene"
+importer_version=1
+type="PackedScene"
+uid="uid://dt2r4f1bcuxma"
+path="res://.godot/imported/avatar_not_found.glb-fa17ab08b54f4ad78e18bf20f3849190.scn"
+
+[deps]
+
+source_file="res://addons/vsk_avatar/import/error_handlers/avatar_not_found.glb"
+dest_files=["res://.godot/imported/avatar_not_found.glb-fa17ab08b54f4ad78e18bf20f3849190.scn"]
+
+[params]
+
+nodes/root_type="Spatial"
+nodes/root_name="Scene Root"
+nodes/apply_root_scale=true
+nodes/root_scale=1.0
+meshes/ensure_tangents=true
+meshes/generate_lods=true
+meshes/create_shadow_meshes=true
+meshes/light_baking=0
+meshes/lightmap_texel_size=0.1
+skins/use_named_skins=true
+animation/import=true
+animation/fps=15
+animation/trimming=false
+animation/remove_immutable_tracks=true
+import_script/path=""
+_subresources={
+"materials": {
+"WarningWhite": {
+"use_external/enabled": true,
+"use_external/path": "res://addons/vsk_avatar/import/error_handlers/WarningWhite.tres"
+},
+"WarningYellow": {
+"use_external/enabled": true,
+"use_external/path": "res://addons/vsk_avatar/import/error_handlers/WarningYellow.tres"
+}
+}
+}
+gltf/embedded_image_handling=1
