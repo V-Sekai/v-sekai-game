@@ -18,9 +18,20 @@ signal state_processing(delta:float)
 ## Called when the state is physics processing.
 signal state_physics_processing(delta:float)
 
+## Called when the state is receiving input.
+signal state_input(event:InputEvent)
+
+## Called when the state is receiving unhandled input.
+signal state_unhandled_input(event:InputEvent)
+
+
+## Whether the state is currently active (internal flag, use active).
+var _state_active = false
+
 ## Whether the current state is active.
 var active:bool:
-	get: return process_mode != Node.PROCESS_MODE_DISABLED
+	get: return _state_active
+	
 
 ## The currently active pending transition.
 var _pending_transition:Transition = null
@@ -31,20 +42,35 @@ var _pending_transition_time:float = 0
 ## The transitions of this state.
 var _transitions:Array[Transition] = []
 
+
+
 ## Called when the state chart is built.
 func _state_init():
 	# disable state by default
 	process_mode = Node.PROCESS_MODE_DISABLED
+	_state_active = false
+	_toggle_processing(false)
+	
 	# load transitions
 	_transitions.clear()
 	for child in get_children():
 		if child is Transition:
 			_transitions.append(child)
 	
-## Called when the state is entered.
-func _state_enter():
+## Called when the state is entered. The parameter indicates whether the state
+## is expected to immediately handle a transition after it has been entered.
+## In this case the state should not automatically activate a default child state.
+## This is to avoid a situation where a state is entered, activates a child then immediately
+## exits and activates another child due to a transition.
+func _state_enter(expect_transition:bool = false):
 	# print("state_enter: " + name)
+	_state_active = true
+	
 	process_mode = Node.PROCESS_MODE_INHERIT
+
+	# enable processing if someone listens to our signal
+	_toggle_processing(true)
+	
 	# emit the signal
 	state_entered.emit()
 	# check all transitions which have no event
@@ -60,8 +86,11 @@ func _state_exit():
 	# cancel any pending transitions
 	_pending_transition = null
 	_pending_transition_time = 0
+	_state_active = false
 	# stop processing
 	process_mode = Node.PROCESS_MODE_DISABLED
+	_toggle_processing(false)
+	
 	# emit the signal
 	state_exited.emit()
 
@@ -108,7 +137,7 @@ func _state_save(saved_state:SavedState, child_levels:int = -1):
 ## If the state was not active when it was saved, this method still will be called
 ## but the given SavedState object will not contain any data for this state.
 func _state_restore(saved_state:SavedState, child_levels:int = -1):
-	print("restoring state " + name)
+	# print("restoring state " + name)
 	var our_saved_state = saved_state.get_substate_or_null(self)
 	if our_saved_state == null:
 		# if we are currently active, deactivate the state
@@ -124,10 +153,10 @@ func _state_restore(saved_state:SavedState, child_levels:int = -1):
 	_pending_transition = get_node_or_null(our_saved_state.pending_transition_name) as Transition
 	_pending_transition_time = our_saved_state.pending_transition_time
 	
-	if _pending_transition != null:
-		print("restored pending transition " + _pending_transition.name + " with time " + str(_pending_transition_time))
-	else:
-		print("no pending transition restored")
+	# if _pending_transition != null:
+	#	print("restored pending transition " + _pending_transition.name + " with time " + str(_pending_transition_time))
+	# else:
+	#	print("no pending transition restored")
 
 	if child_levels == 0:
 		return
@@ -171,6 +200,13 @@ func _physics_process(delta:float):
 	state_physics_processing.emit(delta)
 
 
+func _input(event:InputEvent):
+	state_input.emit(event)
+
+
+func _unhandled_input(event:InputEvent):
+	state_unhandled_input.emit(event)
+
 ## Handles the given event. Returns true if the event was consumed, false otherwise.
 func _state_event(event:StringName) -> bool:
 	if not active:
@@ -195,6 +231,9 @@ func _queue_transition(transition:Transition):
 	# queue the transition for the delay time (0 means next frame)
 	_pending_transition = transition
 	_pending_transition_time = transition.delay_seconds
+	
+	# enable processing when we have a transition
+	set_process(true)
 
 
 func _get_configuration_warnings() -> PackedStringArray:
@@ -212,3 +251,14 @@ func _get_configuration_warnings() -> PackedStringArray:
 		result.append("State is not a child of a StateChart. This will not work.")
 
 	return result		
+
+
+func _toggle_processing(active:bool):
+	set_process(active and _has_connections(state_processing))
+	set_physics_process(active and _has_connections(state_physics_processing))
+	set_process_input(active and _has_connections(state_input))
+	set_process_unhandled_input(active and _has_connections(state_unhandled_input))
+
+## Checks whether the given signal has connections. 
+func _has_connections(sgnl:Signal) -> bool:
+	return sgnl.get_connections().size() > 0
