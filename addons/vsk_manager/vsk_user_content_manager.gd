@@ -30,7 +30,7 @@ func _finished_background_load_request(p_task_path : String) -> void:
 		assert(false, "Background load request underflow!")
 
 func _background_loader_task_done(p_task_path: String, p_err: int, p_resource: Resource) -> void:
-	if background_loading_tasks.has(p_task_path):
+	if background_loading_tasks.has(p_task_path) and p_resource:
 		var url_array: Array = background_loading_tasks[p_task_path]
 		_finished_background_load_request(p_task_path)
 		
@@ -64,18 +64,22 @@ func finished_asset_request() -> void:
 		assert(false, "Asset request underflow!")
 
 func _user_content_asset_request_complete(p_url: String, p_request_object: Dictionary, p_response_code: int) -> void:
-	if user_content_urls.has(p_url):
-		finished_asset_request()
+	if p_url.is_empty():
+		assert(false, "Cannot load empty url.")
+		return
+	if not user_content_urls.has(p_url):
+		return
+	finished_asset_request()
 
-		if p_response_code != VSKAssetManager.ASSET_OK:
-			printerr("Asset download failed with code: %s" % str(p_response_code))
+	if p_response_code != VSKAssetManager.ASSET_OK:
+		printerr("Asset download failed with code: %s" % str(p_response_code))
 
-		if not str(p_request_object["path"]).is_empty():
-			user_content_urls[p_url]["stage"] = VSKAssetManager.STAGE_DOWNLOADING
-			if ! make_background_load_request(p_url, p_request_object["path"], p_request_object["skip_validation"], p_request_object["external_path_whitelist"], p_request_object["resource_whitelist"]):
-				printerr("make_background_load_request failed")
-		else:
-			user_content_load_done.emit(p_url, p_response_code, null, p_request_object["skip_validation"])
+	if not str(p_request_object["path"]).is_empty():
+		user_content_urls[p_url]["stage"] = VSKAssetManager.STAGE_DOWNLOADING
+		if ! make_background_load_request(p_url, p_request_object["path"], p_request_object["skip_validation"], p_request_object["external_path_whitelist"], p_request_object["resource_whitelist"]):
+			printerr("make_background_load_request failed")
+	else:
+		user_content_load_done.emit(p_url, p_response_code, null, p_request_object["skip_validation"])
 
 
 func _user_content_asset_request_cancelled(p_url: String) -> void:
