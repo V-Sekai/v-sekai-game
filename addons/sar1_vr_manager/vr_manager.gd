@@ -241,7 +241,7 @@ func setup_vr_interface() -> void:
 	# Break when one has been found
 	for interface_name in interface_names:
 		xr_interface = XRServer.find_interface(interface_name)
-		if xr_interface:
+		if xr_interface != null:
 			print("Attempting to initialize %s..." % interface_name)
 			if xr_interface.initialize():
 				print("%s Initalized!" % interface_name)
