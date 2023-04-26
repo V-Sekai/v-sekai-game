@@ -4,9 +4,9 @@
 ; git-subrepo command. See https://github.com/ingydotnet/git-subrepo#readme
 ;
 [subrepo]
-	remote = https://github.com/V-Sekai/unidot_importer
+	remote = https://github.com/V-Sekai/unidot_importer.git
 	branch = main
-	commit = 0e72474d67be38f3fa92f773f3442c8c5720642a
-	parent = e751a618e67f01efc2ae7088ef190f4874395d75
+	commit = f32ead41b07f752a8a1b49707ace7ddbd16608f9
+	parent = 4bacd3800efc3b2bde68edb3b419b078f01050df
 	method = merge
 	cmdver = 0.4.6

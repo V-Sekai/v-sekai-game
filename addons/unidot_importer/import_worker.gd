@@ -24,6 +24,7 @@ class ThreadWork:
 	var tmpdir: String
 	var output_path: String
 	var extra: Variant
+	var is_loaded: bool
 
 
 signal asset_processing_started(tw: ThreadWork)
@@ -78,7 +79,10 @@ func push_asset(asset: Object, tmpdir: String, extra: Variant = null):
 	tw.asset = asset
 	tw.tmpdir = tmpdir
 	tw.extra = extra
-	print("Enqueue asset " + str(asset.pathname) + "/" + str(asset.guid))
+	if asset.parsed_meta != null:
+		asset.parsed_meta.log_debug("Enqueue asset " + str(asset.guid) + " " + str(asset.pathname))
+	else:
+		print("Enqueue asset " + str(asset.guid) + " " + str(asset.pathname))
 	if disable_threads:
 		self.call_deferred("_run_single_item_delayed", tw)
 	else:

@@ -9,7 +9,7 @@ const asset_database_class: GDScript = preload("./asset_database.gd")
 const asset_meta_class: GDScript = preload("./asset_meta.gd")
 
 # Set THREAD_COUNT to 0 to run single-threaded.
-const THREAD_COUNT = 0  # 10
+const THREAD_COUNT = 10
 const DISABLE_TEXTURES = false
 
 const STATE_DIALOG_SHOWING = 0
@@ -17,9 +17,10 @@ const STATE_PREPROCESSING = 1
 const STATE_TEXTURES = 2
 const STATE_IMPORTING_MATERIALS_AND_ASSETS = 3
 const STATE_IMPORTING_MODELS = 4
-const STATE_IMPORTING_PREFABS = 5
-const STATE_IMPORTING_SCENES = 6
-const STATE_DONE_IMPORT = 7
+const STATE_IMPORTING_YAML_POST_MODEL = 5
+const STATE_IMPORTING_PREFABS = 6
+const STATE_IMPORTING_SCENES = 7
+const STATE_DONE_IMPORT = 8
 
 var import_worker = import_worker_class.new()
 var asset_adapter = asset_adapter_class.new()
@@ -48,11 +49,13 @@ var force_reimport_models_checkbox: CheckBox = null
 var asset_work_waiting_write: Array = [].duplicate()
 var asset_work_waiting_scan: Array = [].duplicate()
 var asset_work_currently_importing: Array = [].duplicate()
+var asset_work_completed: Array = [].duplicate()
 
 var asset_all: Array = [].duplicate()
 var asset_textures: Array = [].duplicate()
 var asset_materials_and_other: Array = [].duplicate()
 var asset_models: Array = [].duplicate()
+var asset_yaml_post_model: Array = [].duplicate()
 var asset_prefabs: Array = [].duplicate()
 var asset_scenes: Array = [].duplicate()
 
@@ -114,6 +117,7 @@ func _selected_package(p_path: String) -> void:
 	asset_textures = [].duplicate()
 	asset_materials_and_other = [].duplicate()
 	asset_models = [].duplicate()
+	asset_yaml_post_model = [].duplicate()
 	asset_prefabs = [].duplicate()
 	asset_scenes = [].duplicate()
 	pkg = unitypackagefile.new().init_with_filename(p_path)
@@ -257,14 +261,28 @@ func on_import_fully_completed():
 			main_dialog = null
 
 
+func update_task_color(tw: RefCounted):
+	var ti: TreeItem = tw.extra
+	if tw.asset.parsed_meta == null:
+		ti.set_custom_color(0, Color("#ddffbb"))
+	elif not tw.is_loaded:
+		ti.set_custom_color(0, Color("#ff4422"))
+	else:
+		var holder = tw.asset.parsed_meta.log_message_holder
+		if holder.has_fails():
+			ti.set_custom_color(0, Color("#ff8822"))
+		elif holder.has_warnings():
+			ti.set_custom_color(0, Color("#ccff22"))
+		else:
+			ti.set_custom_color(0, Color("#22ff44"))
+
+
 func on_file_completed_godot_import(tw: RefCounted, loaded: bool):
 	var ti: TreeItem = tw.extra
 	if ti.get_button_count(0) > 0:
 		ti.erase_button(0, 0)
-	if loaded:
-		ti.set_custom_color(0, Color("#228822"))
-	else:
-		ti.set_custom_color(0, Color("#ff4422"))
+	update_task_color(tw)
+	asset_work_completed.append(tw)
 
 
 func do_import_step():
@@ -272,6 +290,9 @@ func do_import_step():
 		asset_database.log_fail([null,0,"",0], "Import step called during preprocess")
 		return
 	var editor_filesystem: EditorFileSystem = EditorPlugin.new().get_editor_interface().get_resource_filesystem()
+
+	for tw in asset_work_completed:
+		update_task_color(tw)
 
 	if tree_dialog_state >= STATE_DONE_IMPORT:
 		asset_database.save()
@@ -302,6 +323,12 @@ func do_import_step():
 			asset_work_waiting_write.reverse()
 			asset_models = [].duplicate()
 		elif tree_dialog_state == STATE_IMPORTING_MODELS:
+			tree_dialog_state = STATE_IMPORTING_YAML_POST_MODEL
+			for tw in asset_yaml_post_model:
+				asset_work_waiting_write.append(tw)
+			asset_work_waiting_write.reverse()
+			asset_yaml_post_model = [].duplicate()
+		elif tree_dialog_state == STATE_IMPORTING_YAML_POST_MODEL:
 			tree_dialog_state = STATE_IMPORTING_PREFABS
 			var guid_to_meta = {}.duplicate()
 			var guid_to_tw = {}.duplicate()
@@ -372,6 +399,7 @@ func do_import_step():
 	for tw in completed_scan:
 		tw.asset.log_debug("Asset " + tw.asset.pathname + "/" + tw.asset.guid + " completed import.")
 		var loaded_asset: Resource = ResourceLoader.load(tw.asset.pathname, "", ResourceLoader.CACHE_MODE_REPLACE)
+		tw.is_loaded = (loaded_asset != null)
 		#var loaded_asset: Resource = load(tw.asset.pathname)
 		if loaded_asset != null:
 			tw.asset.parsed_meta.insert_resource_path(tw.asset.parsed_meta.main_object_id, tw.asset.pathname)
@@ -451,7 +479,7 @@ func _asset_processing_finished(tw: Object):
 	_currently_preprocessing_assets -= 1
 	tw.asset.log_debug(str(tw.asset) + " preprocess finished!")
 	var ti: TreeItem = tw.extra
-	ti.set_custom_color(0, Color("#888822"))
+	ti.set_custom_color(0, Color("#44ffff"))
 	if ti.get_button_count(0) > 0:
 		ti.erase_button(0, 0)
 	tw.asset.log_debug("Asset database object is now " + str(asset_database))
@@ -477,12 +505,15 @@ func _asset_processing_finished(tw: Object):
 		if asset_type == asset_adapter.ASSET_TYPE_TEXTURE or asset_type == asset_adapter.ASSET_TYPE_ANIM:
 			tw.asset.log_debug("Asset " + str(tw.output_path) + " is texture/anim")
 			asset_textures.push_back(tw)
-		elif asset_type == asset_adapter.ASSET_TYPE_MODEL:
-			tw.asset.log_debug("Asset " + str(tw.output_path) + " is model")
-			asset_models.push_back(tw)
 		elif asset_type == asset_adapter.ASSET_TYPE_YAML:
 			tw.asset.log_debug("Asset " + str(tw.output_path) + " is yaml")
 			asset_materials_and_other.push_back(tw)
+		elif asset_type == asset_adapter.ASSET_TYPE_MODEL:
+			tw.asset.log_debug("Asset " + str(tw.output_path) + " is model")
+			asset_models.push_back(tw)
+		elif asset_type == asset_adapter.ASSET_TYPE_YAML_POST_MODEL:
+			tw.asset.log_debug("Asset " + str(tw.output_path) + " is yaml")
+			asset_yaml_post_model.push_back(tw)
 		elif asset_type == asset_adapter.ASSET_TYPE_PREFAB:
 			tw.asset.log_debug("Asset " + str(tw.output_path) + " is prefab")
 			asset_prefabs.push_back(tw)
@@ -500,6 +531,8 @@ func _asset_processing_finished(tw: Object):
 func _asset_processing_started(tw: Object):
 	asset_database.log_debug([null,0,tw.asset.guid,0], "Started processing asset is " + str(tw.asset.pathname) + "/" + str(tw.asset.guid))
 	var ti: TreeItem = tw.extra
+	if tw.asset.parsed_meta != null:
+		tw.asset.parsed_meta.clear_logs()
 	ti.set_custom_color(0, Color("#228888"))
 
 

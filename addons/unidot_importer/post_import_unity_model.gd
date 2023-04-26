@@ -32,9 +32,11 @@ class ParseState:
 
 	var skinned_parent_to_node: Dictionary = {}.duplicate()
 	var godot_sanitized_to_orig_remap: Dictionary = {}.duplicate()
+	var bone_map: BoneMap = null
 	var external_objects_by_id: Dictionary = {}.duplicate()  # fileId -> UnityRef Array
 	var external_objects_by_type_name: Dictionary = {}.duplicate()  # type -> name -> UnityRef Array
 	var material_to_texture_name: Dictionary = {}.duplicate()  # for Extract Legacy Materials / By Base Texture Name
+	var animation_to_take_name: Dictionary = {}.duplicate()
 
 	var saved_materials_by_name: Dictionary = {}.duplicate()
 	var saved_meshes_by_name: Dictionary = {}.duplicate()
@@ -84,12 +86,18 @@ class ParseState:
 	#	return objtype_to_name_to_id.get(type, {}).has(name)
 
 	func generate_object_hash(dupe_map: Dictionary, type: String, obj_path: String) -> int:
-		return self.HACK_outer_scope_generate_object_hash.call(dupe_map, type, obj_path)
+		var ret: int = self.HACK_outer_scope_generate_object_hash.call(dupe_map, type, obj_path)
+		var t: String = "Type:" + type + "->" + obj_path
+		t += str(dupe_map[t])
+		metaobj.log_debug(ret, "Hash " + t + " => " + str(ret))
+		return ret
 
 	func get_obj_id(type: String, path: PackedStringArray, name: String) -> int:
 		if type == "PrefabInstance":
 			# May be based on hash in gltf docs, not sure. Anyway for fbx 100100000 seems ok
 			return 100100000  # I think we'll just hardcode this.
+		if type == "AnimationClip":
+			name = animation_to_take_name.get(name, name)
 		if self.is_dae and path == PackedStringArray():
 			name = name.replace(" ", "_")
 		if objtype_to_name_to_id.get(type, {}).has(name):
@@ -113,7 +121,15 @@ class ParseState:
 				metaobj.log_warn(next_obj_id, "Generating id " + str(next_obj_id) + " for " + str(name) + " type " + str(type))
 			return next_obj_id
 
-	func get_orig_name(obj_gltf_type: String, obj_name: String) -> String:
+	func get_orig_name(obj_gltf_type: String, p_obj_name: String) -> String:
+		var obj_name = p_obj_name
+		if obj_gltf_type == "nodes" and p_obj_name == "Skeleton3D" and bone_map != null:
+			obj_name = "GeneralSkeleton"
+		if obj_gltf_type == "bone_name" and bone_map != null:
+			metaobj.log_debug(0, "Lookup bone name " + str(p_obj_name))
+			var bone_mapped = bone_map.get_skeleton_bone_name(p_obj_name)
+			if bone_mapped != "":
+				obj_name = bone_mapped
 		return self.godot_sanitized_to_orig_remap.get(obj_gltf_type, {}).get(obj_name, obj_name)
 
 	func build_skinned_name_to_node_map(node: Node, p_name_to_node_dict: Dictionary) -> Dictionary:
@@ -121,11 +137,11 @@ class ParseState:
 		var node_name = get_orig_name("nodes", node.name)
 		for child in node.get_children():
 			name_to_node_dict = build_skinned_name_to_node_map(child, name_to_node_dict)
-		print("node.name " + str(node_name) + ": " + str(name_to_node_dict))
+		metaobj.log_debug(0, "node.name " + str(node_name) + ": " + str(name_to_node_dict))
 		if node is MeshInstance3D:
 			if node.skin != null:
 				name_to_node_dict[node_name] = node
-				print("adding " + str(node_name) + ": " + str(name_to_node_dict))
+				metaobj.log_debug(0, "adding " + str(node_name) + ": " + str(name_to_node_dict))
 		return name_to_node_dict
 
 	func get_resource_path(sanitized_name: String, extension: String) -> String:
@@ -140,7 +156,7 @@ class ParseState:
 			retlist.append(get_materials_path_base(material_name, basedir))
 			basedir = basedir.get_base_dir()
 		retlist.append(get_materials_path_base(material_name, "res://"))
-		print("Looking in directories " + str(retlist))
+		metaobj.log_debug(0, "Looking in directories " + str(retlist))
 		return retlist
 
 	func get_materials_path_base(material_name: String, base_dir: String) -> String:
@@ -244,7 +260,7 @@ class ParseState:
 			fileid_to_skeleton_bone[fileId_comp] = og_bone_name
 			if p_component == "Transform":
 				fileid_to_skeleton_bone[fileId_go] = og_bone_name
-		#print("fileid_go:" + str(fileId_go) + '/ ' + str(all_name_map[fileId_go]))
+		#metaobj.log_debug(0, "fileid_go:" + str(fileId_go) + '/ ' + str(all_name_map[fileId_go]))
 		return fileId_go
 
 	func register_resource(
@@ -259,7 +275,7 @@ class ParseState:
 		if p_type == "AnimationClip":
 			gltf_type = "animations"
 		metaobj.insert_resource(fileId_object, p_resource)
-		print(
+		metaobj.log_debug(0,
 			(
 				"Register "
 				+ str(metaobj.guid)
@@ -275,7 +291,7 @@ class ParseState:
 		)
 		if p_aux_resource != null:
 			metaobj.insert_resource(-fileId_object, p_aux_resource)  # Used for skin object.
-			print(
+			metaobj.log_debug(0,
 				(
 					"Register aux "
 					+ str(metaobj.guid)
@@ -292,7 +308,7 @@ class ParseState:
 	func iterate_skeleton(
 		node: Skeleton3D, p_path: PackedStringArray, p_skel_bone: int, p_attachments_by_bone_name: Dictionary
 	):
-		#print("Skeleton iterate_skeleton " + str(node.get_class()) + ", " + str(p_path) + ", " + str(node.name))
+		#metaobj.log_debug(0, "Skeleton iterate_skeleton " + str(node.get_class()) + ", " + str(p_path) + ", " + str(node.name))
 
 		if scale_correction_factor != 1.0:
 			var rest: Transform3D = node.get_bone_rest(p_skel_bone)
@@ -353,7 +369,7 @@ class ParseState:
 		return fileId_go
 
 	func iterate_node(node: Node, p_path: PackedStringArray, from_skinned_parent: bool):
-		print("Conventional iterate_node " + str(node.get_class()) + ", " + str(p_path) + ", " + str(node.name))
+		metaobj.log_debug(0, "Conventional iterate_node " + str(node.get_class()) + ", " + str(p_path) + ", " + str(node.name))
 		if node is MeshInstance3D:
 			if is_obj and node.mesh != null:
 				#node_name = "default"
@@ -376,7 +392,7 @@ class ParseState:
 			process_animation_player(node)
 		elif node is MeshInstance3D:
 			if node.skin != null and not skinned_parent_to_node.is_empty() and not from_skinned_parent:
-				print("Already recursed " + str(node.name))
+				metaobj.log_debug(0, "Already recursed " + str(node.name))
 				return 0  # We already recursed into this skinned mesh.
 			if from_skinned_parent or node.get_blend_shape_count() > 0:  # has_obj_id("SkinnedMeshRenderer", node_name):
 				register_component(node, p_path, "SkinnedMeshRenderer", fileId_go)
@@ -424,7 +440,7 @@ class ParseState:
 		if node.get_parent() == null or (len(p_path) == 2 and str(p_path[1]) == "root"):
 			key = ""
 		for child in skinned_parent_to_node.get(key, {}):
-			print("Skinned parent " + str(node.name) + ": " + str(child.name))
+			metaobj.log_debug(0, "Skinned parent " + str(node.name) + ": " + str(child.name))
 			var orig_child_name: String = get_orig_name("nodes", child.name)
 			var new_id: int = 0
 			p_path.push_back(orig_child_name)
@@ -433,7 +449,7 @@ class ParseState:
 			if new_id != 0:
 				self.all_name_map[fileId_go][orig_child_name] = new_id
 		for child in skinned_parent_to_node.get(orig_node_name, {}):
-			print("Skinned oring parent " + str(orig_node_name) + ": " + str(child.name))
+			metaobj.log_debug(0, "Skinned oring parent " + str(orig_node_name) + ": " + str(child.name))
 			var orig_child_name: String = get_orig_name("nodes", child.name)
 			var new_id: int = 0
 			p_path.push_back(orig_child_name)
@@ -458,7 +474,7 @@ class ParseState:
 					anim_lib.add_animation(godot_anim_name, anim)
 				continue
 			saved_animations_by_name[anim_name] = null
-			print("Process ANIM " + str(godot_anim_name))
+			metaobj.log_debug(0, "Process ANIM " + str(godot_anim_name))
 			#if not has_obj_id("AnimationClip", get_orig_name("animations", anim_name))
 			#if fileId == 0:
 			#	metaobj.log_fail(0, "Missing fileId for Animation " + str(anim_name))
@@ -480,11 +496,11 @@ class ParseState:
 					anim_lib.add_animation(godot_anim_name, anim)
 					saved_animations_by_name[anim_name] = anim
 					self.register_resource(anim, anim_name, "AnimationClip", fileId)
-			# print("AnimationPlayer " + str(scene.get_path_to(node)) + " / Anim " + str(i) + " anim_name: " + anim_name + " resource_name: " + str(anim.resource_name))
+			# metaobj.log_debug(0, "AnimationPlayer " + str(scene.get_path_to(node)) + " / Anim " + str(i) + " anim_name: " + anim_name + " resource_name: " + str(anim.resource_name))
 			i += 1
 
 	func process_mesh_instance(node: MeshInstance3D):
-		print("Process mesh instance: " + str(node.name))
+		metaobj.log_debug(0, "Process mesh instance: " + str(node.name))
 		if node.skin == null and node.skeleton != NodePath():
 			metaobj.log_fail(0, "A Skeleton exists for MeshRenderer " + str(node.name))
 		if node.skin != null and node.skeleton == NodePath():
@@ -524,7 +540,7 @@ class ParseState:
 					continue
 				saved_materials_by_name[mat_name] = null
 				var fileId = get_obj_id("Material", PackedStringArray(), mat_name)
-				print(
+				metaobj.log_debug(0,
 					(
 						"Materials "
 						+ str(importMaterials)
@@ -548,7 +564,7 @@ class ParseState:
 						)
 					if new_mat != null:
 						mat = new_mat
-						print(
+						metaobj.log_debug(0,
 							(
 								"External material object "
 								+ str(fileId)
@@ -567,7 +583,7 @@ class ParseState:
 						if legacy_material_name_setting == 2:
 							legacy_material_name = source_file_path.get_file().get_basename() + "-" + godot_mat_name
 
-						print("Extract legacy material " + mat_name + ": " + get_materials_path(legacy_material_name))
+						metaobj.log_debug(0, "Extract legacy material " + mat_name + ": " + get_materials_path(legacy_material_name))
 						var d = DirAccess.open("res://")
 						mat = null
 						if materialSearch == 0:
@@ -595,11 +611,11 @@ class ParseState:
 										mat = load(pathname)
 										break
 						if mat == null:
-							print("Material " + str(legacy_material_name) + " was not found. using default")
+							metaobj.log_debug(0, "Material " + str(legacy_material_name) + " was not found. using default")
 							mat = default_material
 					else:
 						var respath: String = get_resource_path(godot_mat_name, ".material")
-						print(
+						metaobj.log_debug(0,
 							(
 								"Before save "
 								+ str(mat_name)
@@ -612,7 +628,7 @@ class ParseState:
 							)
 						)
 						if mat.albedo_texture != null:
-							print(
+							metaobj.log_debug(0,
 								(
 									"    albedo = "
 									+ str(mat.albedo_texture.resource_name)
@@ -621,7 +637,7 @@ class ParseState:
 								)
 							)
 						if mat.normal_texture != null:
-							print(
+							metaobj.log_debug(0,
 								(
 									"    normal = "
 									+ str(mat.normal_texture.resource_name)
@@ -633,7 +649,7 @@ class ParseState:
 							mat.take_over_path(respath)
 						ResourceSaver.save(mat, respath)
 						mat = load(respath)
-						print(
+						metaobj.log_debug(0,
 							(
 								"Save-and-load material object "
 								+ str(mat_name)
@@ -644,7 +660,7 @@ class ParseState:
 							)
 						)
 						if mat.albedo_texture != null:
-							print(
+							metaobj.log_debug(0,
 								(
 									"    albedo = "
 									+ str(mat.albedo_texture.resource_name)
@@ -653,7 +669,7 @@ class ParseState:
 								)
 							)
 						if mat.normal_texture != null:
-							print(
+							metaobj.log_debug(0,
 								(
 									"    normal = "
 									+ str(mat.normal_texture.resource_name)
@@ -661,13 +677,13 @@ class ParseState:
 									+ str(mat.normal_texture.resource_path)
 								)
 							)
-					print("Mat for " + str(i) + " is " + str(mat))
+					metaobj.log_debug(0, "Mat for " + str(i) + " is " + str(mat))
 					if mat != null:
 						mesh.surface_set_material(i, mat)
 						saved_materials_by_name[mat_name] = mat
 						register_resource(mat, mat_name, "Material", fileId)
-				# print("MeshInstance " + str(scene.get_path_to(node)) + " / Mesh " + str(mesh.resource_name if mesh != null else "NULL")+ " Material " + str(i) + " name " + str(mat.resource_name if mat != null else "NULL"))
-			# print("Looking up " + str(mesh_name) + " in " + str(objtype_to_name_to_id.get("Mesh", {})))
+				# metaobj.log_debug(0, "MeshInstance " + str(scene.get_path_to(node)) + " / Mesh " + str(mesh.resource_name if mesh != null else "NULL")+ " Material " + str(i) + " name " + str(mat.resource_name if mat != null else "NULL"))
+			# metaobj.log_debug(0, "Looking up " + str(mesh_name) + " in " + str(objtype_to_name_to_id.get("Mesh", {})))
 			var fileId: int = get_obj_id("Mesh", PackedStringArray(), mesh_name)
 			if fileId == 0:
 				metaobj.log_fail(0, "Missing fileId for Mesh " + str(mesh_name))
@@ -724,13 +740,13 @@ class ParseState:
 			var bsarr: Array = mesh.surface_get_blend_shape_arrays(surf_idx)
 			var lods: Dictionary = {}  # mesh.surface_get_lods(surf_idx) # get_lods(mesh, surf_idx)
 			var mat: Material = mesh.surface_get_material(surf_idx)
-			#print("About to multiply mesh vertices by " + str(scale_correction_factor) + ": " + str(arr[ArrayMesh.ARRAY_VERTEX][0]))
+			#metaobj.log_debug(0, "About to multiply mesh vertices by " + str(scale_correction_factor) + ": " + str(arr[ArrayMesh.ARRAY_VERTEX][0]))
 			var vert_arr_len: int = len(arr[ArrayMesh.ARRAY_VERTEX])
 			var i: int = 0
 			while i < vert_arr_len:
 				arr[ArrayMesh.ARRAY_VERTEX][i] = arr[ArrayMesh.ARRAY_VERTEX][i] * scale_correction_factor
 				i += 1
-			#print("Done multiplying mesh vertices by " + str(scale_correction_factor) + ": " + str(arr[ArrayMesh.ARRAY_VERTEX][0]))
+			#metaobj.log_debug(0, "Done multiplying mesh vertices by " + str(scale_correction_factor) + ": " + str(arr[ArrayMesh.ARRAY_VERTEX][0]))
 			for bsidx in range(len(bsarr)):
 				i = 0
 				var ilen: int = len(bsarr[bsidx][ArrayMesh.ARRAY_VERTEX])
@@ -740,8 +756,8 @@ class ParseState:
 					)
 					i += 1
 				bsarr[bsidx].resize(3)
-				#print("format flags: " + str(fmt_compress_flags & 7) + "|" + str(typeof(bsarr[bsidx][0]))+"|"+str(typeof(bsarr[bsidx][0]))+"|"+str(typeof(bsarr[bsidx][0])))
-				#print("Len arr " + str(len(arr)) + " bsidx " + str(bsidx) + " len bsarr[bsidx] " + str(len(bsarr[bsidx])))
+				#metaobj.log_debug(0, "format flags: " + str(fmt_compress_flags & 7) + "|" + str(typeof(bsarr[bsidx][0]))+"|"+str(typeof(bsarr[bsidx][0]))+"|"+str(typeof(bsarr[bsidx][0])))
+				#metaobj.log_debug(0, "Len arr " + str(len(arr)) + " bsidx " + str(bsidx) + " len bsarr[bsidx] " + str(len(bsarr[bsidx])))
 				#for i in range(len(arr)):
 				#	if i >= ArrayMesh.ARRAY_INDEX or typeof(arr[i]) == TYPE_NIL:
 				#		bsarr[bsidx][i] = null
@@ -770,11 +786,11 @@ class ParseState:
 			var fmt_compress_flags: int = surf_data_by_mesh[surf_idx].get("fmt_compress_flags")
 			var name: String = surf_data_by_mesh[surf_idx].get("name")
 			var mat: Material = surf_data_by_mesh[surf_idx].get("mat")
-			#print("Adding mesh vertices by " + str(scale_correction_factor) + ": " + str(arr[ArrayMesh.ARRAY_VERTEX][0]))
+			#metaobj.log_debug(0, "Adding mesh vertices by " + str(scale_correction_factor) + ": " + str(arr[ArrayMesh.ARRAY_VERTEX][0]))
 			mesh.add_surface_from_arrays(prim, arr, bsarr, lods, fmt_compress_flags)
 			mesh.surface_set_name(surf_idx, name)
 			mesh.surface_set_material(surf_idx, mat)
-			#print("Get mesh vertices by " + str(scale_correction_factor) + ": " + str(mesh.surface_get_arrays(surf_idx)[ArrayMesh.ARRAY_VERTEX][0]))
+			#metaobj.log_debug(0, "Get mesh vertices by " + str(scale_correction_factor) + ": " + str(mesh.surface_get_arrays(surf_idx)[ArrayMesh.ARRAY_VERTEX][0]))
 		if not is_shadow and mesh.shadow_mesh != mesh and mesh.shadow_mesh != null:
 			adjust_mesh_scale(mesh.shadow_mesh, true)
 
@@ -786,7 +802,7 @@ class ParseState:
 			var path: String = anim.get("tracks/" + str(trackidx) + "/path")
 			if path.ends_with(":x") or path.ends_with(":y") or path.ends_with(":z"):
 				path = path.substr(0, len(path) - 2)  # To make matching easier.
-			print("ANIM Type is " + str(anim.get("tracks/" + str(trackidx) + "/type")))
+			metaobj.log_debug(0, "ANIM Type is " + str(anim.get("tracks/" + str(trackidx) + "/type")))
 			match anim.get("tracks/" + str(trackidx) + "/type"):
 				"position":
 					var xform_keys: PackedFloat32Array = anim.get("tracks/" + str(trackidx) + "/keys")
@@ -879,7 +895,7 @@ func _post_import(p_scene: Node) -> Object:
 			metaobj = asset_database.create_dummy_meta(rel_path)
 		asset_database.insert_meta(metaobj)
 	metaobj.initialize(asset_database)
-	print(str(metaobj.importer))
+	metaobj.log_debug(0, str(metaobj.importer))
 
 	# For now, we assume all data is available in the asset database resource.
 	# var metafile = source_file_path + ".meta"
@@ -892,6 +908,8 @@ func _post_import(p_scene: Node) -> Object:
 	ps.HACK_outer_scope_generate_object_hash = generate_object_hash
 	ps.material_to_texture_name = metaobj.internal_data.get("material_to_texture_name", {})
 	ps.godot_sanitized_to_orig_remap = metaobj.internal_data.get("godot_sanitized_to_orig_remap", {})
+	if metaobj.importer.keys.get("animationType", 2) == 3:
+		ps.bone_map = metaobj.importer.generate_bone_map_from_human()
 	if metaobj.internal_data.has("scale_correction_factor"):
 		var scf: float = metaobj.internal_data.get("scale_correction_factor")
 		if godot_root_scale != scf:
@@ -916,7 +934,7 @@ func _post_import(p_scene: Node) -> Object:
 	ps.default_material = default_material
 	ps.is_obj = source_file_path.ends_with(".obj")
 	ps.is_dae = source_file_path.ends_with(".dae")
-	print("Path " + str(source_file_path) + " correcting scale by " + str(ps.scale_correction_factor))
+	metaobj.log_debug(0, "Path " + str(source_file_path) + " correcting scale by " + str(ps.scale_correction_factor))
 	#### Setting root_scale through the .import ConfigFile doesn't seem to be working foro me. ## p_scene.scale /= ps.scale_correction_factor
 	var external_objects: Dictionary = metaobj.importer.get_external_objects()
 	ps.external_objects_by_type_name = external_objects
@@ -924,18 +942,16 @@ func _post_import(p_scene: Node) -> Object:
 	var skinned_name_to_node = ps.build_skinned_name_to_node_map(ps.scene, {}.duplicate())
 	var skinned_parents: Variant = metaobj.internal_data.get("skinned_parents", null)
 	var skinned_parent_to_node = {}.duplicate()
-	print("Now skinning")
-	print(skinned_name_to_node)
-	print(skinned_parents)
+	metaobj.log_debug(0, "Now skinning " + str(skinned_name_to_node) + " from parents " + str(skinned_parents))
 	if typeof(skinned_parents) == TYPE_DICTIONARY:
 		for par in skinned_parents:
 			var node_list = []
 			for skinned_name in skinned_parents[par]:
 				if skinned_name_to_node.has(skinned_name):
-					print("Do skinned " + str(skinned_name) + " to " + str(skinned_name_to_node[skinned_name]))
+					metaobj.log_debug(0, "Do skinned " + str(skinned_name) + " to " + str(skinned_name_to_node[skinned_name]))
 					node_list.append(skinned_name_to_node[skinned_name])
 				else:
-					print("Missing skinned " + str(skinned_name) + " parent " + str(par))
+					metaobj.log_debug(0, "Missing skinned " + str(skinned_name) + " parent " + str(par))
 			skinned_parent_to_node[par] = node_list
 	ps.skinned_parent_to_node = skinned_parent_to_node
 
@@ -966,7 +982,7 @@ func _post_import(p_scene: Node) -> Object:
 	if metaobj.importer != null and typeof(metaobj.importer.keys.get("internalIDToNameTable")) != TYPE_NIL:
 		internalIdMapping = metaobj.importer.get("internalIDToNameTable")
 		ps.use_new_names = true  # FIXME: Should this only be if empty?
-		print("Setting new names to true")
+		metaobj.log_debug(0, "Setting new names to true")
 	if metaobj.importer != null and typeof(metaobj.importer.keys.get("fileIDToRecycleName")) != TYPE_NIL:
 		var recycles: Dictionary = metaobj.importer.fileIDToRecycleName
 		for fileIdStr in recycles:
@@ -1019,15 +1035,19 @@ func _post_import(p_scene: Node) -> Object:
 				next_num += 1
 			used_names_by_type[type][orig_obj_name] = next_num
 			used_names_by_type[type][obj_name] = 1
-			#print("Adding recycle id " + str(fileId) + " and type " + str(type) + " and utype " + str(fileId / 100000) + ": " + str(obj_name))
+			#metaobj.log_debug(0, "Adding recycle id " + str(fileId) + " and type " + str(type) + " and utype " + str(fileId / 100000) + ": " + str(obj_name))
 			ps.objtype_to_name_to_id[type][obj_name] = fileId
 			ps.used_ids[fileId] = true
 			ps.objtype_to_next_id[type] = utype * 100000
 			if external_objects.get(type, {}).has(og_obj_name):
 				ps.external_objects_by_id[fileId] = external_objects.get(type).get(og_obj_name)
 
-	#print("Ext objs by id: "+ str(ps.external_objects_by_id))
-	#print("objtype name by id: "+ str(ps.objtype_to_name_to_id))
+	var animation_clips: Array[Dictionary] = metaobj.importer.get_animation_clips()
+	for key in animation_clips:
+		ps.animation_to_take_name[key["name"]] = key["take_name"]
+
+	#metaobj.log_debug(0, "Ext objs by id: "+ str(ps.external_objects_by_id))
+	#metaobj.log_debug(0, "objtype name by id: "+ str(ps.objtype_to_name_to_id))
 	ps.toplevel_node = p_scene
 	p_scene.name = source_file_path.get_file().get_basename()
 
@@ -1056,7 +1076,7 @@ func _post_import(p_scene: Node) -> Object:
 	if not ps.preserve_hierarchy:
 		new_toplevel = ps.fold_root_transforms_into_only_child(ps.toplevel_node)
 	if new_toplevel != null:
-		print("Node is toplevel for " + str(source_file_path))
+		metaobj.log_debug(0, "Node is toplevel for " + str(source_file_path))
 		ps.toplevel_node.transform = new_toplevel.transform
 		new_toplevel.transform = Transform3D.IDENTITY
 		ps.toplevel_node = new_toplevel
@@ -1068,7 +1088,7 @@ func _post_import(p_scene: Node) -> Object:
 				new_root_go_id = ps.all_name_map[root_go_id][child]
 		if new_found_roots == 1:
 			root_go_id = new_root_go_id
-			print(ps.all_name_map[root_go_id])
+			metaobj.log_debug(0, "All name map: " + str(ps.all_name_map[root_go_id]))
 			assert(root_go_id == ps.all_name_map[root_go_id][1])
 
 	var path = "//RootNode/root"
@@ -1103,7 +1123,6 @@ static func generate_object_hash(dupe_map: Dictionary, type: String, obj_path: S
 	dupe_map[t] = dupe_map.get(t, -1) + 1
 	t += str(dupe_map[t])
 	var ret: int = xxHash64(t.to_utf8_buffer())
-	print("Hash " + str(t) + " => " + str(ret))
 	return ret
 
 

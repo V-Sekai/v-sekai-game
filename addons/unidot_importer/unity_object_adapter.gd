@@ -1130,11 +1130,13 @@ class UnityRuntimeAnimatorController:
 			var clip_name = animation_guid_fileid_to_name[key]
 			if not requested_clips.has(clip_name):
 				requested_clips[clip_name] = anim_ref
+				log_debug("Requesting clip " + str(clip_name) + " at " + str(anim_ref))
 
 		var anim_library = AnimationLibrary.new()
 		for clip_name in requested_clips:
 			var anim_clip_obj: UnityAnimationClip = meta.lookup(requested_clips[clip_name], true)  # TODO: What if this fails? What if animation in glb file?
 			var anim_res: Animation = meta.get_godot_resource(requested_clips[clip_name], true)
+			log_debug("clip " + str(clip_name) + " animation " + str(anim_res) + " obj " + str(anim_clip_obj))
 			if anim_res == null and anim_clip_obj == null:
 				meta.lookup(requested_clips[clip_name])
 				continue
@@ -3592,21 +3594,23 @@ class UnityPrefabInstance:
 			var existing_node = instanced_scene.get_node(target_nodepath)
 			if uprops.get("m_Controller", [null, 0])[1] != 0:
 				var animtree: AnimationTree = null
-				if target_utype == 91 and existing_node != null and existing_node.get_class() == "AnimationPlayer":
-					animtree = AnimationTree.new()
-					animtree.name = "AnimationTree"
-					existing_node.get_parent().add_child(animtree, true)
-					animtree.anim_player = animtree.get_path_to(existing_node)
-					animtree.active = true
-					animtree.set_script(anim_tree_runtime)
-					# Weird special case, likely to break.
-					# The original file was a .glb and doesn't have an AnimationTree node.
-					# We add one and try to pretend it's ours.
-					# Maybe better to change glb post-import script to add one.
-					state.add_fileID(animtree, virtual_unity_object)
-				else:
-					animtree = existing_node
-				if target_utype == 91:
+				if target_utype == 95: # Animator component
+					if existing_node != null and existing_node.get_class() == "AnimationPlayer":
+						log_debug("Adding AnimationTree as sibling to existing AnimationPlayer component")
+						animtree = AnimationTree.new()
+						animtree.name = "AnimationTree"
+						existing_node.get_parent().add_child(animtree, true)
+						animtree.owner = state.owner
+						animtree.anim_player = animtree.get_path_to(existing_node)
+						animtree.active = true
+						animtree.set_script(anim_tree_runtime)
+						# Weird special case, likely to break.
+						# The original file was a .glb and doesn't have an AnimationTree node.
+						# We add one and try to pretend it's ours.
+						# Maybe better to change glb post-import script to add one.
+						state.add_fileID(animtree, virtual_unity_object)
+					else:
+						animtree = existing_node
 					virtual_unity_object.fileID = fileID ^ self.fileID
 					virtual_unity_object.keys = uprops
 					state.prefab_state.animator_node_to_object[animtree] = virtual_unity_object
@@ -5321,17 +5325,18 @@ class UnityAssetImporter:
 		get:
 			return keys.get("meshes", {}).get("addCollider") == 1
 
-	func get_animation_clips() -> Array:
+	func get_animation_clips() -> Array[Dictionary]:
 		var unityClips = keys.get("animations", {}).get("clipAnimations", [])
-		var outClips = [].duplicate()
+		var outClips: Array[Dictionary] = []
 		for unityClip in unityClips:
 			var clip = {}.duplicate()
-			outClips.push_back(clip)
 			clip["name"] = unityClip.get("name", "")
 			clip["start_frame"] = unityClip.get("firstFrame", 0.0)
 			clip["end_frame"] = unityClip.get("lastFrame", 0.0)
 			# "loop" also exists but appears to be unused at least
-			clip["loops"] = unityClip.get("loopTime", 0) != 0
+			clip["loop_mode"] = 0 if unityClip.get("loopTime", 0) == 0 else 1
+			clip["take_name"] = unityClip.get("takeName", "default")
+			outClips.append(clip)
 			# TODO: Root motion?
 			#cycleOffset: -0
 			#loop: 0
@@ -5413,6 +5418,75 @@ class UnityModelImporter:
 	func get_main_object_id() -> int:
 		return 100100000  # a model is a type of Prefab
 
+	const SINGULAR_UNITY_TO_BONE_MAP: Dictionary = {
+		"Spine": "Spine",
+		"UpperChest": "UpperChest",
+		"Chest": "Chest",
+		"Head": "Head",
+		"Hips": "Hips",
+		"Jaw": "Jaw",
+		"Neck": "Neck",
+	}
+
+	const HANDED_UNITY_TO_BONE_MAP: Dictionary = {
+		" Index Distal": "IndexDistal",
+		" Index Intermediate": "IndexIntermediate",
+		" Index Proximal": "IndexProximal",
+		" Little Distal": "LittleDistal",
+		" Little Intermediate": "LittleIntermediate",
+		" Little Proximal": "LittleProximal",
+		" Middle Distal": "MiddleDistal",
+		" Middle Intermediate": "MiddleIntermediate",
+		" Middle Proximal": "MiddleProximal",
+		" Ring Distal": "RingDistal",
+		" Ring Intermediate": "RingIntermediate",
+		" Ring Proximal": "RingProximal",
+		" Thumb Distal": "ThumbDistal",
+		" Thumb Intermediate": "ThumbProximal",
+		" Thumb Proximal": "ThumbMetacarpal",
+		"Eye": "Eye",
+		"Foot": "Foot",
+		"Hand": "Hand",
+		"LowerArm": "LowerArm",
+		"LowerLeg": "LowerLeg",
+		"Shoulder": "Shoulder",
+		"Toes": "Toes",
+		"UpperArm": "UpperArm",
+		"UpperLeg": "UpperLeg",
+	}
+
+	func generate_bone_map_dict_from_human() -> Dictionary:
+		if not meta.autodetected_bone_map_dict.is_empty():
+			return meta.autodetected_bone_map_dict
+		var humanDescription: Dictionary = self.keys["humanDescription"]
+		var bone_map_dict: Dictionary = {}
+		for human in humanDescription["human"]:
+			var human_name: String = human["humanName"]
+			var bone_name: String = human["boneName"]
+			if human_name.begins_with("Left") or human_name.begins_with("Right"):
+				var leftright = "Left" if human_name.begins_with("Left") else "Right"
+				var human_key: String = human_name.substr(len(leftright))
+				if human_key in HANDED_UNITY_TO_BONE_MAP:
+					bone_map_dict[bone_name] = leftright + HANDED_UNITY_TO_BONE_MAP[human_key]
+				else:
+					log_warn("Unrecognized " + str(leftright) + " humanName " + str(human_name) +" boneName " + str(bone_name))
+			else:
+				if human_name in SINGULAR_UNITY_TO_BONE_MAP:
+					bone_map_dict[bone_name] = SINGULAR_UNITY_TO_BONE_MAP[human_name]
+				else:
+					log_warn("Unrecognized humanName " + str(human_name) +" boneName " + str(bone_name))
+		if not meta.internal_data.get("humanoid_root_bone", "").is_empty():
+			bone_map_dict[meta.internal_data.get("humanoid_root_bone", "")] = "Root"
+		return bone_map_dict
+
+	func generate_bone_map_from_human() -> BoneMap:
+		var bone_map: BoneMap = BoneMap.new()
+		bone_map.profile = SkeletonProfileHumanoid.new()
+		var bone_map_dict: Dictionary = generate_bone_map_dict_from_human()
+		for skeleton_bone_name in bone_map_dict:
+			var profile_bone_name = bone_map_dict[skeleton_bone_name]
+			bone_map.set_skeleton_bone_name(profile_bone_name, skeleton_bone_name)
+		return bone_map
 
 class UnityShaderImporter:
 	extends UnityAssetImporter
