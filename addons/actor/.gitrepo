@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/ingydotnet/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/V-Sekai/actor.git
+	branch = main
+	commit = b2df89ec31954edd8f5eea7f80d2c1b9a72c2943
+	parent = 988f87bcd32ac336bcae971ebfee6f38357e03c1
+	method = merge
+	cmdver = 0.4.6
