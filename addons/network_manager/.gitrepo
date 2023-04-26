@@ -4,9 +4,9 @@
 ; git-subrepo command. See https://github.com/ingydotnet/git-subrepo#readme
 ;
 [subrepo]
-	remote = https://github.com/V-Sekai/network_manager
+	remote = https://github.com/V-Sekai/network_manager.git
 	branch = main
 	commit = 03d1faf67d5fc06733903892728a2f6ec3053c93
-	parent = c6a2b934f8d66ab8d094dcb6c6e5acbce0f50d28
+	parent = 933f9086192124bc5b8b35359f53ff828eb4f63b
 	method = merge
 	cmdver = 0.4.6
