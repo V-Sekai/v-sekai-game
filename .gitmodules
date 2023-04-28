@@ -1,7 +1,3 @@
-[submodule "addons/actor"]
-	path = addons/actor
-	url = https://github.com/V-Sekai/actor
-	branch = godot4
 [submodule "addons/canvas_plane"]
 	path = addons/canvas_plane
 	url = https://github.com/V-Sekai/canvas_plane
