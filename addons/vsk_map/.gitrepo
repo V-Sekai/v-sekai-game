@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/ingydotnet/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/V-Sekai/vsk_map
+	branch = main
+	commit = 42a01480f1c7843619492afa5ebc9f74906cfaa9
+	parent = 3e264910a4feec9ab78a08bf61949fbef3cafb36
+	method = merge
+	cmdver = 0.4.6
