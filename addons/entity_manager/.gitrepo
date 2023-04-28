@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/ingydotnet/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/V-Sekai/entity_manager
+	branch = main
+	commit = b934611e19ff86213f73563687bd30f3382f81a9
+	parent = 8cbb5cbeede1ee61b411651778a20641198a1044
+	method = merge
+	cmdver = 0.4.6
