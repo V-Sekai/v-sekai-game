@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/ingydotnet/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/V-Sekai/godot_xr_vignette
+	branch = main
+	commit = 88714e7f47c1bea0e544bfe588a23bc20e694176
+	parent = 75d0359ba1fbf66daf981670613728e5b1237b11
+	method = merge
+	cmdver = 0.4.6

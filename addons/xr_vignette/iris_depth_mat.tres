@@ -1,0 +1,10 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://dcsmq1pt5n3lx"]
+
+[ext_resource type="Shader" path="res://addons/xr_vignette/tunneling_depth.gdshader" id="1_3i6m6"]
+
+[resource]
+render_priority = -100
+shader = ExtResource("1_3i6m6")
+shader_parameter/current_fov = 100.0
+shader_parameter/current_fade_fov = 6.5
+shader_parameter/iris_distance = 5.0
