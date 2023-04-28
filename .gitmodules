@@ -1,4 +1,0 @@
-[submodule "addons/input_manager"]
-	path = addons/input_manager
-	url = https://github.com/V-Sekai/input_manager
-	branch = godot4
