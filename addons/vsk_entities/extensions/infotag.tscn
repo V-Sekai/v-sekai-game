@@ -1,0 +1,30 @@
+[gd_scene load_steps=2 format=3 uid="uid://bpxjakh1f68nw"]
+
+[ext_resource type="Script" path="res://addons/vsk_entities/extensions/info_tag.gd" id="1"]
+
+[node name="InfoTag" type="Node3D"]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 2, 0)
+script = ExtResource("1")
+nametag_label_nodepath = NodePath("Nametag")
+progress_label_nodepath = NodePath("Label")
+
+[node name="Nametag" type="Label3D" parent="."]
+billboard = 2
+modulate = Color(0.972549, 0.976471, 0.92549, 1)
+outline_modulate = Color(0, 0, 0, 0)
+text = "V_SEKAI_PLAYER_NAMETAG_V_SEKAI_PLAYER_NAMETAG_V_SEKAI_PLAYER_NAMETAG_V_SEKAI_PLAYER_NAMETAG_V_SEKAI_PLAYER_NAMETAG_WITH_128_CHAR"
+font_size = 16
+outline_size = 0
+vertical_alignment = 2
+autowrap_mode = 3
+width = 256.0
+
+[node name="Label" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0808452, 0)
+billboard = 2
+modulate = Color(0.972549, 0.976471, 0.92549, 1)
+text = "0 / 100"
+font_size = 8
+outline_size = 0
+vertical_alignment = 2
+autowrap_mode = 3
