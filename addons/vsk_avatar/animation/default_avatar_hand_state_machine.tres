@@ -1,0 +1,292 @@
+[gd_resource type="AnimationNodeStateMachine" load_steps=73 format=3 uid="uid://duvrf0dgkmqkn"]
+
+[sub_resource type="AnimationNodeAnimation" id="1"]
+animation = &"DefaultPose"
+
+[sub_resource type="AnimationNodeAnimation" id="2"]
+animation = &"Fist"
+
+[sub_resource type="AnimationNodeAnimation" id="3"]
+animation = &"Gun"
+
+[sub_resource type="AnimationNodeAnimation" id="4"]
+animation = &"Neutral"
+
+[sub_resource type="AnimationNodeAnimation" id="5"]
+animation = &"OKSign"
+
+[sub_resource type="AnimationNodeAnimation" id="6"]
+animation = &"Open"
+
+[sub_resource type="AnimationNodeAnimation" id="7"]
+animation = &"Point"
+
+[sub_resource type="AnimationNodeAnimation" id="8"]
+animation = &"ThumbsUp"
+
+[sub_resource type="AnimationNodeAnimation" id="9"]
+animation = &"Victory"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="10"]
+advance_condition = &"fist"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="11"]
+xfade_time = 0.1
+advance_condition = &"thumbs_up"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="12"]
+xfade_time = 0.1
+advance_condition = &"neutral"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="13"]
+xfade_time = 0.1
+advance_condition = &"ok_sign"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="14"]
+xfade_time = 0.1
+advance_condition = &"thumbs_up"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="15"]
+advance_condition = &"neutral"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="16"]
+advance_condition = &"ok_sign"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="17"]
+advance_condition = &"thumbs_up"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="18"]
+advance_condition = &"neutral"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="19"]
+xfade_time = 0.1
+advance_condition = &"fist"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="20"]
+xfade_time = 0.1
+advance_condition = &"thumbs_up"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="21"]
+xfade_time = 0.1
+advance_condition = &"fist"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="22"]
+xfade_time = 0.1
+advance_condition = &"ok_sign"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="23"]
+xfade_time = 0.1
+advance_condition = &"fist"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="24"]
+xfade_time = 0.1
+advance_condition = &"ok_sign"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="25"]
+xfade_time = 0.1
+advance_condition = &"neutral"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="26"]
+xfade_time = 0.1
+advance_condition = &"neutral"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="27"]
+advance_condition = &"gun"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="28"]
+xfade_time = 0.1
+advance_condition = &"thumbs_up"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="29"]
+xfade_time = 0.1
+advance_condition = &"gun"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="30"]
+xfade_time = 0.1
+advance_condition = &"thumbs_up"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="31"]
+xfade_time = 0.1
+advance_condition = &"victory"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="32"]
+xfade_time = 0.1
+advance_condition = &"open"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="33"]
+xfade_time = 0.1
+advance_condition = &"victory"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="34"]
+xfade_time = 0.1
+advance_condition = &"neutral"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="35"]
+xfade_time = 0.1
+advance_condition = &"open"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="36"]
+xfade_time = 0.1
+advance_condition = &"thumbs_up"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="37"]
+xfade_time = 0.1
+advance_condition = &"open"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="38"]
+xfade_time = 0.1
+advance_condition = &"ok_sign"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="39"]
+xfade_time = 0.1
+advance_condition = &"open"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="40"]
+xfade_time = 0.1
+advance_condition = &"victory"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="41"]
+xfade_time = 0.1
+advance_condition = &"ok_sign"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="42"]
+xfade_time = 0.1
+advance_condition = &"gun"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="43"]
+xfade_time = 0.1
+advance_condition = &"ok_sign"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="44"]
+xfade_time = 0.1
+advance_condition = &"gun"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="45"]
+xfade_time = 0.1
+advance_condition = &"open"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="46"]
+xfade_time = 0.1
+advance_condition = &"gun"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="47"]
+xfade_time = 0.1
+advance_condition = &"victory"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="48"]
+advance_condition = &"open"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="49"]
+advance_condition = &"gun"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="50"]
+advance_condition = &"victory"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="51"]
+xfade_time = 0.1
+advance_condition = &"point"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="52"]
+xfade_time = 0.1
+advance_condition = &"fist"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="53"]
+xfade_time = 0.1
+advance_condition = &"gun"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="54"]
+xfade_time = 0.1
+advance_condition = &"point"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="55"]
+xfade_time = 0.1
+advance_condition = &"fist"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="56"]
+xfade_time = 0.1
+advance_condition = &"gun"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="57"]
+xfade_time = 0.1
+advance_condition = &"point"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="58"]
+xfade_time = 0.1
+advance_condition = &"victory"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="59"]
+xfade_time = 0.1
+advance_condition = &"point"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="60"]
+xfade_time = 0.1
+advance_condition = &"open"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="61"]
+xfade_time = 0.1
+advance_condition = &"point"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="62"]
+xfade_time = 0.1
+advance_condition = &"point"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="63"]
+xfade_time = 0.1
+advance_condition = &"thumbs_up"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="64"]
+xfade_time = 0.1
+advance_condition = &"open"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="65"]
+xfade_time = 0.1
+advance_condition = &"fist"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="66"]
+xfade_time = 0.1
+advance_condition = &"ok_sign"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="67"]
+xfade_time = 0.1
+advance_condition = &"point"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="68"]
+xfade_time = 0.1
+advance_condition = &"fist"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="69"]
+xfade_time = 0.1
+advance_condition = &"victory"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="70"]
+xfade_time = 0.1
+advance_condition = &"neutral"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="71"]
+xfade_time = 0.1
+advance_condition = &"point"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_57cs7"]
+
+[resource]
+states/DefaultPose/node = SubResource("1")
+states/DefaultPose/position = Vector2(50, 239)
+states/Fist/node = SubResource("2")
+states/Fist/position = Vector2(321, 30)
+states/Gun/node = SubResource("3")
+states/Gun/position = Vector2(321, 396)
+states/Neutral/node = SubResource("4")
+states/Neutral/position = Vector2(50, -55)
+states/OKSign/node = SubResource("5")
+states/OKSign/position = Vector2(50, 483)
+states/Open/node = SubResource("6")
+states/Open/position = Vector2(-210, 30)
+states/Point/node = SubResource("7")
+states/Point/position = Vector2(473, 239)
+states/Start/position = Vector2(570, 96)
+states/ThumbsUp/node = SubResource("8")
+states/ThumbsUp/position = Vector2(-210, 396)
+states/Victory/node = SubResource("9")
+states/Victory/position = Vector2(-395, 239)
+transitions = ["DefaultPose", "Fist", SubResource("10"), "Neutral", "ThumbsUp", SubResource("11"), "ThumbsUp", "Neutral", SubResource("12"), "ThumbsUp", "OKSign", SubResource("13"), "OKSign", "ThumbsUp", SubResource("14"), "DefaultPose", "Neutral", SubResource("15"), "DefaultPose", "OKSign", SubResource("16"), "DefaultPose", "ThumbsUp", SubResource("17"), "Fist", "Neutral", SubResource("18"), "Neutral", "Fist", SubResource("19"), "Fist", "ThumbsUp", SubResource("20"), "ThumbsUp", "Fist", SubResource("21"), "Fist", "OKSign", SubResource("22"), "OKSign", "Fist", SubResource("23"), "Neutral", "OKSign", SubResource("24"), "OKSign", "Neutral", SubResource("25"), "Gun", "Neutral", SubResource("26"), "Neutral", "Gun", SubResource("27"), "Gun", "ThumbsUp", SubResource("28"), "ThumbsUp", "Gun", SubResource("29"), "Victory", "ThumbsUp", SubResource("30"), "ThumbsUp", "Victory", SubResource("31"), "Victory", "Open", SubResource("32"), "Open", "Victory", SubResource("33"), "Open", "Neutral", SubResource("34"), "Neutral", "Open", SubResource("35"), "Open", "ThumbsUp", SubResource("36"), "ThumbsUp", "Open", SubResource("37"), "Open", "OKSign", SubResource("38"), "OKSign", "Open", SubResource("39"), "OKSign", "Victory", SubResource("40"), "Victory", "OKSign", SubResource("41"), "OKSign", "Gun", SubResource("42"), "Gun", "OKSign", SubResource("43"), "Open", "Gun", SubResource("44"), "Gun", "Open", SubResource("45"), "Victory", "Gun", SubResource("46"), "Gun", "Victory", SubResource("47"), "DefaultPose", "Open", SubResource("48"), "DefaultPose", "Gun", SubResource("49"), "DefaultPose", "Victory", SubResource("50"), "Fist", "Point", SubResource("51"), "Point", "Fist", SubResource("52"), "Point", "Gun", SubResource("53"), "Gun", "Point", SubResource("54"), "Gun", "Fist", SubResource("55"), "Fist", "Gun", SubResource("56"), "DefaultPose", "Point", SubResource("57"), "Point", "Victory", SubResource("58"), "Victory", "Point", SubResource("59"), "Point", "Open", SubResource("60"), "Open", "Point", SubResource("61"), "ThumbsUp", "Point", SubResource("62"), "Point", "ThumbsUp", SubResource("63"), "Fist", "Open", SubResource("64"), "Open", "Fist", SubResource("65"), "Point", "OKSign", SubResource("66"), "OKSign", "Point", SubResource("67"), "Victory", "Fist", SubResource("68"), "Fist", "Victory", SubResource("69"), "Point", "Neutral", SubResource("70"), "Neutral", "Point", SubResource("71"), "Start", "DefaultPose", SubResource("AnimationNodeStateMachineTransition_57cs7")]
+graph_offset = Vector2(-549, -122)
