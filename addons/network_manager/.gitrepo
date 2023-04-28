@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/ingydotnet/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/V-Sekai/math_util
+	branch = main
+	commit = 6a55baf34f6b1b6450866d88d7a27d79f4baa5d7
+	parent = f8589dd5edca339b3f56d21c63f08bf1232ac548
+	method = merge
+	cmdver = 0.4.6
