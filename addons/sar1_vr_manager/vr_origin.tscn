@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://dhpvk1qajtjsy"]
+
+[ext_resource type="Script" path="res://addons/sar1_vr_manager/vr_origin.gd" id="1"]
+[ext_resource type="Environment" uid="uid://cp0t8jp2ellve" path="res://vsk_default/environments/default_env.tres" id="2_goiwr"]
+
+[node name="ARVROrigin" type="XROrigin3D"]
+script = ExtResource("1")
+
+[node name="ARVRCamera" type="XRCamera3D" parent="."]
+environment = ExtResource("2_goiwr")
+current = true
+fov = 70.4352

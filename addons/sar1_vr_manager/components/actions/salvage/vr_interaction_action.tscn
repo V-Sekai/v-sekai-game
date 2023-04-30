@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://calgoigvf6ua5"]
+
+[ext_resource type="Script" path="res://addons/sar1_vr_manager/components/actions/salvage/vr_interaction_action.gd" id="1_n4tmc"]
+
+[sub_resource type="SphereShape3D" id="1"]
+radius = 0.1
+
+[node name="PickupAction" type="Node3D"]
+script = ExtResource("1_n4tmc")
+
+[node name="PickupArea" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.03, 0.115)
+collision_layer = 48
+collision_mask = 48
+
+[node name="CollisionShape" type="CollisionShape3D" parent="PickupArea"]
+shape = SubResource("1")
+
+[connection signal="body_entered" from="PickupArea" to="." method="_on_interaction_body_entered"]
+[connection signal="body_exited" from="PickupArea" to="." method="_on_interaction_body_exited"]

@@ -1,0 +1,33 @@
+[gd_scene load_steps=7 format=3 uid="uid://co2sb8ixxu4wo"]
+
+[ext_resource type="Script" path="res://addons/sar1_vr_manager/components/actions/vr_teleport_action.gd" id="1_i8ryf"]
+[ext_resource type="Material" uid="uid://hbud6t1sa7eq" path="res://addons/sar1_vr_manager/materials/teleport.tres" id="2_tojp4"]
+[ext_resource type="Material" uid="uid://b5jl3c5snlfcx" path="res://addons/sar1_vr_manager/materials/target.tres" id="3_hr1y1"]
+
+[sub_resource type="PlaneMesh" id="1"]
+size = Vector2(0.05, 1)
+subdivide_depth = 40
+
+[sub_resource type="PlaneMesh" id="2"]
+size = Vector2(1, 1)
+
+[sub_resource type="CapsuleMesh" id="3"]
+radius = 0.3
+height = 1.63
+
+[node name="Function_Teleport" type="Node3D"]
+script = ExtResource("1_i8ryf")
+
+[node name="Teleport" type="MeshInstance3D" parent="."]
+mesh = SubResource("1")
+surface_material_override/0 = ExtResource("2_tojp4")
+
+[node name="Target" type="MeshInstance3D" parent="."]
+mesh = SubResource("2")
+surface_material_override/0 = ExtResource("3_hr1y1")
+
+[node name="Player_figure" type="Marker3D" parent="Target"]
+
+[node name="Capsule" type="MeshInstance3D" parent="Target/Player_figure"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+mesh = SubResource("3")
