@@ -1,0 +1,29 @@
+[gd_resource type="AnimationNodeBlendTree" load_steps=5 format=3 uid="uid://ctxvockyck2j8"]
+
+[ext_resource type="AnimationNodeStateMachine" uid="uid://duvrf0dgkmqkn" path="res://addons/vsk_avatar/animation/default_avatar_hand_state_machine.tres" id="1"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_0awa0"]
+animation = &"DefaultPose"
+
+[sub_resource type="AnimationNodeBlend2" id="AnimationNodeBlend2_ltr02"]
+filter_enabled = true
+filters = ["Armature/Skeleton:index_distal_left", "Armature/Skeleton:index_intermediate_left", "Armature/Skeleton:index_proximal_left", "Armature/Skeleton:little_distal_left", "Armature/Skeleton:little_intermediate_left", "Armature/Skeleton:little_proximal_left", "Armature/Skeleton:middle_distal_left", "Armature/Skeleton:middle_intermediate_left", "Armature/Skeleton:middle_proximal_left", "Armature/Skeleton:ring_distal_left", "Armature/Skeleton:ring_intermediate_left", "Armature/Skeleton:ring_proximal_left", "Armature/Skeleton:thumb_distal_left", "Armature/Skeleton:thumb_intermediate_left", "Armature/Skeleton:thumb_proximal_left"]
+
+[sub_resource type="AnimationNodeBlend2" id="AnimationNodeBlend2_44x8a"]
+filter_enabled = true
+filters = ["Armature/Skeleton:index_distal_right", "Armature/Skeleton:index_intermediate_right", "Armature/Skeleton:index_proximal_right", "Armature/Skeleton:little_distal_right", "Armature/Skeleton:little_intermediate_right", "Armature/Skeleton:little_proximal_right", "Armature/Skeleton:middle_distal_right", "Armature/Skeleton:middle_intermediate_right", "Armature/Skeleton:middle_proximal_right", "Armature/Skeleton:ring_distal_right", "Armature/Skeleton:ring_intermediate_right", "Armature/Skeleton:ring_proximal_right", "Armature/Skeleton:thumb_distal_right", "Armature/Skeleton:thumb_intermediate_right", "Armature/Skeleton:thumb_proximal_right"]
+
+[resource]
+graph_offset = Vector2(-203.661, -246.443)
+nodes/Animation/node = SubResource("AnimationNodeAnimation_0awa0")
+nodes/Animation/position = Vector2(0, -180)
+nodes/LeftHandBlend/node = SubResource("AnimationNodeBlend2_ltr02")
+nodes/LeftHandBlend/position = Vector2(400, -160)
+nodes/LeftHandStateMachine/node = ExtResource("1")
+nodes/LeftHandStateMachine/position = Vector2(0, 0)
+nodes/RightHandBlend/node = SubResource("AnimationNodeBlend2_44x8a")
+nodes/RightHandBlend/position = Vector2(400, 80)
+nodes/RightHandStateMachine/node = ExtResource("1")
+nodes/RightHandStateMachine/position = Vector2(320, 480)
+nodes/output/position = Vector2(800, 120)
+node_connections = [&"output", 0, &"RightHandBlend", &"LeftHandBlend", 0, &"Animation", &"LeftHandBlend", 1, &"LeftHandStateMachine", &"RightHandBlend", 0, &"LeftHandBlend", &"RightHandBlend", 1, &"RightHandStateMachine"]

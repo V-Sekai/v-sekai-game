@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=3 uid="uid://odd3okj7gke6"]
+
+[ext_resource type="Script" path="res://addons/vsk_avatar/vsk_avatar_definition.gd" id="2"]
+[ext_resource type="Material" path="res://addons/vsk_avatar/avatars/loading/loading_orb.tres" id="2_3707a"]
+
+[sub_resource type="SphereMesh" id="1"]
+
+[node name="Avatar" type="Node3D"]
+script = ExtResource("2")
+
+[node name="LoadingOrb" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 0.25, 0, 1.5, 0)
+material_override = ExtResource("2_3707a")
+mesh = SubResource("1")
