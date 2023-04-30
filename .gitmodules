@@ -1,4 +1,0 @@
-[submodule "addons/vsk_editor"]
-	path = addons/vsk_editor
-	url = https://github.com/V-Sekai/vsk_editor
-	branch = godot4
