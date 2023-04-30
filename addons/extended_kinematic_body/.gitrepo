@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/ingydotnet/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/V-Sekai/extended_kinematic_body
+	branch = main
+	commit = cd68e9ef3cd35dff2c0ad2ad9e392220bba7d926
+	parent = 26a4685f2dda4c488179cd4695330669f163e0d6
+	method = merge
+	cmdver = 0.4.6
