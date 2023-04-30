@@ -26,10 +26,6 @@
 	path = addons/vsk_editor
 	url = https://github.com/V-Sekai/vsk_editor
 	branch = godot4
-[submodule "addons/vsk_importer_exporter"]
-	path = addons/vsk_importer_exporter
-	url = https://github.com/V-Sekai/vsk_importer_exporter
-	branch = godot4
 [submodule "addons/vsk_map"]
 	path = addons/vsk_map
 	url = https://github.com/V-Sekai/vsk_map
