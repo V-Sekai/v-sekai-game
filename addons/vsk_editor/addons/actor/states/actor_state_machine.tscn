@@ -1,0 +1,31 @@
+[gd_scene load_steps=8 format=3 uid="uid://77rqamnluafb"]
+
+[ext_resource type="Script" path="res://addons/actor/actor_state_machine.gd" id="1"]
+[ext_resource type="Script" path="res://addons/actor/states/actor_state_spawned.gd" id="2"]
+[ext_resource type="Script" path="res://addons/actor/states/actor_state_idle.gd" id="3"]
+[ext_resource type="Script" path="res://addons/actor/states/actor_state_falling.gd" id="4"]
+[ext_resource type="Script" path="res://addons/actor/states/actor_state_locomotion.gd" id="5"]
+[ext_resource type="Script" path="res://addons/actor/states/actor_state_stop.gd" id="6"]
+[ext_resource type="Script" path="res://addons/actor/states/actor_state_landed.gd" id="7"]
+
+[node name="ActorStateMachine" type="Node"]
+script = ExtResource("1")
+start_state = NodePath("Spawned")
+
+[node name="Spawned" type="Node" parent="."]
+script = ExtResource("2")
+
+[node name="Idle" type="Node" parent="."]
+script = ExtResource("3")
+
+[node name="Landed" type="Node" parent="."]
+script = ExtResource("7")
+
+[node name="Locomotion" type="Node" parent="."]
+script = ExtResource("5")
+
+[node name="Falling" type="Node" parent="."]
+script = ExtResource("4")
+
+[node name="Stop" type="Node" parent="."]
+script = ExtResource("6")

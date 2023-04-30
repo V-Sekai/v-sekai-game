@@ -1,0 +1,33 @@
+name: Feature request or design proposal
+description: Add anything here you would like to see added or addressed in V-Sekai, that isn't necessarily a bug or fault.
+labels: [enhancement]
+body:
+
+- type: textarea
+  attributes:
+    label: Describe the proposed feature and how it helps to overcome a problem or limitation
+    placeholder: Example - "The 3D selection tools are cumbersome to use."
+  validations:
+    required: true
+
+- type: textarea
+  attributes:
+    label: Other information about your context or usecase.
+    description: Describe the problem or limitation you have encountered, e.g., in free form using two to three sentences. You may want to articulate the problem in the form of a question.
+    placeholder: Example - "Playing a 3D space game with heavy use of cut-out animation"
+  validations:
+    required: false
+
+- type: textarea
+  attributes:
+    label: If known, describe how your proposal will work, with code, pseudo-code, mock-ups, or diagrams
+    placeholder: Example - "When the user presses Ctrl + Shift + G, select all nodes that have the group..."
+  validations:
+    required: false
+
+- type: textarea
+  attributes:
+    label: Anything else
+    placeholder: Other information
+  validations:
+    required: false

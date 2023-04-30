@@ -1,0 +1,50 @@
+[gd_scene load_steps=3 format=3 uid="uid://b8nt8qsgljqcf"]
+
+[ext_resource type="Script" path="res://addons/vsk_menu/credits_screen.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://cogvc7mlmr810" path="res://addons/vsk_menu/vsk_button.tscn" id="2"]
+
+[node name="CreditsScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+credits_label_nodepath = NodePath("CenterContainer/Control/CreditsLabel")
+default_focus = NodePath("CenterContainer/Control/CreditsLabel")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="CenterContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="Control" type="HBoxContainer" parent="CenterContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 1
+
+[node name="CreditsLabel" type="RichTextLabel" parent="CenterContainer/Control"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="BottomContainer" type="HBoxContainer" parent="CenterContainer"]
+layout_mode = 2
+
+[node name="BackButton" parent="CenterContainer/BottomContainer" instance=ExtResource("2")]
+layout_mode = 2
+text = "TR_MENU_BACK"
+
+[connection signal="pressed" from="CenterContainer/BottomContainer/BackButton" to="." method="_on_BackButton_pressed"]

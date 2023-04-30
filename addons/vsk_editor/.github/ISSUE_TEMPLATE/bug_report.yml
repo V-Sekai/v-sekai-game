@@ -1,0 +1,57 @@
+name: Bug report
+description: Report a bug in V-Sekai
+labels: [bug]
+body:
+- type: markdown
+  attributes:
+    value: |
+      - Write a descriptive issue title above.
+
+- type: textarea
+  attributes:
+    label: Issue description
+    description: |
+      You can include images or videos with drag and drop, and format code blocks or logs with <code>```</code> tags.
+  validations:
+    required: true
+
+- type: textarea
+  attributes:
+    label: Steps to reproduce
+    description: |
+      List of steps or sample code that reproduces the issue. Having reproducible issues is a prerequisite for contributors to be able to solve them.
+      If you include a minimal reproduction project below, you can detail how to use it here.
+  validations:
+    required: true
+
+- type: textarea
+  attributes:
+    label: Minimal reproduction project (For SDK or engine issues)
+    description: |
+      A small V-Sekai project which reproduces the issue. Highly recommended to speed up troubleshooting.
+      Drag and drop a ZIP archive to upload it.
+  validations:
+    required: false
+
+- type: input
+  attributes:
+    label: Using a released version?
+    description: |
+      "Yes" if you have downloaded an official build, or if you exported the project yourself.
+      "No" if you are running the project folder or running directly from the editor.
+      "Both" if you have tested and it happens both when export and when run from project.
+      This is important because some bugs only happen on released builds, and cannot be reproduced from the editor.
+  validations:
+    required: true
+
+- type: input
+  attributes:
+    label: What OS? Any other relevant information? (V-Sekai version, Godot revision, System information)
+    description: >
+      At a minimum, specify the OS and/or headset (Windows, Linux, Quest).
+      Please make sure you are reasonably up to date before reporting issues.
+      If you are not on the latest, include the last set of numbers on the bottom corner of the main screen. (or git commit hash)
+      For graphics-related issues, specify the GPU model, driver version, and the rendering backend (GLES2, GLES3, Vulkan).
+    placeholder: Windows, 65.78, NVidia
+  validations:
+    required: true

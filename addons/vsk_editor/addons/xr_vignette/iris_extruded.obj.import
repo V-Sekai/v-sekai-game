@@ -1,0 +1,21 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://bco58iq46r17e"
+path="res://.godot/imported/iris_extruded.obj-adc6043c5c959c967fcbc70e671ce157.mesh"
+
+[deps]
+
+files=["res://.godot/imported/iris_extruded.obj-adc6043c5c959c967fcbc70e671ce157.mesh"]
+
+source_file="res://addons/xr_vignette/iris_extruded.obj"
+dest_files=["res://.godot/imported/iris_extruded.obj-adc6043c5c959c967fcbc70e671ce157.mesh", "res://.godot/imported/iris_extruded.obj-adc6043c5c959c967fcbc70e671ce157.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true

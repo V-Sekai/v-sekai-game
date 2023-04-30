@@ -1,0 +1,100 @@
+[gd_scene load_steps=5 format=3 uid="uid://mutjc1fjx2ns"]
+
+[ext_resource type="Texture2D" uid="uid://cjdhvcb8tulgj" path="res://vsk_default/icon/groups_logo_no_bg.png" id="1_bm2hw"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_qqa8l"]
+size = Vector3(74, 0.1, 74)
+subdivide_width = 1
+subdivide_height = 1
+subdivide_depth = 1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pweug"]
+albedo_color = Color(0.8, 0.482353, 0.223529, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sqmki"]
+albedo_color = Color(0.282353, 0.482353, 0.92549, 1)
+
+[node name="haven" type="Node3D"]
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="."]
+
+[node name="CSGMesh3D" type="CSGMesh3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27, 0, -27)
+mesh = SubResource("BoxMesh_qqa8l")
+metadata/_edit_group_ = true
+
+[node name="CSGMesh3D2" type="CSGMesh3D" parent="CSGCombiner3D/CSGMesh3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 54)
+mesh = SubResource("BoxMesh_qqa8l")
+metadata/_edit_group_ = true
+metadata/_edit_lock_ = true
+
+[node name="CSGMesh3D3" type="CSGMesh3D" parent="CSGCombiner3D/CSGMesh3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -64, 0, 54)
+mesh = SubResource("BoxMesh_qqa8l")
+metadata/_edit_group_ = true
+metadata/_edit_lock_ = true
+
+[node name="CSGMesh3D4" type="CSGMesh3D" parent="CSGCombiner3D/CSGMesh3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -64, 0, 0)
+mesh = SubResource("BoxMesh_qqa8l")
+metadata/_edit_group_ = true
+metadata/_edit_lock_ = true
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23, 0, 0)
+radius = 2.0
+sides = 32
+material = SubResource("StandardMaterial3D_pweug")
+
+[node name="CSGCylinder3D2" type="CSGCylinder3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -39, 0, 8)
+radius = 2.0
+sides = 32
+material = SubResource("StandardMaterial3D_pweug")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23, 0, -4)
+size = Vector3(10, 10, 1.95)
+material = SubResource("StandardMaterial3D_sqmki")
+
+[node name="Label3D" type="Label3D" parent="CSGBox3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 3, 1)
+text = "Experience adventures, create cozy spaces, and make friends in V-Sekai Central's virtual world. #virtualreality #friendship
+
+"
+font_size = 52
+outline_size = 0
+horizontal_alignment = 0
+autowrap_mode = 3
+width = 1000.0
+metadata/_edit_group_ = true
+metadata/_edit_lock_ = true
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="."]
+transform = Transform3D(6.12303e-17, 0, 1, 0, 1, 0, -1, 0, 6.12303e-17, -43, 0, 8)
+size = Vector3(10, 10, 1.95)
+material = SubResource("StandardMaterial3D_sqmki")
+
+[node name="Label3D" type="Label3D" parent="CSGBox3D2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 3, 1)
+text = "[[Bindings left controller]]  moves forward."
+font_size = 52
+outline_size = 0
+horizontal_alignment = 0
+autowrap_mode = 3
+width = 1000.0
+metadata/_edit_group_ = true
+metadata/_edit_lock_ = true
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -35, 2, -4)
+texture = ExtResource("1_bm2hw")
+
+[node name="Label3D" type="Label3D" parent="Sprite3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1)
+text = "Groups Floating Logo"
+font_size = 64
+outline_size = 0
+uppercase = true
+autowrap_mode = 3

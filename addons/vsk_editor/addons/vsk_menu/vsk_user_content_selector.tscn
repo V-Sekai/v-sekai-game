@@ -1,0 +1,72 @@
+[gd_scene load_steps=4 format=3 uid="uid://d0o3glckp482r"]
+
+[ext_resource type="Theme" uid="uid://bsqrhr15k2kar" path="res://addons/emote_theme/emote_theme.tres" id="1_l38pv"]
+[ext_resource type="Script" path="res://addons/vsk_menu/vsk_user_content_selector.gd" id="2"]
+[ext_resource type="PackedScene" uid="uid://bwn0ka3su58we" path="res://addons/vsk_menu/vsk_user_content_sub_selector.tscn" id="2_ip71e"]
+
+[node name="VSKUserContentSelector" type="Control"]
+layout_mode = 3
+anchor_left = 0.1
+anchor_top = 0.1
+anchor_right = 0.9
+anchor_bottom = 0.9
+theme = ExtResource("1_l38pv")
+script = ExtResource("2")
+sub_selectors = [NodePath("Main/TabContainer/Public/PublicContent"), NodePath("Main/TabContainer/Personal/PersonalContent")]
+local_files_button_path = NodePath("Main/ToolBar/LocalFilesButton")
+load_content_on_creation = true
+
+[node name="Main" type="VBoxContainer" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TabContainer" type="TabContainer" parent="Main"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+tab_alignment = 1
+
+[node name="Public" type="Control" parent="Main/TabContainer"]
+layout_mode = 2
+
+[node name="PublicContent" parent="Main/TabContainer/Public" instance=ExtResource("2_ip71e")]
+layout_mode = 1
+load_content_on_creation = true
+
+[node name="Personal" type="Control" parent="Main/TabContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PersonalContent" parent="Main/TabContainer/Personal" instance=ExtResource("2_ip71e")]
+layout_mode = 1
+load_content_on_creation = true
+public_content = false
+
+[node name="ToolBar" type="HBoxContainer" parent="Main"]
+layout_mode = 2
+alignment = 1
+
+[node name="LocalFilesButton" type="Button" parent="Main/ToolBar"]
+layout_mode = 2
+text = "TR_MENU_LOCAL_FILES"
+
+[node name="RefreshButton" type="Button" parent="Main/ToolBar"]
+layout_mode = 2
+text = "TR_MENU_REFRESH"
+
+[node name="FileSelector" type="FileDialog" parent="."]
+size = Vector2i(488, 210)
+min_size = Vector2i(150, 52)
+filters = PackedStringArray("*.tscn", "*.scn")
+
+[connection signal="refreshed" from="." to="Main/TabContainer/Public/PublicContent" method="refresh"]
+[connection signal="refreshed" from="." to="Main/TabContainer/Personal/PersonalContent" method="refresh"]
+[connection signal="uro_id_selected" from="Main/TabContainer/Public/PublicContent" to="." method="_on_uro_id_selected"]
+[connection signal="uro_id_selected" from="Main/TabContainer/Personal/PersonalContent" to="." method="_on_uro_id_selected"]
+[connection signal="pressed" from="Main/ToolBar/LocalFilesButton" to="." method="_on_local_files_button_pressed"]
+[connection signal="pressed" from="Main/ToolBar/RefreshButton" to="." method="_on_refresh_button_pressed"]
+[connection signal="file_selected" from="FileSelector" to="." method="_on_file_selected"]

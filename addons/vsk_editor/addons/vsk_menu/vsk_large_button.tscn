@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=3 uid="uid://tt3cnvs3qqlq"]
+
+[ext_resource type="FontVariation" uid="uid://cflogxgmdxgn3" path="res://addons/vsk_menu/fonts/title_font.tres" id="1"]
+[ext_resource type="PackedScene" uid="uid://cogvc7mlmr810" path="res://addons/vsk_menu/vsk_button.tscn" id="2"]
+
+[node name="VSKLargeButton" instance=ExtResource("2")]
+theme_override_fonts/font = ExtResource("1")

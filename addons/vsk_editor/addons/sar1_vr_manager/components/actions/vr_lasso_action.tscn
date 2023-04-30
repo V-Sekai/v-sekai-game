@@ -1,0 +1,56 @@
+[gd_scene load_steps=9 format=3 uid="uid://4r6ao13ste61"]
+
+[ext_resource type="Script" path="res://addons/sar1_vr_manager/components/actions/vr_lasso_action.gd" id="1"]
+[ext_resource type="Material" uid="uid://cqyb4m66nqgy6" path="res://addons/sar1_vr_manager/materials/laser.tres" id="2"]
+[ext_resource type="Material" uid="uid://dceqxufojv3q8" path="res://addons/sar1_vr_manager/materials/curved_laser.tres" id="3"]
+[ext_resource type="Shader" path="res://addons/sar1_vr_manager/materials/circle.gdshader" id="4"]
+[ext_resource type="Texture2D" uid="uid://cjg0fyr6ipms8" path="res://addons/sar1_vr_manager/components/actions/snap_circle.svg" id="5_wun48"]
+
+[sub_resource type="PlaneMesh" id="1"]
+size = Vector2(0.05, 1)
+subdivide_depth = 40
+
+[sub_resource type="ShaderMaterial" id="2"]
+resource_local_to_scene = true
+render_priority = 127
+shader = ExtResource("4")
+shader_parameter/width = 0.1
+shader_parameter/height = 0.1
+shader_parameter/mix_color = Color(0.972549, 0.976471, 0.92549, 1)
+shader_parameter/main_texture = ExtResource("5_wun48")
+
+[sub_resource type="QuadMesh" id="3"]
+resource_local_to_scene = true
+
+[node name="snap_pointer" type="Node3D"]
+script = ExtResource("1")
+straight_laser = NodePath("straight_laser")
+snapped_laser = NodePath("snap_laser")
+primary_circle = NodePath("primary_snap_circle")
+secondary_circle = NodePath("secondary_snap_circle")
+
+[node name="straight_laser" type="MeshInstance3D" parent="."]
+material_override = ExtResource("2")
+cast_shadow = 0
+extra_cull_margin = 16384.0
+mesh = SubResource("1")
+skeleton = NodePath("")
+
+[node name="snap_laser" type="MeshInstance3D" parent="."]
+material_override = ExtResource("3")
+cast_shadow = 0
+extra_cull_margin = 16384.0
+mesh = SubResource("1")
+skeleton = NodePath("")
+
+[node name="primary_snap_circle" type="MeshInstance3D" parent="."]
+material_override = SubResource("2")
+cast_shadow = 0
+mesh = SubResource("3")
+skeleton = NodePath("")
+
+[node name="secondary_snap_circle" type="MeshInstance3D" parent="."]
+material_override = SubResource("2")
+cast_shadow = 0
+mesh = SubResource("3")
+skeleton = NodePath("")

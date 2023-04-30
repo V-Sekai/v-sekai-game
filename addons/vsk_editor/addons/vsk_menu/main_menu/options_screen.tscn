@@ -1,0 +1,80 @@
+[gd_scene load_steps=4 format=3 uid="uid://b181g8iovvwte"]
+
+[ext_resource type="PackedScene" uid="uid://cogvc7mlmr810" path="res://addons/vsk_menu/vsk_button.tscn" id="2"]
+[ext_resource type="Script" path="res://addons/vsk_menu/options_screen.gd" id="3"]
+[ext_resource type="PackedScene" uid="uid://tt3cnvs3qqlq" path="res://addons/vsk_menu/vsk_large_button.tscn" id="4"]
+
+[node name="OptionsScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="CenterContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="Control" type="HBoxContainer" parent="CenterContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 1
+
+[node name="ButtonsCenterContainer" type="HBoxContainer" parent="CenterContainer/Control"]
+layout_mode = 2
+alignment = 1
+
+[node name="ButtonsVerticalContainer" type="VBoxContainer" parent="CenterContainer/Control/ButtonsCenterContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+
+[node name="PlayerButton" parent="CenterContainer/Control/ButtonsCenterContainer/ButtonsVerticalContainer" instance=ExtResource("4")]
+layout_mode = 2
+text = "TR_MENU_OPTIONS_PLAYER"
+
+[node name="AudioButton" parent="CenterContainer/Control/ButtonsCenterContainer/ButtonsVerticalContainer" instance=ExtResource("4")]
+layout_mode = 2
+text = "TR_MENU_OPTIONS_AUDIO"
+
+[node name="GraphicsButton" parent="CenterContainer/Control/ButtonsCenterContainer/ButtonsVerticalContainer" instance=ExtResource("4")]
+layout_mode = 2
+disabled = true
+text = "TR_MENU_OPTIONS_GRAPHICS"
+
+[node name="InputButton" parent="CenterContainer/Control/ButtonsCenterContainer/ButtonsVerticalContainer" instance=ExtResource("4")]
+layout_mode = 2
+text = "TR_MENU_OPTIONS_INPUT"
+
+[node name="VRButton" parent="CenterContainer/Control/ButtonsCenterContainer/ButtonsVerticalContainer" instance=ExtResource("4")]
+layout_mode = 2
+text = "TR_MENU_OPTIONS_VR"
+
+[node name="BottomContainer" type="HBoxContainer" parent="CenterContainer"]
+layout_mode = 2
+
+[node name="BackButton" parent="CenterContainer/BottomContainer" instance=ExtResource("2")]
+layout_mode = 2
+text = "TR_MENU_BACK"
+
+[connection signal="pressed" from="CenterContainer/Control/ButtonsCenterContainer/ButtonsVerticalContainer/PlayerButton" to="." method="_on_PlayerButton_pressed"]
+[connection signal="pressed" from="CenterContainer/Control/ButtonsCenterContainer/ButtonsVerticalContainer/AudioButton" to="." method="_on_AudioButton_pressed"]
+[connection signal="pressed" from="CenterContainer/Control/ButtonsCenterContainer/ButtonsVerticalContainer/GraphicsButton" to="." method="_on_GraphicsButton_pressed"]
+[connection signal="pressed" from="CenterContainer/Control/ButtonsCenterContainer/ButtonsVerticalContainer/InputButton" to="." method="_on_InputButton_pressed"]
+[connection signal="pressed" from="CenterContainer/Control/ButtonsCenterContainer/ButtonsVerticalContainer/VRButton" to="." method="_on_VRButton_pressed"]
+[connection signal="pressed" from="CenterContainer/BottomContainer/BackButton" to="." method="_on_BackButton_pressed"]

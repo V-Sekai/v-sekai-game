@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://doby74fiwn7xh"]
+
+[ext_resource type="Script" path="res://addons/canvas_plane/canvas_plane.gd" id="1"]
+[ext_resource type="Script" path="res://addons/vsk_manager/outgame_root_vr.gd" id="2"]
+[ext_resource type="PackedScene" uid="uid://d4dwhcdhb5unf" path="res://addons/vsk_menu/ingame_menu/ingame_menu.tscn" id="3"]
+
+[node name="SpatialIngameMenu" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+script = ExtResource("2")
+
+[node name="CanvasPlane" type="Node3D" parent="."]
+transform = Transform3D(0.05, 0, 0, 0, 0.0353553, -0.0650538, 0, 0.0353553, 0.0650538, -0.05, 0, 0)
+script = ExtResource("1")
+canvas_anchor_x = 1.0
+canvas_anchor_y = 0.5
+interactable = true
+translucent = true
+collision_mask = 2
+collision_layer = 2
+
+[node name="IngameMenu" parent="CanvasPlane" instance=ExtResource("3")]

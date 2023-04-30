@@ -1,0 +1,110 @@
+id,en,es
+TR_MENU_AUDIO_FLAT_INPUT,Flat Audio Input,Entrada de audio de modo plano
+TR_MENU_AUDIO_FLAT_OUTPUT,Flat Audio Output,Salida de audio de modo plano
+TR_MENU_AUDIO_GAME_SFX_VOLUME,Sound Effects Volume,Volúmen de los sonidos de efecto
+TR_MENU_AUDIO_INPUT,Input,Entrada
+TR_MENU_AUDIO_MENU_VOLUME,Menu Volume,Volúmen del menú
+TR_MENU_AUDIO_MIC_INPUT_VOLUME,Mic Input Volume,Volúmen del micrófono
+TR_MENU_AUDIO_MUSIC_VOLUME,Music volume,Volúmen de la música
+TR_MENU_AUDIO_OUTPUT,Output,Salida
+TR_MENU_AUDIO_VOICE_VOLUME,Voice Volume,Volúmen de voz
+TR_MENU_AUDIO_VR_INPUT,VR Audio input,Entrada de audio de VR
+TR_MENU_AUDIO_VR_OUTPUT,VR Audio Output,Salida de audio de VR
+TR_MENU_BACK,Back,Atrás
+TR_MENU_BROWSE_SERVERS,Browse Servers,Explorar servidores
+TR_MENU_CALLBACK_STATE_GAME_MODE_LOAD_FAILED,Game mode failed to load.,No se pudo cargar el modo de juego.
+TR_MENU_CALLBACK_STATE_GAME_MODE_NOT_WHITELISTED,Game mode not whitelisted.,El modo de juego no está permitido.
+TR_MENU_CALLBACK_STATE_HOST_GAME_FAILED,Game could not be hosted.,No se pudo alojar el juego.
+TR_MENU_CALLBACK_STATE_INVALID_MAP,Invalid map.,Mapa inválido.
+TR_MENU_CALLBACK_STATE_KICKED_FROM_SERVER,Kicked from server.,Expulsado del servidor.
+TR_MENU_CALLBACK_STATE_MAP_LOAD_FAILED,Map load failed.,No se pudo cargar el mapa.
+TR_MENU_CALLBACK_STATE_MAP_NOT_WHITELISTED,Map not whitelisted.,Mapa no permitido.
+TR_MENU_CALLBACK_STATE_NO_SERVER_INFO,Server did not provide server info.,El servidor no proporcionó su información.
+TR_MENU_CALLBACK_STATE_NO_SERVER_INFO_VERSION,Server info did not provide version informaton.,La información del servidor no proporcionó la versión.
+TR_MENU_CALLBACK_STATE_SERVER_DISCONNECTED,Server disconnected.,Servidor desconectado.
+TR_MENU_CALLBACK_STATE_SERVER_INFO_VERSION_MISMATCH,"Server's network protocol version is not compatible with client.
+Server network version: {server_network_version}
+Client network version: {client_network_version}","El protocolo de red del servidor no es compatible con el cliente
+Versión de red del servidor: {server_network_version}
+Versión de red del cliente: {client_network_version}"
+TR_MENU_CALLBACK_STATE_SHARD_REGISTRATION_FAILED,Shard could not be registered.,No se pudo registrar el fragmento…
+TR_MENU_CLEAR_CACHE,Clear Cache,Borrar caché
+TR_MENU_CREATING_SERVER_INFO,Creating Server Info...,Creando información del servidor…
+TR_MENU_CREATING_SERVER_STATE,Creating Server State...,Creando estado del servidor…
+TR_MENU_CREDITS,Credits,Créditos
+TR_MENU_DIRECT_IP,Direct IP,IP directa
+TR_MENU_DISCONNECT,Disconnect,Desconectar
+TR_MENU_DOWNLOADING_MAP,Downloading Map,Descargando mapa
+TR_MENU_ERROR,Error,Error
+TR_MENU_EXIT,Exit,Salir
+TR_MENU_FPS,FPS,FPS
+TR_MENU_HOST,Host,Crear
+TR_MENU_HOST_DEDICATED_SERVER,Dedicated Server:,Servidor dedicado: 
+TR_MENU_HOST_MAX_PLAYERS,Max players,Máximo de jugadores
+TR_MENU_HOST_NAME,Name,Nombre
+TR_MENU_HOST_PORT,Port,Puerto
+TR_MENU_HOST_PUBLIC_SERVER,Public Server,Servidor público
+TR_MENU_HOST_SERVER,Host Server,Crear servidor
+TR_MENU_IP,IP,IP
+TR_MENU_JOIN,Join,Unirse
+TR_MENU_LOADING,Loading...,Cargando…
+TR_MENU_LOADING_ASSET,Loading Asset,Cargando asset
+TR_MENU_LOCAL_FILES,Local Files,Archivos locales
+TR_MENU_LOGIN_CANCEL,Cancel,Cancelar
+TR_MENU_LOGIN_CREATE_ACCOUNT,Create Account,Crear cuenta
+TR_MENU_LOGIN_EMAIL,Email,Correo electrónico
+TR_MENU_LOGIN_LOGIN,Login,Iniciar sesión
+TR_MENU_LOGIN_PASSWORD,Password,Contraseña
+TR_MENU_LOGIN_PASSWORD_CONFIRMATION,Password Confirmation,Confirmar contraseña
+TR_MENU_LOGIN_REGISTER,Register,Registrarse
+TR_MENU_LOGIN_SIGN_IN,Sign in,Iniciar sesión
+TR_MENU_LOGIN_USERNAME,Username,Nombre de usuario
+TR_MENU_LOGIN_USERNAME_OR_EMAIL,Username/Email,Usuario/Correo
+TR_MENU_LOOK_INVERT,Look Invert,Invertir giro
+TR_MENU_MAP,Map,Mapa 
+TR_MENU_MAP_LOAD_COMPLETE,Map loading complete!,¡Se terminó de cargar el mapa!
+TR_MENU_MOUSE_SENSITIVITY,Mouse Sensitivity,Sensibilidad del mouse
+TR_MENU_MUTE,Mute,Silenciar
+TR_MENU_OPTIONS,Options,Opciones
+TR_MENU_OPTIONS_AUDIO,Audio,Audio
+TR_MENU_OPTIONS_GRAPHICS,Graphics,Gráficos
+TR_MENU_OPTIONS_INPUT,Input,Entrada
+TR_MENU_OPTIONS_NETWORK,Network,Red
+TR_MENU_OPTIONS_PLAYER,Player,Jugador
+TR_MENU_OPTIONS_VR,VR,VR
+TR_MENU_PEER,Peer,Peer
+TR_MENU_PLAYER_AVATAR_PATH,Avatar Path,Ruta del avatar
+TR_MENU_PLAYER_COUNT,Player Count,Número de jugadores
+TR_MENU_PLAYER_DISPLAY_NAME,Display Name,Nombre visible
+TR_MENU_PORT,Port,Puerto
+TR_MENU_QUIT_MESSAGE,Are you sure you want to quit?,¿Estás seguro de que quieres salir?
+TR_MENU_RECEIVE_EMAIL_NOTIFICATIONS,Receive Email Notifications,Recibir notificaciones de correo
+TR_MENU_RECONNECT,Reconnect,Re-conectar
+TR_MENU_REFRESH,Refresh,Refrescar
+TR_MENU_REGISTERING_SERVER,Registering server...,Registrando servidor…
+TR_MENU_REQUESTING_SERVER_INFO,Requesting server info...,Solicitando información del servidor…
+TR_MENU_REQUESTING_SERVER_STATE,Requesting server state...,Solicitando estado del servidor…
+TR_MENU_RESTART_REQUIRED,Some changes may require the application to be restarted...,Algunos cambios requieren el reinicio de la aplicación.
+TR_MENU_SELECT_AVATAR,Select Avatar...,Elegir avatar…
+TR_MENU_SELECT_MAP,Select Map...,Elegir mapa…
+TR_MENU_SERVER_STATE_READY,Complete!,¡Completado!
+TR_MENU_SESSION_CANT_CONNECT,Can't Connect,No se puede conectar
+TR_MENU_SESSION_CANT_RESOLVE,Can't Resolve,No se puede resolver
+TR_MENU_SESSION_CONNECTION_ERROR,Connection Error,Error de conexión
+TR_MENU_SESSION_DISCONNECTED,Disconnected,Desconectado
+TR_MENU_SESSION_PENDING,Pending...,Pendiente…
+TR_MENU_SESSION_SIGNED_IN_AS,Signed in as {display_name},Conectado como {display_name}
+TR_MENU_SESSION_SSL_HANDSHAKE_ERROR,SSL Handshake Error,Error de enlace de SSL
+TR_MENU_SHARD_SERVER_BROWSER,Server Browser,Explorador de servidores
+TR_MENU_SIGN_IN,Sign in,Iniciar sesión
+TR_MENU_SIGN_OUT,Sign out,Cerrar sesión
+TR_MENU_START,Start,Comenzar
+TR_MENU_STATUS_CODE_NO_PASSWORD,No password,Sin contraseña
+TR_MENU_STATUS_CODE_NO_USERNAME,No username,Sin nombre de usuario
+TR_MENU_STATUS_CODE_PENDING,Pending...,Pendiente…
+TR_MENU_UNMUTE,Unmute,Quitar silencio
+TR_MENU_VR_ENABLED,VR Enabled,VR habilitado
+TR_MENU_VR_MOVEMENT_ORIENTATION,Movement Orientation,Orientación del movimiento
+TR_MENU_VR_MOVEMENT_TYPE,Movement Type,Tipo de movimiento
+TR_MENU_VR_PLAYER_HEIGHT,Player Height (metric),Altura del jugador (metros)
+TR_MENU_VR_TURNING_MODE,Turning Mode,Modo de giro

@@ -1,0 +1,6 @@
+[gd_resource type="FontVariation" load_steps=2 format=3 uid="uid://bhu7fta0yg38x"]
+
+[ext_resource type="FontFile" path="res://addons/emote_theme/fonts/roboto_mono_regular.ttf" id="1_txwsv"]
+
+[resource]
+base_font = ExtResource("1_txwsv")

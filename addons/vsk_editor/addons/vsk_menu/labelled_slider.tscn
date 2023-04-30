@@ -1,0 +1,23 @@
+[gd_scene load_steps=2 format=3 uid="uid://efewungq1gv8"]
+
+[ext_resource type="Script" path="res://addons/vsk_menu/labelled_slider.gd" id="1"]
+
+[node name="LabelledSlider" type="HBoxContainer"]
+offset_right = 330.0
+offset_bottom = 17.0
+size_flags_horizontal = 3
+script = ExtResource("1")
+slider_path = NodePath("SliderValue")
+label_path = NodePath("SliderLabel")
+
+[node name="SliderValue" type="HSlider" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SliderLabel" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.25
+text = "0.0"
+
+[connection signal="value_changed" from="SliderValue" to="." method="_on_slider_value_changed"]

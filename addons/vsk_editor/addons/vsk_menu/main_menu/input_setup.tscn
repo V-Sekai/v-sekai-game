@@ -1,0 +1,100 @@
+[gd_scene load_steps=4 format=3 uid="uid://wbb3bsfay6xa"]
+
+[ext_resource type="PackedScene" uid="uid://efewungq1gv8" path="res://addons/vsk_menu/labelled_slider.tscn" id="1"]
+[ext_resource type="PackedScene" uid="uid://cogvc7mlmr810" path="res://addons/vsk_menu/vsk_button.tscn" id="2"]
+[ext_resource type="Script" path="res://addons/vsk_menu/input_setup.gd" id="3"]
+
+[node name="InputSetup" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3")
+mouse_sensitivity_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/MouseSensitivityContainer/MouseSensitivitySliderContainer")
+look_invert_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/LookInvertContainer/LookInvertCheckBox")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="CenterContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+alignment = 1
+
+[node name="Control" type="HBoxContainer" parent="Panel/CenterContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="BlankSpaceLeft" type="Control" parent="Panel/CenterContainer/Control"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.25
+
+[node name="ButtonsContainer" type="VBoxContainer" parent="Panel/CenterContainer/Control"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+
+[node name="MouseSensitivityContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="MouseSensitivityLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/MouseSensitivityContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "TR_MENU_MOUSE_SENSITIVITY"
+
+[node name="MouseSensitivitySliderContainer" parent="Panel/CenterContainer/Control/ButtonsContainer/MouseSensitivityContainer" instance=ExtResource("1")]
+layout_mode = 2
+padded_decimals = 3
+
+[node name="SliderValue" parent="Panel/CenterContainer/Control/ButtonsContainer/MouseSensitivityContainer/MouseSensitivitySliderContainer" index="0"]
+max_value = 10.0
+step = 0.001
+value = 1.0
+
+[node name="LookInvertContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="LookInvertLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/LookInvertContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "TR_MENU_LOOK_INVERT"
+
+[node name="LookInvertCheckBox" type="CheckBox" parent="Panel/CenterContainer/Control/ButtonsContainer/LookInvertContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BlankSpaceRight" type="Control" parent="Panel/CenterContainer/Control"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.25
+
+[node name="BottomContainer" type="HBoxContainer" parent="Panel/CenterContainer"]
+layout_mode = 2
+
+[node name="BackButton" parent="Panel/CenterContainer/BottomContainer" instance=ExtResource("2")]
+layout_mode = 2
+text = "TR_MENU_BACK"
+
+[connection signal="value_changed" from="Panel/CenterContainer/Control/ButtonsContainer/MouseSensitivityContainer/MouseSensitivitySliderContainer" to="." method="_on_mouse_sensitivity_value_changed"]
+[connection signal="toggled" from="Panel/CenterContainer/Control/ButtonsContainer/LookInvertContainer/LookInvertCheckBox" to="." method="_on_look_invert_toggled"]
+[connection signal="pressed" from="Panel/CenterContainer/BottomContainer/BackButton" to="." method="_on_BackButton_pressed"]
+
+[editable path="Panel/CenterContainer/Control/ButtonsContainer/MouseSensitivityContainer/MouseSensitivitySliderContainer"]

@@ -1,0 +1,63 @@
+[gd_scene load_steps=3 format=3 uid="uid://d4ciww4a7houm"]
+
+[ext_resource type="Script" path="res://addons/textureRectUrl/node_textureRectUrl.gd" id="1"]
+[ext_resource type="Script" path="res://addons/vsk_menu/vsk_user_content_grid_item.gd" id="2"]
+
+[node name="VSKUserContentItem" type="Button"]
+clip_contents = true
+custom_minimum_size = Vector2(640, 360)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -640.0
+offset_bottom = -360.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.333, 0.333)
+script = ExtResource("2")
+name_label_path = NodePath("VBoxContainer/ItemName")
+texture_rect_url_path = NodePath("VBoxContainer/ItemImageContainer/ItemImage")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="ItemImageContainer" type="Control" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="ItemImage" type="TextureRect" parent="VBoxContainer/ItemImageContainer"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 6
+script = ExtResource("1")
+everCache = true
+metadata/_edit_layout_mode = 1
+metadata/_edit_use_custom_anchors = true
+
+[node name="ItemName" type="Label" parent="VBoxContainer"]
+clip_contents = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 16
+text = " "
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+
+[connection signal="pressed" from="." to="." method="_on_pressed"]

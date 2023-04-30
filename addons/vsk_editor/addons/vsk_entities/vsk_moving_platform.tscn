@@ -1,0 +1,52 @@
+[gd_scene load_steps=9 format=3 uid="uid://i8w2m1pbdolp"]
+
+[ext_resource type="Script" path="res://addons/smoothing/smoothing.gd" id="1"]
+[ext_resource type="Script" path="res://addons/network_manager/network_model.gd" id="2"]
+[ext_resource type="Script" path="res://addons/network_manager/network_logic.gd" id="4"]
+[ext_resource type="Script" path="res://addons/network_manager/network_identity.gd" id="6"]
+[ext_resource type="Script" path="res://addons/entity_manager/transform_notification.gd" id="7"]
+[ext_resource type="Script" path="res://addons/network_manager/network_transform.gd" id="8"]
+[ext_resource type="Script" path="res://addons/entity_manager/entity.gd" id="9"]
+[ext_resource type="Script" path="res://addons/vsk_entities/extensions/moving_platform_logic.gd" id="10"]
+
+[node name="MovingPlatform" type="Node3D"]
+script = ExtResource("9")
+
+[node name="TransformNotification" type="Node3D" parent="."]
+script = ExtResource("7")
+
+[node name="MovingPlatformSimulationLogic" type="Node" parent="."]
+script = ExtResource("10")
+_entity_type = "MovingPlatform"
+_entity_node_path = NodePath("..")
+
+[node name="MovingPlatformNetworkLogic" type="Node" parent="."]
+script = ExtResource("4")
+cached_writer_size = 128
+_entity_node_path = NodePath("..")
+
+[node name="NetworkTransform" type="Node" parent="MovingPlatformNetworkLogic"]
+script = ExtResource("8")
+origin_interpolation_factor = 15.0
+rotation_interpolation_factor = 15.0
+snap_threshold = 5.0
+_entity_node_path = NodePath("../..")
+
+[node name="NetworkModel" type="Node" parent="MovingPlatformNetworkLogic"]
+script = ExtResource("2")
+_entity_node_path = NodePath("../..")
+
+[node name="NetworkIdentity" type="Node" parent="."]
+script = ExtResource("6")
+_entity_node_path = NodePath("..")
+
+[node name="RenderSmooth" type="Node3D" parent="."]
+script = ExtResource("1")
+target = NodePath("..")
+flags = 15
+
+[node name="Render" type="Node3D" parent="RenderSmooth"]
+
+[node name="Target" type="Node3D" parent="."]
+
+[connection signal="transform_updated" from="MovingPlatformNetworkLogic/NetworkTransform" to="MovingPlatformSimulationLogic" method="_network_transform_update"]

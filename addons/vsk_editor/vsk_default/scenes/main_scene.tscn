@@ -1,0 +1,64 @@
+[gd_scene load_steps=10 format=3 uid="uid://1nd2u7tkhxsm"]
+
+[ext_resource type="Script" path="res://addons/vsk_manager/vsk_startup_manager.gd" id="1_ilifs"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/compound_state.gd" id="2_q2hku"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/atomic_state.gd" id="2_qid2u"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/state_chart.gd" id="2_uhhyl"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/transition.gd" id="5_mra2e"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/expression_guard.gd" id="6_j6wmn"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/not_guard.gd" id="7_aj6rm"]
+
+[sub_resource type="Resource" id="Resource_x6j2c"]
+script = ExtResource("6_j6wmn")
+expression = "Engine.is_editor_hint()"
+
+[sub_resource type="Resource" id="Resource_5enic"]
+script = ExtResource("7_aj6rm")
+guard = SubResource("Resource_x6j2c")
+
+[node name="MainScene" type="Node"]
+script = ExtResource("1_ilifs")
+
+[node name="StateChart" type="Node" parent="."]
+script = ExtResource("2_uhhyl")
+
+[node name="Root" type="Node" parent="StateChart"]
+script = ExtResource("2_q2hku")
+initial_state = NodePath("Startup")
+
+[node name="Startup" type="Node" parent="StateChart/Root"]
+script = ExtResource("2_qid2u")
+
+[node name="OnTransition" type="Node" parent="StateChart/Root/Startup"]
+script = ExtResource("5_mra2e")
+to = NodePath("../../SetupVSKSingletons")
+
+[node name="SetupVSKSingletons" type="Node" parent="StateChart/Root"]
+script = ExtResource("2_qid2u")
+
+[node name="OnTransition" type="Node" parent="StateChart/Root/SetupVSKSingletons"]
+script = ExtResource("5_mra2e")
+to = NodePath("../../FlowPreload")
+guard = SubResource("Resource_5enic")
+
+[node name="FlowPreload" type="Node" parent="StateChart/Root"]
+script = ExtResource("2_qid2u")
+
+[node name="OnTransition" type="Node" parent="StateChart/Root/FlowPreload"]
+script = ExtResource("5_mra2e")
+to = NodePath("../../Fade")
+
+[node name="Fade" type="Node" parent="StateChart/Root"]
+script = ExtResource("2_qid2u")
+
+[node name="OnTransition" type="Node" parent="StateChart/Root/Fade"]
+script = ExtResource("5_mra2e")
+to = NodePath("../../StartupComplete")
+
+[node name="StartupComplete" type="Node" parent="StateChart/Root"]
+script = ExtResource("2_qid2u")
+
+[connection signal="state_entered" from="StateChart/Root/Startup" to="." method="startup"]
+[connection signal="state_entered" from="StateChart/Root/SetupVSKSingletons" to="." method="setup_vsk_singletons"]
+[connection signal="state_entered" from="StateChart/Root/FlowPreload" to="." method="flow_preload"]
+[connection signal="state_entered" from="StateChart/Root/StartupComplete" to="." method="_startup_complete"]

@@ -1,0 +1,41 @@
+[gd_scene load_steps=3 format=3 uid="uid://bxaya8pq2i21c"]
+
+[ext_resource type="Script" path="res://addons/vsk_menu/main_menu/session_container.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://cogvc7mlmr810" path="res://addons/vsk_menu/vsk_button.tscn" id="2"]
+
+[node name="SessionContainer" type="HBoxContainer"]
+offset_right = 192.0
+offset_bottom = 33.0
+script = ExtResource("1")
+sign_in_container_nodepath = NodePath("SignInContainer")
+sign_out_container_nodepath = NodePath("SignOutContainer")
+reconnect_container_nodepath = NodePath("ReconnectContainer")
+session_info_nodepath = NodePath("SessionInfo")
+
+[node name="SessionInfo" type="Label" parent="."]
+layout_mode = 2
+
+[node name="ReconnectContainer" type="PanelContainer" parent="."]
+layout_mode = 2
+
+[node name="ReconnectButton" parent="ReconnectContainer" instance=ExtResource("2")]
+layout_mode = 2
+text = "TR_MENU_RECONNECT"
+
+[node name="SignInContainer" type="PanelContainer" parent="."]
+layout_mode = 2
+
+[node name="SignInButton" parent="SignInContainer" instance=ExtResource("2")]
+layout_mode = 2
+text = "TR_MENU_SIGN_IN"
+
+[node name="SignOutContainer" type="PanelContainer" parent="."]
+layout_mode = 2
+
+[node name="SignOutButton" parent="SignOutContainer" instance=ExtResource("2")]
+layout_mode = 2
+text = "TR_MENU_SIGN_OUT"
+
+[connection signal="pressed" from="ReconnectContainer/ReconnectButton" to="." method="_on_reconnect_button_pressed"]
+[connection signal="pressed" from="SignInContainer/SignInButton" to="." method="_on_sign_in_button_pressed"]
+[connection signal="pressed" from="SignOutContainer/SignOutButton" to="." method="_on_sign_out_button_pressed"]

@@ -1,0 +1,31 @@
+[gd_scene load_steps=3 format=3 uid="uid://bwn0ka3su58we"]
+
+[ext_resource type="Script" path="res://addons/vsk_menu/vsk_user_content_sub_selector.gd" id="1_u3lli"]
+[ext_resource type="PackedScene" uid="uid://cl2v14xq56f3o" path="res://addons/vsk_menu/vsk_user_content_grid.tscn" id="1_v3r63"]
+
+[node name="VSKUserContentSubSelector" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_u3lli")
+grid_path = NodePath("UserContentGrid")
+message_path = NodePath("Message")
+
+[node name="Message" type="Label" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="UserContentGrid" parent="." instance=ExtResource("1_v3r63")]
+layout_mode = 1
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[connection signal="vsk_content_button_pressed" from="UserContentGrid" to="." method="_on_vsk_content_button_pressed"]

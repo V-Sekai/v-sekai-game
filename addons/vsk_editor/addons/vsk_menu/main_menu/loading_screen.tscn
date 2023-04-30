@@ -1,0 +1,81 @@
+[gd_scene load_steps=3 format=3 uid="uid://rb06gfxj5ns3"]
+
+[ext_resource type="Script" path="res://addons/vsk_menu/loading_screen.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://cogvc7mlmr810" path="res://addons/vsk_menu/vsk_button.tscn" id="2"]
+
+[node name="LoadingScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+progress_bar_path = NodePath("Panel/CenterContainer/Containers/LoadingContainer/ProgressBar")
+loading_status_label_path = NodePath("Panel/CenterContainer/Containers/LoadingContainer/LoadingStatusLabel")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="CenterContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+alignment = 1
+
+[node name="Containers" type="Control" parent="Panel/CenterContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="StatusContainer" type="VBoxContainer" parent="Panel/CenterContainer/Containers"]
+visible = false
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_vertical = 3
+alignment = 1
+
+[node name="StatusLabel" type="Label" parent="Panel/CenterContainer/Containers/StatusContainer"]
+layout_mode = 2
+text = "Status"
+
+[node name="LoadingContainer" type="VBoxContainer" parent="Panel/CenterContainer/Containers"]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_vertical = 3
+alignment = 1
+
+[node name="LoadingLabel" type="Label" parent="Panel/CenterContainer/Containers/LoadingContainer"]
+layout_mode = 2
+text = "TR_MENU_LOADING"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="Panel/CenterContainer/Containers/LoadingContainer"]
+layout_mode = 2
+step = 1.0
+
+[node name="LoadingStatusLabel" type="Label" parent="Panel/CenterContainer/Containers/LoadingContainer"]
+layout_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AdminContainer" type="VBoxContainer" parent="Panel/CenterContainer/Containers"]
+visible = false
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_vertical = 3
+alignment = 1
+
+[node name="BottomContainer" type="HBoxContainer" parent="Panel/CenterContainer"]
+layout_mode = 2
+
+[node name="Disconnect" parent="Panel/CenterContainer/BottomContainer" instance=ExtResource("2")]
+layout_mode = 2
+text = "TR_MENU_DISCONNECT"
+
+[connection signal="pressed" from="Panel/CenterContainer/BottomContainer/Disconnect" to="." method="_on_Disconnect_pressed"]

@@ -1,0 +1,159 @@
+[gd_scene load_steps=3 format=3 uid="uid://de7nu7nu2k10u"]
+
+[ext_resource type="Script" path="res://addons/vsk_menu/register_screen.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://qrrk0xuopfpw" path="res://addons/vsk_menu/password_input.tscn" id="2"]
+
+[node name="RegisterScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+username_input_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/UsernameContainer/UsernameLineEdit")
+email_input_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/EmailContainer/EmailLineEdit")
+password_input_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/PasswordContainer/PasswordInput")
+password_confirmation_input_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/PasswordConfirmationContainer/PasswordConfirmationInput")
+email_notifications_input_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/ReceiveEmailContainer/ReceiveEmailCheckbox")
+register_cancel_button_input_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/ButtonsContainer/RegisterCancelButton")
+status_label_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/StatusContainer/StatusLabel")
+default_focus = NodePath("Panel/CenterContainer/Control/ButtonsContainer/UsernameContainer/UsernameLineEdit")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="CenterContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+alignment = 1
+
+[node name="Control" type="HBoxContainer" parent="Panel/CenterContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="BlankSpaceLeft" type="Control" parent="Panel/CenterContainer/Control"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ButtonsContainer" type="VBoxContainer" parent="Panel/CenterContainer/Control"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+
+[node name="UsernameContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="UsernameLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/UsernameContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "TR_MENU_LOGIN_USERNAME"
+
+[node name="UsernameLineEdit" type="LineEdit" parent="Panel/CenterContainer/Control/ButtonsContainer/UsernameContainer"]
+layout_mode = 2
+max_length = 4096
+
+[node name="EmailContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="EmailLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/EmailContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "TR_MENU_LOGIN_EMAIL"
+
+[node name="EmailLineEdit" type="LineEdit" parent="Panel/CenterContainer/Control/ButtonsContainer/EmailContainer"]
+layout_mode = 2
+max_length = 4096
+
+[node name="PasswordContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="PasswordLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/PasswordContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "TR_MENU_LOGIN_PASSWORD"
+
+[node name="PasswordInput" parent="Panel/CenterContainer/Control/ButtonsContainer/PasswordContainer" instance=ExtResource("2")]
+layout_mode = 2
+
+[node name="PasswordConfirmationContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="PasswordConfirmationLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/PasswordConfirmationContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "TR_MENU_LOGIN_PASSWORD_CONFIRMATION"
+
+[node name="PasswordConfirmationInput" parent="Panel/CenterContainer/Control/ButtonsContainer/PasswordConfirmationContainer" instance=ExtResource("2")]
+layout_mode = 2
+
+[node name="ReceiveEmailContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="ReceiveEmailLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/ReceiveEmailContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "TR_MENU_RECEIVE_EMAIL_NOTIFICATIONS"
+
+[node name="ReceiveEmailCheckbox" type="CheckBox" parent="Panel/CenterContainer/Control/ButtonsContainer/ReceiveEmailContainer"]
+layout_mode = 2
+
+[node name="StatusContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="StatusLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/StatusContainer"]
+layout_mode = 2
+
+[node name="ButtonsContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="RegisterCancelButton" type="Button" parent="Panel/CenterContainer/Control/ButtonsContainer/ButtonsContainer"]
+layout_mode = 2
+text = "TR_MENU_LOGIN_REGISTER"
+
+[node name="SignInButton" type="Button" parent="Panel/CenterContainer/Control/ButtonsContainer/ButtonsContainer"]
+layout_mode = 2
+text = "TR_MENU_LOGIN_SIGN_IN"
+
+[node name="BlankSpaceRight" type="Control" parent="Panel/CenterContainer/Control"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="BottomContainer" type="HBoxContainer" parent="Panel/CenterContainer"]
+layout_mode = 2
+
+[node name="BackButton" type="Button" parent="Panel/CenterContainer/BottomContainer"]
+layout_mode = 2
+text = "TR_MENU_BACK"
+
+[connection signal="text_changed" from="Panel/CenterContainer/Control/ButtonsContainer/UsernameContainer/UsernameLineEdit" to="." method="_on_UsernameLineEdit_text_changed"]
+[connection signal="text_changed" from="Panel/CenterContainer/Control/ButtonsContainer/EmailContainer/EmailLineEdit" to="." method="_on_EmailLineEdit_text_changed"]
+[connection signal="text_changed" from="Panel/CenterContainer/Control/ButtonsContainer/PasswordContainer/PasswordInput" to="." method="_on_PasswordInput_text_changed"]
+[connection signal="text_changed" from="Panel/CenterContainer/Control/ButtonsContainer/PasswordConfirmationContainer/PasswordConfirmationInput" to="." method="_on_PasswordConfirmationInput_text_changed"]
+[connection signal="pressed" from="Panel/CenterContainer/Control/ButtonsContainer/ButtonsContainer/RegisterCancelButton" to="." method="_on_RegisterCancelButton_pressed"]
+[connection signal="pressed" from="Panel/CenterContainer/BottomContainer/BackButton" to="." method="_on_BackButton_pressed"]

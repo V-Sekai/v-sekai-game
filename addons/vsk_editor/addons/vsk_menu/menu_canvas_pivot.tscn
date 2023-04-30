@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://dq1rpnb1np3sf"]
+
+[ext_resource type="Script" path="res://addons/vsk_menu/menu_canvas_pivot.gd" id="1"]
+[ext_resource type="Script" path="res://addons/canvas_plane/canvas_plane.gd" id="2"]
+
+[node name="MenuCanvasPivot" type="Node3D"]
+script = ExtResource("1")
+canvas_plane_nodepath = NodePath("CanvasPlane")
+
+[node name="CanvasPlane" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0147672, 0.180189, -2.98075)
+script = ExtResource("2")
+canvas_anchor_y = 1.0
+canvas_width = 1280.0
+canvas_height = 720.0
+canvas_scale = 0.007
+interactable = true
+translucent = true
+collision_mask = 2
+collision_layer = 2

@@ -1,0 +1,290 @@
+[gd_scene load_steps=3 format=3 uid="uid://d4dwhcdhb5unf"]
+
+[ext_resource type="Script" path="res://addons/vsk_menu/ingame_menu.gd" id="1"]
+[ext_resource type="FontVariation" uid="uid://b11gux52nvdc1" path="res://addons/vsk_menu/fonts/ingame_menu_font.tres" id="2"]
+
+[node name="IngameMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+mute_button_path = NodePath("ColorRect/VBoxContainer/GridContainer/ButtonContainer15/MuteButton")
+fps_label_path = NodePath("ColorRect/VBoxContainer/FPS")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 1, 1, 0.25098)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ColorRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="GridContainer" type="GridContainer" parent="ColorRect/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+columns = 4
+
+[node name="ButtonContainer" type="Control" parent="ColorRect/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Button" type="Button" parent="ColorRect/VBoxContainer/GridContainer/ButtonContainer"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.1
+anchor_right = 0.9
+anchor_bottom = 0.9
+theme_override_fonts/font = ExtResource("2")
+disabled = true
+
+[node name="ButtonContainer2" type="Control" parent="ColorRect/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Button" type="Button" parent="ColorRect/VBoxContainer/GridContainer/ButtonContainer2"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.1
+anchor_right = 0.9
+anchor_bottom = 0.9
+theme_override_fonts/font = ExtResource("2")
+disabled = true
+
+[node name="ButtonContainer3" type="Control" parent="ColorRect/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Button" type="Button" parent="ColorRect/VBoxContainer/GridContainer/ButtonContainer3"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.1
+anchor_right = 0.9
+anchor_bottom = 0.9
+theme_override_fonts/font = ExtResource("2")
+disabled = true
+
+[node name="ButtonContainer4" type="Control" parent="ColorRect/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Button" type="Button" parent="ColorRect/VBoxContainer/GridContainer/ButtonContainer4"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.1
+anchor_right = 0.9
+anchor_bottom = 0.9
+theme_override_fonts/font = ExtResource("2")
+disabled = true
+
+[node name="ButtonContainer5" type="Control" parent="ColorRect/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Button" type="Button" parent="ColorRect/VBoxContainer/GridContainer/ButtonContainer5"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.1
+anchor_right = 0.9
+anchor_bottom = 0.9
+theme_override_fonts/font = ExtResource("2")
+disabled = true
+
+[node name="ButtonContainer6" type="Control" parent="ColorRect/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Button" type="Button" parent="ColorRect/VBoxContainer/GridContainer/ButtonContainer6"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.1
+anchor_right = 0.9
+anchor_bottom = 0.9
+theme_override_fonts/font = ExtResource("2")
+disabled = true
+
+[node name="ButtonContainer7" type="Control" parent="ColorRect/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Button" type="Button" parent="ColorRect/VBoxContainer/GridContainer/ButtonContainer7"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.1
+anchor_right = 0.9
+anchor_bottom = 0.9
+theme_override_fonts/font = ExtResource("2")
+disabled = true
+
+[node name="ButtonContainer8" type="Control" parent="ColorRect/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Button" type="Button" parent="ColorRect/VBoxContainer/GridContainer/ButtonContainer8"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.1
+anchor_right = 0.9
+anchor_bottom = 0.9
+theme_override_fonts/font = ExtResource("2")
+disabled = true
+
+[node name="ButtonContainer9" type="Control" parent="ColorRect/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Button" type="Button" parent="ColorRect/VBoxContainer/GridContainer/ButtonContainer9"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.1
+anchor_right = 0.9
+anchor_bottom = 0.9
+theme_override_fonts/font = ExtResource("2")
+disabled = true
+
+[node name="ButtonContainer10" type="Control" parent="ColorRect/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Button" type="Button" parent="ColorRect/VBoxContainer/GridContainer/ButtonContainer10"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.1
+anchor_right = 0.9
+anchor_bottom = 0.9
+theme_override_fonts/font = ExtResource("2")
+disabled = true
+
+[node name="ButtonContainer11" type="Control" parent="ColorRect/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Button" type="Button" parent="ColorRect/VBoxContainer/GridContainer/ButtonContainer11"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.1
+anchor_right = 0.9
+anchor_bottom = 0.9
+theme_override_fonts/font = ExtResource("2")
+disabled = true
+
+[node name="ButtonContainer12" type="Control" parent="ColorRect/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Button" type="Button" parent="ColorRect/VBoxContainer/GridContainer/ButtonContainer12"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.1
+anchor_right = 0.9
+anchor_bottom = 0.9
+theme_override_fonts/font = ExtResource("2")
+disabled = true
+
+[node name="ButtonContainer13" type="Control" parent="ColorRect/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Button" type="Button" parent="ColorRect/VBoxContainer/GridContainer/ButtonContainer13"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.1
+anchor_right = 0.9
+anchor_bottom = 0.9
+theme_override_fonts/font = ExtResource("2")
+disabled = true
+
+[node name="ButtonContainer14" type="Control" parent="ColorRect/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Button" type="Button" parent="ColorRect/VBoxContainer/GridContainer/ButtonContainer14"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.1
+anchor_right = 0.9
+anchor_bottom = 0.9
+theme_override_fonts/font = ExtResource("2")
+disabled = true
+
+[node name="ButtonContainer15" type="Control" parent="ColorRect/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="MuteButton" type="Button" parent="ColorRect/VBoxContainer/GridContainer/ButtonContainer15"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.1
+anchor_right = 0.9
+anchor_bottom = 0.9
+theme_override_fonts/font = ExtResource("2")
+text = "TR_MENU_MUTE"
+
+[node name="ButtonContainer16" type="Control" parent="ColorRect/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="DisconnectButton" type="Button" parent="ColorRect/VBoxContainer/GridContainer/ButtonContainer16"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.1
+anchor_right = 0.9
+anchor_bottom = 0.9
+offset_left = -1.25989
+offset_right = -1.25989
+theme_override_fonts/font = ExtResource("2")
+text = "TR_MENU_DISCONNECT"
+clip_text = true
+
+[node name="FPS" type="Label" parent="ColorRect/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("2")
+text = "FPS: 0"
+
+[connection signal="pressed" from="ColorRect/VBoxContainer/GridContainer/ButtonContainer15/MuteButton" to="." method="_on_MuteButton_pressed"]
+[connection signal="pressed" from="ColorRect/VBoxContainer/GridContainer/ButtonContainer16/DisconnectButton" to="." method="_on_DisconnectButton_pressed"]

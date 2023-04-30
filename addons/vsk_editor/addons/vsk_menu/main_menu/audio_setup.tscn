@@ -1,0 +1,224 @@
+[gd_scene load_steps=3 format=3 uid="uid://dgofpc1yktx74"]
+
+[ext_resource type="Script" path="res://addons/vsk_menu/audio_setup.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://cogvc7mlmr810" path="res://addons/vsk_menu/vsk_button.tscn" id="2"]
+
+[node name="AudioSetup" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+flat_audio_output_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/AudioOutput/FlatAudioOutputContainer/FlatAudioOutput")
+flat_audio_input_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/AudioInput/FlatAudioInputContainer/FlatAudioInput")
+xr_audio_output_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/AudioOutput/XRAudioOutputContainer/XRAudioOutput")
+xr_audio_input_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/AudioInput/XRAudioInputContainer/XRAudioInput")
+voice_output_volume_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/AudioOutput/VoiceVolume/VoiceVolume")
+music_output_volume_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/AudioOutput/MusicVolume/MusicVolume")
+game_sfx_output_volume_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/AudioOutput/GameSFXVolume/GameSFXVolume")
+menu_output_volume_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/AudioOutput/MenuVolume/MenuVolume")
+mic_input_volume_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/AudioInput/MicInputVolume/MicInputVolume")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="CenterContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+alignment = 1
+
+[node name="Control" type="HBoxContainer" parent="Panel/CenterContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+
+[node name="BlankSpaceLeft" type="Control" parent="Panel/CenterContainer/Control"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.25
+
+[node name="ButtonsContainer" type="VBoxContainer" parent="Panel/CenterContainer/Control"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+
+[node name="AudioOutput" type="VBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer"]
+layout_mode = 2
+
+[node name="OutputLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/AudioOutput"]
+layout_mode = 2
+text = "TR_MENU_AUDIO_OUTPUT"
+
+[node name="FlatAudioOutputContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer/AudioOutput"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="FlatAudioOutputLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/AudioOutput/FlatAudioOutputContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "TR_MENU_AUDIO_FLAT_OUTPUT"
+
+[node name="FlatAudioOutput" type="MenuButton" parent="Panel/CenterContainer/Control/ButtonsContainer/AudioOutput/FlatAudioOutputContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+flat = false
+clip_text = true
+
+[node name="XRAudioOutputContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer/AudioOutput"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="XRAudioOutputLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/AudioOutput/XRAudioOutputContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "TR_MENU_AUDIO_VR_OUTPUT"
+
+[node name="XRAudioOutput" type="MenuButton" parent="Panel/CenterContainer/Control/ButtonsContainer/AudioOutput/XRAudioOutputContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+flat = false
+clip_text = true
+
+[node name="MusicVolume" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer/AudioOutput"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="MusicVolumeLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/AudioOutput/MusicVolume"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "TR_MENU_AUDIO_MUSIC_VOLUME"
+
+[node name="MusicVolume" type="SpinBox" parent="Panel/CenterContainer/Control/ButtonsContainer/AudioOutput/MusicVolume"]
+layout_mode = 2
+size_flags_horizontal = 3
+suffix = "%"
+
+[node name="VoiceVolume" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer/AudioOutput"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="VoiceVolumeLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/AudioOutput/VoiceVolume"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "TR_MENU_AUDIO_VOICE_VOLUME"
+
+[node name="VoiceVolume" type="SpinBox" parent="Panel/CenterContainer/Control/ButtonsContainer/AudioOutput/VoiceVolume"]
+layout_mode = 2
+size_flags_horizontal = 3
+suffix = "%"
+
+[node name="GameSFXVolume" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer/AudioOutput"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="GameSFXVolumeLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/AudioOutput/GameSFXVolume"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "TR_MENU_AUDIO_GAME_SFX_VOLUME"
+
+[node name="GameSFXVolume" type="SpinBox" parent="Panel/CenterContainer/Control/ButtonsContainer/AudioOutput/GameSFXVolume"]
+layout_mode = 2
+size_flags_horizontal = 3
+suffix = "%"
+
+[node name="MenuVolume" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer/AudioOutput"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="MenuVolumeLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/AudioOutput/MenuVolume"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "TR_MENU_AUDIO_MENU_VOLUME"
+
+[node name="MenuVolume" type="SpinBox" parent="Panel/CenterContainer/Control/ButtonsContainer/AudioOutput/MenuVolume"]
+layout_mode = 2
+size_flags_horizontal = 3
+suffix = "%"
+
+[node name="AudioInput" type="VBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer"]
+layout_mode = 2
+
+[node name="InputLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/AudioInput"]
+layout_mode = 2
+text = "TR_MENU_AUDIO_INPUT"
+
+[node name="FlatAudioInputContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer/AudioInput"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="FlatAudioInputLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/AudioInput/FlatAudioInputContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "TR_MENU_AUDIO_FLAT_INPUT"
+
+[node name="FlatAudioInput" type="MenuButton" parent="Panel/CenterContainer/Control/ButtonsContainer/AudioInput/FlatAudioInputContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+flat = false
+clip_text = true
+
+[node name="XRAudioInputContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer/AudioInput"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="XRAudioInputLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/AudioInput/XRAudioInputContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "TR_MENU_AUDIO_VR_INPUT"
+
+[node name="XRAudioInput" type="MenuButton" parent="Panel/CenterContainer/Control/ButtonsContainer/AudioInput/XRAudioInputContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+flat = false
+clip_text = true
+
+[node name="MicInputVolume" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer/AudioInput"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="MicInputVolumeLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/AudioInput/MicInputVolume"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "TR_MENU_AUDIO_MIC_INPUT_VOLUME"
+
+[node name="MicInputVolume" type="SpinBox" parent="Panel/CenterContainer/Control/ButtonsContainer/AudioInput/MicInputVolume"]
+layout_mode = 2
+size_flags_horizontal = 3
+editable = false
+suffix = "%"
+
+[node name="BlankSpaceRight" type="Control" parent="Panel/CenterContainer/Control"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.25
+
+[node name="BottomContainer" type="HBoxContainer" parent="Panel/CenterContainer"]
+layout_mode = 2
+
+[node name="BackButton" parent="Panel/CenterContainer/BottomContainer" instance=ExtResource("2")]
+layout_mode = 2
+text = "TR_MENU_BACK"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+
+[connection signal="pressed" from="Panel/CenterContainer/BottomContainer/BackButton" to="." method="_on_BackButton_pressed"]

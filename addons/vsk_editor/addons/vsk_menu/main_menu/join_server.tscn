@@ -1,0 +1,111 @@
+[gd_scene load_steps=3 format=3 uid="uid://yjo807pm7mu8"]
+
+[ext_resource type="PackedScene" uid="uid://cogvc7mlmr810" path="res://addons/vsk_menu/vsk_button.tscn" id="1"]
+[ext_resource type="Script" path="res://addons/vsk_menu/join_server.gd" id="2"]
+
+[node name="JoinServer" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2")
+join_button_nodepath = NodePath("Panel/CenterContainer/BottomContainer/BackButton")
+ip_input_nodepath = NodePath("Panel/CenterContainer/Control/MarginedButtonsContainer/ButtonsContainer/JoinIPContainer/IPLineEdit")
+port_input_nodepath = NodePath("Panel/CenterContainer/Control/MarginedButtonsContainer/ButtonsContainer/PortContainer/PortSpinbox")
+default_focus = NodePath("Panel/CenterContainer/Control/MarginedButtonsContainer/ButtonsContainer/HostJoinButtonsContainer/JoinButton")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="CenterContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+alignment = 1
+
+[node name="Control" type="Control" parent="Panel/CenterContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="MarginedButtonsContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control"]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="BlankSpaceLeft" type="Control" parent="Panel/CenterContainer/Control/MarginedButtonsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ButtonsContainer" type="VBoxContainer" parent="Panel/CenterContainer/Control/MarginedButtonsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+
+[node name="PortContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/MarginedButtonsContainer/ButtonsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="PortLabel" type="Label" parent="Panel/CenterContainer/Control/MarginedButtonsContainer/ButtonsContainer/PortContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "TR_MENU_PORT"
+
+[node name="PortSpinbox" type="SpinBox" parent="Panel/CenterContainer/Control/MarginedButtonsContainer/ButtonsContainer/PortContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+max_value = 65535.0
+
+[node name="JoinIPContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/MarginedButtonsContainer/ButtonsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="Label" type="Label" parent="Panel/CenterContainer/Control/MarginedButtonsContainer/ButtonsContainer/JoinIPContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "TR_MENU_IP"
+
+[node name="IPLineEdit" type="LineEdit" parent="Panel/CenterContainer/Control/MarginedButtonsContainer/ButtonsContainer/JoinIPContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+max_length = 16
+
+[node name="HostJoinButtonsContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/MarginedButtonsContainer/ButtonsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="JoinButton" parent="Panel/CenterContainer/Control/MarginedButtonsContainer/ButtonsContainer/HostJoinButtonsContainer" instance=ExtResource("1")]
+layout_mode = 2
+text = "TR_MENU_JOIN"
+
+[node name="BlankSpaceLeft2" type="Control" parent="Panel/CenterContainer/Control/MarginedButtonsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="BottomContainer" type="HBoxContainer" parent="Panel/CenterContainer"]
+layout_mode = 2
+
+[node name="BackButton" parent="Panel/CenterContainer/BottomContainer" instance=ExtResource("1")]
+layout_mode = 2
+text = "TR_MENU_BACK"
+
+[connection signal="pressed" from="Panel/CenterContainer/Control/MarginedButtonsContainer/ButtonsContainer/HostJoinButtonsContainer/JoinButton" to="." method="_on_JoinButton_pressed"]
+[connection signal="pressed" from="Panel/CenterContainer/BottomContainer/BackButton" to="." method="_on_BackButton_pressed"]

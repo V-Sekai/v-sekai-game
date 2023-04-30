@@ -1,0 +1,139 @@
+[gd_scene load_steps=3 format=3 uid="uid://btqssk3vbbpg"]
+
+[ext_resource type="Script" path="res://addons/vsk_menu/vr_setup.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://cogvc7mlmr810" path="res://addons/vsk_menu/vsk_button.tscn" id="2"]
+
+[node name="VRSetup" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+movement_orientation_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/MovementOrientationContainer/MovementOrientation")
+turning_mode_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/TurningMode/TurningMode")
+custom_player_height_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/PlayerHeightContainer/PlayerHeightSpinbox")
+movement_type_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/MovementType/MovementType")
+restart_notification_nodepath = NodePath("Panel/CenterContainer/RestartRequired")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="CenterContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+alignment = 1
+
+[node name="RestartRequired" type="Label" parent="Panel/CenterContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+text = "TR_MENU_RESTART_REQUIRED"
+
+[node name="Control" type="HBoxContainer" parent="Panel/CenterContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="BlankSpaceLeft" type="Control" parent="Panel/CenterContainer/Control"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.25
+
+[node name="ButtonsContainer" type="VBoxContainer" parent="Panel/CenterContainer/Control"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+
+[node name="MovementOrientationContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="MovementOrientationLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/MovementOrientationContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "TR_MENU_VR_MOVEMENT_ORIENTATION"
+
+[node name="MovementOrientation" type="MenuButton" parent="Panel/CenterContainer/Control/ButtonsContainer/MovementOrientationContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+flat = false
+
+[node name="TurningMode" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="TurningModeLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/TurningMode"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "TR_MENU_VR_TURNING_MODE"
+
+[node name="TurningMode" type="MenuButton" parent="Panel/CenterContainer/Control/ButtonsContainer/TurningMode"]
+layout_mode = 2
+size_flags_horizontal = 3
+flat = false
+
+[node name="PlayerHeightContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="PlayerHeightLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/PlayerHeightContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "TR_MENU_VR_PLAYER_HEIGHT"
+
+[node name="PlayerHeightSpinbox" type="SpinBox" parent="Panel/CenterContainer/Control/ButtonsContainer/PlayerHeightContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 0.5
+max_value = 2.8
+step = 0.01
+value = 1.0
+
+[node name="MovementType" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="MovementTypeLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/MovementType"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "TR_MENU_VR_MOVEMENT_TYPE"
+
+[node name="MovementType" type="MenuButton" parent="Panel/CenterContainer/Control/ButtonsContainer/MovementType"]
+layout_mode = 2
+size_flags_horizontal = 3
+flat = false
+
+[node name="StatusContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="StatusLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/StatusContainer"]
+layout_mode = 2
+
+[node name="BlankSpaceRight" type="Control" parent="Panel/CenterContainer/Control"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.25
+
+[node name="BottomContainer" type="HBoxContainer" parent="Panel/CenterContainer"]
+layout_mode = 2
+
+[node name="BackButton" parent="Panel/CenterContainer/BottomContainer" instance=ExtResource("2")]
+layout_mode = 2
+text = "TR_MENU_BACK"
+
+[connection signal="value_changed" from="Panel/CenterContainer/Control/ButtonsContainer/PlayerHeightContainer/PlayerHeightSpinbox" to="." method="_on_PlayerHeightSpinbox_value_changed"]
+[connection signal="pressed" from="Panel/CenterContainer/BottomContainer/BackButton" to="." method="_on_BackButton_pressed"]

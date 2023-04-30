@@ -1,0 +1,116 @@
+[gd_scene load_steps=19 format=3 uid="uid://bo26j15q6it62"]
+
+[ext_resource type="PackedScene" uid="uid://cehyoeokgdutf" path="res://addons/vsk_avatar/import/animations/xbot_animations.gltf" id="1"]
+[ext_resource type="AnimationNodeBlendTree" uid="uid://ctxvockyck2j8" path="res://addons/vsk_avatar/animation/default_avatar_tree.tres" id="2"]
+[ext_resource type="Script" path="res://addons/vsk_avatar/avatar_default_driver.gd" id="3"]
+[ext_resource type="Script" path="res://addons/vsk_avatar/vsk_avatar_definition.gd" id="5"]
+
+[sub_resource type="Animation" id="Animation_qsjud"]
+resource_name = "DefaultPose"
+length = 0.001
+
+[sub_resource type="Animation" id="Animation_wq07x"]
+resource_name = "Fist"
+length = 0.001
+
+[sub_resource type="Animation" id="Animation_cvg6v"]
+resource_name = "Gun"
+length = 0.001
+
+[sub_resource type="Animation" id="Animation_awxox"]
+resource_name = "MiddleFinger"
+length = 0.001
+
+[sub_resource type="Animation" id="Animation_tjvgy"]
+resource_name = "Neutral"
+length = 0.001
+
+[sub_resource type="Animation" id="Animation_a81n0"]
+resource_name = "OKSign"
+length = 0.001
+
+[sub_resource type="Animation" id="Animation_pjs70"]
+resource_name = "Open"
+length = 0.001
+
+[sub_resource type="Animation" id="Animation_t3m4b"]
+resource_name = "Point"
+length = 0.001
+
+[sub_resource type="Animation" id="Animation_5x3s4"]
+resource_name = "RockAndRoll"
+length = 0.001
+
+[sub_resource type="Animation" id="Animation_xxeid"]
+resource_name = "ThumbsUp"
+length = 0.001
+
+[sub_resource type="Animation" id="Animation_cjjii"]
+resource_name = "Victory"
+length = 0.001
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_lg05d"]
+_data = {
+"DefaultPose": SubResource("Animation_qsjud"),
+"Fist": SubResource("Animation_wq07x"),
+"Gun": SubResource("Animation_cvg6v"),
+"MiddleFinger": SubResource("Animation_awxox"),
+"Neutral": SubResource("Animation_tjvgy"),
+"OKSign": SubResource("Animation_a81n0"),
+"Open": SubResource("Animation_pjs70"),
+"Point": SubResource("Animation_t3m4b"),
+"RockAndRoll": SubResource("Animation_5x3s4"),
+"ThumbsUp": SubResource("Animation_xxeid"),
+"Victory": SubResource("Animation_cjjii")
+}
+
+[sub_resource type="AnimationNodeStateMachinePlayback" id="2"]
+
+[sub_resource type="AnimationNodeStateMachinePlayback" id="AnimationNodeStateMachinePlayback_njr8u"]
+
+[node name="AnimationTreeTest" type="Node3D"]
+script = ExtResource("5")
+skeleton_path = NodePath("xbot_animations/Armature/Skeleton")
+
+[node name="xbot_animations" parent="." instance=ExtResource("1")]
+
+[node name="AnimationPlayer" parent="xbot_animations" index="1"]
+libraries = {
+"": SubResource("AnimationLibrary_lg05d")
+}
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+tree_root = ExtResource("2")
+anim_player = NodePath("../xbot_animations/AnimationPlayer")
+active = true
+parameters/LeftHandBlend/blend_amount = 1.0
+parameters/LeftHandStateMachine/playback = SubResource("2")
+parameters/LeftHandStateMachine/conditions/fist = false
+parameters/LeftHandStateMachine/conditions/gun = false
+parameters/LeftHandStateMachine/conditions/neutral = false
+parameters/LeftHandStateMachine/conditions/ok_sign = false
+parameters/LeftHandStateMachine/conditions/open = false
+parameters/LeftHandStateMachine/conditions/point = false
+parameters/LeftHandStateMachine/conditions/thumbs_up = false
+parameters/LeftHandStateMachine/conditions/victory = false
+parameters/RightHandBlend/blend_amount = 1.0
+parameters/RightHandStateMachine/playback = SubResource("AnimationNodeStateMachinePlayback_njr8u")
+parameters/RightHandStateMachine/conditions/fist = false
+parameters/RightHandStateMachine/conditions/gun = false
+parameters/RightHandStateMachine/conditions/neutral = false
+parameters/RightHandStateMachine/conditions/ok_sign = false
+parameters/RightHandStateMachine/conditions/open = false
+parameters/RightHandStateMachine/conditions/point = false
+parameters/RightHandStateMachine/conditions/thumbs_up = false
+parameters/RightHandStateMachine/conditions/victory = false
+
+[node name="AnimationTreeDriver" type="Node" parent="."]
+script = ExtResource("3")
+anim_tree = NodePath("../AnimationTree")
+left_hand_gesture_id = 5
+right_hand_gesture_id = 3
+
+[node name="Camera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3, 1)
+
+[editable path="xbot_animations"]

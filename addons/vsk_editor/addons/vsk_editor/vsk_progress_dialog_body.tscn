@@ -1,0 +1,41 @@
+[gd_scene load_steps=2 format=3 uid="uid://fw50jktro3bx"]
+
+[ext_resource type="Script" path="res://addons/vsk_editor/vsk_progress_dialog_body.gd" id="1"]
+
+[node name="ProgressDialogBody" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1")
+progress_label_nodepath = NodePath("MainVBox/ProgressLabel")
+progress_bar_nodepath = NodePath("MainVBox/ProgressBar")
+cancel_button_nodepath = NodePath("MainVBox/FooterHBox/FooterVBox/CancelButton")
+
+[node name="MainVBox" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+
+[node name="ProgressLabel" type="Label" parent="MainVBox"]
+layout_mode = 2
+text = "Progress: "
+
+[node name="ProgressBar" type="ProgressBar" parent="MainVBox"]
+layout_mode = 2
+
+[node name="FooterHBox" type="HBoxContainer" parent="MainVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+
+[node name="FooterVBox" type="VBoxContainer" parent="MainVBox/FooterHBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="CancelButton" type="Button" parent="MainVBox/FooterHBox/FooterVBox"]
+layout_mode = 2
+text = "Cancel"
+
+[connection signal="pressed" from="MainVBox/FooterHBox/FooterVBox/CancelButton" to="." method="_on_CancelButton_pressed"]

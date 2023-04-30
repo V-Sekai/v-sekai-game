@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/ingydotnet/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/V-Sekai/sar1_screenshot_manager
+	branch = main
+	commit = ad8f190834d0969e2c3d38765e041e6472bc1950
+	parent = 58c68792d985dd148894f990b96ca4c9056acbf9
+	method = merge
+	cmdver = 0.4.6

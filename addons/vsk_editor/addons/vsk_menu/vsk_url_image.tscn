@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://d1cwhvduhhhmt"]
+
+[ext_resource type="Script" path="res://addons/textureRectUrl/node_textureRectUrl.gd" id="1"]
+
+[node name="VSKURLImage" type="TextureRect"]
+stretch_mode = 6
+script = ExtResource("1")

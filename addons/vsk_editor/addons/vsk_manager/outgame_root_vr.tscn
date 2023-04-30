@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://bv8eghx4dh2pe"]
+
+[ext_resource type="PackedScene" uid="uid://dhpvk1qajtjsy" path="res://addons/sar1_vr_manager/vr_origin.tscn" id="1"]
+[ext_resource type="Script" path="res://addons/vsk_manager/outgame_root_vr.gd" id="2"]
+
+[node name="OutgameRootVR" type="Node3D"]
+script = ExtResource("2")
+origin_nodepath = NodePath("ARVROrigin")
+
+[node name="ARVROrigin" parent="." instance=ExtResource("1")]

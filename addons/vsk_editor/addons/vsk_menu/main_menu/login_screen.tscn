@@ -1,0 +1,123 @@
+[gd_scene load_steps=3 format=3 uid="uid://db4etefs2jvrc"]
+
+[ext_resource type="Script" path="res://addons/vsk_menu/login_screen.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://qrrk0xuopfpw" path="res://addons/vsk_menu/password_input.tscn" id="2"]
+
+[node name="LoginScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+username_or_email_input_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/UsernameEmailContainer/UsernameEmailLineEdit")
+password_input_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/PasswordContainer/PasswordInput/PasswordLineEdit")
+status_label_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/StatusContainer/StatusLabel")
+login_cancel_button_input_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/ButtonsContainer/LoginCancelButton")
+default_focus = NodePath("Panel/CenterContainer/Control/ButtonsContainer/UsernameEmailContainer/UsernameEmailLineEdit")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="CenterContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+alignment = 1
+
+[node name="Control" type="HBoxContainer" parent="Panel/CenterContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="BlankSpaceLeft" type="Control" parent="Panel/CenterContainer/Control"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ButtonsContainer" type="VBoxContainer" parent="Panel/CenterContainer/Control"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.0
+alignment = 1
+
+[node name="UsernameEmailContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="UsernameEmailLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/UsernameEmailContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "TR_MENU_LOGIN_USERNAME_OR_EMAIL"
+
+[node name="UsernameEmailLineEdit" type="LineEdit" parent="Panel/CenterContainer/Control/ButtonsContainer/UsernameEmailContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_length = 4096
+
+[node name="PasswordContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="PasswordLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/PasswordContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "TR_MENU_LOGIN_PASSWORD"
+
+[node name="PasswordInput" parent="Panel/CenterContainer/Control/ButtonsContainer/PasswordContainer" instance=ExtResource("2")]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="StatusContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="StatusLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/StatusContainer"]
+layout_mode = 2
+
+[node name="ButtonsContainer" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="LoginCancelButton" type="Button" parent="Panel/CenterContainer/Control/ButtonsContainer/ButtonsContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+disabled = true
+text = "TR_MENU_LOGIN_LOGIN"
+
+[node name="CreateAccountButton" type="Button" parent="Panel/CenterContainer/Control/ButtonsContainer/ButtonsContainer"]
+visible = false
+layout_mode = 2
+text = "TR_MENU_LOGIN_CREATE_ACCOUNT"
+
+[node name="BlankSpaceRight" type="Control" parent="Panel/CenterContainer/Control"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="BottomContainer" type="HBoxContainer" parent="Panel/CenterContainer"]
+layout_mode = 2
+
+[node name="BackButton" type="Button" parent="Panel/CenterContainer/BottomContainer"]
+layout_mode = 2
+text = "TR_MENU_BACK"
+
+[connection signal="text_changed" from="Panel/CenterContainer/Control/ButtonsContainer/UsernameEmailContainer/UsernameEmailLineEdit" to="." method="_on_UsernameEmailLineEdit_text_changed"]
+[connection signal="text_changed" from="Panel/CenterContainer/Control/ButtonsContainer/PasswordContainer/PasswordInput" to="." method="_on_PasswordInput_text_changed"]
+[connection signal="button_up" from="Panel/CenterContainer/Control/ButtonsContainer/PasswordContainer/PasswordInput/PasswordHideToggle" to="." method="_on_password_hide_toggle_button_up"]
+[connection signal="button_up" from="Panel/CenterContainer/Control/ButtonsContainer/ButtonsContainer/LoginCancelButton" to="." method="_on_login_cancel_button_button_up"]
+[connection signal="pressed" from="Panel/CenterContainer/BottomContainer/BackButton" to="." method="_on_BackButton_pressed"]
+
+[editable path="Panel/CenterContainer/Control/ButtonsContainer/PasswordContainer/PasswordInput"]

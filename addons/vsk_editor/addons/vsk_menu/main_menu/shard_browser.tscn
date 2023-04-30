@@ -1,0 +1,120 @@
+[gd_scene load_steps=3 format=3 uid="uid://s44dpwqo6eya"]
+
+[ext_resource type="Script" path="res://addons/vsk_menu/shard_browser.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://cogvc7mlmr810" path="res://addons/vsk_menu/vsk_button.tscn" id="2"]
+
+[node name="ShardBrowser" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1")
+shard_list_nodepath = NodePath("Panel/CenterContainer/Control/Container/Control/Container/Control/ShardBrowser/ShardList")
+shard_browser_nodepath = NodePath("Panel/CenterContainer/Control/Container/Control/Container/Control/ShardBrowser")
+info_label_nodepath = NodePath("Panel/CenterContainer/Control/Container/Control/Container/Control/InfoLabel")
+refresh_button_nodepath = NodePath("Panel/CenterContainer/Control/Container/Control/Container/Footer/RefreshButton")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="CenterContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+alignment = 1
+
+[node name="Control" type="Control" parent="Panel/CenterContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Container" type="VBoxContainer" parent="Panel/CenterContainer/Control"]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Label" type="Label" parent="Panel/CenterContainer/Control/Container"]
+layout_mode = 2
+text = "TR_MENU_SHARD_SERVER_BROWSER"
+
+[node name="Control" type="Control" parent="Panel/CenterContainer/Control/Container"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Container" type="VBoxContainer" parent="Panel/CenterContainer/Control/Container/Control"]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+
+[node name="Header" type="HBoxContainer" parent="Panel/CenterContainer/Control/Container/Control/Container"]
+layout_mode = 2
+
+[node name="MapLabel" type="Label" parent="Panel/CenterContainer/Control/Container/Control/Container/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 6
+text = "TR_MENU_MAP"
+
+[node name="PlayerCountLabel" type="Label" parent="Panel/CenterContainer/Control/Container/Control/Container/Header"]
+layout_mode = 2
+size_flags_vertical = 6
+text = "TR_MENU_PLAYER_COUNT"
+
+[node name="Control" type="Control" parent="Panel/CenterContainer/Control/Container/Control/Container"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ShardBrowser" type="ScrollContainer" parent="Panel/CenterContainer/Control/Container/Control/Container/Control"]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ShardList" type="VBoxContainer" parent="Panel/CenterContainer/Control/Container/Control/Container/Control/ShardBrowser"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="InfoLabel" type="Label" parent="Panel/CenterContainer/Control/Container/Control/Container/Control"]
+visible = false
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+text = "Searching..."
+
+[node name="Footer" type="HBoxContainer" parent="Panel/CenterContainer/Control/Container/Control/Container"]
+layout_mode = 2
+alignment = 2
+
+[node name="DirectIPButton" parent="Panel/CenterContainer/Control/Container/Control/Container/Footer" instance=ExtResource("2")]
+layout_mode = 2
+text = "TR_MENU_DIRECT_IP"
+
+[node name="RefreshButton" parent="Panel/CenterContainer/Control/Container/Control/Container/Footer" instance=ExtResource("2")]
+layout_mode = 2
+text = "TR_MENU_REFRESH"
+
+[node name="BottomContainer" type="HBoxContainer" parent="Panel/CenterContainer"]
+layout_mode = 2
+
+[node name="BackButton" parent="Panel/CenterContainer/BottomContainer" instance=ExtResource("2")]
+layout_mode = 2
+text = "TR_MENU_BACK"
+
+[connection signal="pressed" from="Panel/CenterContainer/Control/Container/Control/Container/Footer/DirectIPButton" to="." method="_on_DirectIPButton_pressed"]
+[connection signal="pressed" from="Panel/CenterContainer/Control/Container/Control/Container/Footer/RefreshButton" to="." method="_on_RefreshButton_pressed"]
+[connection signal="pressed" from="Panel/CenterContainer/BottomContainer/BackButton" to="." method="_on_BackButton_pressed"]

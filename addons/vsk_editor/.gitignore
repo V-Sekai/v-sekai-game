@@ -1,0 +1,19 @@
+logs
+Thumbs.db
+.DS_Store
+*.pyc
+.*.swp
+.*.swo
+.vscode/
+build
+# Godot 4+ specific ignores
+.godot/
+# Unidot trash
+temp_*
+_temp_*
+_sentinel_file.png*
+*asset_database.tres
+
+vsk_default/test/results/
+
+TEST.xml

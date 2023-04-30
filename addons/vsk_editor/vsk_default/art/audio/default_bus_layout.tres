@@ -1,0 +1,38 @@
+[gd_resource type="AudioBusLayout" load_steps=3 format=3 uid="uid://q5teiau5gsxp"]
+
+[sub_resource type="AudioEffectCapture" id="AudioEffectCapture_ydspc"]
+resource_name = "EchoCancellation"
+
+[sub_resource type="AudioEffectCapture" id="AudioEffectCapture_7d00x"]
+resource_name = "Capture"
+
+[resource]
+bus/0/volume_db = -10.2192
+bus/0/effect/0/effect = SubResource("AudioEffectCapture_ydspc")
+bus/0/effect/0/enabled = true
+bus/1/name = &"Mic"
+bus/1/solo = false
+bus/1/mute = true
+bus/1/bypass_fx = false
+bus/1/volume_db = 0.0
+bus/1/send = &"MicInput"
+bus/1/effect/0/effect = SubResource("AudioEffectCapture_7d00x")
+bus/1/effect/0/enabled = true
+bus/2/name = &"MusicOutput"
+bus/2/solo = false
+bus/2/mute = false
+bus/2/bypass_fx = false
+bus/2/volume_db = 0.0
+bus/2/send = &"Master"
+bus/3/name = &"MenuOutput"
+bus/3/solo = false
+bus/3/mute = false
+bus/3/bypass_fx = false
+bus/3/volume_db = 0.0
+bus/3/send = &"Master"
+bus/4/name = &"Spatializer"
+bus/4/solo = false
+bus/4/mute = false
+bus/4/bypass_fx = false
+bus/4/volume_db = 0.0
+bus/4/send = &"Master"

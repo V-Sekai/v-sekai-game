@@ -1,0 +1,36 @@
+[gd_scene load_steps=3 format=3 uid="uid://cl2v14xq56f3o"]
+
+[ext_resource type="Script" path="res://addons/vsk_menu/vsk_user_content_grid.gd" id="1_8qdge"]
+[ext_resource type="Script" path="res://addons/vsk_menu/vsk_responsive_grid_container.gd" id="2_1x1gg"]
+
+[node name="UserContentGrid" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+script = ExtResource("1_8qdge")
+grid_container_path = NodePath("ScrollContainer/GridContainer")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+follow_focus = true
+metadata/_edit_layout_mode = 1
+
+[node name="GridContainer" type="GridContainer" parent="ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+columns = 3
+script = ExtResource("2_1x1gg")
+width_min = 512.0
+
+[connection signal="scroll_ended" from="ScrollContainer" to="." method="_on_scroll_ended"]

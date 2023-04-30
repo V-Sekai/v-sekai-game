@@ -1,0 +1,40 @@
+[gd_scene load_steps=4 format=3 uid="uid://ba16kkru7l73i"]
+
+[ext_resource type="PackedScene" uid="uid://cogvc7mlmr810" path="res://addons/vsk_menu/vsk_button.tscn" id="1"]
+[ext_resource type="Script" path="res://addons/vsk_menu/main_menu/shard_button.gd" id="2"]
+
+[sub_resource type="StyleBoxFlat" id="1"]
+draw_center = false
+border_width_bottom = 1
+
+[node name="ShardButton" instance=ExtResource("1")]
+custom_minimum_size = Vector2(1152, 50)
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = -9.0
+offset_right = 0.0
+offset_bottom = 9.0
+theme_override_styles/normal = SubResource("1")
+script = ExtResource("2")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." index="1"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="NameLabel" type="Label" parent="HBoxContainer" index="0"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 7
+clip_text = true
+
+[node name="PlayerCountLabel" type="Label" parent="HBoxContainer" index="1"]
+layout_mode = 2
+size_flags_vertical = 6
+text = "0/0"

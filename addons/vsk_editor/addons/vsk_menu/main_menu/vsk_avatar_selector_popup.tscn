@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://rgidoa3biuq8"]
+
+[ext_resource type="Script" path="res://addons/vsk_menu/main_menu/vsk_user_content_selector_popup.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://d0o3glckp482r" path="res://addons/vsk_menu/vsk_user_content_selector.tscn" id="2"]
+
+[node name="VSKAvatarSelectorPopup" type="AcceptDialog"]
+title = "Select Avatar..."
+script = ExtResource("1")
+
+[node name="VSKUserContentSelector" parent="." instance=ExtResource("2")]
+load_content_on_creation = false
+
+[connection signal="about_to_popup" from="." to="VSKUserContentSelector" method="_reload_content"]
+[connection signal="uro_id_selected" from="VSKUserContentSelector" to="." method="_on_uro_id_selected"]

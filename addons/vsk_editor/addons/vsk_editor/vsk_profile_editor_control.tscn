@@ -1,0 +1,58 @@
+[gd_scene load_steps=3 format=3 uid="uid://drtdslcxgyc37"]
+
+[ext_resource type="Script" path="res://addons/vsk_editor/vsk_profile_editor_control.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://cl2v14xq56f3o" path="res://addons/vsk_menu/vsk_user_content_grid.tscn" id="2"]
+
+[node name="ProfileEditorControl" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1")
+profile_container = NodePath("TabContainer/Profile/VBoxContainer")
+tab_container = NodePath("TabContainer")
+profile_tab = NodePath("TabContainer/Profile")
+avatars_tab = NodePath("TabContainer/Avatars")
+maps_tab = NodePath("TabContainer/Maps")
+avatars_grid = NodePath("TabContainer/Avatars/AvatarGrid")
+maps_grid = NodePath("TabContainer/Maps/MapGrid")
+
+[node name="TabContainer" type="TabContainer" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+tab_alignment = 1
+
+[node name="Profile" type="Control" parent="TabContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Profile"]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 32.0
+offset_right = -32.0
+offset_bottom = -32.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+
+[node name="Avatars" type="Control" parent="TabContainer"]
+visible = false
+layout_mode = 2
+
+[node name="AvatarGrid" parent="TabContainer/Avatars" instance=ExtResource("2")]
+layout_mode = 1
+metadata/_edit_layout_mode = 1
+
+[node name="Maps" type="Control" parent="TabContainer"]
+visible = false
+layout_mode = 2
+
+[node name="MapGrid" parent="TabContainer/Maps" instance=ExtResource("2")]
+layout_mode = 1
+metadata/_edit_layout_mode = 1
+
+[connection signal="tab_changed" from="TabContainer" to="." method="_on_tab_changed"]

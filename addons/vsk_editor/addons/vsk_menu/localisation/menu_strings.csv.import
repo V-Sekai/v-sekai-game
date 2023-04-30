@@ -1,0 +1,17 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://vjxjiru2r1jm"
+
+[deps]
+
+files=["res://addons/vsk_menu/localisation/menu_strings.en.translation", "res://addons/vsk_menu/localisation/menu_strings.es.translation"]
+
+source_file="res://addons/vsk_menu/localisation/menu_strings.csv"
+dest_files=["res://addons/vsk_menu/localisation/menu_strings.en.translation", "res://addons/vsk_menu/localisation/menu_strings.es.translation"]
+
+[params]
+
+compress=true
+delimiter=0
