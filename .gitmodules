@@ -1,7 +1,3 @@
-[submodule "addons/gd_util"]
-	path = addons/gd_util
-	url = https://github.com/V-Sekai/gd_util
-	branch = godot4
 [submodule "addons/godot_uro"]
 	path = addons/godot_uro
 	url = https://github.com/V-Sekai/godot_uro
