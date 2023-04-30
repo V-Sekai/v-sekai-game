@@ -46,10 +46,6 @@
 	path = addons/vsk_map
 	url = https://github.com/V-Sekai/vsk_map
 	branch = godot4
-[submodule "addons/vsk_vrm_avatar_tool"]
-	path = addons/vsk_vrm_avatar_tool
-	url = https://github.com/V-Sekai/vsk_vrm_avatar_tool
-	branch = godot4
 [submodule "addons/vrm"]
 	path = addons/vrm
 	url = https://github.com/V-Sekai/godot-vrm
