@@ -82,9 +82,6 @@
 	path = addons/vsk_vrm_avatar_tool
 	url = https://github.com/V-Sekai/vsk_vrm_avatar_tool
 	branch = godot4
-[submodule "addons/Godot-MToon-Shader"]
-	path = addons/Godot-MToon-Shader
-	url = https://github.com/V-Sekai/Godot-MToon-Shader
 [submodule "addons/vrm"]
 	path = addons/vrm
 	url = https://github.com/V-Sekai/godot-vrm
