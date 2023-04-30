@@ -12,14 +12,14 @@ config_version=5
 
 config/name="V-Sekai Game"
 run/main_scene="res://vsk_default/scenes/main_scene.tscn"
-config/features=PackedStringArray("4.0")
+config/quit_on_go_back=false
+config/features=PackedStringArray("4.0", "Double Precision")
 run/flush_stdout_on_print.debug=false
 boot_splash/bg_color=Color(0.227451, 0.054902, 0.054902, 1)
 boot_splash/image="res://splash.png"
 boot_splash/fullsize=false
 config/icon="res://vsk_default/icon/v_sekai_logo.png"
 config/windows_native_icon="res://vsk_default/icon/v-sekai.ico"
-config/quit_on_go_back=false
 config/loading_scene="res://vsk_default/scenes/network_lobby.tscn"
 
 [assets]
@@ -116,9 +116,9 @@ settings/enabled=true
 window/size/viewport_width=1280
 window/size/viewport_height=768
 window/size/resizable=false
-window/vsync/vsync_mode=2
 window/stretch/mode="viewport"
 window/stretch/aspect="keep_height"
+window/vsync/vsync_mode=2
 window/vsync/vsync_via_compositor=true
 
 [editor]
@@ -516,6 +516,7 @@ config/use_threaded_received_server_state_func=true
 
 [rendering]
 
+textures/canvas_textures/default_texture_filter=2
 driver/threads/thread_model=2
 lights_and_shadows/use_physical_light_units=true
 reflections/reflection_atlas/reflection_size=1024
@@ -528,7 +529,6 @@ occlusion_culling/use_occlusion_culling=true
 mesh_lod/lod_change/threshold_pixels=0.8
 vrs/mode=2
 vrs/texture="res://vsk_default/core/vrs_texture.png"
-textures/canvas_textures/default_texture_filter=2
 textures/vram_compression/import_bptc=true
 anti_aliasing/quality/msaa=1
 batching/options/use_batching=true
