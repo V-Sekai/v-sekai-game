@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/ingydotnet/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/V-Sekai/sar1_graphics_manager
+	branch = main
+	commit = dcac9331fd50ef6b828c89ae0fa81367183a911c
+	parent = 29ea728a7089dd24d32d9d5d447e9d3df96587bf
+	method = merge
+	cmdver = 0.4.6
