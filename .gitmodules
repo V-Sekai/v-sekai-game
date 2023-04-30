@@ -10,10 +10,6 @@
 	path = addons/vsk_editor
 	url = https://github.com/V-Sekai/vsk_editor
 	branch = godot4
-[submodule "addons/vsk_map"]
-	path = addons/vsk_map
-	url = https://github.com/V-Sekai/vsk_map
-	branch = godot4
 [submodule "addons/unidot_importer"]
 	path = addons/unidot_importer
 	url = https://github.com/V-Sekai/unidot_importer
