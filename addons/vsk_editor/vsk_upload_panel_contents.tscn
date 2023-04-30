@@ -1,0 +1,113 @@
+[gd_scene load_steps=3 format=3 uid="uid://cwwgmr7u4e85f"]
+
+[ext_resource type="Script" path="res://addons/vsk_editor/vsk_upload_panel_contents.gd" id="1"]
+[ext_resource type="Script" path="res://addons/textureRectUrl/node_textureRectUrl.gd" id="2"]
+
+[node name="UploadPanelContents" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1")
+name_line_edit_path = NodePath("MarginContainer/Content/Editable/TextFields/NameContainer/NameEditField")
+description_text_edit_path = NodePath("MarginContainer/Content/Editable/TextFields/DescriptionContainer/DescriptionEditField")
+saved_preview_texture_rect_path = NodePath("MarginContainer/Content/Editable/SupplementaryFields/PreviewPanel/PreviewMargin/SavedPreviewTextureRect")
+new_preview_texture_rect_path = NodePath("MarginContainer/Content/Editable/SupplementaryFields/PreviewPanel/PreviewMargin/NewPreviewTextureRect")
+update_preview_checkbox_path = NodePath("MarginContainer/Content/Editable/SupplementaryFields/FlagsContainer/UpdatePreviewCheckbox")
+is_public_checkbox_path = NodePath("MarginContainer/Content/Editable/SupplementaryFields/FlagsContainer/IsPublicCheckbox")
+submit_button_path = NodePath("MarginContainer/Content/SubmitButton")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Content" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="Editable" type="HBoxContainer" parent="MarginContainer/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="TextFields" type="VBoxContainer" parent="MarginContainer/Content/Editable"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="NameContainer" type="VBoxContainer" parent="MarginContainer/Content/Editable/TextFields"]
+layout_mode = 2
+
+[node name="NameLabel" type="Label" parent="MarginContainer/Content/Editable/TextFields/NameContainer"]
+layout_mode = 2
+text = "Name:"
+
+[node name="NameEditField" type="LineEdit" parent="MarginContainer/Content/Editable/TextFields/NameContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+
+[node name="DescriptionContainer" type="VBoxContainer" parent="MarginContainer/Content/Editable/TextFields"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="DescriptionLabel" type="Label" parent="MarginContainer/Content/Editable/TextFields/DescriptionContainer"]
+layout_mode = 2
+text = "Description:"
+
+[node name="DescriptionEditField" type="TextEdit" parent="MarginContainer/Content/Editable/TextFields/DescriptionContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="SupplementaryFields" type="VBoxContainer" parent="MarginContainer/Content/Editable"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PreviewPanel" type="Panel" parent="MarginContainer/Content/Editable/SupplementaryFields"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="PreviewMargin" type="MarginContainer" parent="MarginContainer/Content/Editable/SupplementaryFields/PreviewPanel"]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="NewPreviewTextureRect" type="TextureRect" parent="MarginContainer/Content/Editable/SupplementaryFields/PreviewPanel/PreviewMargin"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SavedPreviewTextureRect" type="TextureRect" parent="MarginContainer/Content/Editable/SupplementaryFields/PreviewPanel/PreviewMargin"]
+visible = false
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+script = ExtResource("2")
+
+[node name="FlagsContainer" type="GridContainer" parent="MarginContainer/Content/Editable/SupplementaryFields"]
+layout_mode = 2
+size_flags_vertical = 3
+columns = 2
+
+[node name="UpdatePreviewCheckbox" type="CheckBox" parent="MarginContainer/Content/Editable/SupplementaryFields/FlagsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+text = "Update Preview"
+
+[node name="IsPublicCheckbox" type="CheckBox" parent="MarginContainer/Content/Editable/SupplementaryFields/FlagsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Is Public"
+
+[node name="SubmitButton" type="Button" parent="MarginContainer/Content"]
+layout_mode = 2
+disabled = true
+text = "Submit"
+
+[connection signal="text_changed" from="MarginContainer/Content/Editable/TextFields/NameContainer/NameEditField" to="." method="_on_NameEditField_text_changed"]
+[connection signal="toggled" from="MarginContainer/Content/Editable/SupplementaryFields/FlagsContainer/UpdatePreviewCheckbox" to="." method="_on_update_preview_checkbox_toggled"]
+[connection signal="pressed" from="MarginContainer/Content/SubmitButton" to="." method="_on_SubmitButton_pressed"]
