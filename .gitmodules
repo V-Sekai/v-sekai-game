@@ -1,7 +1,3 @@
-[submodule "addons/line_renderer"]
-	path = addons/line_renderer
-	url = https://github.com/V-Sekai/line_renderer
-	branch = godot4
 [submodule "addons/math_util"]
 	path = addons/math_util
 	url = https://github.com/V-Sekai/math_util
