@@ -13,13 +13,10 @@
         "cwd": "${workspaceFolder}/vsk_godot"
       },
       "command": [
-        "scons verbose=no warnings=no werror=yes compiledb=yes precision=double dev_build=no optimize=speed_trace use_static_cpp=true target=editor"
+        "scons verbose=no warnings=no werror=yes precision=double use_llvm=yes use_mingw=yes LINKFLAGS='-Wl,-pdb=' CCFLAGS='-g -gcodeview' compiledb=yes dev_build=no optimize=speed_trace use_static_cpp=true target=editor"
       ],
       "problemMatcher": [],
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
-    }
+      "group": "build"
+    },
   ]
 }

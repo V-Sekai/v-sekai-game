@@ -14,9 +14,9 @@
       "name": "Build the editor",
       "type": "lldb",
       "request": "launch",
-      "args": ["--path", "v-sekai-game", "-e"],
+      // "args": ["--path", "v-sekai-game", "-e"],
       "cwd": "${workspaceFolder}",
-      "program": "${workspaceFolder}/vsk_godot/bin/godot.macos.editor.double.x86_64",
+      "program": "${workspaceFolder}/vsk_godot/bin/godot.windows.editor.double.x86_64.llvm.exe",
       "preLaunchTask": "Godot Engine"
     }
   ]
