@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://chb8tq62aj2b2"
-path="res://.godot/imported/transition.svg-20a1a52a85a71c731b2386952d47b2f7.ctex"
+uid="uid://b3m20gsesp4i0"
+path="res://.godot/imported/animation_player_state.svg-1acd03c414690dd7446458c5293935cb.ctex"
 metadata={
 "editor_scale": 2.0,
 "has_editor_variant": true,
@@ -12,8 +12,8 @@ metadata={
 
 [deps]
 
-source_file="res://addons/godot_state_charts/transition.svg"
-dest_files=["res://.godot/imported/transition.svg-20a1a52a85a71c731b2386952d47b2f7.ctex"]
+source_file="res://addons/godot_state_charts/animation_player_state.svg"
+dest_files=["res://.godot/imported/animation_player_state.svg-1acd03c414690dd7446458c5293935cb.ctex"]
 
 [params]
 
