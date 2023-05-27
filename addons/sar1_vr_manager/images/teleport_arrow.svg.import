@@ -3,16 +3,16 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://do8eyl0ysfw5u"
-path.s3tc="res://.godot/imported/teleport_arrow.svg-594bc0eae2f4163a536b28691b237f82.s3tc.ctex"
+path.etc2="res://.godot/imported/teleport_arrow.svg-594bc0eae2f4163a536b28691b237f82.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://addons/sar1_vr_manager/images/teleport_arrow.svg"
-dest_files=["res://.godot/imported/teleport_arrow.svg-594bc0eae2f4163a536b28691b237f82.s3tc.ctex"]
+dest_files=["res://.godot/imported/teleport_arrow.svg-594bc0eae2f4163a536b28691b237f82.etc2.ctex"]
 
 [params]
 

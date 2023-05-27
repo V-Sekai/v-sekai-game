@@ -3,16 +3,16 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://btj34xkl2mtb3"
-path.s3tc="res://.godot/imported/sky_celebration_main_room_Concrete_AlbedoTransparency.webp-79b46a75f944ca67b0fc09bc4d3e9c0e.s3tc.ctex"
+path.etc2="res://.godot/imported/sky_celebration_main_room_Concrete_AlbedoTransparency.webp-79b46a75f944ca67b0fc09bc4d3e9c0e.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://vsk_default/art/sky_celebration/sky_celebration_main_room_Concrete_AlbedoTransparency.webp"
-dest_files=["res://.godot/imported/sky_celebration_main_room_Concrete_AlbedoTransparency.webp-79b46a75f944ca67b0fc09bc4d3e9c0e.s3tc.ctex"]
+dest_files=["res://.godot/imported/sky_celebration_main_room_Concrete_AlbedoTransparency.webp-79b46a75f944ca67b0fc09bc4d3e9c0e.etc2.ctex"]
 
 [params]
 

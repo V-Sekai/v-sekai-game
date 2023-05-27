@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/uro_logo_32.png-cf68c49c603a03b7a37f08f977fe5
 
 [params]
 
-compress/mode=0
+compress/mode=4
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=1

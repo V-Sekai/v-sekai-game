@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/v_sekai_logo.png-bd0bace8e0655fcf5aca7e5efffb
 
 [params]
 
-compress/mode=0
+compress/mode=4
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=1

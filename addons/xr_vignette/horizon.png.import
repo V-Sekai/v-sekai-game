@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/horizon.png-fe4c2590b03a3e22cc29ed15e6747b6c.
 
 [params]
 
-compress/mode=0
+compress/mode=4
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=1

@@ -3,20 +3,19 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cjdhvcb8tulgj"
-path.s3tc="res://.godot/imported/groups_logo_no_bg.png-5461623a8ba84e1bd3da2fe40a93eb79.s3tc.ctex"
+path="res://.godot/imported/groups_logo_no_bg.png-5461623a8ba84e1bd3da2fe40a93eb79.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://vsk_default/icon/groups_logo_no_bg.png"
-dest_files=["res://.godot/imported/groups_logo_no_bg.png-5461623a8ba84e1bd3da2fe40a93eb79.s3tc.ctex"]
+dest_files=["res://.godot/imported/groups_logo_no_bg.png-5461623a8ba84e1bd3da2fe40a93eb79.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=4
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/hdr_compression=1
