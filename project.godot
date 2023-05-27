@@ -178,6 +178,22 @@ wav={
 scene={
 "gltf/embedded_image_handling": 2
 }
+cubemap_texture={
+"compress/mode": 4
+}
+cubemap_array_texture={
+"compress/mode": 4
+}
+2d_array_texture={
+"compress/mode": 4
+}
+3d_texture={
+"compress/mode": 4
+}
+animation_library={
+"animation/trimming": true,
+"gltf/embedded_image_handling": 2
+}
 
 [input]
 
