@@ -1,0 +1,22 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "options": {
+    "env": {
+      "RUST_LOG": "error",
+      "MVSQLITE_DATA_PLANE": "http://192.168.0.39:7000"
+    }
+  },
+  "configurations": [
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Launch Program",
+      "program": "${workspaceRoot}/vsk_godot/bin/godot.macos.editor.double.arm64",
+      "cwd": "${workspaceRoot}",
+      "args": ["--path", "vsk_game", "-e"],
+    },
+  ]
+}
