@@ -54,7 +54,7 @@ jobs:
             deploy-platform-target: editor
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
 
       # Need newer mesa for lavapipe to work properly.
       - name: Linux dependencies for tests
@@ -76,7 +76,7 @@ jobs:
 
       - name: Set up Emscripten latest
         if: ${{ matrix.platform == 'web' }}
-        uses: mymindstorm/setup-emsdk@v12
+        uses: mymindstorm/setup-emsdk@ab889da2abbcbb280f91ec4c215d3bb4f3a8f775 # v12
         with:
           version: ${{env.EM_VERSION}}
           actions-cache-folder: ${{env.EM_CACHE_FOLDER}}
@@ -90,13 +90,13 @@ jobs:
         uses: ./.github/actions/godot-deps
 
       - name: Set up .NET Sdk
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@aa983c550dfda0d1722b6ac6aed55724ffacc6d3 # v3.1.0
         if: ${{ matrix.build-mono }}
         with:
           dotnet-version: "6.0.x"
 
       - name: Setup GCC problem matcher
-        uses: ammaraskar/gcc-problem-matcher@master
+        uses: ammaraskar/gcc-problem-matcher@d1fed1fac9e94d30e23b5a82dba4e2963e71d2e7 # master
 
       - name: Compilation
         uses: ./.github/actions/godot-build
@@ -142,7 +142,7 @@ jobs:
 
       - name: Upload Godot Artifact Export
         if: ${{ matrix.deploy }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
         with:
           name: vsekai_game_${{ matrix.deploy-platform }}_x86_64
           path: |
@@ -217,7 +217,7 @@ jobs:
       # Checkout godot-cpp
       - name: Checkout godot-cpp
         if: ${{ matrix.godot-cpp-test }}
-        uses: actions/checkout@v3
+        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
         with:
           repository: godotengine/godot-cpp
           submodules: "recursive"
