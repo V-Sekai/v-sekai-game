@@ -17,6 +17,7 @@
       "program": "${workspaceRoot}/vsk_godot/bin/godot.macos.editor.double.arm64",
       "cwd": "${workspaceRoot}",
       "args": ["--path", "vsk_game", "-e"],
+      "preLaunchTask": "Godot Engine"
     },
   ]
 }
