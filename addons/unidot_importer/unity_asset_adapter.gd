@@ -21,39 +21,6 @@ const SHOULD_CONVERT_TO_GLB: bool = false
 var STUB_PNG_FILE: PackedByteArray = Marshalls.base64_to_raw(
 	"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQot" + "tAAAAABJRU5ErkJggg=="
 )
-var STUB_GLB_FILE: PackedByteArray = Marshalls.base64_to_raw(
-	(
-		"Z2xURgIAAACEAAAAcAAAAEpTT057ImFzc2V0Ijp7ImdlbmVyYXRvciI6IiIsInZlcnNpb24i"
-		+ "OiIyLjAifSwic2NlbmUiOjAsInNjZW5lcyI6W3sibmFtZSI6IlMiLCJub2RlcyI6WzBdfV0s"
-		+ "Im5vZGVzIjpbeyJuYW1lIjoiTiJ9XX0g"
-	)
-)
-var STUB_GLTF_FILE: PackedByteArray = (
-	(
-		'{"asset":{"generator":"","version":"2.0"},"scene":0,'
-		+ '"scenes":[{"name":"temp","nodes":[0]}],"nodes":[{"name":"temp"}]}'
-	)
-	. to_ascii_buffer()
-)
-var STUB_OBJ_FILE: PackedByteArray = "o a\nv 0 0 0\nf 1 1 1".to_ascii_buffer()
-var STUB_DAE_FILE: PackedByteArray = (
-	("""
-<?xml version="1.0" encoding="utf-8"?>
-<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4">
-  <library_visual_scenes>
-	<visual_scene id="A" name="A">
-	  <node id="a" name="a" type="NODE">
-		<matrix sid="transform">1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</matrix>
-	  </node>
-	</visual_scene>
-  </library_visual_scenes>
-  <scene>
-	<instance_visual_scene url="#A"/>
-  </scene>
-</COLLADA>
-""")
-	. to_ascii_buffer()
-)  # vscode syntax hack: "#"
 
 
 func write_sentinel_png(sentinel_filename: String):
@@ -181,12 +148,6 @@ class DefaultHandler:
 
 class ImageHandler:
 	extends AssetHandler
-	var STUB_PNG_FILE: PackedByteArray = PackedByteArray([])
-
-	func create_with_constant(stub_file: PackedByteArray):
-		var ret = self
-		ret.STUB_PNG_FILE = stub_file
-		return ret
 
 	func preprocess_asset(
 		pkgasset: Object,
@@ -531,12 +492,6 @@ class SceneHandler:
 
 class BaseModelHandler:
 	extends AssetHandler
-	var stub_file: PackedByteArray = PackedByteArray([])
-
-	func create_with_constant(stub_file: PackedByteArray):
-		var ret = self
-		ret.stub_file = stub_file
-		return ret
 
 	func preprocess_asset(
 		pkgasset: Object,
@@ -952,6 +907,29 @@ class FbxHandler:
 		#pkgasset.log_debug("Looking in directories " + str(retlist))
 		return retlist
 
+	func _make_relative_to(filename: String, basedir: String):
+		var path_beginning: String = ""
+		while not filename.begins_with(basedir + "/"):
+			path_beginning += "../"
+			basedir = basedir.get_base_dir()
+			if basedir == "":
+				break
+		if not basedir.is_empty():
+			filename = filename.substr(len(basedir) + 1)
+		return path_beginning + filename
+
+	func _scan_project_for_textures(filename_dict: Dictionary, efsdir: EditorFileSystemDirectory=null):
+		if efsdir == null:
+			var fs: EditorFileSystem = EditorPlugin.new().get_editor_interface().get_resource_filesystem()
+			efsdir = fs.get_filesystem()
+		for i in range(efsdir.get_file_count()):
+			var lowerfn: String = efsdir.get_file(i).to_lower()
+			for texname in filename_dict.keys():
+				if lowerfn == texname.to_lower():
+					filename_dict[texname] = efsdir.get_path() + "/" + efsdir.get_file(i)
+		for i in range(efsdir.get_subdir_count()):
+			_scan_project_for_textures(filename_dict, efsdir.get_subdir(i))
+
 	func write_and_preprocess_asset(pkgasset: Object, tmpdir: String, thread_subdir: String) -> String:
 		var full_tmpdir: String = tmpdir + "/" + thread_subdir
 		var input_path: String = thread_subdir + "/" + "input.fbx"
@@ -993,16 +971,33 @@ class FbxHandler:
 			unique_texture_map[fn_filename.get_basename() + "." + replaced_extension] = fn_filename
 		pkgasset.log_debug("Referenced textures: " + str(unique_texture_map.keys()))
 		var d = DirAccess.open("res://")
+		var tex_not_exists = {}
 		for fn in unique_texture_map.keys():
 			if not d.file_exists(texture_dirname + "/" + fn):
 				pkgasset.log_debug("Creating dummy texture: " + str(texture_dirname + "/" + fn))
 				var tmpf = FileAccess.open(texture_dirname + "/" + fn, FileAccess.WRITE_READ)
 				tmpf = null
 			var candidate_texture_dict = _get_parent_textures_paths(output_dirname + "/" + unique_texture_map[fn])
+			var tex_exists: bool = false
 			for candidate_fn in candidate_texture_dict:
 				#pkgasset.log_debug("candidate " + str(candidate_fn) + " INPKG=" + str(pkgasset.packagefile.path_to_pkgasset.has(candidate_fn)) + " FILEEXIST=" + str(d.file_exists(candidate_fn)))
 				if pkgasset.packagefile.path_to_pkgasset.has(candidate_fn) or d.file_exists(candidate_fn):
 					unique_texture_map[fn] = candidate_texture_dict[candidate_fn]
+					tex_exists = true
+					break
+			if not tex_exists:
+				tex_not_exists[fn] = ""
+		if not tex_not_exists.is_empty():
+			for fn in pkgasset.packagefile.path_to_pkgasset:
+				for texname in tex_not_exists.keys():
+					if fn.get_file().to_lower() == texname.to_lower():
+						unique_texture_map[texname] = _make_relative_to(fn, output_dirname)
+						tex_not_exists.erase(texname)
+		if not tex_not_exists.is_empty():
+			_scan_project_for_textures(tex_not_exists)
+			for texname in tex_not_exists.keys():
+				if not tex_not_exists[texname].is_empty():
+					unique_texture_map[texname] = _make_relative_to(tex_not_exists[texname], output_dirname)
 		var output_path: String = self.preprocess_asset(
 			pkgasset, tmpdir, thread_subdir, input_path, fbx_file, unique_texture_map
 		)
@@ -1227,8 +1222,18 @@ class FbxHandler:
 		var importer = pkgasset.parsed_meta.importer
 		var humanoid_original_transforms: Dictionary = {}
 		var human_skin_nodes: Array = []
-		if importer.keys.get("animationType", 2) == 3 and json.has("nodes"):
-			if len(importer.keys.get("humanDescription", {}).get("human", [])) < 10:
+		if importer.keys.get("animationType", 2) == 3 and json.has("nodes") and importer.keys.get("avatarSetup", 0) >= 1:
+			var bone_map_dict: Dictionary
+			if importer.keys.get("avatarSetup", 0) == 2:
+				var src_ava = importer.keys.get("lastHumanDescriptionAvatarSource", [null,0,"",0])
+				var src_ava_meta = pkgasset.meta_dependencies.get(src_ava[2], null)
+				if src_ava_meta == null:
+					pkgasset.log_fail("Unable to lookup meta dependency", "lastHumanDescriptionAvatarSource", src_ava)
+				else:
+					bone_map_dict = src_ava_meta.importer.generate_bone_map_dict_from_human()
+					humanoid_original_transforms = src_ava_meta.internal_data.get("humanoid_original_transforms", {}).duplicate()
+				
+			elif len(importer.keys.get("humanDescription", {}).get("human", [])) < 10:
 				var skel: Skeleton3D = Skeleton3D.new()
 				for node in json["nodes"]:
 					var node_name = node.get("name", "")
@@ -1250,8 +1255,10 @@ class FbxHandler:
 				pkgasset.parsed_meta.autodetected_bone_map_dict = bone_map_editor_plugin.auto_mapping_process_dictionary(skel)
 				skel.free()
 
-			pkgasset.log_debug("AAAA set to humanoid and has nodes")
-			var bone_map_dict: Dictionary = importer.generate_bone_map_dict_from_human()
+			if importer.keys.get("avatarSetup", 0) == 1:
+				pkgasset.log_debug("AAAA set to humanoid and has nodes")
+				bone_map_dict = importer.generate_bone_map_dict_from_human()
+
 			var node_idx = 0
 			var hips_node_idx = -1
 			for node in json["nodes"]:
@@ -1261,7 +1268,10 @@ class FbxHandler:
 					var godot_human_name: String = bone_map_dict[node_name]
 					if godot_human_name == "Hips":
 						hips_node_idx = node_idx
-					humanoid_original_transforms[godot_human_name] = gltf_to_transform3d(node)
+					if importer.keys.get("avatarSetup", 0) == 2:
+						gltf_transform3d_into_json(node, humanoid_original_transforms[godot_human_name])
+					else:
+						humanoid_original_transforms[godot_human_name] = gltf_to_transform3d(node)
 					human_skin_nodes.push_back(node_idx)
 				node_idx += 1
 			# Add up to three levels up into the skeleton. Our goal is to make the toplevel Armature node be a skeleton, so that we are guaranteed a root bone.
@@ -1279,7 +1289,10 @@ class FbxHandler:
 						if child == hips_node_idx:
 							pkgasset.log_debug("Found the child " + str(child) + " type " + str(typeof(child)) + " hni type " + str(typeof(hips_node_idx)))
 							pkgasset.parsed_meta.internal_data["humanoid_root_bone"] = node["name"]
-							humanoid_original_transforms["Root"] = gltf_to_transform3d(node)
+							if importer.keys.get("avatarSetup", 0) == 2:
+								gltf_transform3d_into_json(node, humanoid_original_transforms["Root"])
+							else:
+								humanoid_original_transforms["Root"] = gltf_to_transform3d(node)
 							new_root_idx = node_idx
 							human_skin_nodes.push_back(new_root_idx)
 							break
@@ -1410,18 +1423,16 @@ func get_class_name(obj):
 		return "AssetHandler"
 	return obj.get_class()
 
-var obj_handler: BaseModelHandler = BaseModelHandler.new().create_with_constant(STUB_OBJ_FILE)
-var dae_handler: BaseModelHandler = BaseModelHandler.new().create_with_constant(STUB_DAE_FILE)
-var image_handler: ImageHandler = ImageHandler.new().create_with_constant(STUB_PNG_FILE)
+var image_handler: ImageHandler = ImageHandler.new()
 
 var file_handlers: Dictionary = {
-	"fbx": FbxHandler.new().create_with_constant(STUB_GLB_FILE if SHOULD_CONVERT_TO_GLB else STUB_GLTF_FILE),
-	"obj": obj_handler,
-	"dae": dae_handler,
+	"fbx": FbxHandler.new(),
+	"obj": BaseModelHandler.new(),
+	"dae": BaseModelHandler.new(),
 	#"obj": DisabledHandler.new(), # .obj is broken due to multithreaded importer
 	#"dae": DisabledHandler.new(), # .dae is broken due to multithreaded importer
-	"glb": FbxHandler.new().create_with_constant(STUB_GLB_FILE),
-	"gltf": FbxHandler.new().create_with_constant(STUB_GLTF_FILE),
+	"glb": FbxHandler.new(),
+	"gltf": FbxHandler.new(),
 	"jpg": image_handler,
 	"jpeg": image_handler,
 	"png": image_handler,
@@ -1491,7 +1502,7 @@ func preprocess_asset(asset_database: Object, pkgasset: Object, tmpdir: String, 
 	dres.make_dir_recursive(tmpdir + "/" + path.get_base_dir())
 	dres.make_dir_recursive(tmpdir + "/" + thread_subdir)
 
-	if pkgasset.metadata_tar_header != null:
+	if pkgasset.metadata_tar_header != null and pkgasset.parsed_meta == null:
 		var sf = pkgasset.metadata_tar_header.get_stringfile()
 		pkgasset.parsed_meta = asset_database.parse_meta(sf, path)
 		pkgasset.log_debug("Parsing " + path + ": " + str(pkgasset.parsed_meta))
