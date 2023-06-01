@@ -3,16 +3,16 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c61w7i8l7c1l6"
-path.etc2="res://.godot/imported/mic_outline.svg-bc0120fac90b476931f3a50061a23cb7.etc2.ctex"
+path.s3tc="res://.godot/imported/mic_outline.svg-bc0120fac90b476931f3a50061a23cb7.s3tc.ctex"
 metadata={
-"imported_formats": ["etc2_astc"],
+"imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://addons/vsk_menu/textures/mic_outline.svg"
-dest_files=["res://.godot/imported/mic_outline.svg-bc0120fac90b476931f3a50061a23cb7.etc2.ctex"]
+dest_files=["res://.godot/imported/mic_outline.svg-bc0120fac90b476931f3a50061a23cb7.s3tc.ctex"]
 
 [params]
 
