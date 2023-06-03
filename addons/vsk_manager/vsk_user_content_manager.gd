@@ -16,7 +16,9 @@ var background_loading_tasks : Dictionary = {}
 var validation_skip_flags: Dictionary = {}
 
 func _finished_background_load_request(p_task_path : String) -> void:
-	assert(background_loading_tasks.erase(p_task_path))
+	if not background_loading_tasks.erase(p_task_path):
+		push_error("Background load request underflow!")
+		return
 
 	background_loading_tasks_in_progress -= 1
 	if background_loading_tasks_in_progress == 0:
@@ -27,8 +29,9 @@ func _finished_background_load_request(p_task_path : String) -> void:
 		if BackgroundLoader.task_set_stage_count.is_connected(self._background_loader_task_stage_count):
 			BackgroundLoader.task_set_stage_count.disconnect(self._background_loader_task_stage_count)
 	elif background_loading_tasks_in_progress < 0:
-		assert(false, "Background load request underflow!")
-
+		push_error("Background load request underflow!")
+		return
+		
 func _background_loader_task_done(p_task_path: String, p_err: int, p_resource: Resource) -> void:
 	if background_loading_tasks.has(p_task_path):
 		var url_array: Array = background_loading_tasks[p_task_path]
@@ -136,18 +139,25 @@ func make_asset_request(
 	p_skip_validation: bool,
 	p_external_path_whitelist: Dictionary,
 	p_resource_whitelist: Dictionary) -> bool:
+	
 	if asset_requests_in_progress == 0:
-		assert(VSKAssetManager.request_complete.connect(self._user_content_asset_request_complete) == OK)
-		assert(VSKAssetManager.request_cancelled.connect(self._user_content_asset_request_cancelled) == OK)
-		assert(VSKAssetManager.request_started.connect(self._user_content_asset_request_started) == OK)
+		var request_complete_result = VSKAssetManager.request_complete.connect(self._user_content_asset_request_complete)
+		var request_cancelled_result = VSKAssetManager.request_cancelled.connect(self._user_content_asset_request_cancelled)
+		var request_started_result = VSKAssetManager.request_started.connect(self._user_content_asset_request_started)
+
+		if request_complete_result != OK or request_cancelled_result != OK or request_started_result != OK:
+			push_error("Failed to connect signals.")
+			return false
 
 	asset_requests_in_progress += 1
-	if (await VSKAssetManager.make_request(p_user_content_path, \
+	var request_result = await VSKAssetManager.make_request(p_user_content_path, \
 		p_asset_type, \
 		p_bypass_whitelist, \
 		p_skip_validation, \
 		p_external_path_whitelist, \
-		p_resource_whitelist)).is_empty():
+		p_resource_whitelist)
+
+	if request_result.is_empty():
 		return false
 	else:
 		return true
@@ -171,25 +181,26 @@ func request_user_content_load(
 		p_resource_whitelist):
 		printerr("VSKUserContentManager: request %s failed!" % p_user_content_path)
 
+
 func log_validation_result(p_url: String, p_user_content_type_name: String, p_validation_result: Dictionary) -> void:
 	var code: int = p_validation_result["code"]
 	var info: String = p_validation_result["info"]
 
 	if code != VSKImporter.ImporterResult.OK:
-		assert(false,
-"{user_content_type_name} at url '{user_content_url}' failed validation check with error '{code_string}'.
-The following information was provided:
-{info}".format(
-				{
-				"user_content_type_name":p_user_content_type_name,
-				"user_content_url":p_url,
+		var error_message = "{user_content_type_name} at url '{user_content_url}' failed validation check with error '{code_string}'.\nThe following information was provided:\n{info}".format(
+			{
+				"user_content_type_name": p_user_content_type_name,
+				"user_content_url": p_url,
 				"code_string": vsk_importer_const.get_string_for_importer_result(code),
-				"info":info if not info.is_empty() else "No extra information provided"
+				"info": info if not info.is_empty() else "No extra information provided"
 			}
-		))
+		)
+		push_error(error_message)
+		
 
 func request_user_content_cancel(p_user_content_path : String) -> void:
 	cancel_user_content(p_user_content_path)
+
 
 func setup() -> void:
 	pass
