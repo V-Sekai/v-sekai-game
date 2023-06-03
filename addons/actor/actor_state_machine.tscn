@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://dtj4xwyh8jcdm"]
+[gd_scene load_steps=17 format=3 uid="uid://dtj4xwyh8jcdm"]
 
 [ext_resource type="Script" path="res://addons/actor/actor_state_machine.gd" id="1"]
 [ext_resource type="Script" path="res://addons/actor/states/actor_state_spawned.gd" id="2"]
@@ -10,6 +10,15 @@
 [ext_resource type="Script" path="res://addons/actor/states/actor_state_networked.gd" id="8"]
 [ext_resource type="Script" path="res://addons/actor/states/actor_state_pre_jump.gd" id="9"]
 [ext_resource type="Script" path="res://addons/actor/states/actor_state_noclip.gd" id="10"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/state_chart.gd" id="11_b8jtm"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/compound_state.gd" id="12_xpokv"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/atomic_state.gd" id="13_2ndhb"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/transition.gd" id="14_ppkdt"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/expression_guard.gd" id="15_vdocb"]
+
+[sub_resource type="Resource" id="Resource_3o8w6"]
+script = ExtResource("15_vdocb")
+expression = "noclipping == true"
 
 [node name="ActorStateMachine" type="Node"]
 script = ExtResource("1")
@@ -41,3 +50,44 @@ script = ExtResource("8")
 
 [node name="Noclip" type="Node" parent="."]
 script = ExtResource("10")
+
+[node name="StateChartWorkInProgress" type="Node" parent="."]
+script = ExtResource("11_b8jtm")
+
+[node name="CompoundState" type="Node" parent="StateChartWorkInProgress"]
+script = ExtResource("12_xpokv")
+initial_state = NodePath("Spawned")
+
+[node name="Spawned" type="Node" parent="StateChartWorkInProgress/CompoundState"]
+script = ExtResource("13_2ndhb")
+
+[node name="OnTransitionToNoClipping" type="Node" parent="StateChartWorkInProgress/CompoundState/Spawned"]
+script = ExtResource("14_ppkdt")
+to = NodePath("../../Noclip")
+guard = SubResource("Resource_3o8w6")
+
+[node name="Idle" type="Node" parent="StateChartWorkInProgress/CompoundState"]
+script = ExtResource("13_2ndhb")
+
+[node name="Landed" type="Node" parent="StateChartWorkInProgress/CompoundState"]
+script = ExtResource("13_2ndhb")
+
+[node name="Locomotion" type="Node" parent="StateChartWorkInProgress/CompoundState"]
+script = ExtResource("13_2ndhb")
+
+[node name="Falling" type="Node" parent="StateChartWorkInProgress/CompoundState"]
+script = ExtResource("13_2ndhb")
+
+[node name="Stop" type="Node" parent="StateChartWorkInProgress/CompoundState"]
+script = ExtResource("13_2ndhb")
+
+[node name="Pre-Jump" type="Node" parent="StateChartWorkInProgress/CompoundState"]
+script = ExtResource("13_2ndhb")
+
+[node name="Networked" type="Node" parent="StateChartWorkInProgress/CompoundState"]
+script = ExtResource("13_2ndhb")
+
+[node name="Noclip" type="Node" parent="StateChartWorkInProgress/CompoundState"]
+script = ExtResource("13_2ndhb")
+
+[connection signal="event_received" from="StateChartWorkInProgress/CompoundState" to="." method="print_event_received"]
