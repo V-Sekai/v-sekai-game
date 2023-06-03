@@ -63,10 +63,11 @@ func _change_state(p_state_name: String) -> void:
 
 
 func start() -> void:
-	if !Engine.is_editor_hint():
-		if start_state == NodePath():
-			start_state = get_child(0).get_path()
-		for child in get_children():
-			child.finished.connect(self._change_state)
-			child.state_machine = self
-		initialize(start_state)
+	if Engine.is_editor_hint():
+		return
+	if start_state == NodePath():
+		start_state = get_child(0).get_path()
+	for child in get_children():
+		child.finished.connect(self._change_state)
+		child.state_machine = self
+	initialize(start_state)
