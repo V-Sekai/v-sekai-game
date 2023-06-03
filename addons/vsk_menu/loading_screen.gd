@@ -10,7 +10,7 @@ var loading_status_label: Label = null
 var peer_list_tree: Tree = null
 
 
-class State:
+class StateTypes:
 	const NONE = 0
 	const REGISTERING_SHARD = 1
 	const EXCHANGING_SERVER_INFO = 2
@@ -20,14 +20,14 @@ class State:
 	const COMPLETE = 6
 
 
-var state: int = State.NONE
+var state: int = StateTypes.NONE
 
 var previous_data_progress: Dictionary = {}
 var data_progress: Dictionary = {}
 
 
 func _map_load_update(p_stage: int, p_stage_count: int) -> void:
-	state = State.RESOURCE_LOAD
+	state = StateTypes.RESOURCE_LOAD
 
 	if p_stage_count > 0:
 		set_progress(
@@ -51,41 +51,41 @@ func _map_load_callback(_callback: int, _callback_dictionary: Dictionary) -> voi
 
 
 func _map_download_started() -> void:
-	state = State.NETWORK_DOWNLOAD
+	state = StateTypes.NETWORK_DOWNLOAD
 
 
 func _registering_shard() -> void:
-	state = State.REGISTERING_SHARD
+	state = StateTypes.REGISTERING_SHARD
 	set_progress(0.0)
 	loading_status_label.set_text(tr("TR_MENU_REGISTERING_SERVER"))
 
 
 func _host_creating_server_info() -> void:
-	state = State.EXCHANGING_SERVER_INFO
+	state = StateTypes.EXCHANGING_SERVER_INFO
 	set_progress(0.0)
 	loading_status_label.set_text(tr("TR_MENU_CREATING_SERVER_INFO"))
 
 
 func _host_creating_server_state() -> void:
-	state = State.EXCHANGING_SERVER_STATE
+	state = StateTypes.EXCHANGING_SERVER_STATE
 	set_progress(0.0)
 	loading_status_label.set_text(tr("TR_MENU_CREATING_SERVER_STATE"))
 
 
 func _requesting_server_info() -> void:
-	state = State.EXCHANGING_SERVER_INFO
+	state = StateTypes.EXCHANGING_SERVER_INFO
 	set_progress(0.0)
 	loading_status_label.set_text(tr("TR_MENU_REQUESTING_SERVER_INFO"))
 
 
 func _requesting_server_state() -> void:
-	state = State.EXCHANGING_SERVER_STATE
+	state = StateTypes.EXCHANGING_SERVER_STATE
 	set_progress(0.0)
 	loading_status_label.set_text(tr("TR_MENU_REQUESTING_SERVER_STATE"))
 
 
 func _server_state_ready() -> void:
-	state = State.COMPLETE
+	state = StateTypes.COMPLETE
 	set_progress(1.0)
 	loading_status_label.set_text(tr("TR_MENU_SERVER_STATE_READY"))
 
@@ -220,7 +220,7 @@ func _update_data_progress() -> void:
 
 
 func _process(_delta: float) -> void:
-	if state == State.NETWORK_DOWNLOAD:
+	if state == StateTypes.NETWORK_DOWNLOAD:
 		_update_data_progress()
 
 

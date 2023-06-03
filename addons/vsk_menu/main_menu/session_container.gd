@@ -129,13 +129,13 @@ func sign_out():
 
 func _ready():
 	if VSKAccountManager.session_renew_started.connect(self._session_renew_started) != OK:
-		print_error("Failed to connect session_renew_started signal")
+		push_error("Failed to connect session_renew_started signal")
 		return
 
 	if VSKAccountManager.session_request_complete.connect(self._session_request_complete) != OK:
-		print_error("Failed to connect session_request_complete signal")
+		push_error("Failed to connect session_request_complete signal")
 		return
 
 	if VSKAccountManager.session_deletion_complete.connect(self._session_deletion_complete) != OK:
-		print_error("Failed to connect session_deletion_complete signal")
+		push_error("Failed to connect session_deletion_complete signal")
 		return
