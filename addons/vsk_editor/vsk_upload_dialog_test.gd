@@ -1,3 +1,8 @@
+# Copyright (c) 2018-present. This file is part of V-Sekai https://v-sekai.org/.
+# SaracenOne & K. S. Ernest (Fire) Lee & Lyuma & MMMaellon & Contributors
+# vsk_upload_dialog_test.gd
+# SPDX-License-Identifier: MIT
+
 extends Control
 
 const vsk_types_const = preload("res://addons/vsk_importer_exporter/vsk_types.gd")

@@ -1,3 +1,8 @@
+# Copyright (c) 2018-present. This file is part of V-Sekai https://v-sekai.org/.
+# SaracenOne & K. S. Ernest (Fire) Lee & Lyuma & MMMaellon & Contributors
+# network_rpc_table.gd
+# SPDX-License-Identifier: MIT
+
 class_name NetworkRPCTable extends "res://addons/entity_manager/component_node.gd"
 
 var virtual_rpc_method_table: Dictionary = {}

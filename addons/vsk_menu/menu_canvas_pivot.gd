@@ -1,3 +1,8 @@
+# Copyright (c) 2018-present. This file is part of V-Sekai https://v-sekai.org/.
+# SaracenOne & K. S. Ernest (Fire) Lee & Lyuma & MMMaellon & Contributors
+# menu_canvas_pivot.gd
+# SPDX-License-Identifier: MIT
+
 extends Node3D
 
 @export var canvas_plane_nodepath: NodePath = NodePath()

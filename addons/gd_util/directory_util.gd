@@ -1,3 +1,8 @@
+# Copyright (c) 2018-present. This file is part of V-Sekai https://v-sekai.org/.
+# SaracenOne & K. S. Ernest (Fire) Lee & Lyuma & MMMaellon & Contributors
+# directory_util.gd
+# SPDX-License-Identifier: MIT
+
 @tool
 
 enum DirectorySearchOptions { SEARCH_ALL_DIRS, SEARCH_LOCAL_DIR_ONLY }

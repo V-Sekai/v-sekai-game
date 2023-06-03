@@ -1,3 +1,8 @@
+# Copyright (c) 2018-present. This file is part of V-Sekai https://v-sekai.org/.
+# SaracenOne & K. S. Ernest (Fire) Lee & Lyuma & MMMaellon & Contributors
+# commandline_arguments.gd
+# SPDX-License-Identifier: MIT
+
 const VALID_LAUNCH_ARGUMENTS: Dictionary = {
 	"docs": 0,
 	"map": 1,

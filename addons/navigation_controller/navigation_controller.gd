@@ -1,3 +1,8 @@
+# Copyright (c) 2018-present. This file is part of V-Sekai https://v-sekai.org/.
+# SaracenOne & K. S. Ernest (Fire) Lee & Lyuma & MMMaellon & Contributors
+# navigation_controller.gd
+# SPDX-License-Identifier: MIT
+
 @tool
 class_name NavigationController extends "res://addons/navigation_controller/view_controller.gd"
 

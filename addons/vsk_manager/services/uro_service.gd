@@ -1,3 +1,8 @@
+# Copyright (c) 2018-present. This file is part of V-Sekai https://v-sekai.org/.
+# SaracenOne & K. S. Ernest (Fire) Lee & Lyuma & MMMaellon & Contributors
+# uro_service.gd
+# SPDX-License-Identifier: MIT
+
 extends "res://addons/vsk_manager/services/service.gd"  # service.gd
 
 var shard_id: String = ""

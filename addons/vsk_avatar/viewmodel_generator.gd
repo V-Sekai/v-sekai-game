@@ -1,3 +1,8 @@
+# Copyright (c) 2018-present. This file is part of V-Sekai https://v-sekai.org/.
+# SaracenOne & K. S. Ernest (Fire) Lee & Lyuma & MMMaellon & Contributors
+# viewmodel_generator.gd
+# SPDX-License-Identifier: MIT
+
 extends Node
 
 const bone_lib_const = preload("bone_lib.gd")

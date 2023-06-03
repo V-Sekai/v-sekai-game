@@ -1,3 +1,8 @@
+# Copyright (c) 2018-present. This file is part of V-Sekai https://v-sekai.org/.
+# SaracenOne & K. S. Ernest (Fire) Lee & Lyuma & MMMaellon & Contributors
+# vsk_upload_panel_contents.gd
+# SPDX-License-Identifier: MIT
+
 @tool
 extends Control
 
