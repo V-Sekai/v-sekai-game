@@ -5,12 +5,20 @@ concurrency:
   group: ci-${{github.actor}}-${{github.head_ref || github.run_number}}-${{github.ref}}-static
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   static-checks:
     name: Static Checks (clang-format, black format, file format, documentation checks)
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v3
+      - name: Harden Runner
+        uses: step-security/harden-runner@128a63446a954579617e875aaab7d2978154e969 # v2.4.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
         with:
           repository: v-sekai/godot
           ref: groups-4.x.2023-02-16T003047Z
@@ -69,7 +77,7 @@ jobs:
           bash ./misc/scripts/dotnet_format.sh
 
       - name: Spell checks via codespell
-        uses: codespell-project/actions-codespell@v2
+        uses: codespell-project/actions-codespell@94259cd8be02ad2903ba34a22d9c13de21a74461 # v2.0
         with:
           skip: ./.*,./**/.*,./bin,./thirdparty,*.desktop,*.gen.*,*.po,*.pot,*.rc,./AUTHORS.md,./COPYRIGHT.txt,./DONORS.md,./core/input/gamecontrollerdb.txt,./core/string/locales.h,./editor/project_converter_3_to_4.cpp,./misc/scripts/codespell.sh,./platform/android/java/lib/src/com,./platform/web/node_modules,./platform/web/package-lock.json
           check_hidden: false
