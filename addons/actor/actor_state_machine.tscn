@@ -52,6 +52,7 @@ script = ExtResource("8")
 script = ExtResource("10")
 
 [node name="StateChartWorkInProgress" type="Node" parent="."]
+unique_name_in_owner = true
 script = ExtResource("11_b8jtm")
 
 [node name="CompoundState" type="Node" parent="StateChartWorkInProgress"]

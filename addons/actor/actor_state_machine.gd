@@ -34,7 +34,7 @@ var actor_controller: Node = null  # of type actor_controller.gd
 
 var noclip: bool = false
 
-@onready var state_chart: StateChart = $StateChart
+@onready var state_chart: StateChart = %StateChartWorkInProgress
 
 func _change_state(state_name: String) -> void:
 	##
@@ -125,7 +125,7 @@ func get_motion_vector() -> Vector3:
 
 
 func print_event_received(event):
-	print(event)
+	print("Event received %s" % event)
 
 
 func update(p_delta: float) -> void:
