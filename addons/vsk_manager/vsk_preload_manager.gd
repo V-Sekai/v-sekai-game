@@ -42,9 +42,9 @@ func _all_preloading_done() -> void:
 func _next_preloading_task() -> void:
 	if preloading_tasks.size() > 0:
 		if BackgroundLoader.request_loading_task_bypass_whitelist(preloading_tasks.keys()[0]) == false:
-			printerr("request_loading_task failed!")
+			push_error("request_loading_task failed!")
 	else:
-		assert(false, "Preloading task queue underflow!")
+		push_error("Preloading task queue underflow!")
 
 
 ##
@@ -108,7 +108,10 @@ func _preloading_task_done(p_task: String, p_err: int, p_resource: Resource) -> 
 				_preloading_failed()
 				printerr("_preloading_task_done: no callback data for task '%s'!" % p_task)
 				return
-		assert(preloading_tasks.erase(p_task))
+		if not preloading_tasks.erase(p_task):
+			printerr("_preloading_task_done: failed to erase task '%s'!" % p_task)
+			_preloading_failed()
+			return
 	else:
 		_preloading_failed()
 		printerr("_preloading_task_done: invalid task '%s'!" % p_task)
