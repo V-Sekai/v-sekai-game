@@ -77,11 +77,10 @@ func get_direction_normal() -> Vector3:
 func move(p_target_velocity: Vector3) -> void:
 	if _character_body:
 		if p_target_velocity.length() > 0.0:
-			if _character_body:
-				_character_body.velocity = p_target_velocity
-				_character_body.move_and_slide()
-				motion_vector = _character_body.velocity
-			set_global_transform(Transform3D(get_global_transform().basis, _character_body.global_transform.origin))
+			_character_body.velocity = p_target_velocity
+			_character_body.move_and_slide()
+			motion_vector = _character_body.velocity
+		set_global_transform(Transform3D(get_global_transform().basis, _character_body.global_transform.origin))
 
 
 func set_movement_vector(p_target_velocity: Vector3) -> void:
@@ -96,11 +95,11 @@ func is_grounded() -> bool:
 
 
 func get_gravity_speed() -> float:
-	return 9.8 * 3
+	return abs(ProjectSettings.get_setting("physics/3d/default_gravity")) * 3.0
 
 
 func get_gravity_direction() -> Vector3:
-	return Vector3(0.0, -1.0, 0.0)
+	return ProjectSettings.get_setting("physics/3d/default_gravity_vector")
 
 
 func cache_nodes() -> void:
