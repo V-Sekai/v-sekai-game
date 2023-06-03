@@ -123,11 +123,12 @@ func write_entity_destroy_command(p_entity_id: int, p_network_writer: Object) ->
 
 	return p_network_writer
 
-
 func write_entity_request_master_command(p_entity_id: int, p_network_writer: Object) -> Object:
 	var network_entity_manager: Node = network_manager.network_entity_manager
 	var entity_instance: Node = network_entity_manager.get_network_instance_for_instance_id(p_entity_id)
-	assert(entity_instance)
+
+	if not entity_instance:
+		return p_network_writer
 
 	p_network_writer = network_entity_manager.write_entity_instance_id_for_entity(entity_instance, p_network_writer)
 
@@ -373,9 +374,11 @@ func get_packed_scene_for_path(p_path: String) -> PackedScene:
 
 	if ResourceLoader.exists(p_path):
 		var packed_scene: PackedScene = ResourceLoader.load(p_path)
-		assert(packed_scene is PackedScene)
 
-		return packed_scene
+		if packed_scene is PackedScene:
+			return packed_scene
+		else:
+			return null
 	else:
 		return null
 

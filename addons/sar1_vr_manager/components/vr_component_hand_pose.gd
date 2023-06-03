@@ -120,10 +120,14 @@ func tracker_added(p_tracker: XRController3D) -> void:
 		match tracker_hand:
 			XRPositionalTracker.TRACKER_HAND_LEFT:
 				left_hand_pose_action = vr_hand_pose_action
-				assert(left_hand_pose_action.hand_pose_changed.connect(self.left_hand_pose_updated) == OK)
+				if left_hand_pose_action.hand_pose_changed.connect(self.left_hand_pose_updated) != OK:
+					printerr("Failed to connect left_hand_pose_changed signal")
+					return
 			XRPositionalTracker.TRACKER_HAND_RIGHT:
 				right_hand_pose_action = vr_hand_pose_action
-				assert(right_hand_pose_action.hand_pose_changed.connect(self.right_hand_pose_updated) == OK)
+				if right_hand_pose_action.hand_pose_changed.connect(self.right_hand_pose_updated) != OK:
+					printerr("Failed to connect right_hand_pose_changed signal")
+					return
 
 
 func tracker_removed(p_tracker: XRController3D) -> void:

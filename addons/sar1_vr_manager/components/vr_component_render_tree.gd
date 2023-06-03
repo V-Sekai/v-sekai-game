@@ -11,30 +11,34 @@ func tracker_added(p_tracker: XRController3D) -> void:  # vr_controller_tracker_
 	super.tracker_added(p_tracker)
 
 	var tracker_hand: int = p_tracker.get_tracker_hand()
-	if tracker_hand == XRPositionalTracker.TRACKER_HAND_LEFT or tracker_hand == XRPositionalTracker.TRACKER_HAND_RIGHT:
-		var vr_render_tree_action: Node3D = vr_render_tree_action_const.new()
+	if tracker_hand != XRPositionalTracker.TRACKER_HAND_LEFT and tracker_hand != XRPositionalTracker.TRACKER_HAND_RIGHT:
+		return
 
-		# instance our render model object
-		var spatial_render_tree: Node3D = VRManager.create_render_tree()
-		# hide to begin with
-		vr_render_tree_action.visible = false
+	var vr_render_tree_action: Node3D = vr_render_tree_action_const.new()
 
-		var controller_name: String = str(p_tracker.tracker)
-		if spatial_render_tree and !spatial_render_tree.load_render_tree(VRManager, controller_name):
-			printerr("Could not load render tree")
+	# instance our render model object
+	var spatial_render_tree: Node3D = VRManager.create_render_tree()
+	# hide to begin with
+	vr_render_tree_action.visible = false
 
-		vr_render_tree_action.visible = true
+	var controller_name: String = str(p_tracker.tracker)
+	if spatial_render_tree and !spatial_render_tree.load_render_tree(VRManager, controller_name):
+		printerr("Could not load render tree")
 
-		vr_render_tree_action.set_render_tree(spatial_render_tree)
-		p_tracker.add_component_action(vr_render_tree_action)
+	vr_render_tree_action.visible = true
 
-		match tracker_hand:
-			XRPositionalTracker.TRACKER_HAND_LEFT:
-				# assert(!is_instance_valid(left_render_tree_action))
-				left_render_tree_action = vr_render_tree_action
-			XRPositionalTracker.TRACKER_HAND_RIGHT:
-				# assert(!is_instance_valid(right_render_tree_action))
-				right_render_tree_action = vr_render_tree_action
+	vr_render_tree_action.set_render_tree(spatial_render_tree)
+	p_tracker.add_component_action(vr_render_tree_action)
+
+	match tracker_hand:
+		XRPositionalTracker.TRACKER_HAND_LEFT:
+			if is_instance_valid(left_render_tree_action):
+				return
+			left_render_tree_action = vr_render_tree_action
+		XRPositionalTracker.TRACKER_HAND_RIGHT:
+			if is_instance_valid(right_render_tree_action):
+				return
+			right_render_tree_action = vr_render_tree_action
 
 
 func tracker_removed(p_tracker: XRController3D) -> void:  # vr_controller_tracker_const

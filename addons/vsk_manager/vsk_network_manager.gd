@@ -117,8 +117,11 @@ func _host_state_task_increment() -> void:
 
 func _host_state_task_decrement() -> void:
 	host_state_tasks -= 1
+	
 	if host_state_tasks < 0:
-		assert(false, "host state task underflow!")
+		push_error("Error: host state task underflow!")
+		host_state_tasks = 0
+		return
 
 	if host_state_tasks == 0 and kill_flag:
 		NetworkManager.request_network_kill()
@@ -317,7 +320,6 @@ func add_player_scene(p_master_id: int) -> Node:
 		return null
 
 
-##
 ## Destroys a player scene, usually called by the server host when a peer
 ## is leaving the server.
 ## p_master_id is network id for the client we're creating this player scene for.
@@ -325,13 +327,13 @@ func add_player_scene(p_master_id: int) -> Node:
 func remove_player_scene(p_master_id: int) -> void:
 	print("Removing player scene for {master_id}...".format({"master_id": str(p_master_id)}))
 
-	if player_instances.has(p_master_id):
-		var instantiate: Node = player_instances[p_master_id]
-		assert(player_instances.erase(p_master_id))
-		EntityManager._delete_entity_unsafe(instantiate)
-	else:
+	if not player_instances.has(p_master_id):
 		printerr("Attempted to remove unrecorded client player scene!")
+		return
 
+	var instantiate: Node = player_instances[p_master_id]
+	player_instances.erase(p_master_id)
+	EntityManager._delete_entity_unsafe(instantiate)
 
 ##
 ## Destroys all the player scene instances, called as part of the cleanup phase.
@@ -576,7 +578,6 @@ func _host_create_server_info() -> void:
 	await VSKMapManager.request_map_load(VSKGameFlowManager.multiplayer_request.map_path, false, false)  # Warning, this skips all validation on localhosted maps
 
 
-##
 ## Called when server has initialised their host state. Called from the main thread.
 ## p_instances contains ['map'] and ['players'], map containing the instantiate
 ## map scene, and players contains a list player instances, assigns them random
@@ -588,27 +589,30 @@ func _host_create_server_info() -> void:
 func _host_setup_map(p_instances: Dictionary, p_fade_skipped: bool) -> void:
 	print("_host_setup_map")
 
-	if is_session_alive():
-		if p_instances["map"]:
-			VSKMapManager._set_current_map_unsafe(p_instances["map"])
-			var players: Array = p_instances["players"]
-			var spawn_nodes = node_util_const.find_nodes_in_group(NETWORK_SPAWNER_GROUP_NAME, p_instances["map"])
-			for player_instance in players:
-				if not player_instance:
-					continue
-				var transform: Transform3D = get_random_spawn_transform_for_spawners(spawn_nodes)
-				player_instance.transform = transform
+	if not is_session_alive():
+		return
 
-				EntityManager.scene_tree_execution_command(scene_tree_execution_table_const.ADD_ENTITY, player_instance)
+	if not p_instances["map"]:
+		printerr("Could not instantiate map!")
+		network_callback.emit(INVALID_MAP, {})
+		return
 
-			EntityManager.scene_tree_execution_table._execute_scene_tree_execution_table_unsafe()
-			# Tell the server it is now safe to send server state
-			# to connected peers
-			NetworkManager.confirm_server_state_ready()
-			session_ready.emit(p_fade_skipped)
-		else:
-			assert(false, "Could not instantiate map!")
-			network_callback.emit(INVALID_MAP, {})
+	VSKMapManager._set_current_map_unsafe(p_instances["map"])
+	var players: Array = p_instances["players"]
+	var spawn_nodes = node_util_const.find_nodes_in_group(NETWORK_SPAWNER_GROUP_NAME, p_instances["map"])
+	for player_instance in players:
+		if not player_instance:
+			continue
+		var transform: Transform3D = get_random_spawn_transform_for_spawners(spawn_nodes)
+		player_instance.transform = transform
+
+		EntityManager.scene_tree_execution_command(scene_tree_execution_table_const.ADD_ENTITY, player_instance)
+
+	EntityManager.scene_tree_execution_table._execute_scene_tree_execution_table_unsafe()
+	# Tell the server it is now safe to send server state
+	# to connected peers
+	NetworkManager.confirm_server_state_ready()
+	session_ready.emit(p_fade_skipped)
 
 
 ##
@@ -846,29 +850,32 @@ func _received_client_info(p_network_id: int, p_client_info: Dictionary) -> void
 
 
 func _client_state_initialization_fade_complete(p_instance: Node, p_skipped: bool) -> void:
-	if is_session_alive():
-		if p_instance:
-			#Instance all networked entities received from the server
-			NetworkManager.confirm_server_ready_for_sync()
-			session_ready.emit(p_skipped)
-		else:
-			assert(false, "Could not instantiate map!")
-			network_callback.emit(INVALID_MAP, {})
+	if not is_session_alive():
+		return
+
+	if not p_instance:
+		printerr("Could not instantiate map!")
+		network_callback.emit(INVALID_MAP, {})
+		return
+
+	# Instance all networked entities received from the server
+	NetworkManager.confirm_server_ready_for_sync()
+	session_ready.emit(p_skipped)
 
 
 func _client_state_initialization_complete(p_instance: Node) -> void:
 	server_state_ready.emit()
 
-	if p_instance:
-		# is a bool
-		var skipped = await VSKFadeManager.execute_fade(false).fade_complete
-		if is_session_alive():
-			_client_state_initialization_fade_complete(p_instance, skipped)
-	else:
-		assert(false, "Could not instantiate map!")
+	if not p_instance:
+		printerr("Could not instantiate map!")
 		network_callback.emit(INVALID_MAP, {})
+		_host_state_task_decrement()
+		return
 
-	_host_state_task_decrement()
+	# is a bool
+	var skipped = await VSKFadeManager.execute_fade(false).fade_complete
+	if is_session_alive():
+		_client_state_initialization_fade_complete(p_instance, skipped)
 
 
 func _threaded_client_state_initialization_complete() -> void:

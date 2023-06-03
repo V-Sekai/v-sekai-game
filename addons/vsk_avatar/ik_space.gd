@@ -696,8 +696,6 @@ func update_physics(p_delta) -> void:
 					[global_transform] + _get_transforms_from_tracker_collection(tracker_collection_output)
 				)
 				mocap_recording.write_transform_array(transform_array)
-
-
 func setup() -> void:
 	if not is_inside_tree():
 		return
@@ -727,9 +725,17 @@ func setup() -> void:
 
 		if !Engine.is_editor_hint():
 			if is_multiplayer_authority():
-				assert(VRManager.xr_mode_changed.connect(self._xr_mode_changed) == OK)
-				assert(VRManager.request_vr_calibration.connect(self._request_vr_calibration) == OK)
-				assert(VRManager.confirm_vr_calibration.connect(self._confirm_vr_calibration) == OK)
+				var xr_mode_changed_result = VRManager.xr_mode_changed.connect(self._xr_mode_changed)
+				if xr_mode_changed_result != OK:
+					push_error("Failed to connect xr_mode_changed signal")
+
+				var request_vr_calibration_result = VRManager.request_vr_calibration.connect(self._request_vr_calibration)
+				if request_vr_calibration_result != OK:
+					push_error("Failed to connect request_vr_calibration signal")
+
+				var confirm_vr_calibration_result = VRManager.confirm_vr_calibration.connect(self._confirm_vr_calibration)
+				if confirm_vr_calibration_result != OK:
+					push_error("Failed to connect confirm_vr_calibration signal")
 
 		update_trackers()
 		update_ik_controller()
@@ -739,7 +745,6 @@ func setup() -> void:
 			and ProjectSettings.get_setting("mocap_manager/recording_enabled")
 		):
 			mocap_recording = MocapManager.start_recording(Engine.physics_ticks_per_second)
-
 
 func _on_avatar_changed():
 	if (
@@ -761,4 +766,7 @@ func _entity_ready():
 		ik_point_count -= 1
 
 	if !Engine.is_editor_hint():
-		assert(external_trackers_changed.connect(self._external_trackers_updated, CONNECT_ONE_SHOT) == OK)
+		var connection_result = external_trackers_changed.connect(self._external_trackers_updated, CONNECT_ONE_SHOT)
+		if connection_result != OK:
+			print("Failed to connect external_trackers_changed signal")
+			return

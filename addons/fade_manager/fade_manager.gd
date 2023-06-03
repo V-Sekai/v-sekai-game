@@ -38,12 +38,14 @@ func execute_fade(p_start: Color, p_end: Color, p_time: float) -> void:
 
 	self.color = source_fade_color
 	tween = get_tree().create_tween()
-	assert(tween.finished.connect(self._tween_complete) == OK)
+	if tween.finished.connect(self._tween_complete) != OK:
+		printerr("Failed to connect tween.finished signal.")
+		return
 	tween.set_ease(Tween.EASE_IN_OUT)
 	tween.set_trans(Tween.TRANS_LINEAR)
-	assert(tween.tween_property(self, "color", target_fade_color, p_time) != null)
-	# tween.play() not needed due to Autoplay.
-
+	if tween.tween_property(self, "color", target_fade_color, p_time) == null:
+		printerr("Failed to set tween property.")
+		return
 
 func skip_fade() -> void:
 	_reset_tween()

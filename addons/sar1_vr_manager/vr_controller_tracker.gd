@@ -46,21 +46,27 @@ func _on_action_released(p_action: String) -> void:
 
 
 func add_component_action(p_component_action: Node) -> void:
-	assert(p_component_action)
+	if not p_component_action:
+		return
+
 	if component_action.has(p_component_action):
 		printerr("Attempted to add a duplicate module tracker!")
 		return
+
 	component_action.push_back(p_component_action)
 	add_child(p_component_action, true)
 
 
 func remove_component_action(p_component_action: Node) -> void:
-	assert(p_component_action)
+	if not p_component_action:
+		return
+
 	var index: int = component_action.find(p_component_action)
 	if index != -1:
 		component_action.remove_at(index)
 	else:
 		printerr("Attempted to remove an invalid module tracker!")
+
 	p_component_action.queue_free()
 	remove_child(p_component_action)
 

@@ -672,16 +672,17 @@ func register_peer(p_id) -> void:
 	peer_registered.emit(p_id)
 	peer_list_changed.emit()
 
-
 func unregister_peer(p_id) -> void:
 	if active_peers.has(p_id):
 		active_peers.erase(p_id)
 	if not peer_data.has(p_id):
 		return
-	assert(peer_data.erase(p_id))
-	NetworkLogger.printl("peer_unregistered:{id}".format({"id": str(p_id)}))
-	peer_unregistered.emit(p_id)
-	peer_list_changed.emit()
+
+	if peer_data.has(p_id):
+		peer_data.erase(p_id)
+		NetworkLogger.printl("peer_unregistered:{id}".format({"id": str(p_id)}))
+		peer_unregistered.emit(p_id)
+		peer_list_changed.emit()
 
 
 func setup_project_settings() -> void:

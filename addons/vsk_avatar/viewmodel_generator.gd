@@ -21,7 +21,6 @@ static func get_recursive_children_for_bone_id(p_skeleton: Skeleton3D, p_bone_id
 
 	return PackedInt32Array(valid_ids)
 
-
 static func generate_mesh_for_bone_ids(p_mesh: Mesh, p_valid_bone_ids: PackedInt32Array) -> Mesh:
 	var new_mesh: Mesh = Mesh.new()
 
@@ -51,7 +50,9 @@ static func generate_mesh_for_bone_ids(p_mesh: Mesh, p_valid_bone_ids: PackedInt
 
 					var vertex_valid: bool = false
 
-					assert(bone_ids.size() == bone_weights.size())
+					if bone_ids.size() != bone_weights.size():
+						print("Bone IDs size does not match Bone Weights size")
+						return new_mesh
 
 					var found: bool = false
 					for bone_idx in range(0, bone_ids.size()):

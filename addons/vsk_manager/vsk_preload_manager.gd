@@ -173,7 +173,8 @@ func request_preloading_tasks() -> bool:
 
 func _process(_delta: float) -> void:
 	if preloading_failed_flag:
-		assert(false, "preloading failure flag triggered!")
+		push_error("preloading failure flag triggered!")
+		return
 
 
 func setup() -> void:

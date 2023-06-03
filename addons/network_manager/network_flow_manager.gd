@@ -129,7 +129,6 @@ func ordered_inserted(p_packet: RefCounted, p_time_sorted_queue: Array, p_packet
 	else:
 		p_time_sorted_queue.append(p_packet)
 
-
 func setup_and_send_ordered_queue(
 	p_time: float, p_queue: Array, p_time_sorted_queue: Array, p_transfer_mode: int
 ) -> Array:
@@ -174,7 +173,10 @@ func setup_and_send_ordered_queue(
 	for packet in current_queue:
 		if p_time >= packet.time:
 			var index: int = p_time_sorted_queue.find(packet)
-			assert(index >= 0)
+			if index < 0:
+				printerr("Index not found.")
+				continue
+
 			if (
 				packet.id == network_constants_const.ALL_PEERS
 				or packet.id == network_constants_const.SERVER_MASTER_PEER_ID

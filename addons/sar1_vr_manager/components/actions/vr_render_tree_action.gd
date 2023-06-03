@@ -41,5 +41,10 @@ func _ready() -> void:
 	if VRManager.xr_origin:
 		_update_scale(VRManager.xr_origin.get_world_scale())
 
-	assert(VRManager.world_origin_scale_changed.connect(self._update_scale) == OK)
-	assert(VRManager.xr_mode_changed.connect(self._xr_mode_changed) == OK)
+	var world_origin_scale_changed_result = VRManager.world_origin_scale_changed.connect(self._update_scale)
+	if world_origin_scale_changed_result != OK:
+		printerr("Failed to connect world_origin_scale_changed signal")
+
+	var xr_mode_changed_result = VRManager.xr_mode_changed.connect(self._xr_mode_changed)
+	if xr_mode_changed_result != OK:
+		printerr("Failed to connect xr_mode_changed signal")

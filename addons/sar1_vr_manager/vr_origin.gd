@@ -27,12 +27,21 @@ func clear_controllers() -> void:
 	for tracker_name in active_controllers.keys():
 		remove_tracker(tracker_name)
 
-	assert(active_controllers.is_empty())
-	assert(unknown_controller_count == 0)
+	if not active_controllers.is_empty():
+		printerr("Active controllers are not empty after clearing!")
+		return
 
-	assert(hand_controllers.is_empty())
-	assert(left_hand_controller == null)
-	assert(right_hand_controller == null)
+	if unknown_controller_count != 0:
+		printerr("Unknown controller count is not zero after clearing!")
+		return
+
+	if not hand_controllers.is_empty():
+		printerr("Hand controllers are not empty after clearing!")
+		return
+
+	if left_hand_controller != null or right_hand_controller != null:
+		printerr("Left or right hand controller is not null after clearing!")
+		return
 
 
 func add_tracker(p_tracker_name: StringName) -> void:

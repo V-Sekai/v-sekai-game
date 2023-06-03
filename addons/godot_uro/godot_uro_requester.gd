@@ -74,14 +74,13 @@ func http_download_progressed(_http_state: RefCounted, _bytes: int, _total_bytes
 	#print("Download progressed " + str(bytes) + "/" + str(total_bytes))
 	pass
 
-
 func request(
 	p_path: String, p_payload: Dictionary, p_use_token: int, p_options: Dictionary = DEFAULT_OPTIONS
 ) -> Result:
 	var http_state = await http_pool.new_http_state()
 	if http_state == null:
 		return Result.new(godot_uro_helper_const.RequesterCode.CANT_CONNECT, ERR_CANT_CREATE, -1)
-	#print("Got http state")
+
 	var download_prog_callable = self.http_download_progressed.bind(http_state)
 	if p_options.get("download_to"):
 		http_state.set_output_path(_get_option(p_options, "download_to"))
@@ -89,12 +88,9 @@ func request(
 
 	var http_client: HTTPClient = null
 	for i in range(3):
-		#print("Try connect...")
 		http_client = await http_state.connect_http(hostname, port, use_ssl)
 		if http_client != null:
-			#print("Connect done!")
 			break
-		#print("Failed connect...")
 
 	if http_client == null:
 		var err: int = http_state.connect_err
@@ -103,7 +99,6 @@ func request(
 		http_state.release()
 		return Result.new(godot_uro_helper_const.RequesterCode.CANT_CONNECT, err, -1)
 
-	#print("We got here! " + p_path)
 	var uri: String = p_path
 	var encoded_payload: PackedByteArray = PackedByteArray()
 	var headers: Array = []
@@ -142,16 +137,15 @@ func request(
 	if token and token is String:
 		headers.append("Authorization: Bearer %s" % token)
 
-	print("Do request! " + p_path)
-	assert(http_client.request_raw(_get_option(p_options, "method"), uri, headers, encoded_payload) == OK)
-	#print("Done request! now await")
+	var request_result = http_client.request_raw(_get_option(p_options, "method"), uri, headers, encoded_payload)
+	if request_result != OK:
+		printerr("Failed to send request.")
+		return
 
 	if not await http_state.wait_for_request():
-		#print("Do request failed...  " + p_path)
 		var ret = uro_requester_const.get_status_error_response(http_client.get_status())
 		http_state.release()
 		return ret
-	print("Done await! " + p_path)
 
 	if p_options.get("download_to"):
 		http_state.download_progressed.disconnect(download_prog_callable)

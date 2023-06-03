@@ -10,9 +10,10 @@ static func decode_24_bit_value(p_buffer: PackedByteArray) -> int:
 	integer = (p_buffer[0] & 0x000000ff | (p_buffer[1] << 8) & 0x0000ff00 | (p_buffer[2] << 16) & 0x00ff0000)
 	return integer
 
-
 func _init(p_buffer: PackedByteArray):
-	assert(typeof(p_buffer) == TYPE_PACKED_BYTE_ARRAY)
+	if typeof(p_buffer) != TYPE_PACKED_BYTE_ARRAY:
+		return
+
 	stream_peer_buffer = StreamPeerBuffer.new()
 	stream_peer_buffer.data_array = p_buffer
 

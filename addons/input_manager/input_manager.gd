@@ -238,7 +238,9 @@ func set_active(p_active: bool) -> void:
 
 
 func decrement_ingame_input_block() -> void:
-	assert(ingame_input_blocks > 0)
+	if ingame_input_blocks <= 0:
+		return
+
 	ingame_input_blocks -= 1
 	if ingame_input_blocks == 0:
 		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)

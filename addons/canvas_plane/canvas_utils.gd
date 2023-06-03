@@ -32,7 +32,10 @@ const UI_PIXELS_TO_METER = 1.0 / 1024
 
 
 static func find_child_control(p_root: Node) -> Control:
-	assert(p_root)
+	if not p_root:
+		printerr("p_root is null.")
+		return null
+
 	var control_node: Control = null
 	for child in p_root.get_children():
 		if child is Control:

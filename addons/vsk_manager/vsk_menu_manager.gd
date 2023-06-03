@@ -136,9 +136,6 @@ func _console_active(p_is_active: bool) -> void:
 		menu_request_decrement()
 
 
-##
-##
-##
 func menu_request_increment() -> void:
 	menu_request_count += 1
 	InputManager.increment_ingame_input_block()
@@ -146,11 +143,10 @@ func menu_request_increment() -> void:
 	_update_menu_canvas()
 
 
-##
-##
-##
 func menu_request_decrement() -> void:
-	assert(menu_request_count > 0)
+	if menu_request_count <= 0:
+		printerr("Menu request count is not greater than 0.")
+		return
 
 	menu_request_count -= 1
 	InputManager.decrement_ingame_input_block()
@@ -158,7 +154,6 @@ func menu_request_decrement() -> void:
 	_update_menu_canvas()
 
 
-##
 ## Called to request the main menu to disappear.
 ##
 func hide_menu() -> void:
@@ -324,42 +319,44 @@ func _update_console() -> void:
 
 
 func setup() -> void:
-	if not Engine.is_editor_hint():
-		console_root = Control.new()
-		console_root.set_name("ConsoleRoot")
-		console_root.set_anchors_preset(Control.PRESET_FULL_RECT)
+	if Engine.is_editor_hint():
+		return
 
-		menu_root = NavigationController.new()
-		menu_root.set_name("MenuRoot")
-		menu_root.set_anchors_preset(Control.PRESET_FULL_RECT)
+	console_root = Control.new()
+	console_root.set_name("ConsoleRoot")
+	console_root.set_anchors_preset(Control.PRESET_FULL_RECT)
 
-		# Add console
-		call_deferred("_update_console")
+	menu_root = NavigationController.new()
+	menu_root.set_name("MenuRoot")
+	menu_root.set_anchors_preset(Control.PRESET_FULL_RECT)
 
-		ingame_gui_root = Control.new()
-		ingame_gui_root.set_name("IngameGUIRoot")
-		ingame_gui_root.set_anchors_preset(Control.PRESET_FULL_RECT)
-		ingame_gui_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# Add console
+	call_deferred("_update_console")
 
-		menu_canvas_pivot_instance = menu_canvas_pivot_const.instantiate()
+	ingame_gui_root = Control.new()
+	ingame_gui_root.set_name("IngameGUIRoot")
+	ingame_gui_root.set_anchors_preset(Control.PRESET_FULL_RECT)
+	ingame_gui_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
-		var project_theme_path: String = ProjectSettings.get_setting("gui/theme/custom")
-		if !ResourceLoader.has_cached(project_theme_path):
-			project_theme = ResourceLoader.load(project_theme_path)
-			menu_root.theme = project_theme
+	menu_canvas_pivot_instance = menu_canvas_pivot_const.instantiate()
 
-		if !Engine.is_editor_hint():
-			assert(VRManager.xr_mode_changed.connect(self.setup_viewport) == OK)
+	var project_theme_path: String = ProjectSettings.get_setting("gui/theme/custom")
+	if !ResourceLoader.has_cached(project_theme_path):
+		project_theme = ResourceLoader.load(project_theme_path)
+		menu_root.theme = project_theme
 
-		# Setup the fader for the flat view
-		flat_fader = ColorRect.new()
-		flat_fader.set_color(Color(0.0, 0.0, 0.0, 0.0))
-		flat_fader.set_name("Fader")
-		flat_fader.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE, 0)
-		flat_fader.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if VRManager.xr_mode_changed.connect(self.setup_viewport) != OK:
+		printerr("Failed to connect VRManager.xr_mode_changed signal.")
 
-		if !Engine.is_editor_hint():
-			assert(FadeManager.color_changed.connect(self._fade_color_changed) == OK)
+	# Setup the fader for the flat view
+	flat_fader = ColorRect.new()
+	flat_fader.set_color(Color(0.0, 0.0, 0.0, 0.0))
+	flat_fader.set_name("Fader")
+	flat_fader.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE, 0)
+	flat_fader.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	if FadeManager.color_changed.connect(self._fade_color_changed) != OK:
+		printerr("Failed to connect FadeManager.color_changed signal.")
 
 
 func _input(p_event: InputEvent):
@@ -378,8 +375,9 @@ func _input(p_event: InputEvent):
 func _ready():
 	if Engine.is_editor_hint():
 		set_process_input(false)
+		return
 	else:
 		set_process_input(true)
 
-	if !Engine.is_editor_hint():
-		assert(VRManager.new_origin_assigned.connect(self.new_origin_assigned) == OK)
+	if VRManager.new_origin_assigned.connect(self.new_origin_assigned) != OK:
+		printerr("Failed to connect VRManager.new_origin_assigned signal.")

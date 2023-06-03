@@ -86,9 +86,15 @@ func refresh_edited_object() -> void:
 
 func _edit(p_object: Object) -> void:
 	current_edited_object = p_object
-	assert(current_edited_object)
-	if !current_edited_object.is_connected("script_changed", refresh_edited_object):
-		assert(current_edited_object.connect("script_changed", refresh_edited_object, CONNECT_DEFERRED) == OK)
+	
+	if not current_edited_object:
+		return
+
+	if !current_edited_object.is_connected("script_changed", Callable(self, "refresh_edited_object")):
+		var connection_result = current_edited_object.connect("script_changed", Callable(self, "refresh_edited_object"), CONNECT_DEFERRED)
+		if connection_result != OK:
+			push_error("Error: Failed to connect 'script_changed' signal.")
+			return
 
 	map_definition_editor.edit(current_edited_object)
 	update_menu_options(current_edited_object)

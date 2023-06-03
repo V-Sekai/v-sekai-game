@@ -54,9 +54,19 @@ func create_spatial_game_viewport() -> SubViewport:
 
 	return spatial_game_viewport
 
-
 func _ready() -> void:
 	if !Engine.is_editor_hint():
-		assert(get_viewport().size_changed.connect(self.update_viewports) == OK)
-		assert(GraphicsManager.graphics_changed.connect(self.update_viewports) == OK)
-		assert(VRManager.xr_mode_changed.connect(self.update_viewports) == OK)
+		var viewport_result = get_viewport().size_changed.connect(self.update_viewports)
+		if viewport_result != OK:
+			print("Failed to connect size_changed signal")
+			return
+
+		var graphics_result = GraphicsManager.graphics_changed.connect(self.update_viewports)
+		if graphics_result != OK:
+			print("Failed to connect graphics_changed signal")
+			return
+
+		var xr_result = VRManager.xr_mode_changed.connect(self.update_viewports)
+		if xr_result != OK:
+			print("Failed to connect xr_mode_changed signal")
+			return

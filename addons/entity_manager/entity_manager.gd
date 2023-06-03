@@ -66,14 +66,19 @@ func scene_tree_execution_command(p_command: int, p_entity_instance: Node):
 
 func _add_entity(p_entity: Node) -> void:
 	print("Adding: " + str(p_entity))
-	assert(!entity_reference_dictionary.has(p_entity))
+	if entity_reference_dictionary.has(p_entity):
+		printerr("Entity already exists in the dictionary.")
+		return
 	entity_reference_dictionary[p_entity.get_entity_ref()] = p_entity
 
 
 func _remove_entity(p_entity: Node) -> void:
 	print("Removing: " + str(p_entity))
-	if entity_reference_dictionary.has(p_entity.get_entity_ref()):
-		assert(entity_reference_dictionary.erase(p_entity.get_entity_ref()))
+	var entity_ref = p_entity.get_entity_ref()
+	if entity_reference_dictionary.has(entity_ref):
+		if not entity_reference_dictionary.erase(entity_ref):
+			printerr("Failed to remove entity from the dictionary.")
+			return
 	if entity_kinematic_integration_callbacks.has(p_entity):
 		entity_kinematic_integration_callbacks.erase(p_entity)
 
