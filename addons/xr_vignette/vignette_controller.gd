@@ -74,10 +74,11 @@ func _process(delta: float):
 		if rt < virtual_timestamp - running_average_interval:
 			count_to_remove += 1
 	count_to_remove = min(count_to_remove, len(running_timestamps) - 2)
-	if count_to_remove > 0:
-		running_timestamps.resize(len(running_timestamps) - count_to_remove)
-		running_origin_xforms.resize(len(running_timestamps) - count_to_remove)
-		running_camera_xforms.resize(len(running_timestamps) - count_to_remove)
+	if count_to_remove > 0 and len(running_timestamps) - count_to_remove > 0:
+		count_to_remove = len(running_timestamps) - count_to_remove
+		running_timestamps.resize(count_to_remove)
+		running_origin_xforms.resize(count_to_remove)
+		running_camera_xforms.resize(count_to_remove)
 
 	running_timestamps.insert(0, virtual_timestamp)
 	running_origin_xforms.insert(0, xr_origin_node.global_transform)
