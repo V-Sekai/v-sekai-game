@@ -1106,7 +1106,9 @@ func setup() -> void:
 		shard_heartbeat_timer.set_name("ShardHeartbeatTimer")
 		add_child(shard_heartbeat_timer, true)
 
-		assert(shard_heartbeat_timer.timeout.connect(self._heartbeat_timer_timout) == OK)
+		if shard_heartbeat_timer.timeout.connect(self._heartbeat_timer_timout) != OK:
+			printerr("Failed to connect ShardHeartbeatTimer timeout signal")
+			return
 
 		var godot_speech: Node = GodotSpeech
 		if godot_speech:

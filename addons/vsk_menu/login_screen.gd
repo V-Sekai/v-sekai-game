@@ -70,7 +70,9 @@ func cancel_sign_in() -> void:
 
 func _ready() -> void:
 	if !Engine.is_editor_hint():
-		assert(VSKAccountManager.session_request_complete.connect(self._session_request_complete) == OK)
+		if VSKAccountManager.session_request_complete.connect(self._session_request_complete) != OK:
+			push_error("Failed to connect session_request_complete signal.")
+			return
 
 	username_or_email_input = get_node_or_null(username_or_email_input_nodepath)
 	password_input = get_node_or_null(password_input_nodepath)

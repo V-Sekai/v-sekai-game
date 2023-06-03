@@ -125,7 +125,9 @@ func _destroy_loading_task(p_path) -> void:
 	print_debug("background_loader_destroy_loading_task: {path}".format({"path": str(p_path)}))
 
 	if _loading_tasks.has(p_path):
-		assert(_loading_tasks.erase(p_path))
+		if not _loading_tasks.erase(p_path):
+			push_error("Failed to erase loading task: {path}".format({"path": str(p_path)}))
+			return
 	else:
 		printerr(
 			"background_loader_destroy_loading_task: could not destroy loading task {path}".format(

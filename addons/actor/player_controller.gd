@@ -358,14 +358,18 @@ func _master_ready() -> void:
 
 	### Avatar ###
 	_update_avatar(VSKPlayerManager.avatar_path)
-	assert(VSKPlayerManager.avatar_path_changed.connect(self._local_avatar_path_updated) == OK)
+	if VSKPlayerManager.avatar_path_changed.connect(self._local_avatar_path_updated) != OK:
+		push_error("Failed to connect avatar_path_changed signal.")
+		return
 	###
 
 	_player_input.setup_xr_camera()
 
 	_player_teleport_controller.setup(self)
 
-	assert(VSKDebugManager.noclip_changed.connect(self._noclip_changed) == OK)
+	if VSKDebugManager.noclip_changed.connect(self._noclip_changed) != OK:
+		push_error("Failed to connect noclip_changed signal.")
+		return
 
 	if _character_body:
 		_character_body.collision_layer = local_player_collision
@@ -385,12 +389,16 @@ func _puppet_ready() -> void:
 	_render_node.hide()
 
 	if get_entity_node().network_logic_node:
-		assert(_ik_space.external_trackers_changed.connect(_render_node.show, CONNECT_ONE_SHOT) == OK)
+		if _ik_space.external_trackers_changed.connect(_render_node.show, CONNECT_ONE_SHOT) != OK:
+			push_error("Failed to connect external_trackers_changed signal.")
+			return
 
 	_state_machine.start_state = NodePath("Networked")
 
 	### Avatar ###
-	assert(VSKNetworkManager.player_avatar_path_updated.connect(self._player_network_avatar_path_updated) == OK)
+	if VSKNetworkManager.player_avatar_path_updated.connect(self._player_network_avatar_path_updated) != OK:
+		push_error("Failed to connect player_avatar_path_updated signal.")
+		return
 	if VSKNetworkManager.player_avatar_paths.has(get_multiplayer_authority()):
 		_update_avatar(VSKNetworkManager.player_avatar_paths[get_multiplayer_authority()])
 	###

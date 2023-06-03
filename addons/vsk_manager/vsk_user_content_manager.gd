@@ -64,7 +64,8 @@ func finished_asset_request() -> void:
 		VSKAssetManager.request_cancelled.disconnect(self._user_content_asset_request_cancelled)
 		VSKAssetManager.request_started.disconnect(self._user_content_asset_request_started)
 	elif asset_requests_in_progress < 0:
-		assert(false, "Asset request underflow!")
+		push_error("Asset request underflow!")
+		return
 
 func _user_content_asset_request_complete(p_url: String, p_request_object: Dictionary, p_response_code: int) -> void:
 	if user_content_urls.has(p_url):

@@ -36,8 +36,9 @@ func _ready():
 	if server_name_line_edit:
 		server_name_line_edit.text = VSKNetworkManager.DEFAULT_SERVER_NAME
 
-	assert($MapSelectorPopup.path_selected.connect(self._map_path_selected) == OK)
-
+	if $MapSelectorPopup.path_selected.connect(self._map_path_selected) != OK:
+		push_error("Failed to connect path_selected signal.")
+		return
 
 func _gameflow_state_changed(p_gameflow_state: int):
 	if p_gameflow_state == VSKGameFlowManager.GAMEFLOW_STATE_INTERSTITIAL:

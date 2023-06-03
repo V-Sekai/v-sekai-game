@@ -61,4 +61,6 @@ func _ready() -> void:
 	name_input.set_text(VSKPlayerManager.display_name)
 	avatar_input.set_text(VSKPlayerManager.avatar_path)
 
-	assert($AvatarSelectorPopup.path_selected.connect(self._avatar_path_selected) == OK)
+	if $AvatarSelectorPopup.path_selected.connect(self._avatar_path_selected) != OK:
+		push_error("Failed to connect path_selected signal")
+		return

@@ -36,6 +36,9 @@ func update_transform(p_transform: Transform3D) -> void:
 func on_serialize(p_writer: Object, p_initial_state: bool) -> Object:
 	if p_initial_state:
 		pass
+	
+	if not entity_node is Node3D:
+		return
 
 	# Transform
 	var transform: Transform3D = entity_node.simulation_logic_node.get_transform()

@@ -83,7 +83,10 @@ func refresh() -> void:
 		server_button.queue_free()
 		shard_list.remove_child(server_button)
 
-	assert(VSKShardManager.shard_list_callback.connect(self._shard_list_callback, CONNECT_ONE_SHOT) == OK)
+	if VSKShardManager.shard_list_callback.connect(self._shard_list_callback, CONNECT_ONE_SHOT) != OK:
+		push_error("Failed to connect shard_list_callback signal")
+		return
+
 	VSKShardManager.show_shards(shard_list_callback)
 
 

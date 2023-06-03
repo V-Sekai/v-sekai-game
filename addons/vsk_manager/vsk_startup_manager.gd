@@ -90,15 +90,18 @@ func setup_vsk_singletons() -> void:
 ## the resource preloads
 ##
 func startup() -> void:
-	assert(VSKVersion != null)  # VSKVersion must be moved up before VSKStartupManager in Autoloads
+	if VSKVersion == null:
+		printerr("VSKVersion must be moved up before VSKStartupManager in Autoloads")
+		return
 	print("V-Sekai Build: %s" % vsk_version_const.get_build_label())
 
 
 func flow_preload() -> void:
 	VSKGameFlowManager.go_to_preloading()
 	if !VSKPreloadManager.request_preloading_tasks():
-		assert(false, "Could not request preloading tasks!")
-	
+		printerr("Could not request preloading tasks!")
+		return
+
 
 func execute_fade() -> void:
 	await VSKFadeManager.execute_fade(true).fade_complete
