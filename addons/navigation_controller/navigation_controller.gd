@@ -30,13 +30,14 @@ func get_top_view_controller() -> Node:  # -> ViewController:
 
 func clear_view_node(p_view_node: Control, p_delete: bool) -> void:
 	for child in p_view_node.get_children():
-		child.will_disappear()
+		if child and child is ViewController:
+			child.will_disappear()
 		if p_delete:
 			child.queue_free()
 		current_view_node.remove_child(child)
 
 
-func push_view_controller(p_view_controller: ViewController, p_animated: bool) -> void:
+func push_view_controller(p_view_controller: Control, p_animated: bool) -> void:
 	if p_animated:
 		pass
 
@@ -44,7 +45,7 @@ func push_view_controller(p_view_controller: ViewController, p_animated: bool) -
 
 	clear_view_node(current_view_node, false)
 
-	if p_view_controller:
+	if p_view_controller and p_view_controller is ViewController:
 		p_view_controller.will_appear()
 	current_view_node.add_child(get_top_view_controller(), true)
 

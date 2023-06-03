@@ -84,6 +84,7 @@ func clear_cache() -> void:
 
 func is_whitelisted(p_url: String, p_user_content_type: int) -> bool:
 	var whitelist: PackedStringArray
+
 	match p_user_content_type:
 		user_content_type.USER_CONTENT_AVATAR:
 			whitelist = avatar_whitelist
@@ -102,9 +103,9 @@ func is_whitelisted(p_url: String, p_user_content_type: int) -> bool:
 
 	if p_url.is_empty():
 		printerr("Asset is not whitelisted!")
-		return false
+	else:
+		printerr("Asset %s is not whitelisted!" % p_url)
 
-	printerr("Asset %s is not whitelisted!" % p_url)
 	return false
 
 
@@ -135,7 +136,6 @@ func get_error_path(p_type: int, p_asset_err: int) -> String:
 		_:
 			return ""
 
-
 func _http_request_completed(
 	p_result: int,
 	p_response_code: int,
@@ -145,40 +145,42 @@ func _http_request_completed(
 ) -> void:
 	var response_code: int = ASSET_UNKNOWN_FAILURE
 
-	# TODO: make the writing of the file background threaded
-	if p_result == OK:
-		match p_response_code:
-			HTTPClient.RESPONSE_OK:
-				if p_request_object["path"] == "":
-					var path: String = (
-						"%s/%s.%s"
-						% [ASSET_CACHE_PATH, String(p_request_object["url"]).md5_text(), CACHE_FILE_EXTENSION]
-					)
-					var file: FileAccess = FileAccess.open(path, FileAccess.WRITE)
-					if file != null:
-						file.store_buffer(p_body)
-					p_request_object["path"] = path
-				response_code = ASSET_OK
-			HTTPClient.RESPONSE_UNAUTHORIZED:
-				p_request_object["path"] = get_error_path(p_request_object["asset_type"], ASSET_UNAUTHORIZED)
-				response_code = ASSET_FORBIDDEN
-			HTTPClient.RESPONSE_FORBIDDEN:
-				p_request_object["path"] = get_error_path(p_request_object["asset_type"], ASSET_FORBIDDEN)
-				response_code = ASSET_FORBIDDEN
-			HTTPClient.RESPONSE_NOT_FOUND:
-				p_request_object["path"] = get_error_path(p_request_object["asset_type"], ASSET_NOT_FOUND)
-				response_code = ASSET_NOT_FOUND
-			HTTPClient.RESPONSE_IM_A_TEAPOT:
-				p_request_object["path"] = get_error_path(p_request_object["asset_type"], ASSET_I_AM_A_TEAPOT)
-				response_code = ASSET_I_AM_A_TEAPOT
-			HTTPClient.RESPONSE_UNAVAILABLE_FOR_LEGAL_REASONS:
-				p_request_object["path"] = get_error_path(
-					p_request_object["asset_type"], ASSET_UNAVAILABLE_FOR_LEGAL_REASONS
+	if p_result != OK:
+		_complete_request(p_request_object, response_code)
+		return
+
+	match p_response_code:
+		HTTPClient.RESPONSE_OK:
+			if p_request_object["path"] == "":
+				var path: String = (
+					"%s/%s.%s"
+					% [ASSET_CACHE_PATH, String(p_request_object["url"]).md5_text(), CACHE_FILE_EXTENSION]
 				)
-				response_code = ASSET_UNAVAILABLE_FOR_LEGAL_REASONS
-			_:
-				p_request_object["path"] = get_error_path(p_request_object["asset_type"], ASSET_UNKNOWN_FAILURE)
-				response_code = ASSET_UNKNOWN_FAILURE
+				var file: FileAccess = FileAccess.open(path, FileAccess.WRITE)
+				if file != null:
+					file.store_buffer(p_body)
+				p_request_object["path"] = path
+			response_code = ASSET_OK
+		HTTPClient.RESPONSE_UNAUTHORIZED:
+			p_request_object["path"] = get_error_path(p_request_object["asset_type"], ASSET_UNAUTHORIZED)
+			response_code = ASSET_FORBIDDEN
+		HTTPClient.RESPONSE_FORBIDDEN:
+			p_request_object["path"] = get_error_path(p_request_object["asset_type"], ASSET_FORBIDDEN)
+			response_code = ASSET_FORBIDDEN
+		HTTPClient.RESPONSE_NOT_FOUND:
+			p_request_object["path"] = get_error_path(p_request_object["asset_type"], ASSET_NOT_FOUND)
+			response_code = ASSET_NOT_FOUND
+		HTTPClient.RESPONSE_IM_A_TEAPOT:
+			p_request_object["path"] = get_error_path(p_request_object["asset_type"], ASSET_I_AM_A_TEAPOT)
+			response_code = ASSET_I_AM_A_TEAPOT
+		HTTPClient.RESPONSE_UNAVAILABLE_FOR_LEGAL_REASONS:
+			p_request_object["path"] = get_error_path(
+				p_request_object["asset_type"], ASSET_UNAVAILABLE_FOR_LEGAL_REASONS
+			)
+			response_code = ASSET_UNAVAILABLE_FOR_LEGAL_REASONS
+		_:
+			p_request_object["path"] = get_error_path(p_request_object["asset_type"], ASSET_UNKNOWN_FAILURE)
+			response_code = ASSET_UNKNOWN_FAILURE
 
 	if request_objects.has(p_request_object["request_path"]):
 		_complete_request(p_request_object, response_code)
@@ -201,48 +203,46 @@ func make_http_request(p_request_object: Dictionary, p_bypass_whitelist: bool) -
 	var url: String = p_request_object["url"]
 	var asset_type: int = request_object["asset_type"]
 
-	if p_bypass_whitelist or is_whitelisted(url, asset_type):
-		var etag_path: String = "%s/%s.%s" % [ASSET_CACHE_PATH, String(url).md5_text(), ETAG_FILE_EXTENSION]
-		if FileAccess.file_exists(etag_path):
-			var etag_file = FileAccess.open(etag_path, FileAccess.READ)
-			if etag_file != null:
-				var resource_path: String = (
-					"%s/%s.%s" % [ASSET_CACHE_PATH, String(url).md5_text(), CACHE_FILE_EXTENSION]
-				)
-
-				if FileAccess.file_exists(resource_path):
-					request_object["path"] = resource_path
-
-					_complete_request(p_request_object, ASSET_OK)
-
-					return request_object
-			else:
-				printerr("Could not open etag file!")
-		else:
-			var etag_file: FileAccess = FileAccess.open(etag_path, FileAccess.WRITE)
-			if etag_file == null:
-				printerr("Could not create etag file!")
-
-		var http_request: HTTPRequest = HTTPRequest.new()
-		http_request.name = "httpreq"
-		http_request.use_threads = true
-		http_request.download_chunk_size = HTTP_DOWNLOAD_CHUNK_SIZE
-		add_child(http_request, true)
-
-		if http_request.request_completed.connect(self._http_request_completed.bind(request_object)) != OK:
-			printerr("Could not connect signal 'request_complete'!")
-
-		register_request(request_object)
-		if http_request.request(url) == OK:
-			request_object["object"] = http_request
-
-			request_started.emit(request_object["request_path"])
-		else:
-			request_object["path"] = get_error_path(request_object["asset_type"], ASSET_UNKNOWN_FAILURE)
-			_complete_request(p_request_object, ASSET_UNKNOWN_FAILURE)
-	else:
+	if not p_bypass_whitelist and not is_whitelisted(url, asset_type):
 		request_object["path"] = get_error_path(request_object["asset_type"], ASSET_NOT_WHITELISTED)
 		_complete_request(p_request_object, ASSET_NOT_WHITELISTED)
+		return request_object
+
+	var etag_path: String = "%s/%s.%s" % [ASSET_CACHE_PATH, String(url).md5_text(), ETAG_FILE_EXTENSION]
+	if FileAccess.file_exists(etag_path):
+		var etag_file = FileAccess.open(etag_path, FileAccess.READ)
+		if etag_file != null:
+			var resource_path: String = (
+				"%s/%s.%s" % [ASSET_CACHE_PATH, String(url).md5_text(), CACHE_FILE_EXTENSION]
+			)
+
+			if FileAccess.file_exists(resource_path):
+				request_object["path"] = resource_path
+				_complete_request(p_request_object, ASSET_OK)
+				return request_object
+		else:
+			printerr("Could not open etag file!")
+	else:
+		var etag_file: FileAccess = FileAccess.open(etag_path, FileAccess.WRITE)
+		if etag_file == null:
+			printerr("Could not create etag file!")
+
+	var http_request: HTTPRequest = HTTPRequest.new()
+	http_request.name = "httpreq"
+	http_request.use_threads = true
+	http_request.download_chunk_size = HTTP_DOWNLOAD_CHUNK_SIZE
+	add_child(http_request, true)
+
+	if http_request.request_completed.connect(self._http_request_completed.bind(request_object)) != OK:
+		printerr("Could not connect signal 'request_complete'!")
+
+	register_request(request_object)
+	if http_request.request(url) == OK:
+		request_object["object"] = http_request
+		request_started.emit(request_object["request_path"])
+	else:
+		request_object["path"] = get_error_path(request_object["asset_type"], ASSET_UNKNOWN_FAILURE)
+		_complete_request(p_request_object, ASSET_UNKNOWN_FAILURE)
 
 	return request_object
 
@@ -278,7 +278,6 @@ func make_local_file_request(p_request_object: Dictionary, p_bypass_whitelist: b
 static func _get_full_url_for_uro_request(p_request) -> String:
 	return GodotUro.get_base_url() + p_request
 
-
 func _uro_api_request(p_request_object: Dictionary, p_id: String, p_asset_type: int):
 	var async_result = null
 	var user_content_type_string: String = ""
@@ -290,40 +289,40 @@ func _uro_api_request(p_request_object: Dictionary, p_id: String, p_asset_type: 
 			async_result = await GodotUro.godot_uro_api.get_map_async(p_id)
 			user_content_type_string = "map"
 
-	# Make sure the request object hasn't been cancelled
-	if async_result and request_objects.has(p_request_object["request_path"]):
-		var request_path: String = p_request_object["request_path"]
-		if GodotUro.godot_uro_helper_const.requester_result_is_ok(async_result):
-			print("Uro Request: %s" % str(async_result["output"]))
-			var data_valid: bool = false
+	if not async_result is Dictionary or not request_objects.has(p_request_object["request_path"]):
+		return {}
 
-			var output: Dictionary = async_result["output"]
-			if output.has("data"):
-				var data = output["data"]
-				if data.has(user_content_type_string):
-					var user_content = data[user_content_type_string]
-					if user_content.has("user_content_data"):
-						var user_content_data = user_content["user_content_data"]
-						p_request_object["url"] = vsk_asset_manager_const._get_full_url_for_uro_request(
-							user_content_data
-						)
-						data_valid = true
-						p_request_object = make_http_request(p_request_object, true)
-						return p_request_object
-
-			if !data_valid:
-				print("Uro Request for %s data invalid" % request_path)
-
-				_complete_request(p_request_object, ASSET_INVALID)
-		else:
-			print(
-				(
-					"Uro Request for %s returned with error: %s"
-					% [request_path, GodotUro.godot_uro_helper_const.get_full_requester_error_string(async_result)]
-				)
+	var request_path: String = p_request_object["request_path"]
+	if not GodotUro.godot_uro_helper_const.requester_result_is_ok(async_result):
+		print(
+			(
+				"Uro Request for %s returned with error: %s"
+				% [request_path, GodotUro.godot_uro_helper_const.get_full_requester_error_string(async_result)]
 			)
+		)
+		_complete_request(p_request_object, ASSET_UNKNOWN_FAILURE)
+		return {}
 
-			_complete_request(p_request_object, ASSET_UNKNOWN_FAILURE)
+	print("Uro Request: %s" % str(async_result["output"]))
+	var data_valid: bool = false
+
+	var output: Dictionary = async_result["output"]
+	if output.has("data"):
+		var data = output["data"]
+		if data.has(user_content_type_string):
+			var user_content = data[user_content_type_string]
+			if user_content.has("user_content_data"):
+				var user_content_data = user_content["user_content_data"]
+				p_request_object["url"] = vsk_asset_manager_const._get_full_url_for_uro_request(
+					user_content_data
+				)
+				data_valid = true
+				p_request_object = make_http_request(p_request_object, true)
+				return p_request_object
+
+	if not data_valid:
+		print("Uro Request for %s data invalid" % request_path)
+		_complete_request(p_request_object, ASSET_INVALID)
 
 	return {}
 

@@ -1,8 +1,6 @@
 extends Node
 
-###########################
-# V-Sekai Preload Manager #
-###########################
+## V-Sekai Preload Manager
 
 ##
 ## The preload manager is class responsible for handling resources which need
@@ -171,11 +169,6 @@ func request_preloading_tasks() -> bool:
 		_next_preloading_task()
 
 	return true
-
-
-########
-# Node #
-########
 
 
 func _process(_delta: float) -> void:

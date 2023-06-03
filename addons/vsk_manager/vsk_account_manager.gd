@@ -34,7 +34,6 @@ var token_refresh_in_progress: bool = false
 func is_signed_in() -> bool:
 	return signed_in
 
-
 func _update_session(
 	p_renewal_token: String,
 	p_access_token: String,
@@ -47,8 +46,8 @@ func _update_session(
 	if not godot_uro:
 		signed_in = false
 		return
-	signed_in = p_signed_in
 
+	signed_in = p_signed_in
 	var token_changed: bool = false
 
 	if GodotUroData.renewal_token != p_renewal_token:
@@ -67,17 +66,21 @@ func _update_session(
 	can_upload_maps = p_user_privilege_rulesets.get("can_upload_maps", false)
 	can_upload_props = p_user_privilege_rulesets.get("can_upload_props", false)
 
-	if signed_in:
-		godot_uro.cfg.set_value("api", "renewal_token", GodotUroData.renewal_token)
-		if godot_uro.cfg.save(godot_uro.get_uro_editor_config_path()) != OK:
-			printerr("Could not save editor token!")
-		if godot_uro.cfg.save(godot_uro.get_uro_config_path()) != OK:
-			printerr("Could not save game token!")
+	if not signed_in:
+		return
 
-	if token_changed:
-		token_refresh_in_progress = false
-		if not GodotUroData.renewal_token.is_empty():
-			token_refresh_timer.start(REFRESH_TIMER)
+	godot_uro.cfg.set_value("api", "renewal_token", GodotUroData.renewal_token)
+	if godot_uro.cfg.save(godot_uro.get_uro_editor_config_path()) != OK:
+		printerr("Could not save editor token!")
+	if godot_uro.cfg.save(godot_uro.get_uro_config_path()) != OK:
+		printerr("Could not save game token!")
+
+	if not token_changed:
+		return
+
+	token_refresh_in_progress = false
+	if not GodotUroData.renewal_token.is_empty():
+		token_refresh_timer.start(REFRESH_TIMER)
 
 
 func _load_session() -> void:
@@ -121,22 +124,22 @@ func _process_result_and_update(p_result: Dictionary) -> Dictionary:
 
 
 func _process_result_and_delete(p_result: Dictionary) -> Dictionary:
-	if godot_uro:
-		var processed_result: Dictionary = godot_uro.godot_uro_helper_const.process_session_json(p_result)
-
-		if godot_uro.godot_uro_helper_const.requester_result_is_ok(processed_result):
-			_delete_session()
-		else:
-			printerr(
-				(
-					"_process_result_and_delete: %s"
-					% godot_uro.godot_uro_helper_const.get_full_requester_error_string(processed_result)
-				)
-			)
-
-		return processed_result
-	else:
+	if not godot_uro:
 		return {}
+
+	var processed_result: Dictionary = godot_uro.godot_uro_helper_const.process_session_json(p_result)
+
+	if not godot_uro.godot_uro_helper_const.requester_result_is_ok(processed_result):
+		printerr(
+			(
+				"_process_result_and_delete: %s"
+				% godot_uro.godot_uro_helper_const.get_full_requester_error_string(processed_result)
+			)
+		)
+		return processed_result
+
+	_delete_session()
+	return processed_result
 
 
 func _process_result_and_update_session(p_result: Dictionary) -> Dictionary:
@@ -164,23 +167,26 @@ func _process_result_and_update_registration(p_result: Dictionary) -> Dictionary
 
 
 func renew_session() -> Dictionary:
-	if godot_uro and godot_uro.godot_uro_api:
-		session_renew_started.emit()
-		if GodotUroData.renewal_token:
-			token_refresh_in_progress = true
-			var result = await godot_uro.godot_uro_api.renew_session_async()
-			print("renew_session result received.")
-			if typeof(result) != TYPE_DICTIONARY:
-				push_error("Failed to get_profile_async: " + str(result))
-				return {}
-			return _process_result_and_update_session(result)
-		else:
-			token_refresh_in_progress = false
-			_clear_session()
-			session_request_complete.emit(godot_uro.godot_uro_helper_const.RequesterCode.NO_TOKEN, "No token")
-			return {}
+	if not godot_uro or not godot_uro.godot_uro_api:
+		return {}
 
-	return {}
+	session_renew_started.emit()
+
+	if GodotUroData.renewal_token.is_empty():
+		token_refresh_in_progress = false
+		_clear_session()
+		session_request_complete.emit(godot_uro.godot_uro_helper_const.RequesterCode.NO_TOKEN, "No token")
+		return {}
+
+	token_refresh_in_progress = true
+	var result = await godot_uro.godot_uro_api.renew_session_async()
+	print("renew_session result received.")
+
+	if typeof(result) != TYPE_DICTIONARY:
+		push_error("Failed to get_profile_async: " + str(result))
+		return {}
+
+	return _process_result_and_update_session(result)
 
 
 func get_profile_info() -> Dictionary:
@@ -304,10 +310,6 @@ func _node_added(p_node: Node) -> void:
 func _node_removed(p_node: Node) -> void:
 	if p_node == godot_uro:
 		_unlink_godot_uro()
-
-
-##
-##
 
 
 func setup() -> void:
