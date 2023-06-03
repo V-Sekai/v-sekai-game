@@ -68,8 +68,6 @@ func start() -> void:
 	if start_state == NodePath():
 		start_state = get_child(0).get_path()
 	for child in get_children():
-		if not child.has_signal("finished"):
-			continue
 		child.finished.connect(self._change_state)
 		child.state_machine = self
 	initialize(start_state)
