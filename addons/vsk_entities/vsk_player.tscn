@@ -175,7 +175,6 @@ doppler_tracking = 1
 [node name="IKSpace" type="Node3D" parent="TargetSmooth/Render"]
 script = ExtResource("13")
 _player_input_path = NodePath("../../../PlayerInput")
-debug_points = true
 origin_interpolation_factor = 15.0
 rotation_interpolation_factor = 15.0
 _camera_controller_node_path = NodePath("../../PlayerCameraController")
