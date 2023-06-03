@@ -34,6 +34,7 @@ var actor_controller: Node = null  # of type actor_controller.gd
 
 var noclip: bool = false
 
+@onready var state_chart: StateChart = $StateChart
 
 func _change_state(state_name: String) -> void:
 	##
@@ -48,12 +49,25 @@ func _change_state(state_name: String) -> void:
 var input_direction: Vector3 = Vector3():
 	set = set_input_direction
 
+
 var input_magnitude: float = 0.0:
 	set = set_input_magnitude
 
 
 func is_noclipping() -> bool:
 	return noclip
+
+
+func is_attempting_movement() -> bool:
+	return input_direction.length() > 0.0 and input_magnitude > 0.0
+
+
+func is_attempting_jumping() -> bool:
+	return InputManager.is_ingame_action_just_pressed("jump")
+
+
+func is_grounded() -> bool:
+	return get_actor_controller().is_grounded()
 
 
 func get_vertical_input() -> float:
@@ -82,20 +96,8 @@ func get_input_magnitude() -> float:
 	return input_magnitude
 
 
-func is_attempting_movement() -> bool:
-	return input_direction.length() > 0.0 and input_magnitude > 0.0
-
-
-func is_attempting_jumping() -> bool:
-	return InputManager.is_ingame_action_just_pressed("jump")
-
-
 func get_actor_controller() -> Node:
 	return actor_controller
-
-
-func is_grounded() -> bool:
-	return get_actor_controller().is_grounded()
 
 
 func get_velocity() -> Vector3:
@@ -122,8 +124,16 @@ func get_motion_vector() -> Vector3:
 	return actor_controller.motion_vector
 
 
+func print_event_received(event):
+	print(event)
+
+
 func update(p_delta: float) -> void:
 	super.update(p_delta)
+	state_chart.set_expression_property("noclipping", is_noclipping())
+	state_chart.set_expression_property("attempting_movement", is_attempting_movement())
+	state_chart.set_expression_property("attempting_jumping", is_attempting_movement())
+	state_chart.set_expression_property("grounded", is_grounded())
 
 
 func start() -> void:
