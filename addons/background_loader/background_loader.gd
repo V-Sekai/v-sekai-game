@@ -178,80 +178,52 @@ func _attempt_to_start_loading_thread() -> void:
 		if !_loading_thread.is_started():
 			_start_loading_thread()
 
-
 func _threaded_loading_complete() -> void:
 	_loading_thread.wait_to_finish()
 	print_debug("background_loader_thread_ended (success)")
 	thread_ended.emit()
 
-	# If there are still tasks pending, restart the thread
 	_attempt_to_start_loading_thread()
-
-
 func _threaded_loading_method() -> void:
 	while get_loading_active() and !is_loading_task_queue_empty():
 		var tasks: Dictionary = _get_loading_task_paths()
-		if tasks.size():
-			for task_path in tasks.keys():
-				var load_path: String = ""
-				var loading_task: LoadingTask = _loading_tasks[task_path]
+		if tasks.size() == 0:
+			continue
 
-				if loading_task.load_path == "":
-					if loading_task.bypass_whitelist:
-						print(
-							"Load " + str(task_path) + " of type " + str(loading_task.type_hint) + " **skip whitelist**"
-						)
-						ResourceLoader.load_threaded_request(task_path, loading_task.type_hint)
-					else:
-						print(
-							(
-								"Load "
-								+ str(task_path)
-								+ " of type "
-								+ str(loading_task.type_hint)
-								+ " with "
-								+ str(loading_task.external_path_whitelist)
-								+ " and "
-								+ str(loading_task.type_whitelist)
-							)
-						)
-						ResourceLoader.load_threaded_request_whitelisted(
-							task_path,
-							loading_task.external_path_whitelist,
-							loading_task.type_whitelist,
-							loading_task.type_hint
-						)
-					load_path = task_path
-					if load_path:
-						loading_task.load_path = load_path
-						call_deferred("_task_set_loading_stage_count", task_path, 100)  # now a percentage... was loader.get_stage_count()
-					else:
-						call_deferred("_task_done", task_path, ERR_FILE_UNRECOGNIZED, null)
-						_destroy_loading_task(task_path)
+		for task_path in tasks.keys():
+			var loading_task: LoadingTask = _loading_tasks[task_path]
+
+			if loading_task.load_path == "":
+				if loading_task.bypass_whitelist:
+					print("Load " + str(task_path) + " of type " + str(loading_task.type_hint) + " **skip whitelist**")
+					ResourceLoader.load_threaded_request(task_path, loading_task.type_hint)
 				else:
-					load_path = loading_task.load_path
+					print("Load " + str(task_path) + " of type " + str(loading_task.type_hint) + " with " + str(loading_task.external_path_whitelist) + " and " + str(loading_task.type_whitelist))
+					ResourceLoader.load_threaded_request_whitelisted(task_path, loading_task.external_path_whitelist, loading_task.type_whitelist, loading_task.type_hint)
 
-				if not load_path.is_empty():
-					if !tasks[task_path]:
-						var err = OK
-						var r_progress: Array = [].duplicate()
-						err = ResourceLoader.load_threaded_get_status(loading_task.load_path, r_progress)
-						if err == ResourceLoader.THREAD_LOAD_LOADED:
-							call_deferred(
-								"_task_done", task_path, OK, ResourceLoader.load_threaded_get(loading_task.load_path)
-							)
-							_destroy_loading_task(task_path)
-						elif err != ResourceLoader.THREAD_LOAD_IN_PROGRESS:
-							call_deferred("_task_done", task_path, FAILED, null)
-							_destroy_loading_task(task_path)
-						else:
-							pass
-							# very spammy. Had to comment out
-					else:
-						call_deferred("_task_cancelled", task_path)
-						_destroy_loading_task(task_path)
+				loading_task.load_path = task_path if task_path else ""
+				if loading_task.load_path != "":
+					Callable(self, "_task_set_loading_stage_count").call_deferred(task_path, 100)
+				else:
+					Callable(self, "_task_done").call_deferred(task_path, ERR_FILE_UNRECOGNIZED, null)
+					_destroy_loading_task(task_path)
 
-	call_deferred("_threaded_loading_complete")
+			if loading_task.load_path.is_empty():
+				continue
+
+			if !tasks[task_path]:
+				var err = ResourceLoader.load_threaded_get_status(loading_task.load_path, [])
+				if err == ResourceLoader.THREAD_LOAD_LOADED:
+					Callable(self, "_task_done").call_deferred(task_path, OK, ResourceLoader.load_threaded_get(loading_task.load_path))
+					_destroy_loading_task(task_path)
+				elif err != ResourceLoader.THREAD_LOAD_IN_PROGRESS:
+					Callable(self, "_task_done").call_deferred(task_path, FAILED, null)
+					_destroy_loading_task(task_path)
+			else:
+				Callable(self, "_task_cancelled").call_deferred(task_path)
+				_destroy_loading_task(task_path)
+
+	Callable(self, "_threaded_loading_complete").call_deferred()
 
 
 func is_quitting() -> void:
