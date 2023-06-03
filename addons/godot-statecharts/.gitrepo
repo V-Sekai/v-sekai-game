@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/ingydotnet/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/derkork/godot-statecharts.git
+	branch = main
+	commit = 4280aacac3114c36c1ffbc865f2e18389378e45a
+	parent = f8fac5f27b9fe320588f29fccc9150b7beeaca43
+	method = merge
+	cmdver = 0.4.6
