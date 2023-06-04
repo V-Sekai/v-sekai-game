@@ -8,23 +8,22 @@ var targets: Dictionary
 var config: Dictionary = {
 	"Hips": {
 		"swing_rotation_center_radius": [
-			{"center": Vector3(0, -1, 0), "radius": 0.2617993878}  # 15 degrees
+			{"center": Vector3(0, -1, 0), "radius": 0.1745329252}  # 10 degrees
 		],
 		"twist_rotation_range": {
 			"from": 1.5707963268,  # 90 degrees
-			"range": 0.1745329252  # 10 degrees
+			"range": 0.0872664626  # 5 degrees
 		}
 	},
 	"Spine": {
 		"swing_rotation_center_radius": [
-			{"center": Vector3(0, 1, 0), "radius": 0.3490658504}  # 20 degrees
+			{"center": Vector3(0, 1, 0), "radius": 0.2617993878}  # 15 degrees
 		],
 		"twist_rotation_range": {
 			"from": 0,  # 0 degrees
-			"range": 0.0872664626  # 5 degrees
+			"range": 0.0436332313  # 2.5 degrees
 		}
 	},
-
 	"Chest": {
 		"swing_rotation_center_radius": [
 			{"center": Vector3(0, 1, 0), "radius": 0.0436332313}  # 2.5 degrees
