@@ -112,7 +112,7 @@ var config: Dictionary = {
 	},
 	"LeftUpperLeg": {
 		"swing_rotation_center_radius": [
-			{"center": Vector3(0, -1, 0), "radius": 1.5707963268}, # 90 degrees
+			{"center": Vector3(0, -1, 0), "radius": 1.308996939}, # 75 degrees
 		],
 		"twist_rotation_range": {
 			"from": 0,            # 0 degrees
@@ -201,7 +201,7 @@ var config: Dictionary = {
 	},
 	"RightUpperLeg": {
 		"swing_rotation_center_radius": [
-			{"center": Vector3(0, -1, 0), "radius": 1.5707963268}, # 90 degrees
+			{"center": Vector3(0, -1, 0), "radius": 1.308996939}, # 75 degrees
 		],
 		"twist_rotation_range": {
 			"from": 0,            # 0 degrees
