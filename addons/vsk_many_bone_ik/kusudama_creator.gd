@@ -11,91 +11,94 @@ extends EditorScript
 	# Each key is a bone name, and its value is a list of dictionaries.
 	# Each dictionary in the list represents a limit cone with a "center" Vector3 and a "radius" (in radians). Radius cannot be 0.
 	# The limit cones are applied sequentially and are connected to restrict the rotation of the joint.
+	# Has between 1 to 10 cones for each bone:
+	#	| No. | Joint Name          | Joint Type        | Constraint Description                      |
+	#	|-----|---------------------|-------------------|---------------------------------------------|
+	#	| 1   | Spine constraint    | Hinge joint       | Limited twisting motion (left-right)        |
+	#	| 2   | Chest constraint    | Hinge joint       | Limited twisting motion (left-right)        |
+	#	| 3   | UpperChest constraint | Hinge joint     | Limited twisting motion (left-right)        |
+	#	| 4   | Neck constraint     | Hinge joint       | Limited nodding motion (up-down)            |
+	#	| 5   | Head constraint     | Hinge joint       | Limited nodding motion (up-down)            |
+	#	| 6   | LeftEye constraint  | Ball and socket joint | Limited eye movement (up-down, left-right) |
+	#	| 7   | LeftShoulder constraint | Ball and socket joint | Limited shoulder rotation (front-back, up-down) |
+	#	| 8   | LeftUpperArm constraint | Hinge joint   | Limited upper arm rotation (front-back, up-down) |
+	#	| 9   | LeftLowerArm constraint | Hinge joint   | Limited lower arm rotation (front-back)    |
+	#	| 10  | LeftHand constraint | Ball and socket joint | Limited hand rotation (up-down, left-right) |
+	#	| 11  | LeftUpperLeg constraint | Ball and socket joint | Limited upper leg rotation (front-back, up-down) |
+	#	| 12  | LeftLowerLeg constraint | Hinge joint   | Limited lower leg rotation (front-back)    |
+	#	| 13  | LeftFoot constraint | Ball and socket joint | Limited foot rotation (up-down, left-right) |
+	#	| 14  | LeftToes constraint | Ball and socket joint | Limited toe movement (up-down, left-right) |
+	#
 	"bone_name_sequential_limit_cones":
 	{
-		# Has between 1 to 10 cones for each bone:
 		"Hips": [
-			{"center": Vector3(0, -1, 0), "radius": deg_to_rad(20)},
+			{"center": Vector3(0, -1, 0), "radius": deg_to_rad(30)},
 		],
-		# Spine constraint allows a limited range of twisting motion (left-right).
 		"Spine": [
-			{"center": Vector3(-1, 0, 0), "radius": deg_to_rad(30)},
-			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(30)},
-			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(40)}, 
-			{"center": Vector3(0, -1, 0), "radius": deg_to_rad(40)},
+			{"center": Vector3(-1, 0, 0), "radius": deg_to_rad(40)},
+			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(40)},
+			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(50)}, 
+			{"center": Vector3(0, -1, 0), "radius": deg_to_rad(50)},
 		],
-		# Chest constraint allows a limited range of twisting motion (left-right).
 		"Chest": [
-			{"center": Vector3(-0.5, 0.5, 0), "radius": deg_to_rad(20)},
-			{"center": Vector3(0.5, 0.5, 0), "radius": deg_to_rad(10)},
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(10)}
+			{"center": Vector3(-0.5, 0.5, 0), "radius": deg_to_rad(30)},
+			{"center": Vector3(0.5, 0.5, 0), "radius": deg_to_rad(20)},
+			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(20)}
 		],
-		# UpperChest constraint allows a limited range of twisting motion (left-right).
 		"UpperChest": [
-			{"center": Vector3(-0.5, 0.5, 0), "radius": deg_to_rad(20)},
-			{"center": Vector3(0.5, 0.5, 0), "radius": deg_to_rad(10)},
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(10)}
+			{"center": Vector3(-0.5, 0.5, 0), "radius": deg_to_rad(30)},
+			{"center": Vector3(0.5, 0.5, 0), "radius": deg_to_rad(120)},
+			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(20)}
 		],
-		# Neck constraint allows a limited range of nodding motion (up-down).
 		"Neck": [
 			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(50)},
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(40)}
+			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(50)}
 		],
-		# Head constraint allows a limited range of nodding motion (up-down).
 		"Head": [
-			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(40)},
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(40)},
-			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(160)}
+			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(50)},
+			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(50)},
+			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(180)}
 		],
-		# LeftEye constraint allows a limited range of eye movement (up-down, left-right).
 		"LeftEye": [
-			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(15)},
-			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(10)},
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(10)}
+			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(20)},
+			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(15)},
+			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(50)}
 		],
-		# LeftShoulder constraint allows a limited range of shoulder rotation (front-back, up-down).
 		"LeftShoulder": [
-			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(15)},
-			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(10)},
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(10)}
+			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(20)},
+			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(15)},
+			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(15)}
 		],
-		# LeftUpperArm constraint allows a limited range of upper arm rotation (front-back, up-down).
 		"LeftUpperArm": [
 			{"center": Vector3(0.2, 1, -0.5), "radius": deg_to_rad(80)}, 
 			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(50)},
 			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(30)}
 		],
-		# LeftLowerArm constraint allows a limited range of lower arm rotation (front-back).
 		"LeftLowerArm": [
 			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(10)},
 			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(130)},
 			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(10)}
 		],
-		# LeftHand constraint allows a limited range of hand rotation (up-down, left-right).
 		"LeftHand": [ 
 			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(180)},
 			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(180)},
 			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(180)}	
 		],
-		# LeftUpperLeg constraint allows a limited range of upper leg rotation (front-back, up-down).
 		"LeftUpperLeg": [
 			{"center": Vector3(0, -1, 1), "radius": deg_to_rad(60)},
 			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(30)},
 			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(30)}
 		],
-		# LeftLowerLeg constraint allows a limited range of lower leg rotation (front-back).
 		"LeftLowerLeg": [
 			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(10)},
 			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(90)},
 			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(10)}
 		],
-		# LeftFoot constraint allows a limited range of foot rotation (up-down, left-right).
 		"LeftFoot": [
 			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(5)},
 			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(45)},
 			{"center": Vector3(-1, 0, 0), "radius": deg_to_rad(90)} 
 		],
-		# LeftToes constraint allows a limited range of toe movement (up-down, left-right).
 		"LeftToes": [
 			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(5)},
 			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(3)},
