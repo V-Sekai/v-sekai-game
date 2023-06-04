@@ -26,25 +26,25 @@ var config: Dictionary = {
 	},
 	"Chest": {
 		"swing_rotation_center_radius": [
-			{"center": Vector3(0, 1, 0), "radius": 0.0436332313}  # 2.5 degrees
+			{"center": Vector3(0, 1, 0), "radius": 0.0872664626}  # 5 degrees
 		],
 		"twist_rotation_range": {
 			"from": 0,  # 0 degrees
-			"range": 0.0872664626  # 5 degrees
+			"range": 0.1745329252  # 10 degrees
 		}
 	},
 	"UpperChest": {
 		"swing_rotation_center_radius": [
-			{"center": Vector3(0, 1, 0), "radius": 0.0436332313}  # 2.5 degrees
+			{"center": Vector3(0, 1, 0), "radius": 0.0872664626}  # 5 degrees
 		],
 		"twist_rotation_range": {
 			"from": 0,  # 0 degrees
-			"range": 0.0872664626  # 5 degrees
+			"range": 0.1745329252  # 10 degrees
 		}
 	},
 	"Neck": {
 		"swing_rotation_center_radius": [
-			{"center": Vector3(0, 1, 0), "radius": 0.1745329252}  # 10 degrees
+			{"center": Vector3(0, 1, 0), "radius": 0.3926990817}  # 22.5 degrees
 		],
 		"twist_rotation_range": {
 			"from": 0,  # 0 degrees
