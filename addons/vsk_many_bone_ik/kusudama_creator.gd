@@ -9,9 +9,9 @@ extends EditorScript
 @export var config: Dictionary = {
 	# bone_name_sequential_limit_cones:
 	# Each key is a bone name, and its value is a list of dictionaries.
-	# Each dictionary in the list represents a limit cone with a "center" Vector3 and a "radius" (in radians). Radius cannot be 0.
+	# Each dictionary in the list represents a limit cone with a "center" Vector3 and a "radius" (in radians). Centers can be any normalized Vector3. Radius cannot be 0.
 	# The limit cones are applied sequentially and are connected to restrict the rotation of the joint.
-	# Has between 1 to 10 cones for each bone:
+	# Has between 1 to 10 cones for each bone.
 	#	| No. | Joint Name          | Joint Type        | Constraint Description                      |
 	#	|-----|---------------------|-------------------|---------------------------------------------|
 	#	| 1   | Spine constraint    | Hinge joint       | Limited twisting motion (left-right)        |
@@ -28,158 +28,26 @@ extends EditorScript
 	#	| 12  | LeftLowerLeg constraint | Hinge joint   | Limited lower leg rotation (front-back)    |
 	#	| 13  | LeftFoot constraint | Ball and socket joint | Limited foot rotation (up-down, left-right) |
 	#	| 14  | LeftToes constraint | Ball and socket joint | Limited toe movement (up-down, left-right) |
-	#
+	#   Use stubs. Repeat for the right side.
 	"bone_name_sequential_limit_cones":
 	{
 		"Hips": [
 			{"center": Vector3(0, -1, 0), "radius": deg_to_rad(30)},
 		],
 		"Spine": [
-			{"center": Vector3(-1, 0, 0), "radius": deg_to_rad(40)},
-			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(40)},
-			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(50)}, 
-			{"center": Vector3(0, -1, 0), "radius": deg_to_rad(50)},
+			{"center": Vector3(0, 0, 1), "radius": deg_to_rad(20)},
 		],
 		"Chest": [
-			{"center": Vector3(-0.5, 0.5, 0), "radius": deg_to_rad(30)},
-			{"center": Vector3(0.5, 0.5, 0), "radius": deg_to_rad(20)},
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(20)}
-		],
-		"UpperChest": [
-			{"center": Vector3(-0.5, 0.5, 0), "radius": deg_to_rad(30)},
-			{"center": Vector3(0.5, 0.5, 0), "radius": deg_to_rad(120)},
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(20)}
-		],
-		"Neck": [
-			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(50)},
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(50)}
-		],
-		"Head": [
-			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(50)},
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(50)},
-			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(180)}
-		],
-		"LeftEye": [
-			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(20)},
-			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(15)},
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(50)}
-		],
-		"LeftShoulder": [
-			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(20)},
-			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(15)},
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(15)}
-		],
-		"LeftUpperArm": [
-			{"center": Vector3(0.2, 1, -0.5), "radius": deg_to_rad(80)}, 
-			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(50)},
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(30)}
-		],
-		"LeftLowerArm": [
-			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(10)},
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(130)},
-			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(10)}
-		],
-		"LeftHand": [ 
-			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(180)},
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(180)},
-			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(180)}	
-		],
-		"LeftUpperLeg": [
-			{"center": Vector3(0, -1, 1), "radius": deg_to_rad(60)},
-			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(30)},
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(30)}
-		],
-		"LeftLowerLeg": [
-			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(10)},
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(90)},
-			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(10)}
-		],
-		"LeftFoot": [
-			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(5)},
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(45)},
-			{"center": Vector3(-1, 0, 0), "radius": deg_to_rad(90)} 
-		],
-		"LeftToes": [
-			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(5)},
-			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(3)},
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(3)}
-		],
-		# Right side bones (mirror of left side)
-		"RightEye": [
-			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(15)},
-			{"center": Vector3(-1, 0, 0), "radius": deg_to_rad(10)},
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(10)}
-		],
-		"RightShoulder": [
-			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(15)},
-			{"center": Vector3(-1, 0, 0), "radius": deg_to_rad(10)},
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(10)}
-		],
-		"RightUpperArm": [
-			{"center": Vector3(-0.2, 1, -0.5), "radius": deg_to_rad(70)},
-			{"center": Vector3(-1, 0, 0), "radius": deg_to_rad(45)},
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(25)}
-		],
-		"RightLowerArm": [
-			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(2)},
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(130)},
-			{"center": Vector3(-1, 0, 0), "radius": deg_to_rad(2)}
-		],
-		"RightHand": [
-			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(180)},
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(180)},
-			{"center": Vector3(-1, 0, 0), "radius": deg_to_rad(180)}
-		],
-		"RightUpperLeg": [
-			{"center": Vector3(0, -1, 1), "radius": deg_to_rad(60)},
-			{"center": Vector3(-1, 0, 0), "radius": deg_to_rad(30)},
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(30)}
-		],
-		"RightLowerLeg": [
-			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(5)},
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(90)},
-			{"center": Vector3(-1, 0, 0), "radius": deg_to_rad(5)}
-		],
-		"RightFoot": [
-			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(5)},
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(45)},
-			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(90)} 
-		],
-		"RightToes": [
-			{"center": Vector3(-1, 0, 0), "radius": deg_to_rad(5)},
-			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(3)},
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(3)}
+			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(20)},
 		],
 	},
 	# Each key is a bone name, and its value is a Vector2.
 	# Vector2.x represents the starting angle (in radians), and Vector2.y represents the range of angles from that starting point.
 	"bone_name_from_to_range_forward_axis":
 	{
-		"Hips": Vector2(deg_to_rad(90), deg_to_rad(20)),
-		"Spine": Vector2(deg_to_rad(185), deg_to_rad(20)),
-		"Chest": Vector2(deg_to_rad(360), deg_to_rad(20)),
-		"UpperChest": Vector2(deg_to_rad(360), deg_to_rad(20)),
-		"Head": Vector2(deg_to_rad(0), deg_to_rad(120)),     
-		"Neck": Vector2(deg_to_rad(355), deg_to_rad(20)),
-		"LeftEye": Vector2(deg_to_rad(180), deg_to_rad(5)),
-		"LeftShoulder": Vector2(deg_to_rad(110), deg_to_rad(40)),
-		"LeftUpperArm": Vector2(deg_to_rad(240), deg_to_rad(80)),
-		"LeftLowerArm": Vector2(deg_to_rad(0), deg_to_rad(20)),
-		"LeftHand": Vector2(deg_to_rad(30), deg_to_rad(20)),
-		"LeftUpperLeg": Vector2(deg_to_rad(270), deg_to_rad(20)),
-		"LeftLowerLeg": Vector2(deg_to_rad(90), deg_to_rad(5)),
-		"LeftFoot": Vector2(deg_to_rad(0), deg_to_rad(5)),
-		"LeftToes": Vector2(deg_to_rad(0), deg_to_rad(5)),
-		# Right side bones (mirror of left side)
-		"RightEye": Vector2(deg_to_rad(180), deg_to_rad(5)),
-		"RightShoulder": Vector2(deg_to_rad(250), deg_to_rad(40)),
-		"RightUpperArm": Vector2(deg_to_rad(120), deg_to_rad(80)),
-		"RightLowerArm": Vector2(deg_to_rad(75), deg_to_rad(110)),
-		"RightHand": Vector2(deg_to_rad(330), deg_to_rad(20)),
-		"RightUpperLeg": Vector2(deg_to_rad(270), deg_to_rad(20)),
-		"RightLowerLeg": Vector2(deg_to_rad(0), deg_to_rad(5)),
-		"RightFoot": Vector2(deg_to_rad(0), deg_to_rad(5)),
-		"RightToes": Vector2(deg_to_rad(0), deg_to_rad(5)),
+		"Hips": Vector2(deg_to_rad(0), deg_to_rad(360)),
+		"Spine": Vector2(deg_to_rad(0), deg_to_rad(20)),
+		"Chest": Vector2(deg_to_rad(0), deg_to_rad(20)),
 	},
 }
 func _run():
@@ -196,7 +64,7 @@ func _run():
 	skeleton.add_child(new_ik, true)
 	new_ik.skeleton_node_path = ".."
 	new_ik.owner = root
-	new_ik.iterations_per_frame = 10
+	new_ik.iterations_per_frame = 5
 	new_ik.queue_print_skeleton()
 	new_ik.stabilization_passes = 1
 	new_ik.constraint_mode = true
