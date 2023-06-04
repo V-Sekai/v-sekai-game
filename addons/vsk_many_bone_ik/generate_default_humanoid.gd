@@ -72,8 +72,8 @@ var config: Dictionary = {
 	},
 	"LeftShoulder": {
 		"swing_rotation_center_radius": [
-			{"center": Vector3(1, 0.5, 0), "radius": 0.872664626},  # 50 degrees
-			{"center": Vector3(0, 1, 0.5), "radius": 0.872664626}   # 50 degrees
+			{"center": Vector3(1, 0.5, 0), "radius": 0.610865238},  # 35 degrees
+			{"center": Vector3(0, 1, 0.5), "radius": 0.523598776}   # 30 degrees
 		],
 		"twist_rotation_range": {
 			"from": 0,  # 0 degrees
@@ -161,8 +161,8 @@ var config: Dictionary = {
 	},
 	"RightShoulder": {
 		"swing_rotation_center_radius": [
-			{"center": Vector3(-1, 0.5, 0), "radius": 0.872664626},  # 50 degrees
-			{"center": Vector3(0, 1, -0.5), "radius": 0.872664626}   # 50 degrees
+			{"center": Vector3(-1, 0.5, 0), "radius": 0.610865238},  # 35 degrees
+			{"center": Vector3(0, 1, -0.5), "radius": 0.523598776}   # 30 degrees
 		],
 		"twist_rotation_range": {
 			"from": 0,  # 0 degrees
