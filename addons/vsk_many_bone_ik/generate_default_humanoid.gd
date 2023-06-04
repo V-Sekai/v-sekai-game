@@ -1,9 +1,11 @@
 @tool
 extends EditorScript
 
-@export var targets: Dictionary
+@export 
+var targets: Dictionary
 
-@export var config: Dictionary = {
+@export 
+var config: Dictionary = {
 	"Hips": {
 		"swing_rotation_center_radius": [
 			{"center": Vector3(0, -1, 0), "radius": 0.2617993878}  # 15 degrees
@@ -68,174 +70,175 @@ extends EditorScript
 			"range": 0.0436332313  # 2.5 degrees
 		}
 	},
+	"LeftShoulder": {
+		"swing_rotation_center_radius": [
+			{"center": Vector3(1, 0.5, 0), "radius": 0.872664626},  # 50 degrees
+			{"center": Vector3(0, 1, 0.5), "radius": 0.872664626}   # 50 degrees
+		],
+		"twist_rotation_range": {
+			"from": 0,  # 0 degrees
+			"range": 0.2617993878  # 15 degrees
+		}
+	},
+	"LeftUpperArm": {
+		"swing_rotation_center_radius": [
+			{"center": Vector3(1, 0, 0.25), "radius": 0.872664626},  # 50 degrees
+			{"center": Vector3(0, -0.25, 1), "radius": 0.872664626}   # 50 degrees
+		],
+		"twist_rotation_range": {
+			"from": 0,  # 0 degrees
+			"range": 0.2617993878  # 15 degrees
+		}
+	},
+	"LeftLowerArm": {
+		"swing_rotation_center_radius": [
+			{"center": Vector3(1, 0, 0.5), "radius": 0.698131701},  # 40 degrees - Top segment
+			{"center": Vector3(0, 1, 0.5), "radius": 0.698131701},  # 40 degrees - Middle segment
+			{"center": Vector3(0, 0, 1), "radius": 0.698131701}     # 40 degrees - Bottom segment
+		],
+		"twist_rotation_range": {
+			"from": 0,  # 0 degrees
+			"range": 0.2617993878  # 15 degrees
+		}
+	},
+	"LeftHand": {
+		"swing_rotation_center_radius": [
+			{"center": Vector3(0, 1, 0), "radius": 1.5707963268},  # 90 degrees
+		],
+		"twist_rotation_range": {
+			"from": 0,  # 0 degrees
+			"range": 1.5707963268  # 90 degrees
+		}
+	},
+	"LeftUpperLeg": {
+		"swing_rotation_center_radius": [
+			{"center": Vector3(0, -1, 0), "radius": 1.5707963268}, # 90 degrees
+		],
+		"twist_rotation_range": {
+			"from": 0,            # 0 degrees
+			"range": 0.1745329252  # 10 degrees
+		}
+	},
+	"LeftLowerLeg": {
+		"swing_rotation_center_radius": [
+			{"center": Vector3(0, 1, -0.5), "radius": 0.698131701},  # 40 degrees - Top segment
+			{"center": Vector3(1, 0, -0.5), "radius": 0.698131701},  # 40 degrees - Middle segment
+			{"center": Vector3(0, 0, -1), "radius": 0.698131701}     # 40 degrees - Bottom segment
+		],
+		"twist_rotation_range": {
+			"from": 0.872665,            # 50 degrees
+			"range": 0.1745329252  # 10 degrees
+		}
+	},
+	"LeftFoot": {
+		"swing_rotation_center_radius": [
+			{"center": Vector3(0, -1, 0), "radius": 0.7853981634},  # 45 degrees
+			{"center": Vector3(0, 0, 1), "radius": 0.7853981634}  # 45 degrees
+		],
+		"twist_rotation_range": {
+			"from": 0,  # 0 degrees
+			"range": 0.0872664626  # 5 degrees
+		}
+	},
+	"LeftToes": {
+		"swing_rotation_center_radius": [
+			{"center": Vector3(0, -1, 0), "radius": 0.3490658504}  # 20 degrees
+		],
+		"twist_rotation_range": {
+			"from": 0,  # 0 degrees
+			"range": 0.0872664626  # 5 degrees
+		}
+	},
+	"RightEye": {
+		"swing_rotation_center_radius": [
+			{"center": Vector3(-1, 0, 0), "radius": 0.0436332313},  # 2.5 degrees
+			{"center": Vector3(0, 1, 0), "radius": 0.0436332313}   # 2.5 degrees
+		],
+		"twist_rotation_range": {
+			"from": 0,  # 0 degrees
+			"range": 0.0436332313  # 2.5 degrees
+		}
+	},
+	"RightShoulder": {
+		"swing_rotation_center_radius": [
+			{"center": Vector3(-1, 0.5, 0), "radius": 0.872664626},  # 50 degrees
+			{"center": Vector3(0, 1, -0.5), "radius": 0.872664626}   # 50 degrees
+		],
+		"twist_rotation_range": {
+			"from": 0,  # 0 degrees
+			"range": 0.2617993878  # 15 degrees
+		}
+	},
+	"RightUpperArm": {
+		"swing_rotation_center_radius": [
+			{"center": Vector3(-0.25, 0, 1), "radius": 0.872664626},  # 50 degrees
+			{"center": Vector3(-1, 0.25, 0), "radius": 0.872664626}   # 50 degrees
+		],
+		"twist_rotation_range": {
+			"from": 0,  # 0 degrees
+			"range": 0.2617993878  # 15 degrees
+		}
+	},
+	"RightLowerArm": {
+		"swing_rotation_center_radius": [
+			{"center": Vector3(1, 0, 0.5), "radius": 0.698131701},  # 40 degrees - Top segment
+			{"center": Vector3(0, 1, 0.5), "radius": 0.698131701},  # 40 degrees - Middle segment
+			{"center": Vector3(0, 0, 1), "radius": 0.698131701}     # 40 degrees - Bottom segment
+		],
+		"twist_rotation_range": {
+			"from": 0,  # 0 degrees
+			"range": 0.2617993878  # 15 degrees
+		}
+	},
+	"RightHand": {
+		"swing_rotation_center_radius": [
+			{"center": Vector3(0, 1, 0), "radius": 1.5707963268},  # 90 degrees
+		],
+		"twist_rotation_range": {
+			"from": 0,  # 0 degrees
+			"range": 1.5707963268  # 90 degrees
+		}
+	},
+	"RightUpperLeg": {
+		"swing_rotation_center_radius": [
+			{"center": Vector3(0, -1, 0), "radius": 1.5707963268}, # 90 degrees
+		],
+		"twist_rotation_range": {
+			"from": 0,            # 0 degrees
+			"range": 0.1745329252  # 10 degrees
+		}
+	},
+	"RightLowerLeg": {
+		"swing_rotation_center_radius": [
+			{"center": Vector3(1, 0, -0.5), "radius": 0.698131701},  # 40 degrees - Top segment
+			{"center": Vector3(0, 1, -0.5), "radius": 0.698131701},  # 40 degrees - Middle segment
+			{"center": Vector3(0, 0, -1), "radius": 0.698131701}     # 40 degrees - Bottom segment
+		],
+		"twist_rotation_range": {
+			"from": 0.872665,            # 50 degrees
+			"range": 0.1745329252  # 10 degrees
+		}
+	},
+	"RightFoot": {
+		"swing_rotation_center_radius": [
+			{"center": Vector3(0, -1, 0), "radius": 0.7853981634},  # 45 degrees
+			{"center": Vector3(0, 0, 1), "radius": 0.7853981634}  # 45 degrees
+		],
+		"twist_rotation_range": {
+			"from": 0,  # 0 degrees
+			"range": 0.0872664626  # 5 degrees
+		}
+	},
+	"RightToes": {
+		"swing_rotation_center_radius": [
+			{"center": Vector3(0, -1, 0), "radius": 0.3490658504}  # 20 degrees
+		],
+		"twist_rotation_range": {
+			"from": 0,  # 0 degrees
+			"range": 0.0872664626  # 5 degrees
+		}
+	},
 }
-	
-#	"LeftShoulder": {
-#		"swing_rotation_center_radius": [
-#			{"center": Vector3(1, 0, 0), "radius": 0.6108652382},
-#			{"center": Vector3(0, 1, 0), "radius": 0.6108652382}
-#		],
-#		"twist_rotation_range": {
-#			"from": 0,  # 0 degrees
-#			"range": 0.3490658504  # 20 degrees
-#		}
-#	},
-#	"LeftUpperArm": {
-#		"swing_rotation_center_radius": [
-#			{"center": Vector3(1, 0, 0), "radius": 0.6108652382},
-#			{"center": Vector3(0, 1, 0), "radius": 0.6108652382}
-#		],
-#		"twist_rotation_range": {
-#			"from": 0,  # 0 degrees
-#			"range": 0.3490658504  # 20 degrees
-#		}
-#	},
-#	"LeftLowerArm": {
-#		"swing_rotation_center_radius": [
-#			{"center": Vector3(1, 0, 0), "radius": 0.3490658504}
-#		],
-#		"twist_rotation_range": {
-#			"from": 0,  # 0 degrees
-#			"range": 0.1745329252  # 10 degrees
-#		}
-#	},
-#	"LeftHand": {
-#		"swing_rotation_center_radius": [
-#			{"center": Vector3(1, 0, 0), "radius": 0.2617993878},
-#			{"center": Vector3(0, 1, 0), "radius": 0.2617993878}
-#		],
-#		"twist_rotation_range": {
-#			"from": 0,  # 0 degrees
-#			"range": 0.1745329252  # 10 degrees
-#		}
-#	},
-#	"LeftUpperLeg": {
-#		"swing_rotation_center_radius": [
-#			{"center": Vector3(1, 0, 0), "radius": 0.6108652382},
-#			{"center": Vector3(0, 1, 0), "radius": 0.6108652382}
-#		],
-#		"twist_rotation_range": {
-#			"from": 0,  # 0 degrees
-#			"range": 0.3490658504  # 20 degrees
-#		}
-#	},
-#	"LeftLowerLeg": {
-#		"swing_rotation_center_radius": [
-#			{"center": Vector3(1, 0, 0), "radius": 0.3490658504}
-#		],
-#		"twist_rotation_range": {
-#			"from": 0,  # 0 degrees
-#			"range": 0.1745329252  # 10 degrees
-#		}
-#	},
-#	"LeftFoot": {
-#		"swing_rotation_center_radius": [
-#			{"center": Vector3(1, 0, 0), "radius": 0.2617993878},
-#			{"center": Vector3(0, 1, 0), "radius": 0.2617993878}
-#		],
-#		"twist_rotation_range": {
-#			"from": 0,  # 0 degrees
-#			"range": 0.1745329252  # 10 degrees
-#		}
-#	},
-#	"LeftToes": {
-#		"swing_rotation_center_radius": [
-#			{"center": Vector3(1, 0, 0), "radius": 0.0872664626},
-#			{"center": Vector3(0, 1, 0), "radius": 0.0872664626}
-#		],
-#		"twist_rotation_range": {
-#			"from": 0,  # 0 degrees
-#			"range": 0.0872664626  # 5 degrees
-#		}
-#	},
-#	"RightEye": {
-#		"swing_rotation_center_radius": [
-#			{"center": Vector3(1, 0, 0), "radius": 0.0872664626},
-#			{"center": Vector3(0, -1, 0), "radius": 0.0872664626}
-#		],
-#		"twist_rotation_range": {
-#			"from": 0,  # 0 degrees
-#			"range": 0.0872664626  # 5 degrees
-#		}
-#	},
-#	"RightShoulder": {
-#		"swing_rotation_center_radius": [
-#			{"center": Vector3(1, 0, 0), "radius": 0.6108652382},
-#			{"center": Vector3(0, -1, 0), "radius": 0.6108652382}
-#		],
-#		"twist_rotation_range": {
-#			"from": 0,  # 0 degrees
-#			"range": 0.3490658504  # 20 degrees
-#		}
-#	},
-#	"RightUpperArm": {
-#		"swing_rotation_center_radius": [
-#			{"center": Vector3(1, 0, 0), "radius": 0.6108652382},
-#			{"center": Vector3(0, -1, 0), "radius": 0.6108652382}
-#		],
-#		"twist_rotation_range": {
-#			"from": 0,  # 0 degrees
-#			"range": 0.3490658504  # 20 degrees
-#		}
-#	},
-#	"RightLowerArm": {
-#		"swing_rotation_center_radius": [
-#			{"center": Vector3(1, 0, 0), "radius": 0.3490658504}
-#		],
-#		"twist_rotation_range": {
-#			"from": 0,  # 0 degrees
-#			"range": 0.1745329252  # 10 degrees
-#		}
-#	},
-#	"RightHand": {
-#		"swing_rotation_center_radius": [
-#			{"center": Vector3(1, 0, 0), "radius": 0.2617993878},
-#			{"center": Vector3(0, -1, 0), "radius": 0.2617993878}
-#		],
-#		"twist_rotation_range": {
-#			"from": 0,  # 0 degrees
-#			"range": 0.1745329252  # 10 degrees
-#		}
-#	},
-#	"RightUpperLeg": {
-#		"swing_rotation_center_radius": [
-#			{"center": Vector3(1, 0, 0), "radius": 0.6108652382},
-#			{"center": Vector3(0, -1, 0), "radius": 0.6108652382}
-#		],
-#		"twist_rotation_range": {
-#			"from": 0,  # 0 degrees
-#			"range": 0.3490658504  # 20 degrees
-#		}
-#	},
-#	"RightLowerLeg": {
-#		"swing_rotation_center_radius": [
-#			{"center": Vector3(1, 0, 0), "radius": 0.3490658504}
-#		],
-#		"twist_rotation_range": {
-#			"from": 0,  # 0 degrees
-#			"range": 0.1745329252  # 10 degrees
-#		}
-#	},
-#	"RightFoot": {
-#		"swing_rotation_center_radius": [
-#			{"center": Vector3(1, 0, 0), "radius": 0.2617993878},
-#			{"center": Vector3(0, -1, 0), "radius": 0.2617993878}
-#		],
-#		"twist_rotation_range": {
-#			"from": 0,  # 0 degrees
-#			"range": 0.1745329252  # 10 degrees
-#		}
-#	},
-#	"RightToes": {
-#		"swing_rotation_center_radius": [
-#			{"center": Vector3(1, 0, 0), "radius": 0.0872664626},
-#			{"center": Vector3(0, -1, 0), "radius": 0.0872664626}
-#		],
-#		"twist_rotation_range": {
-#			"from": 0,  # 0 degrees
-#			"range": 0.0872664626  # 5 degrees
-#		}
-#	},
 
 # This configuration dictionary defines joint constraints for a character rig.
 #
@@ -243,7 +246,9 @@ extends EditorScript
 #
 # bone_name_sequential_limit_cones:
 # - Each key is a bone name, and its value is a list of dictionaries.
-# - Each dictionary in the list represents a limit cone with a "center" Vector3 and a "radius" (in radians). Center defaults to Vector3(0, @ , 0) Radius cannot be 0.
+# - Each dictionary in the list represents a limit cone with a "center" Vector3 and a "radius" (in radians).
+#     - Center is not axis locked. Center defaults to Vector3(0, @ , 0) 
+#     - Radius cannot be 0.
 # - The limit cones are applied sequentially and are connected to restrict the rotation of the joint.
 #
 # Has between 1 to 10 cones for each bone:
@@ -294,17 +299,11 @@ func _run():
 	targets["LeftHand"] = "ManyBoneIK3D"
 	targets["RightLowerarm"] = "ManyBoneIK3D"
 	targets["RightHand"] = "ManyBoneIK3D"
-	targets["LeftLowerLeg"] = "ManyBoneIK3D"
 	targets["LeftFoot"] = "ManyBoneIK3D"
-	targets["RightLowerLeg"] = "ManyBoneIK3D"
 	targets["RightFoot"] = "ManyBoneIK3D"
 
 	for bone_i in skeleton.get_bone_count():
 		var bone_name = skeleton.get_bone_name(bone_i)
-		if bone_name in ["Root", "UpperChest"]:
-			new_ik.set_pin_passthrough_factor(bone_i, 1)
-		else:
-			new_ik.set_pin_passthrough_factor(bone_i, 0)
 
 		if config.has(bone_name):
 			var bone_config = config[bone_name]
@@ -345,4 +344,6 @@ func tune_bone(new_ik: ManyBoneIK3D, skeleton: Skeleton3D, bone_name: String, bo
 		skeleton.global_transform.affine_inverse() * skeleton.get_bone_global_pose_no_override(bone_i)
 	)
 	node_3d.owner = new_ik.owner
+	if bone_name in ["LeftToes", "RightToes"]:
+		new_ik.set_pin_weight(bone_i, 0)
 	new_ik.set_pin_nodepath(bone_i, new_ik.get_path_to(node_3d))
