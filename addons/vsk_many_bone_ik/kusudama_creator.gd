@@ -9,42 +9,43 @@ extends EditorScript
 @export var config: Dictionary = {
 	# bone_name_sequential_limit_cones:
 	# Each key is a bone name, and its value is a list of dictionaries.
-	# Each dictionary in the list represents a limit cone with a "center" Vector3 and a "radius" (in radians).
+	# Each dictionary in the list represents a limit cone with a "center" Vector3 and a "radius" (in radians). Radius cannot be 0.
 	# The limit cones are applied sequentially and are connected to restrict the rotation of the joint.
 	"bone_name_sequential_limit_cones":
 	{
 		# Has between 1 to 10 cones for each bone:
 		"Hips": [
-			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(15)},
-			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(10)}
+			{"center": Vector3(0, -1, 0), "radius": deg_to_rad(20)},
 		],
 		# Spine constraint allows a limited range of twisting motion (left-right).
 		"Spine": [
-			{"center": Vector3(-1, 0, 0), "radius": deg_to_rad(10)},
-			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(10)},
+			{"center": Vector3(-1, 0, 0), "radius": deg_to_rad(30)},
+			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(30)},
+			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(40)}, 
+			{"center": Vector3(0, -1, 0), "radius": deg_to_rad(40)},
 		],
 		# Chest constraint allows a limited range of twisting motion (left-right).
 		"Chest": [
-			{"center": Vector3(-0.5, 0.5, 0), "radius": deg_to_rad(5)},
-			{"center": Vector3(0.5, 0.5, 0), "radius": deg_to_rad(2.5)},
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(2.5)}
+			{"center": Vector3(-0.5, 0.5, 0), "radius": deg_to_rad(20)},
+			{"center": Vector3(0.5, 0.5, 0), "radius": deg_to_rad(10)},
+			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(10)}
 		],
 		# UpperChest constraint allows a limited range of twisting motion (left-right).
 		"UpperChest": [
-			{"center": Vector3(-0.5, 0.5, 0), "radius": deg_to_rad(7)},
-			{"center": Vector3(0.5, 0.5, 0), "radius": deg_to_rad(3.5)},
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(3.5)}
+			{"center": Vector3(-0.5, 0.5, 0), "radius": deg_to_rad(20)},
+			{"center": Vector3(0.5, 0.5, 0), "radius": deg_to_rad(10)},
+			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(10)}
 		],
 		# Neck constraint allows a limited range of nodding motion (up-down).
 		"Neck": [
-			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(25)},
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(20)}
+			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(50)},
+			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(40)}
 		],
 		# Head constraint allows a limited range of nodding motion (up-down).
 		"Head": [
-			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(20)},
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(20)},
-			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(80)}
+			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(40)},
+			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(40)},
+			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(160)}
 		],
 		# LeftEye constraint allows a limited range of eye movement (up-down, left-right).
 		"LeftEye": [
@@ -54,9 +55,9 @@ extends EditorScript
 		],
 		# LeftShoulder constraint allows a limited range of shoulder rotation (front-back, up-down).
 		"LeftShoulder": [
-			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(5)},
-			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(2)},
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(2)}
+			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(15)},
+			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(10)},
+			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(10)}
 		],
 		# LeftUpperArm constraint allows a limited range of upper arm rotation (front-back, up-down).
 		"LeftUpperArm": [
@@ -66,33 +67,33 @@ extends EditorScript
 		],
 		# LeftLowerArm constraint allows a limited range of lower arm rotation (front-back).
 		"LeftLowerArm": [
-			{"center": Vector3(0, 0.8, 0), "radius": deg_to_rad(90)},    
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(0)},
-			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(0)}
+			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(10)},
+			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(130)},
+			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(10)}
 		],
 		# LeftHand constraint allows a limited range of hand rotation (up-down, left-right).
-		"LeftHand": [ {
-			"center": Vector3(0, 1, 0), "radius": deg_to_rad(30)},
-			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(15)},
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(15)}		
+		"LeftHand": [ 
+			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(180)},
+			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(180)},
+			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(180)}	
 		],
 		# LeftUpperLeg constraint allows a limited range of upper leg rotation (front-back, up-down).
 		"LeftUpperLeg": [
-			{"center": Vector3(0, -1, 1), "radius": deg_to_rad(45)},
-			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(20)},
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(20)}
+			{"center": Vector3(0, -1, 1), "radius": deg_to_rad(60)},
+			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(30)},
+			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(30)}
 		],
 		# LeftLowerLeg constraint allows a limited range of lower leg rotation (front-back).
 		"LeftLowerLeg": [
-			{"center": Vector3(0, -1, 0), "radius": deg_to_rad(20)},
-			{"center": Vector3(0, -0.8, 1), "radius": deg_to_rad(0)},
-			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(0)}
+			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(10)},
+			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(90)},
+			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(10)}
 		],
 		# LeftFoot constraint allows a limited range of foot rotation (up-down, left-right).
 		"LeftFoot": [
-			{"center": Vector3(0, -1, 0), "radius": deg_to_rad(15)},
-			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(10)},
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(10)}
+			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(5)},
+			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(45)},
+			{"center": Vector3(-1, 0, 0), "radius": deg_to_rad(90)} 
 		],
 		# LeftToes constraint allows a limited range of toe movement (up-down, left-right).
 		"LeftToes": [
@@ -107,9 +108,9 @@ extends EditorScript
 			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(10)}
 		],
 		"RightShoulder": [
-			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(5)},
-			{"center": Vector3(-1, 0, 0), "radius": deg_to_rad(2)},
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(2)}
+			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(15)},
+			{"center": Vector3(-1, 0, 0), "radius": deg_to_rad(10)},
+			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(10)}
 		],
 		"RightUpperArm": [
 			{"center": Vector3(-0.2, 1, -0.5), "radius": deg_to_rad(70)},
@@ -117,29 +118,29 @@ extends EditorScript
 			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(25)}
 		],
 		"RightLowerArm": [
-			{"center": Vector3(0, 0.8, 0), "radius": deg_to_rad(90)},
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(0)},
-			{"center": Vector3(-1, 0, 0), "radius": deg_to_rad(0)}
+			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(2)},
+			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(130)},
+			{"center": Vector3(-1, 0, 0), "radius": deg_to_rad(2)}
 		],
 		"RightHand": [
-			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(30)},
-			{"center": Vector3(-1, 0, 0), "radius": deg_to_rad(15)},
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(15)}
+			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(180)},
+			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(180)},
+			{"center": Vector3(-1, 0, 0), "radius": deg_to_rad(180)}
 		],
 		"RightUpperLeg": [
-			{"center": Vector3(0, -1, 1), "radius": deg_to_rad(45)},
-			{"center": Vector3(-1, 0, 0), "radius": deg_to_rad(20)},
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(20)}
+			{"center": Vector3(0, -1, 1), "radius": deg_to_rad(60)},
+			{"center": Vector3(-1, 0, 0), "radius": deg_to_rad(30)},
+			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(30)}
 		],
 		"RightLowerLeg": [
-			{"center": Vector3(0, -1, 0), "radius": deg_to_rad(20)},
-			{"center": Vector3(0, -0.8, 1), "radius": deg_to_rad(0)},
-			{"center": Vector3(-1, 0, 0), "radius": deg_to_rad(0)}
+			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(5)},
+			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(90)},
+			{"center": Vector3(-1, 0, 0), "radius": deg_to_rad(5)}
 		],
 		"RightFoot": [
-			{"center": Vector3(0, -1, 0), "radius": deg_to_rad(15)},
-			{"center": Vector3(-1, 0, 0), "radius": deg_to_rad(10)},
-			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(10)}
+			{"center": Vector3(0, 1, 0), "radius": deg_to_rad(5)},
+			{"center": Vector3(0, 0, -1), "radius": deg_to_rad(45)},
+			{"center": Vector3(1, 0, 0), "radius": deg_to_rad(90)} 
 		],
 		"RightToes": [
 			{"center": Vector3(-1, 0, 0), "radius": deg_to_rad(5)},
@@ -151,34 +152,33 @@ extends EditorScript
 	# Vector2.x represents the starting angle (in radians), and Vector2.y represents the range of angles from that starting point.
 	"bone_name_from_to_range_forward_axis":
 	{
-		"Hips": Vector2(deg_to_rad(0), deg_to_rad(0)),
-		"Spine": Vector2(deg_to_rad(185), deg_to_rad(10)),
-		"Chest": Vector2(deg_to_rad(360), deg_to_rad(10)),
-		"UpperChest": Vector2(deg_to_rad(360), deg_to_rad(10)),
-		"Head": Vector2(deg_to_rad(340), deg_to_rad(40)),     
-		"Neck": Vector2(deg_to_rad(355), deg_to_rad(10)),
-		"LeftEye": Vector2(deg_to_rad(180), deg_to_rad(3)),
-		"LeftShoulder": Vector2(deg_to_rad(110), deg_to_rad(30)),
-		"LeftUpperArm": Vector2(deg_to_rad(240), deg_to_rad(60)),
-		"LeftLowerArm": Vector2(deg_to_rad(285), deg_to_rad(100)),
-		"LeftHand": Vector2(deg_to_rad(30), deg_to_rad(15)),
-		"LeftUpperLeg": Vector2(deg_to_rad(270), deg_to_rad(15)),
-		"LeftLowerLeg": Vector2(deg_to_rad(90), deg_to_rad(15)),
-		"LeftFoot": Vector2(deg_to_rad(180), deg_to_rad(3)),
-		"LeftToes": Vector2(deg_to_rad(0), deg_to_rad(3)),
+		"Hips": Vector2(deg_to_rad(90), deg_to_rad(20)),
+		"Spine": Vector2(deg_to_rad(185), deg_to_rad(20)),
+		"Chest": Vector2(deg_to_rad(360), deg_to_rad(20)),
+		"UpperChest": Vector2(deg_to_rad(360), deg_to_rad(20)),
+		"Head": Vector2(deg_to_rad(0), deg_to_rad(120)),     
+		"Neck": Vector2(deg_to_rad(355), deg_to_rad(20)),
+		"LeftEye": Vector2(deg_to_rad(180), deg_to_rad(5)),
+		"LeftShoulder": Vector2(deg_to_rad(110), deg_to_rad(40)),
+		"LeftUpperArm": Vector2(deg_to_rad(240), deg_to_rad(80)),
+		"LeftLowerArm": Vector2(deg_to_rad(0), deg_to_rad(20)),
+		"LeftHand": Vector2(deg_to_rad(30), deg_to_rad(20)),
+		"LeftUpperLeg": Vector2(deg_to_rad(270), deg_to_rad(20)),
+		"LeftLowerLeg": Vector2(deg_to_rad(90), deg_to_rad(5)),
+		"LeftFoot": Vector2(deg_to_rad(0), deg_to_rad(5)),
+		"LeftToes": Vector2(deg_to_rad(0), deg_to_rad(5)),
 		# Right side bones (mirror of left side)
-		"RightEye": Vector2(deg_to_rad(180), deg_to_rad(3)),
-		"RightShoulder": Vector2(deg_to_rad(250), deg_to_rad(30)),
-		"RightUpperArm": Vector2(deg_to_rad(120), deg_to_rad(60)),
-		"RightLowerArm": Vector2(deg_to_rad(75), deg_to_rad(100)),
-		"RightHand": Vector2(deg_to_rad(330), deg_to_rad(15)),
-		"RightUpperLeg": Vector2(deg_to_rad(270), deg_to_rad(15)),
-		"RightLowerLeg": Vector2(deg_to_rad(90), deg_to_rad(15)),
-		"RightFoot": Vector2(deg_to_rad(180), deg_to_rad(3)),
-		"RightToes": Vector2(deg_to_rad(0), deg_to_rad(3)),
+		"RightEye": Vector2(deg_to_rad(180), deg_to_rad(5)),
+		"RightShoulder": Vector2(deg_to_rad(250), deg_to_rad(40)),
+		"RightUpperArm": Vector2(deg_to_rad(120), deg_to_rad(80)),
+		"RightLowerArm": Vector2(deg_to_rad(75), deg_to_rad(110)),
+		"RightHand": Vector2(deg_to_rad(330), deg_to_rad(20)),
+		"RightUpperLeg": Vector2(deg_to_rad(270), deg_to_rad(20)),
+		"RightLowerLeg": Vector2(deg_to_rad(0), deg_to_rad(5)),
+		"RightFoot": Vector2(deg_to_rad(0), deg_to_rad(5)),
+		"RightToes": Vector2(deg_to_rad(0), deg_to_rad(5)),
 	},
 }
-
 func _run():
 	var root: Node3D = get_editor_interface().get_edited_scene_root()
 	if root == null:
@@ -237,11 +237,6 @@ func _run():
 					new_ik.set_kusudama_limit_cone_center(bone_i, cone_i, cone["center"])
 				if cone.keys().has("radius"):
 					new_ik.set_kusudama_limit_cone_radius(bone_i, cone_i, cone["radius"])
-		else:
-			new_ik.set_pin_weight(bone_i, 0)
-			new_ik.set_pin_direction_priorities(bone_i, Vector3())
-			new_ik.set_kusudama_limit_cone_count(bone_i, 1)
-			new_ik.set_kusudama_limit_cone_radius(bone_i, 0, deg_to_rad(5))
 			
 
 	var keys = targets.keys()
@@ -253,8 +248,6 @@ func tune_bone(new_ik: ManyBoneIK3D, skeleton: Skeleton3D, bone_name: String, bo
 	var bone_i = skeleton.find_bone(bone_name)
 	if bone_i == -1:
 		return
-	new_ik.set_kusudama_twist(bone_i, Vector2(deg_to_rad(180), deg_to_rad(1)))
-	new_ik.set_kusudama_limit_cone_count(bone_i, 0)
 	var node_3d = Node3D.new()
 	node_3d.name = bone_name
 	var children: Array[Node] = owner.find_children("*", "")
@@ -269,7 +262,5 @@ func tune_bone(new_ik: ManyBoneIK3D, skeleton: Skeleton3D, bone_name: String, bo
 	node_3d.global_transform = (
 		skeleton.global_transform.affine_inverse() * skeleton.get_bone_global_pose_no_override(bone_i)
 	)
-	if bone_name.find("Hips") != -1:
-		new_ik.set_pin_direction_priorities(bone_i, Vector3())
 	node_3d.owner = new_ik.owner
 	new_ik.set_pin_nodepath(bone_i, new_ik.get_path_to(node_3d))
