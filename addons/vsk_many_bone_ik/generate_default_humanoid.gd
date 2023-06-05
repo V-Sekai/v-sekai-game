@@ -72,32 +72,33 @@ var config: Dictionary = {
 	},
 	"LeftShoulder": {
 		"swing_rotation_center_radius": [
-			{"center": Vector3(1, 0.5, 0), "radius": 0.436332312},  # 25 degrees
-			{"center": Vector3(0, 1, 0.5), "radius": 0.3490658504},   # 20 degrees
+			{"center": Vector3(1, 0.5, 0), "radius": 0.0872664626},  # 5 degrees
+			{"center": Vector3(0, 1, 0.5), "radius": 0.0872664626},   # 5 degrees
 		],
 		"twist_rotation_range": {
 			"from": 0,  # 0 degrees
-			"range": 0.3490658504  # 20 degrees
+			"range": 0.0872664626  # 5 degrees
 		}
 	},
 	"LeftUpperArm": {
 		"swing_rotation_center_radius": [
-			{"center": Vector3(1, 0, 0.25), "radius": 0.523598776},  # 30 degrees
-			{"center": Vector3(0, -0.25, 1), "radius": 0.523598776}   # 30 degrees
-		],
-		"twist_rotation_range": {
-			"from": 0,  # 0 degrees
-			"range": 0.3490658504  # 20 degrees
-		}
-	},
-	"LeftLowerArm": {
-		"swing_rotation_center_radius": [
-			{"center": Vector3(1, 0, 0), "radius": 0.3490658504},  # 20 degrees - Top segment
-			{"center": Vector3(0, 1, 0), "radius": 0.3490658504}   # 20 degrees - Middle segment (flipped front to back)
+			{"center": Vector3(1, 0, 0.25), "radius": 0.436332313},  # 25 degrees
+			{"center": Vector3(0, -0.25, 1), "radius": 0.436332313}   # 25 degrees
 		],
 		"twist_rotation_range": {
 			"from": 0,  # 0 degrees
 			"range": 0.2617993878  # 15 degrees
+		}
+	},
+	"LeftLowerArm": {
+		"swing_rotation_center_radius": [
+			{"center": Vector3(0, 1, -0.5), "radius": 0.523598776},  # 30 degrees - Top segment
+			{"center": Vector3(1, 0, -0.5), "radius": 0.523598776},  # 30 degrees - Middle segment
+			{"center": Vector3(0, 0, -1), "radius": 0.523598776}     # 30 degrees - Bottom segment
+		],
+		"twist_rotation_range": {
+			"from": 0.872665,            # 50 degrees
+			"range": 0.1745329252  # 10 degrees
 		}
 	},
 	"LeftHand": {
@@ -160,28 +161,28 @@ var config: Dictionary = {
 	},
 	"RightShoulder": {
 		"swing_rotation_center_radius": [
-			{"center": Vector3(-1, 0.5, 0), "radius": 0.436332312},  # 25 degrees
-			{"center": Vector3(0, 1, -0.5), "radius": 0.3490658504},   # 20 degrees
+			{"center": Vector3(-1, 0.5, 0), "radius": 0.0872664626},  # 5 degrees
+			{"center": Vector3(0, 1, -0.5), "radius": 0.0872664626},   # 5 degrees
 		],
 		"twist_rotation_range": {
 			"from": 0,  # 0 degrees
-			"range": 0.3490658504  # 20 degrees
+			"range": 0.0872664626  # 5 degrees
 		}
 	},
 	"RightUpperArm": {
 		"swing_rotation_center_radius": [
-			{"center": Vector3(-0.25, 0, 1), "radius": 0.523598776},  # 30 degrees
-			{"center": Vector3(-1, 0.25, 0), "radius": 0.523598776}   # 30 degrees
+			{"center": Vector3(-0.25, 0, 1), "radius": 0.436332313},  # 25 degrees
+			{"center": Vector3(-1, 0.25, 0), "radius": 0.436332313}   # 25 degrees
 		],
 		"twist_rotation_range": {
 			"from": 0,  # 0 degrees
-			"range": 0.3490658504  # 20 degrees
+			"range": 0.2617993878  # 15 degrees
 		}
 	},
 	"RightLowerArm": {
 		"swing_rotation_center_radius": [
-			{"center": Vector3(-1, 0, 0), "radius": 0.3490658504},  # 20 degrees - Top segment
-			{"center": Vector3(0, 1, 0), "radius": 0.3490658504},   # 20 degrees - Middle segment
+			{"center": Vector3(-1, 0, 0), "radius": 0.2617993878},  # 15 degrees - Top segment
+			{"center": Vector3(0, 1, 0), "radius": 0.2617993878},   # 15 degrees - Middle segment
 		],
 		"twist_rotation_range": {
 			"from": 0,  # 0 degrees
