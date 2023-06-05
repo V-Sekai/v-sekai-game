@@ -26,11 +26,11 @@ var config: Dictionary = {
 	},
 	"Chest": {
 		"swing_rotation_center_radius": [
-			{"center": Vector3(0, 1, 0), "radius": 0.0872664626}  # 5 degrees
+			{"center": Vector3(0, 1, 0), "radius": 0.1745329252}  # 10 degrees
 		],
 		"twist_rotation_range": {
 			"from": 0,  # 0 degrees
-			"range": 0.1745329252  # 10 degrees
+			"range": 0.2617993878  # 15 degrees
 		}
 	},
 	"UpperChest": {
@@ -72,12 +72,12 @@ var config: Dictionary = {
 	},
 	"LeftShoulder": {
 		"swing_rotation_center_radius": [
-			{"center": Vector3(1, 0.5, 0), "radius": 0.3490658504},  # 20 degrees
-			{"center": Vector3(0, 1, 0.5), "radius": 0.2617993878},   # 15 degrees
+			{"center": Vector3(1, 0.5, 0), "radius": 0.436332312},  # 25 degrees
+			{"center": Vector3(0, 1, 0.5), "radius": 0.3490658504},   # 20 degrees
 		],
 		"twist_rotation_range": {
 			"from": 0,  # 0 degrees
-			"range": 0.2617993878  # 15 degrees
+			"range": 0.3490658504  # 20 degrees
 		}
 	},
 	"LeftUpperArm": {
@@ -160,12 +160,12 @@ var config: Dictionary = {
 	},
 	"RightShoulder": {
 		"swing_rotation_center_radius": [
-			{"center": Vector3(-1, 0.5, 0), "radius": 0.3490658504},  # 20 degrees
-			{"center": Vector3(0, 1, -0.5), "radius": 0.2617993878},   # 15 degrees
+			{"center": Vector3(-1, 0.5, 0), "radius": 0.436332312},  # 25 degrees
+			{"center": Vector3(0, 1, -0.5), "radius": 0.3490658504},   # 20 degrees
 		],
 		"twist_rotation_range": {
 			"from": 0,  # 0 degrees
-			"range": 0.2617993878  # 15 degrees
+			"range": 0.3490658504  # 20 degrees
 		}
 	},
 	"RightUpperArm": {
