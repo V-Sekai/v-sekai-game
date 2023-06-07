@@ -1,14 +1,6 @@
 @tool
 extends EditorScript
 
-enum Direction {
-	RIGHT,
-	LEFT,
-	UP,
-	DOWN,
-	FRONT,
-	BACK
-}
 
 func create_symmetric_entry(name, swing_rotation_center_radius, twist_rotation_range_from, twist_rotation_range_range):
 	var entry = {
@@ -20,8 +12,7 @@ func create_symmetric_entry(name, swing_rotation_center_radius, twist_rotation_r
 			}
 		}
 	}
-
-	var right_name = "Right" + name.substr(4)
+	var right_name = name.replace("Left", "Right")
 	entry[right_name] = {
 		"swing_rotation_center_radius": [],
 		"twist_rotation_range": {
@@ -31,98 +22,85 @@ func create_symmetric_entry(name, swing_rotation_center_radius, twist_rotation_r
 	}
 
 	for center_radius in swing_rotation_center_radius:
-		var center = center_radius["center"]
+		var center = center_radius.get("center", Vector3(0, 1, 0))
 		var radius = center_radius["radius"]
-		var new_center = Vector3()
-
-		match center:
-			Direction.RIGHT:
-				new_center = Vector3(-center.x, center.y, center.z)
-			Direction.LEFT:
-				new_center = Vector3(-center.x, center.y, center.z)
-			Direction.UP:
-				new_center = Vector3(center.x, -center.y, center.z)
-			Direction.DOWN:
-				new_center = Vector3(center.x, -center.y, center.z)
-			Direction.FRONT:
-				new_center = Vector3(center.x, center.y, -center.z)
-			Direction.BACK:
-				new_center = Vector3(center.x, center.y, -center.z)
+		var new_center = Vector3(-center.x, center.y, center.z)
 
 		entry[right_name]["swing_rotation_center_radius"].append({"center": new_center, "radius": radius})
 
 	return entry
-	
+
 func generate_config():
 	var config: Dictionary = {
-		"Hips": {
-			"swing_rotation_center_radius": [
-				{"center": Vector3(0, -1, 0), "radius": deg_to_rad(10)}
-			],
-			"twist_rotation_range": {
-				"from": deg_to_rad(90) + deg_to_rad(180),
-				"range": deg_to_rad(5)
-			}
-		},
-		"Spine": {
-			"swing_rotation_center_radius": [
-				{"center": Vector3(0, 1, 0), "radius": deg_to_rad(15)}
-			],
-			"twist_rotation_range": {
-				"from": deg_to_rad(0),
-				"range": deg_to_rad(2.5)
-			}
-		},
-		"Chest": {
-			"swing_rotation_center_radius": [
-				{"center": Vector3(0, 1, 0), "radius": deg_to_rad(10)}
-			],
-			"twist_rotation_range": {
-				"from": deg_to_rad(0),
-				"range": deg_to_rad(15)
-			}
-		},
-		"UpperChest": {
-			"swing_rotation_center_radius": [
-				{"center": Vector3(0, 1, 0), "radius": deg_to_rad(5)}
-			],
-			"twist_rotation_range": {
-				"from": deg_to_rad(0),
-				"range": deg_to_rad(10)
-			}
-		},
-		"Neck": {
-			"swing_rotation_center_radius": [
-				{"center": Vector3(0, 1, 0), "radius": deg_to_rad(22.5)}
-			],
-			"twist_rotation_range": {
-				"from": deg_to_rad(0),
-				"range": deg_to_rad(2.5)
-			}
-		},
-		"Head": {
-			"swing_rotation_center_radius": [
-				{"center": Vector3(0, 1, 0), "radius": deg_to_rad(2.5)}
-			],
-			"twist_rotation_range": {
-				"from": deg_to_rad(0),
-				"range": deg_to_rad(1.25)
-			}
-		},
-	}
+			"Hips": {
+				"swing_rotation_center_radius": [
+					{"center": Vector3.DOWN, "radius": deg_to_rad(10)}
+				],
+				"twist_rotation_range": {
+					"from": deg_to_rad(90) + deg_to_rad(180),
+					"range": deg_to_rad(5)
+				}
+			},
+			"Spine": {
+				"swing_rotation_center_radius": [
+					{"center": Vector3.UP, "radius": deg_to_rad(15)}
+				],
+				"twist_rotation_range": {
+					"from": deg_to_rad(0),
+					"range": deg_to_rad(2.5)
+				}
+			},
+			"Chest": {
+				"swing_rotation_center_radius": [
+					{"center": Vector3.UP, "radius": deg_to_rad(10)}
+				],
+				"twist_rotation_range": {
+					"from": deg_to_rad(0),
+					"range": deg_to_rad(15)
+				}
+			},
+			"UpperChest": {
+				"swing_rotation_center_radius": [
+					{"center": Vector3.UP, "radius": deg_to_rad(5)}
+				],
+				"twist_rotation_range": {
+					"from": deg_to_rad(0),
+					"range": deg_to_rad(10)
+				}
+			},
+			"Neck": {
+				"swing_rotation_center_radius": [
+					{"center": Vector3.UP, "radius": deg_to_rad(22.5)}
+				],
+				"twist_rotation_range": {
+					"from": deg_to_rad(0),
+					"range": deg_to_rad(2.5)
+				}
+			},
+			"Head": {
+				"swing_rotation_center_radius": [
+					{"center": Vector3.UP, "radius": deg_to_rad(2.5)}
+				],
+				"twist_rotation_range": {
+					"from": deg_to_rad(0),
+					"range": deg_to_rad(1.25)
+				}
+			},
+		}
+
 
 	var symmetric_entries = [
-		["LeftEye", [{"center": Direction.RIGHT, "radius": deg_to_rad(2.5)}, {"center": Direction.UP, "radius": deg_to_rad(2.5)}], 0, 2.5],
-		["LeftShoulder", [{"center": Direction.RIGHT, "radius": deg_to_rad(5)}, {"center": Direction.UP, "radius": deg_to_rad(5)}], 0, 5],
-		["LeftUpperArm", [{"center": Direction.RIGHT, "radius": deg_to_rad(25)}, {"center": Direction.FRONT, "radius": deg_to_rad(25)}], 0, 15],
-		["LeftLowerArm", [{"center": Direction.UP, "radius": deg_to_rad(30)}, {"center": Direction.RIGHT, "radius": deg_to_rad(30)}, {"center": Direction.BACK, "radius": deg_to_rad(30)}], 50, 10],
-		["LeftHand", [{"center": Direction.UP, "radius": deg_to_rad(45)}], 0, 90],
+		["LeftEye", [{"center": Vector3.RIGHT, "radius": deg_to_rad(2.5)}, {"center": Vector3.UP, "radius": deg_to_rad(2.5)}], 0, 2.5],
+		["LeftShoulder", [{"center": Vector3.RIGHT, "radius": deg_to_rad(4)}, {"center": Vector3.UP, "radius": deg_to_rad(4)}], 0, 4],
+		["LeftUpperArm", [{"center": Vector3.RIGHT, "radius": deg_to_rad(20)}, {"center": Vector3.BACK, "radius": deg_to_rad(20)}], 0, 12],
+		["LeftLowerArm", [{"center": Vector3.UP, "radius": deg_to_rad(25)}, {"center": Vector3.FORWARD, "radius": deg_to_rad(25)}, {"center": Vector3.DOWN, "radius": deg_to_rad(25)}], 45, 8],
+		["LeftHand", [{"center": Vector3.UP, "radius": deg_to_rad(40)}], 0, 80],
 		["LeftUpperLeg", [
-			{"center": Direction.RIGHT, "radius": deg_to_rad(30)},
-			{"center": Direction.FRONT, "radius": deg_to_rad(30)}], 90, 2.5],
-		["LeftLowerLeg", [{"center": Direction.UP, "radius": deg_to_rad(40)}, {"center": Direction.RIGHT, "radius": deg_to_rad(40)}, {"center": Direction.BACK, "radius": deg_to_rad(40)}], 50, 10],
-		["LeftFoot", [{"center": Direction.DOWN, "radius": deg_to_rad(45)}, {"center": Direction.FRONT, "radius": deg_to_rad(45)}], 0, 5],
-		["LeftToes", [{"center": Direction.DOWN, "radius": deg_to_rad(20)}], 0, 5],
+			{"center": Vector3.RIGHT, "radius": deg_to_rad(25)},
+			{"center": Vector3.BACK, "radius": deg_to_rad(25)}], 85, 2],
+		["LeftLowerLeg", [{"center": Vector3.UP, "radius": deg_to_rad(35)}, {"center": Vector3.RIGHT, "radius": deg_to_rad(35)}, {"center": Vector3.BACK, "radius": deg_to_rad(35)}], 45, 8],
+		["LeftFoot", [{"center": Vector3.DOWN, "radius": deg_to_rad(40)}, {"center": Vector3.BACK, "radius": deg_to_rad(40)}], 0, 4],
+		["LeftToes", [{"center": Vector3.DOWN, "radius": deg_to_rad(15)}], 0, 4],
 	]
 
 	for entry in symmetric_entries:
@@ -143,7 +121,7 @@ var config: Dictionary = generate_config()
 # bone_name_sequential_limit_cones:
 # - Each key is a bone name, and its value is a list of dictionaries.
 # - Each dictionary in the list represents a limit cone with a "center" Vector3 and a "radius" (in radians).
-#     - Center is not axis locked. Center defaults to Vector3(0, @ , 0) 
+#     - Center is not axis locked. Center defaults to Vector3(0, 1, 0) 
 #     - Radius cannot be 0.
 # - The limit cones are applied sequentially and are connected to restrict the rotation of the joint.
 #
