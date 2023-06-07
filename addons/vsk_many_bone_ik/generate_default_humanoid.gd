@@ -16,7 +16,7 @@ func print_bone_report(targets, initial_global_poses):
 			if not initial_global_poses.has(bone_name):
 				continue
 			
-			if not targets.has(bone_name):
+			if not targets.has(bone_name) and not config.has(bone_name):
 				continue
 
 			num_bones_considered += 1
