@@ -2,31 +2,7 @@
 extends EditorScript
 
 
-func calculate_constraint_progress(skeleton: Skeleton3D, bone_name: String) -> float:
-	var progress: float = 0.0
-	if config.has(bone_name):
-		var bone_config = config[bone_name]
-		var bone_index = skeleton.find_bone(bone_name)
-		var current_pose_basis = skeleton.get_bone_global_pose_no_override(bone_index).basis
-		var rest_pose_basis = skeleton.get_bone_global_rest(bone_index).basis
-
-		if bone_config.has("twist_rotation_range"):
-			var twist_from = bone_config["twist_rotation_range"][0]
-			var twist_to = bone_config["twist_rotation_range"][1]
-			var twist_diff = abs(current_pose_basis.get_euler().y - rest_pose_basis.get_euler().y)
-			progress = max(progress, (twist_diff - twist_from) / (twist_to - twist_from))
-
-		if bone_config.has("swing_spherical_coords"):
-			for cone in bone_config["swing_spherical_coords"]:
-				var center = spherical_to_cartesian(Vector2(cone[0], cone[1]))
-				var radius = cone[2]
-				var swing_diff_quat = current_pose_basis.get_rotation_quaternion().inverse() * rest_pose_basis.get_rotation_quaternion()
-				var swing_diff_angle = swing_diff_quat.get_angle()
-				progress = max(progress, (swing_diff_angle - center.length()) / radius)
-
-	return progress
-
-func print_bone_report():
+func print_bone_report(targets, initial_global_poses):
 	var skeletons: Array[Node] = get_editor_interface().get_edited_scene_root().find_children("*", "Skeleton3D")
 	for skeleton in skeletons:
 		if skeleton == null:
@@ -35,36 +11,31 @@ func print_bone_report():
 
 		for bone_index in range(skeleton.get_bone_count()):
 			var bone_name = skeleton.get_bone_name(bone_index)
-			if config.has(bone_name):
-				var progress = calculate_constraint_progress(skeleton, bone_name)
-				var action = ""
+			if not initial_global_poses.has(bone_name):
+				continue
+			
+			var action = ""
 
-				var current_pose_global = skeleton.get_bone_global_pose(bone_index)
-				var rest_pose_global = skeleton.get_bone_global_rest(bone_index)
-				var current_pose_local_position = skeleton.get_bone_pose_position(bone_index)
+			var current_pose_global = skeleton.get_bone_global_pose(bone_index)
 
-				var parent_bone_index = skeleton.get_bone_parent(bone_index)
-				var rest_pose_local_position = Vector3()
-				if parent_bone_index != -1:
-					var parent_global_pose = skeleton.get_bone_global_pose(parent_bone_index)
-					rest_pose_local_position = (parent_global_pose.inverse() * rest_pose_global).origin
-				else:
-					rest_pose_local_position = rest_pose_global.origin
+			var initial_pose_global = initial_global_poses[bone_name]
+			
+			# Use global positions for distance calculation
+			var position_distance = current_pose_global.origin.distance_to(initial_pose_global.origin) * 1000  # Convert to mm
+			var rotation_difference = (current_pose_global.basis.get_euler() - initial_pose_global.basis.get_euler()) * 180 / PI  # Convert to degrees
 
-				var position_distance = current_pose_local_position.distance_to(rest_pose_local_position) * 1000  # Convert to mm
-				var rotation_difference = (current_pose_global.basis.get_euler() - rest_pose_global.basis.get_euler()) * 180 / PI  # Convert to degrees
+			if position_distance < 50:
+				action = "Good"
+			elif (position_distance >= 50 and position_distance < 100):
+				action = "Slightly out of range"
+			elif (position_distance >= 100 and position_distance < 150):
+				action = "Out of range"
+			else:
+				action = "Significantly out of range"
 
-				if progress < 0.25 and position_distance < 1000:
-					action = "Good"
-				elif (progress >= 0.25 and progress < 0.5) or (position_distance >= 1000 and position_distance < 2000):
-					action = "Slightly out of range"
-				elif (progress >= 0.5 and progress < 0.75) or (position_distance >= 2000 and position_distance < 3000):
-					action = "Out of range"
-				else:
-					action = "Significantly out of range"
+			print("Bone: %s | Suggested Action: %s | Distance from Initial Pose: %.2fmm" % [bone_name, action, position_distance])
 
-				print("Bone: %s | Progress: %.2f | Suggested Action: %s | Rotation Difference: %s° | Distance from Rest Pose: %.2fmm" % [bone_name, progress, action, rotation_difference, position_distance])
-				
+
 func create_symmetric_entry(name, swing_spherical_coords, twist_rotation_range_from, twist_rotation_range_range):
 	var entry = {
 		name: {
@@ -170,6 +141,12 @@ func _run():
 	var skeleton: Skeleton3D = skeletons[0]
 	for ik in iks:
 		ik.free()
+	
+	var initial_global_poses = {}
+	for bone_i in range(skeleton.get_bone_count()):
+		var bone_name = skeleton.get_bone_name(bone_i)
+		initial_global_poses[bone_name] = skeleton.get_bone_global_pose(bone_i)
+	
 	var new_ik: ManyBoneIK3D = ManyBoneIK3D.new()
 	skeleton.add_child(new_ik, true)
 	new_ik.skeleton_node_path = ".."
@@ -182,29 +159,11 @@ func _run():
 	var targets: Dictionary = {
 		"Root": "ManyBoneIK3D",
 		"Hips": "ManyBoneIK3D",
-		"Spine": "ManyBoneIK3D",
-		"Chest": "ManyBoneIK3D",
-		"UpperChest": "ManyBoneIK3D",
-		"Neck": "ManyBoneIK3D",
 		"Head": "ManyBoneIK3D",
-		"LeftEye": "ManyBoneIK3D",
-		"LeftShoulder": "ManyBoneIK3D",
-		"LeftUpperArm": "ManyBoneIK3D",
-		"LeftLowerArm": "ManyBoneIK3D",
 		"LeftHand": "ManyBoneIK3D",
-		"LeftUpperLeg": "ManyBoneIK3D",
-		"LeftLowerLeg": "ManyBoneIK3D",
 		"LeftFoot": "ManyBoneIK3D",
-		"LeftToes": "ManyBoneIK3D",
-		"RightEye": "ManyBoneIK3D",
-		"RightShoulder": "ManyBoneIK3D",
-		"RightUpperArm": "ManyBoneIK3D",
-		"RightLowerArm": "ManyBoneIK3D",
 		"RightHand": "ManyBoneIK3D",
-		"RightUpperLeg": "ManyBoneIK3D",
-		"RightLowerLeg": "ManyBoneIK3D",
 		"RightFoot": "ManyBoneIK3D",
-		"RightToes": "ManyBoneIK3D"
 	}       
 
 	for bone_i in skeleton.get_bone_count():
@@ -229,7 +188,7 @@ func _run():
 	for target_i in keys.size():
 		tune_bone(new_ik, skeleton, keys[target_i], targets[keys[target_i]], root)
 
-	print_bone_report()
+	print_bone_report(targets, initial_global_poses)
 	
 func tune_bone(new_ik: ManyBoneIK3D, skeleton: Skeleton3D, bone_name: String, bone_name_parent: String, owner):
 	var bone_i = skeleton.find_bone(bone_name)
@@ -241,7 +200,6 @@ func tune_bone(new_ik: ManyBoneIK3D, skeleton: Skeleton3D, bone_name: String, bo
 	var parent: Node = null
 	for node in children:
 		if str(node.name) == bone_name_parent:
-			print(node.name)
 			node.add_child(node_3d, true)
 			node_3d.owner = owner
 			parent = node
