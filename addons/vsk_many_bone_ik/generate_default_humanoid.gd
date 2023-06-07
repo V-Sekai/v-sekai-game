@@ -1,13 +1,14 @@
 @tool
 extends EditorScript
 
+
 func calculate_constraint_progress(skeleton: Skeleton3D, bone_name: String) -> float:
 	var progress: float = 0.0
 	if config.has(bone_name):
 		var bone_config = config[bone_name]
 		var bone_index = skeleton.find_bone(bone_name)
 		var current_pose_basis = skeleton.get_bone_global_pose_no_override(bone_index).basis
-		var rest_pose_basis = skeleton.get_bone_rest(bone_index).basis
+		var rest_pose_basis = skeleton.get_bone_global_rest(bone_index).basis
 
 		if bone_config.has("twist_rotation_range"):
 			var twist_from = bone_config["twist_rotation_range"][0]
@@ -25,7 +26,6 @@ func calculate_constraint_progress(skeleton: Skeleton3D, bone_name: String) -> f
 
 	return progress
 
-
 func print_bone_report():
 	var skeletons: Array[Node] = get_editor_interface().get_edited_scene_root().find_children("*", "Skeleton3D")
 	for skeleton in skeletons:
@@ -39,22 +39,32 @@ func print_bone_report():
 				var progress = calculate_constraint_progress(skeleton, bone_name)
 				var action = ""
 
-				var current_pose = skeleton.get_bone_global_pose_no_override(bone_index)
-				var rest_pose = skeleton.get_bone_rest(bone_index)
-				var position_distance = current_pose.origin.distance_to(rest_pose.origin) * 1000  # Convert to mm
-				var rotation_difference = (current_pose.basis.get_euler() - rest_pose.basis.get_euler()) * 180 / PI  # Convert to degrees
+				var current_pose_global = skeleton.get_bone_global_pose(bone_index)
+				var rest_pose_global = skeleton.get_bone_global_rest(bone_index)
+				var current_pose_local_position = skeleton.get_bone_pose_position(bone_index)
+
+				var parent_bone_index = skeleton.get_bone_parent(bone_index)
+				var rest_pose_local_position = Vector3()
+				if parent_bone_index != -1:
+					var parent_global_pose = skeleton.get_bone_global_pose(parent_bone_index)
+					rest_pose_local_position = (parent_global_pose.inverse() * rest_pose_global).origin
+				else:
+					rest_pose_local_position = rest_pose_global.origin
+
+				var position_distance = current_pose_local_position.distance_to(rest_pose_local_position) * 1000  # Convert to mm
+				var rotation_difference = (current_pose_global.basis.get_euler() - rest_pose_global.basis.get_euler()) * 180 / PI  # Convert to degrees
 
 				if progress < 0.25 and position_distance < 1000:
 					action = "Good"
-				elif progress < 0.5 or (position_distance >= 1000 and position_distance < 2000):
+				elif (progress >= 0.25 and progress < 0.5) or (position_distance >= 1000 and position_distance < 2000):
 					action = "Slightly out of range"
-				elif progress < 0.75 or (position_distance >= 2000 and position_distance < 3000):
+				elif (progress >= 0.5 and progress < 0.75) or (position_distance >= 2000 and position_distance < 3000):
 					action = "Out of range"
 				else:
 					action = "Significantly out of range"
 
 				print("Bone: %s | Progress: %.2f | Suggested Action: %s | Rotation Difference: %s° | Distance from Rest Pose: %.2fmm" % [bone_name, progress, action, rotation_difference, position_distance])
-
+				
 func create_symmetric_entry(name, swing_spherical_coords, twist_rotation_range_from, twist_rotation_range_range):
 	var entry = {
 		name: {
@@ -90,6 +100,7 @@ func spherical_to_cartesian(theta_phi: Vector2) -> Vector3:
 	var y = sin(phi) * sin(theta)
 	var z = cos(phi)
 	return Vector3(x, y, z)
+
 	
 func generate_config():
 	var config: Dictionary = {
