@@ -1,9 +1,11 @@
 @tool
 extends EditorScript
 
-
 func print_bone_report(targets, initial_global_poses):
 	var skeletons: Array[Node] = get_editor_interface().get_edited_scene_root().find_children("*", "Skeleton3D")
+	var num_bones_considered = 0
+	var sum_squared_position_distances = 0.0
+
 	for skeleton in skeletons:
 		if skeleton == null:
 			print("No Skeleton3D found.")
@@ -14,26 +16,36 @@ func print_bone_report(targets, initial_global_poses):
 			if not initial_global_poses.has(bone_name):
 				continue
 			
+			if not targets.has(bone_name):
+				continue
+
+			num_bones_considered += 1
+
 			var action = ""
 
 			var current_pose_global = skeleton.get_bone_global_pose(bone_index)
 
 			var initial_pose_global = initial_global_poses[bone_name]
-			
-			# Use global positions for distance calculation
+
 			var position_distance = current_pose_global.origin.distance_to(initial_pose_global.origin) * 1000  # Convert to mm
 			var rotation_difference = (current_pose_global.basis.get_euler() - initial_pose_global.basis.get_euler()) * 180 / PI  # Convert to degrees
 
-			if position_distance < 50:
+			sum_squared_position_distances += position_distance * position_distance
+
+			if position_distance < 5:
 				action = "Good"
-			elif (position_distance >= 50 and position_distance < 100):
+			elif (position_distance >= 5 and position_distance < 10):
 				action = "Slightly out of range"
-			elif (position_distance >= 100 and position_distance < 150):
+			elif (position_distance >= 10 and position_distance < 15):
 				action = "Out of range"
 			else:
 				action = "Significantly out of range"
 
 			print("Bone: %s | Suggested Action: %s | Distance from Initial Pose: %.2fmm" % [bone_name, action, position_distance])
+
+	if num_bones_considered > 0:
+		var rmse = sqrt(sum_squared_position_distances / num_bones_considered)
+		print("RMSE: %.2fmm" % rmse)
 
 
 func create_symmetric_entry(name, swing_spherical_coords, twist_rotation_range_from, twist_rotation_range_range):
@@ -153,6 +165,7 @@ func _run():
 	new_ik.owner = root
 	new_ik.iterations_per_frame = 10
 	new_ik.stabilization_passes = 1
+	new_ik.constraint_mode = true
 	skeleton.reset_bone_poses()
 	var humanoid_profile: SkeletonProfileHumanoid = SkeletonProfileHumanoid.new()
 	var humanoid_bones: PackedStringArray = []
