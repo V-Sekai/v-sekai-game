@@ -13,20 +13,19 @@ func calculate_constraint_progress(skeleton: Skeleton3D, bone_name: String) -> f
 			var twist_from = bone_config["twist_rotation_range"]["from"]
 			var twist_range = bone_config["twist_rotation_range"]["range"]
 			var twist_diff = abs(current_pose_basis.get_euler().y - rest_pose_basis.get_euler().y)
-			progress = max(progress, min((twist_diff - twist_from) / twist_range, 1.0))
+			progress = max(progress, (twist_diff - twist_from) / twist_range)
 
 		if bone_config.has("swing_rotation_center_radius"):
-			var cones: Array = bone_config["swing_rotation_center_radius"]
-			for cone_i in range(cones.size()):
-				var cone: Dictionary = cones[cone_i]
+			for cone in bone_config["swing_rotation_center_radius"]:
 				var center = cone["center"]
 				var radius = cone["radius"]
 				var swing_diff_quat = current_pose_basis.get_rotation_quaternion().inverse() * rest_pose_basis.get_rotation_quaternion()
 				var swing_diff_angle = swing_diff_quat.get_angle()
-				progress = max(progress, min((swing_diff_angle - center.length()) / radius, 1.0))
+				progress = max(progress, (swing_diff_angle - center.length()) / radius)
 	
 	return progress
-	
+
+
 func print_bone_report():
 	var skeletons: Array[Node] = get_editor_interface().get_edited_scene_root().find_children("*", "Skeleton3D")
 	for skeleton in skeletons:
@@ -49,8 +48,16 @@ func print_bone_report():
 				else:
 					action = "Significantly out of range"
 
-				print("Bone: %s | Progress: %.2f | Suggested Action: %s" % [bone_name, progress, action])
+				var current_rotation_angles = skeleton.get_bone_global_pose_no_override(bone_index).basis.get_euler()
+				var parent_bone_distance = 0.0
+				if skeleton.get_bone_parent(bone_index) != -1:
+					var parent_bone_pose = skeleton.get_bone_global_pose_no_override(skeleton.get_bone_parent(bone_index))
+					parent_bone_distance = parent_bone_pose.origin.distance_to(skeleton.get_bone_global_pose_no_override(bone_index).origin)
 
+				print("Bone: %s | Progress: %.2f | Suggested Action: %s | Rotation Angles: %s | Distance from Parent Bone: %.2f" % [bone_name, progress, action, current_rotation_angles, parent_bone_distance])
+			else:
+				print("Bone: %s | Not in config" % bone_name)
+	
 func create_symmetric_entry(name, swing_rotation_center_radius, twist_rotation_range_from, twist_rotation_range_range):
 	var entry = {
 		name: {
@@ -79,7 +86,28 @@ func create_symmetric_entry(name, swing_rotation_center_radius, twist_rotation_r
 
 	return entry
 
+func spherical_to_cartesian(theta_phi: Vector2) -> Vector3:
+	var theta = theta_phi.x
+	var phi = theta_phi.y
+	var x = sin(phi) * cos(theta)
+	var y = sin(phi) * sin(theta)
+	var z = cos(phi)
+	return Vector3(x, y, z)
+
 func generate_config():
+	var symmetric_entries = [
+		["LeftEye", [{"center": spherical_to_cartesian(Vector2(deg_to_rad(90), deg_to_rad(2.5))), "radius": deg_to_rad(2.5)}, {"center": spherical_to_cartesian(Vector2(deg_to_rad(0), deg_to_rad(2.5))), "radius": deg_to_rad(2.5)}], 0, 2.5],
+		["LeftShoulder", [{"center": spherical_to_cartesian(Vector2(deg_to_rad(90), deg_to_rad(4))), "radius": deg_to_rad(4)}, {"center": spherical_to_cartesian(Vector2(deg_to_rad(0), deg_to_rad(4))), "radius": deg_to_rad(4)}], 0, 4],
+		["LeftUpperArm", [{"center": spherical_to_cartesian(Vector2(deg_to_rad(90), deg_to_rad(20))), "radius": deg_to_rad(20)}, {"center": spherical_to_cartesian(Vector2(deg_to_rad(180), deg_to_rad(20))), "radius": deg_to_rad(20)}], 0, 12],
+		["LeftLowerArm", [{"center": spherical_to_cartesian(Vector2(deg_to_rad(0), deg_to_rad(25))), "radius": deg_to_rad(25)}, {"center": spherical_to_cartesian(Vector2(deg_to_rad(270), deg_to_rad(25))), "radius": deg_to_rad(25)}, {"center": spherical_to_cartesian(Vector2(deg_to_rad(180), deg_to_rad(25))), "radius": deg_to_rad(25)}], 45, 8],
+		["LeftHand", [{"center": spherical_to_cartesian(Vector2(deg_to_rad(0), deg_to_rad(40))), "radius": deg_to_rad(40)}], 0, 80],
+		["LeftUpperLeg", [
+			{"center": spherical_to_cartesian(Vector2(deg_to_rad(90), deg_to_rad(25))), "radius": deg_to_rad(25)},
+			{"center": spherical_to_cartesian(Vector2(deg_to_rad(180), deg_to_rad(25))), "radius": deg_to_rad(25)}], 85, 2],
+		["LeftLowerLeg", [{"center": spherical_to_cartesian(Vector2(deg_to_rad(0), deg_to_rad(35))), "radius": deg_to_rad(35)}, {"center": spherical_to_cartesian(Vector2(deg_to_rad(90), deg_to_rad(35))), "radius": deg_to_rad(35)}, {"center": spherical_to_cartesian(Vector2(deg_to_rad(180), deg_to_rad(35))), "radius": deg_to_rad(35)}], 45, 8],
+		["LeftFoot", [{"center": spherical_to_cartesian(Vector2(deg_to_rad(180), deg_to_rad(40))), "radius": deg_to_rad(40)}, {"center": spherical_to_cartesian(Vector2(deg_to_rad(270), deg_to_rad(40))), "radius": deg_to_rad(40)}], 0, 4],
+		["LeftToes", [{"center": spherical_to_cartesian(Vector2(deg_to_rad(180), deg_to_rad(15))), "radius": deg_to_rad(15)}], 0, 4],
+	]
 	var config: Dictionary = {
 			"Hips": {
 				"swing_rotation_center_radius": [
@@ -136,21 +164,7 @@ func generate_config():
 				}
 			},
 		}
-
-	var symmetric_entries = [
-		["LeftEye", [{"center": Vector3.RIGHT, "radius": deg_to_rad(2.5)}, {"center": Vector3.UP, "radius": deg_to_rad(2.5)}], 0, 2.5],
-		["LeftShoulder", [{"center": Vector3.RIGHT, "radius": deg_to_rad(4)}, {"center": Vector3.UP, "radius": deg_to_rad(4)}], 0, 4],
-		["LeftUpperArm", [{"center": Vector3.RIGHT, "radius": deg_to_rad(20)}, {"center": Vector3.BACK, "radius": deg_to_rad(20)}], 0, 12],
-		["LeftLowerArm", [{"center": Vector3.UP, "radius": deg_to_rad(25)}, {"center": Vector3.FORWARD, "radius": deg_to_rad(25)}, {"center": Vector3.DOWN, "radius": deg_to_rad(25)}], 45, 8],
-		["LeftHand", [{"center": Vector3.UP, "radius": deg_to_rad(40)}], 0, 80],
-		["LeftUpperLeg", [
-			{"center": Vector3.RIGHT, "radius": deg_to_rad(25)},
-			{"center": Vector3.BACK, "radius": deg_to_rad(25)}], 85, 2],
-		["LeftLowerLeg", [{"center": Vector3.UP, "radius": deg_to_rad(35)}, {"center": Vector3.RIGHT, "radius": deg_to_rad(35)}, {"center": Vector3.BACK, "radius": deg_to_rad(35)}], 45, 8],
-		["LeftFoot", [{"center": Vector3.DOWN, "radius": deg_to_rad(40)}, {"center": Vector3.BACK, "radius": deg_to_rad(40)}], 0, 4],
-		["LeftToes", [{"center": Vector3.DOWN, "radius": deg_to_rad(15)}], 0, 4],
-	]
-
+		
 	for entry in symmetric_entries:
 		var new_entry = create_symmetric_entry(entry[0], entry[1], entry[2], entry[3])
 		for key in new_entry.keys():
