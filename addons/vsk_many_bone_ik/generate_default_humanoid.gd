@@ -1,6 +1,55 @@
 @tool
 extends EditorScript
 
+func calculate_constraint_progress(skeleton: Skeleton3D, bone_name: String) -> float:
+	var progress: float = 0.0
+	if config.has(bone_name):
+		var bone_config = config[bone_name]
+		var bone_index = skeleton.find_bone(bone_name)
+		var current_pose_basis = skeleton.get_bone_global_pose_no_override(bone_index).basis
+		var rest_pose_basis = skeleton.get_bone_rest(bone_index).basis
+
+		if bone_config.has("twist_rotation_range"):
+			var twist_from = bone_config["twist_rotation_range"]["from"]
+			var twist_range = bone_config["twist_rotation_range"]["range"]
+			var twist_diff = abs(current_pose_basis.get_euler().y - rest_pose_basis.get_euler().y)
+			progress = max(progress, min((twist_diff - twist_from) / twist_range, 1.0))
+
+		if bone_config.has("swing_rotation_center_radius"):
+			var cones: Array = bone_config["swing_rotation_center_radius"]
+			for cone_i in range(cones.size()):
+				var cone: Dictionary = cones[cone_i]
+				var center = cone["center"]
+				var radius = cone["radius"]
+				var swing_diff_quat = current_pose_basis.get_rotation_quaternion().inverse() * rest_pose_basis.get_rotation_quaternion()
+				var swing_diff_angle = swing_diff_quat.get_angle()
+				progress = max(progress, min((swing_diff_angle - center.length()) / radius, 1.0))
+	
+	return progress
+	
+func print_bone_report():
+	var skeletons: Array[Node] = get_editor_interface().get_edited_scene_root().find_children("*", "Skeleton3D")
+	for skeleton in skeletons:
+		if skeleton == null:
+			print("No Skeleton3D found.")
+			return
+
+		for bone_index in range(skeleton.get_bone_count()):
+			var bone_name = skeleton.get_bone_name(bone_index)
+			if config.has(bone_name):
+				var progress = calculate_constraint_progress(skeleton, bone_name)
+				var action = ""
+
+				if progress < 0.25:
+					action = "Good"
+				elif progress < 0.5:
+					action = "Slightly out of range"
+				elif progress < 0.75:
+					action = "Out of range"
+				else:
+					action = "Significantly out of range"
+
+				print("Bone: %s | Progress: %.2f | Suggested Action: %s" % [bone_name, progress, action])
 
 func create_symmetric_entry(name, swing_rotation_center_radius, twist_rotation_range_from, twist_rotation_range_range):
 	var entry = {
@@ -88,7 +137,6 @@ func generate_config():
 			},
 		}
 
-
 	var symmetric_entries = [
 		["LeftEye", [{"center": Vector3.RIGHT, "radius": deg_to_rad(2.5)}, {"center": Vector3.UP, "radius": deg_to_rad(2.5)}], 0, 2.5],
 		["LeftShoulder", [{"center": Vector3.RIGHT, "radius": deg_to_rad(4)}, {"center": Vector3.UP, "radius": deg_to_rad(4)}], 0, 4],
@@ -113,38 +161,6 @@ func generate_config():
 @export 
 var config: Dictionary = generate_config()
 
-
-# This configuration dictionary defines joint constraints for a character rig.
-#
-# The text directions are from the camera looking at the skeleton.
-#
-# bone_name_sequential_limit_cones:
-# - Each key is a bone name, and its value is a list of dictionaries.
-# - Each dictionary in the list represents a limit cone with a "center" Vector3 and a "radius" (in radians).
-#     - Center is not axis locked. Center defaults to Vector3(0, 1, 0) 
-#     - Radius cannot be 0.
-# - The limit cones are applied sequentially and are connected to restrict the rotation of the joint.
-#
-# Has between 1 to 10 cones for each bone:
-#
-# | Joint Name          | Joint Type        | Constraint Description                      |
-# |---------------------|-------------------|---------------------------------------------|
-# | Root                | Free              | Any rotation and range                      |
-# | Spine               | Hinge             | Limited twisting motion (left-right)        |
-# | Chest               | Hinge             | Limited twisting motion (left-right)        |
-# | UpperChest          | Hinge             | Limited twisting motion (left-right)        |
-# | Neck                | Hinge             | Limited nodding motion (up-down)            |
-# | Head                | Hinge             | Limited nodding motion (up-down)            |
-# | LeftEye             | Ball and socket   | Limited eye movement (up-down, left-right)  |
-# | LeftShoulder        | Ball and socket   | Limited shoulder rotation (front-back, up-down) |
-# | LeftUpperArm        | Hinge             | Limited upper arm rotation (front-back, up-down) |
-# | LeftLowerArm        | Hinge             | Limited lower arm rotation (front-back)    |
-# | LeftHand            | Ball and socket   | Limited hand rotation (up-down, left-right) |
-# | LeftUpperLeg        | Ball and socket   | Limited upper leg rotation (front-back, up-down) |
-# | LeftLowerLeg        | Hinge             | Limited lower leg rotation (front-back)    |
-# | LeftFoot            | Ball and socket   | Limited foot rotation (up-down, left-right) |
-# | LeftToes            | Ball and socket   | Limited toe movement (up-down, left-right) |
-
 func _run():
 	var root: Node3D = get_editor_interface().get_edited_scene_root()
 	if root == null:
@@ -160,7 +176,6 @@ func _run():
 	new_ik.skeleton_node_path = ".."
 	new_ik.owner = root
 	new_ik.iterations_per_frame = 10
-	new_ik.queue_print_skeleton()
 	new_ik.stabilization_passes = 1
 	skeleton.reset_bone_poses()
 	var humanoid_profile: SkeletonProfileHumanoid = SkeletonProfileHumanoid.new()
@@ -190,7 +205,7 @@ func _run():
 		"RightLowerLeg": "ManyBoneIK3D",
 		"RightFoot": "ManyBoneIK3D",
 		"RightToes": "ManyBoneIK3D"
-	}		
+	}       
 
 	for bone_i in skeleton.get_bone_count():
 		var bone_name = skeleton.get_bone_name(bone_i)
@@ -215,6 +230,8 @@ func _run():
 	for target_i in keys.size():
 		tune_bone(new_ik, skeleton, keys[target_i], targets[keys[target_i]], root)
 
+	print_bone_report()
+	
 func tune_bone(new_ik: ManyBoneIK3D, skeleton: Skeleton3D, bone_name: String, bone_name_parent: String, owner):
 	var bone_i = skeleton.find_bone(bone_name)
 	if bone_i == -1:
@@ -234,6 +251,4 @@ func tune_bone(new_ik: ManyBoneIK3D, skeleton: Skeleton3D, bone_name: String, bo
 		skeleton.global_transform.affine_inverse() * skeleton.get_bone_global_pose_no_override(bone_i)
 	)
 	node_3d.owner = new_ik.owner
-	if bone_name in ["LeftToes", "RightToes"]:
-		new_ik.set_pin_weight(bone_i, 0)
 	new_ik.set_pin_nodepath(bone_i, new_ik.get_path_to(node_3d))
