@@ -78,35 +78,6 @@ func print_bone_report(targets, initial_global_poses):
 		print("RMSE: %.2fmm" % rmse)
 
 
-
-func create_symmetric_entry(name, swing_spherical_coords, twist_rotation_range_from, twist_rotation_range_range):
-	var entry = {
-		name: {
-			"swing_spherical_coords": swing_spherical_coords,
-			"twist_rotation_range": {
-				"from": deg_to_rad(twist_rotation_range_from),
-				"range": deg_to_rad(twist_rotation_range_range)
-			}
-		}
-	}
-	var right_name = name.replace("Left", "Right")
-	entry[right_name] = {
-		"swing_spherical_coords": [],
-		"twist_rotation_range": {
-			"from": deg_to_rad(twist_rotation_range_from),
-			"range": deg_to_rad(twist_rotation_range_range)
-		}
-	}
-
-	for center_radius in swing_spherical_coords:
-		var center = center_radius.get("center", Vector2(0, 1))
-		var radius = center_radius["radius"]
-		var new_center = Vector2(-center.x, center.y)
-
-		entry[right_name]["swing_spherical_coords"].append({"center": new_center, "radius": radius})
-
-	return entry
-
 	# The `process_swing_spherical_coords` function takes three arguments: a configuration dictionary, a mode string, and an optional integer parameter. The purpose of this function is to process the swing spherical coordinates for each bone in the configuration dictionary based on the specified mode.
 
 	# 1. It iterates through the keys of the configuration dictionary.
@@ -135,127 +106,40 @@ func spherical_to_cartesian(theta_phi: Vector2) -> Vector3:
 	var z = cos(phi)
 	return Vector3(x, y, z)
 
-func generate_config():
-	var config: Dictionary = {
-		"Head": {
-			"swing_spherical_coords": [[PI / 2, PI / 2, deg_to_rad(15)]],
-			"twist_rotation_range": [deg_to_rad(-3), deg_to_rad(8)],
-			"comment": "The head does not move much. Allows for limited rotation and tilt."
-		},
-		"Neck": {
-			"swing_spherical_coords": [[PI / 2, PI / 2, deg_to_rad(10)]],
-			"twist_rotation_range": [deg_to_rad(-3), deg_to_rad(8)],
-			"comment": "Allows for moderate neck movement while maintaining a natural posture."
-		},
-		"LeftHand": {
-			"swing_spherical_coords": [[PI / 2, PI / 2, deg_to_rad(15)]],
-			"twist_rotation_range": [deg_to_rad(-3), deg_to_rad(8)],
-			"comment": "Permits a wide range of motion for grasping and gesturing."
-		},
-		"LeftLowerArm": {
-			"swing_spherical_coords": [[PI / 2, PI / 2, deg_to_rad(15)]],
-			"twist_rotation_range": [deg_to_rad(-3), deg_to_rad(8)],
-			"comment": "Allows for bending at the elbow and limited twisting."
-		},
-		"LeftUpperArm": {
-			"swing_spherical_coords": [[PI / 2, PI / 2, deg_to_rad(15)]],
-			"twist_rotation_range": [deg_to_rad(-3), deg_to_rad(8)],
-			"comment": "Enables a wide range of shoulder movement while maintaining a natural appearance."
-		},
-		"LeftShoulder": {
-			"swing_spherical_coords": [[PI / 2, PI / 2, deg_to_rad(15)]],
-			"twist_rotation_range": [deg_to_rad(-3), deg_to_rad(8)],
-			"comment": "Permits shoulder rotation and limited twisting for natural arm movement."
-		},
-		"RightHand": {
-			"swing_spherical_coords": [[PI / 2, PI / 2, deg_to_rad(15)]],
-			"twist_rotation_range": [deg_to_rad(-3), deg_to_rad(8)],
-			"comment": "Permits a wide range of motion for grasping and gesturing."
-		},
-		"RightLowerArm": {
-			"swing_spherical_coords": [[PI / 2, PI / 2, deg_to_rad(15)]],
-			"twist_rotation_range": [deg_to_rad(-3), deg_to_rad(8)],
-			"comment": "Allows for bending at the elbow and limited twisting."
-		},
-		"RightUpperArm": {
-			"swing_spherical_coords": [[PI / 2, PI / 2, deg_to_rad(15)]],
-			"twist_rotation_range": [deg_to_rad(-3), deg_to_rad(8)],
-			"comment": "Enables a wide range of shoulder movement while maintaining a natural appearance."
-		},
-		"RightShoulder": {
-			"swing_spherical_coords": [[PI / 2, PI / 2, deg_to_rad(15)]],
-			"twist_rotation_range": [deg_to_rad(-3), deg_to_rad(8)],
-			"comment": "Permits shoulder rotation and limited twisting for natural arm movement."
-		},
-		"UpperChest": {
-			"swing_spherical_coords": [[PI / 2, PI / 2, deg_to_rad(10)]],
-			"twist_rotation_range": [deg_to_rad(-3), deg_to_rad(8)],
-			"comment": "Allows for moderate upper chest movement while maintaining a natural posture."
-		},
-		"Chest": {
-			"swing_spherical_coords": [[PI / 2, PI / 2, deg_to_rad(10)]],
-			"twist_rotation_range": [deg_to_rad(-3), deg_to_rad(8)],
-			"comment": "Permits moderate chest movement for natural breathing and posture."
-		},
-		"Spine": {
-			"swing_spherical_coords": [[PI / 2, PI / 2, deg_to_rad(7)]],
-			"twist_rotation_range": [deg_to_rad(-1), deg_to_rad(4)],
-			"comment": "Enables limited spine movement to maintain a natural and comfortable posture."
-		},
-		"LeftFoot": {
-			"swing_spherical_coords": [[PI / 2, PI / 2, deg_to_rad(15)]],
-			"twist_rotation_range": [deg_to_rad(-3), deg_to_rad(8)],
-			"comment": "Allows for a wide range of foot movement for balance and walking."
-		},
-        "LeftLowerLeg": {
-            "swing_spherical_coords": [[PI / 2, PI / 4, deg_to_rad(45)]],
-            "twist_rotation_range": [deg_to_rad(-15), deg_to_rad(15)],
-            "comment": "Permits bending at the knee and limited twisting for natural leg movement."
-        },
-		"LeftUpperLeg": {
-			"swing_spherical_coords": [
-				[PI / 2, -PI / 2, deg_to_rad(20)],
-				[PI / 3, -2 * PI / 3, deg_to_rad(20)],
-				[2 * PI / 3, -PI / 3, deg_to_rad(20)]
-			],
-			"twist_rotation_range": [deg_to_rad(-3), deg_to_rad(3)],
-			"comment": "Enables a wide range of hip movement for walking and sitting."
-		},
-		"RightFoot": {
-			"swing_spherical_coords": [[PI / 2, PI / 2, deg_to_rad(15)]],
-			"twist_rotation_range": [deg_to_rad(-3), deg_to_rad(8)],
-			"comment": "Allows for a wide range of foot movement for balance and walking."
-		},
-        "RightLowerLeg": {
-            "swing_spherical_coords": [[PI / 2, PI / 4, deg_to_rad(45)]],
-            "twist_rotation_range": [deg_to_rad(-15), deg_to_rad(15)],
-            "comment": "Permits bending at the knee and limited twisting for natural leg movement."
-        },
-		"RightUpperLeg": {
-			"swing_spherical_coords": [
-				[PI / 2, -PI / 2, deg_to_rad(20)],
-				[PI / 3, -2 * PI / 3, deg_to_rad(20)],
-				[2 * PI / 3, -PI / 3, deg_to_rad(20)]
-			],
-			"twist_rotation_range": [deg_to_rad(-3), deg_to_rad(3)],
-			"comment": "Enables a wide range of hip movement for walking and sitting."
-		},
-		"Hips": {
-			"swing_spherical_coords": [
-				[PI / 6, -(5 * PI / 6), deg_to_rad(3)],
-				[PI / 2, -(PI / 2), deg_to_rad(3)],
-				[5 * PI / 6, -(PI / 6), deg_to_rad(3)]
-			],
-			"twist_rotation_range": [deg_to_rad(270), deg_to_rad(8)],
-			"comment": "Permits limited hip movement for stability and natural posture."
-		},
-		"Root": {
-			"swing_spherical_coords": [[PI / 2, PI / 2, deg_to_rad(7)]],
-			"twist_rotation_range": [deg_to_rad(-1), deg_to_rad(4)],
-			"comment": "Allows for minimal root movement to maintain overall body balance and posture."
-		},
+func create_entry(directions: Array, adjustment: Array, comment: String, mirror=false):
+	if mirror:
+		var mirrored_directions = [[]]
+		for d in directions:
+			mirrored_directions.append([-d[0], d[1], d[2]])
+		directions = mirrored_directions
+
+	return {
+		"swing_spherical_coords_degree": directions,
+		"twist_rotation_range_degree": adjustment,
+		"comment": comment
 	}
-	return config
+	
+
+func generate_config():
+	var new_config = {
+		"Head": create_entry([[70, 110, 15]], [356, 6], "The head has increased range of motion. Allows for more rotation and tilt."),
+		"Neck": create_entry([[85, 95, 12]], [354, 6], "Allows for moderate neck movement while maintaining a natural posture."),
+		"UpperChest": create_entry([[85, 95, 18]], [354, 11], "Allows for moderate upper chest movement while maintaining a natural posture."),
+		"Chest": create_entry([[85, 95, 18]], [354, 11], "Permits moderate chest movement for natural breathing and posture."),
+		"Spine": create_entry([[85, 95, 12]], [356, 7], "Enables limited spine movement to maintain a natural and comfortable posture.")
+	}
+
+	for side in ["Left", "Right"]:
+		var mirror = side == "Right"
+		new_config[side + "Hand"] = create_entry([[85, 95, 22]], [354, 11], "Permits a wide range of motion for grasping and gesturing.", mirror)
+		new_config[side + "LowerArm"] = create_entry([[85, 95, 22]], [354, 11], "Allows for bending at the elbow and limited twisting, contributing to reaching forward and touching the shoulder.", mirror)
+		new_config[side + "UpperArm"] = create_entry([[85, 95, 55]], [354, 11], "Enables a wide range of shoulder movement while maintaining a natural appearance. Contributes to reaching forward and touching the shoulder, as well as allowing hand placement on the hip.", mirror)
+		new_config[side + "Shoulder"] = create_entry([[70, 110, 22]], [354, 11], "These joints allow for increased rotation and limited twisting, enabling more natural arm movement such as reaching forward, touching the shoulder, and swinging the arms in a circular motion.", mirror)
+		new_config[side + "Foot"] = create_entry([[85, 95, 22]], [354, 11], "Allows for a wide range of foot movement for balance and walking.", mirror)
+		new_config[side + "LowerLeg"] = create_entry([[85, 50, 38]], [347, 13], "Permits bending at the knee and limited twisting for natural leg movement.", mirror)
+		new_config[side + "UpperLeg"] = create_entry([[85, -95, 28], [55, -125, 28], [115, -65, 28]], [354, 6], "Enables a wide range of hip movement for walking and sitting.", mirror)
+
+	return new_config
 
 @export 
 var config: Dictionary = generate_config()
@@ -282,8 +166,8 @@ func _run():
 	new_ik.owner = root
 	new_ik.iterations_per_frame = 10
 	new_ik.stabilization_passes = 1
-	new_ik.constraint_mode = true
 	skeleton.reset_bone_poses()
+	new_ik.constraint_mode = true
 	var humanoid_profile: SkeletonProfileHumanoid = SkeletonProfileHumanoid.new()
 	var humanoid_bones: PackedStringArray = []
 	var targets: Dictionary = {
@@ -295,24 +179,25 @@ func _run():
 		"RightHand": "ManyBoneIK3D",
 		"RightFoot": "ManyBoneIK3D",
 	}       
-
 	for bone_i in skeleton.get_bone_count():
 		var bone_name = skeleton.get_bone_name(bone_i)
-	
+
 		if config.has(bone_name):
 			var bone_config = config[bone_name]
-			if bone_config.has("twist_rotation_range"):
-				var twist: Vector2 = Vector2(deg_to_rad(bone_config["twist_rotation_range"][0]), deg_to_rad(bone_config["twist_rotation_range"][1]))
+			if bone_config.has("twist_rotation_range_degree"):
+				var twist: Vector2 = Vector2(deg_to_rad(bone_config["twist_rotation_range_degree"][0]), deg_to_rad(bone_config["twist_rotation_range_degree"][1]))
 				new_ik.set_kusudama_twist(bone_i, twist)
-	
-			if bone_config.has("swing_spherical_coords"):
-				var cones: Array = bone_config["swing_spherical_coords"]
+
+			if bone_config.has("swing_spherical_coords_degree"):
+				var cones: Array = bone_config["swing_spherical_coords_degree"]
 				new_ik.set_kusudama_limit_cone_count(bone_i, cones.size())
 				for cone_i in range(cones.size()):
 					var cone: Array = cones[cone_i]
-					var center: Vector2 = Vector2(cone[0], cone[1])
+					if not cone.size():
+						continue
+					var center: Vector2 = Vector2(deg_to_rad(cone[0]), deg_to_rad(cone[1]))
 					new_ik.set_kusudama_limit_cone_center(bone_i, cone_i, spherical_to_cartesian(center))
-					new_ik.set_kusudama_limit_cone_radius(bone_i, cone_i, cone[2])
+					new_ik.set_kusudama_limit_cone_radius(bone_i, cone_i, deg_to_rad(cone[2]))
 
 	var keys = targets.keys()
 	for target_i in keys.size():
