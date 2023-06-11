@@ -233,7 +233,6 @@ class HTTPState:
 
 		http_pool.http_tick.connect(self.http_tick)
 		#print("Waiting for connection to succeed to " + str(hostname))
-		await get_tree().idle_frame 
 		var ret = await self._connection_finished
 		#print("Connection succeeded to " + str(hostname))
 		http_pool.http_tick.disconnect(self.http_tick)
