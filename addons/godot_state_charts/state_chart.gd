@@ -49,7 +49,7 @@ func send_event(event:StringName) -> void:
 ## Sets a property that can be used in expression guards. The property will be available as a global variable
 ## with the same name. E.g. if you set the property "foo" to 42, you can use the expression "foo == 42" in
 ## an expression guard.
-func set_expression_property(name:StringName, value) -> void:
+func set_expression_property(_name:StringName, value) -> void:
 	_expression_properties[name] = value
 
 

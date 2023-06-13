@@ -98,6 +98,10 @@ NetworkManager="*res://addons/network_manager/network_manager.gd"
 ScreenshotManager="*res://addons/sar1_screenshot_manager/screenshot_manager.gd"
 ConnectionUtil="*res://addons/gd_util/connection_util.gd"
 
+[compression]
+
+formats/zstd/long_distance_matching=true
+
 [debug]
 
 gdscript/warnings/exclude_addons=false
@@ -120,12 +124,12 @@ window/stretch/mode="viewport"
 window/stretch/aspect="keep_height"
 window/vsync/vsync_mode=2
 window/vsync/vsync_via_compositor=true
+window/vsync/vsync_mode.macos=1
 
 [editor]
 
 movie_writer/mjpeg_quality=1.0
 movie_writer/movie_file="../export.avi"
-run/main_run_args="--xr-mode off"
 import/use_multiple_threads=false
 
 [editor_plugins]
@@ -542,6 +546,7 @@ global_illumination/gi/use_half_resolution=true
 global_illumination/sdfgi/probe_ray_count=0
 anti_aliasing/quality/msaa_2d=1
 anti_aliasing/quality/msaa_3d=1
+viewport/transparent_background=true
 anti_aliasing/quality/use_debanding=true
 occlusion_culling/use_occlusion_culling=true
 mesh_lod/lod_change/threshold_pixels=0.8
