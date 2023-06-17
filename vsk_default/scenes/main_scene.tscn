@@ -24,6 +24,7 @@ script = ExtResource("2_uhhyl")
 
 [node name="Root" type="Node" parent="StateChart"]
 script = ExtResource("2_q2hku")
+initial_state = NodePath("Startup")
 
 [node name="Startup" type="Node" parent="StateChart/Root"]
 script = ExtResource("2_qid2u")
