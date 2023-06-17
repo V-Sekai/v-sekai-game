@@ -6,7 +6,7 @@ class Future:
 
 
 var next_request: int = 0
-var pending_requests: Dictionary  # int -> Future
+var pending_requests: Dictionary = {} # int -> Future
 
 var http_client_pool: Array[HTTPClient]
 var total_http_clients: int = 0
@@ -245,7 +245,7 @@ class HTTPState:
 		http_pool.http_tick.disconnect(self.http_tick)
 		#print("Call deferred release")
 		# FIXME: self.release.call_deferred() doesn't seem to work. Please call release() manually for now.
-		self.release.call_deferred()
+		call_deferred("release")
 		return ret
 
 	func release():
