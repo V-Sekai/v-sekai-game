@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/ingydotnet/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/V-Sekai/godot-splerger.git
+	branch = master
+	commit = 98fa45f0630986772d95f3f5d1e3616cc26060c1
+	parent = 17350ca9c4ac712d5999c3f2e7debc25774024c5
+	method = merge
+	cmdver = 0.4.6
