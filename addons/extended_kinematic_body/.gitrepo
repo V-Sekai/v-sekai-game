@@ -6,7 +6,7 @@
 [subrepo]
 	remote = https://github.com/V-Sekai/extended_kinematic_body
 	branch = main
-	commit = cba94e389259624891aed82b386100e36dffe5fc
-	parent = df91533c4f1e18e1169f78773ab9fa997a325bdf
+	commit = c8f5757bbdde116ae2492a4e34dffd9da94cac94
+	parent = b832ed0c803373a3678b4dee6e2ae46a01c0de0f
 	method = merge
 	cmdver = 0.4.6
