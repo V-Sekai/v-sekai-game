@@ -6,7 +6,7 @@
 [subrepo]
 	remote = https://github.com/V-Sekai/actor
 	branch = main
-	commit = c57eaa93a3bc2982620a207c5879c1df0bc6fa58
-	parent = 94496501a4d6eb713fbefd58f0993b7204310059
+	commit = 4db336f11966284ef2a82d115df1cc6dfd1b6227
+	parent = 9fca650bbc30e702c0aed28c15cd1ada23a17cab
 	method = merge
 	cmdver = 0.4.6
