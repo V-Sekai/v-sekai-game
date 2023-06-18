@@ -11,13 +11,17 @@
   },
   "configurations": [
     {
+      "name": "Build the editor",
       "type": "lldb",
       "request": "launch",
-      "name": "Launch Program",
-      "program": "${workspaceRoot}/vsk_godot/bin/godot.macos.editor.double.arm64",
-      "cwd": "${workspaceRoot}",
-      "args": ["--path", "vsk_game", "-e"],
+      "args": [
+        "--path",
+        "vsk_game",
+        "-e",
+      ],
+      "cwd": "${workspaceFolder}",
+      "program": "${workspaceFolder}/vsk_godot/bin/godot.macos.editor.double.x86_64",
       "preLaunchTask": "Godot Engine"
-    },
+    }
   ]
 }

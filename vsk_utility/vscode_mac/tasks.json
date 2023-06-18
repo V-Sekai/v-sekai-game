@@ -13,7 +13,22 @@
         "cwd": "${workspaceFolder}/vsk_godot"
       },
       "command": [
-        "scons verbose=no warnings=no werror=yes precision=double compiledb=yes"
+        "scons verbose=no warnings=no werror=no dev_build=no precision=double compiledb=yes use_static_cpp=true target=editor"
+      ],
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "Godot fetch",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceFolder}/vsk_godot"
+      },
+      "command": [
+        "git fetch origin"
       ],
       "problemMatcher": [],
       "group": {
