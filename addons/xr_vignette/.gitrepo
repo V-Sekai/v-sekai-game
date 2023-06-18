@@ -6,7 +6,7 @@
 [subrepo]
 	remote = https://github.com/V-Sekai/godot_xr_vignette
 	branch = main
-	commit = 4bbe79a78841d52ebf32f1a5dc86f5f2af14a6ac
-	parent = 9a4ec5721fe2cce5e1fc4805a5b4b9eb51c070d8
+	commit = bdca72e88426c4e7273d99c28e9ec7c072aca17f
+	parent = 3f88510f6d404e4740b0a4caf07381bcd6df0624
 	method = merge
 	cmdver = 0.4.6
