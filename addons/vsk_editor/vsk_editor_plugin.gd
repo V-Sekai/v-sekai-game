@@ -26,9 +26,7 @@ func _get_plugin_name() -> String:
 	return "VSKEditor"
 
 
-func setup_vskeditor(
-	viewport: Viewport, button: Button, editor_interface: EditorInterface, undo_redo: EditorUndoRedoManager
-) -> void:
+func setup_vskeditor(viewport: Viewport, button: Button, editor_interface: EditorInterface, undo_redo: EditorUndoRedoManager) -> void:
 	var vsk_editor: Node = get_node_or_null("/root/VSKEditor")
 	assert(vsk_editor)
 

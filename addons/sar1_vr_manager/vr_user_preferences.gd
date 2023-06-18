@@ -182,32 +182,20 @@ func get_settings_values() -> void:
 	click_to_move = get_settings_value("click_to_move", TYPE_BOOL, click_to_move)
 	strafe_movement = get_settings_value("strafe_movement", TYPE_BOOL, strafe_movement)
 	always_move_at_full_speed = get_settings_value("always_move_at_full_speed", TYPE_BOOL, always_move_at_full_speed)
-	movement_on_rotation_controller = get_settings_value(
-		"movement_on_rotation_controller", TYPE_BOOL, movement_on_rotation_controller
-	)
+	movement_on_rotation_controller = get_settings_value("movement_on_rotation_controller", TYPE_BOOL, movement_on_rotation_controller)
 	rotation_sensitivity = get_settings_value("rotation_sensitivity", TYPE_FLOAT, rotation_sensitivity)
 	movement_deadzone = get_settings_value("movement_deadzone", TYPE_FLOAT, movement_deadzone)
 	rotation_deadzone = get_settings_value("rotation_deadzone", TYPE_FLOAT, rotation_deadzone)
-	max_positional_distance_start = get_settings_value(
-		"max_positional_distance_start", TYPE_FLOAT, max_positional_distance_start
-	)
-	max_positional_distance_end = get_settings_value(
-		"max_positional_distance_end", TYPE_FLOAT, max_positional_distance_end
-	)
+	max_positional_distance_start = get_settings_value("max_positional_distance_start", TYPE_FLOAT, max_positional_distance_start)
+	max_positional_distance_end = get_settings_value("max_positional_distance_end", TYPE_FLOAT, max_positional_distance_end)
 	turning_mode = get_settings_value("turning_mode", TYPE_INT, turning_mode)
-	snap_turning_degrees_custom = get_settings_value(
-		"snap_turning_degrees_custom", TYPE_INT, snap_turning_degrees_custom
-	)
+	snap_turning_degrees_custom = get_settings_value("snap_turning_degrees_custom", TYPE_INT, snap_turning_degrees_custom)
 	play_position = get_settings_value("play_position", TYPE_INT, play_position)
 	movement_orientation = get_settings_value("movement_orientation", TYPE_INT, movement_orientation)
-	preferred_hand_oriented_movement_hand = get_settings_value(
-		"preferred_hand_oriented_movement_hand", TYPE_INT, preferred_hand_oriented_movement_hand
-	)
+	preferred_hand_oriented_movement_hand = get_settings_value("preferred_hand_oriented_movement_hand", TYPE_INT, preferred_hand_oriented_movement_hand)
 	eye_to_arm_ratio = get_settings_value("eye_to_arm_ratio", TYPE_FLOAT, eye_to_arm_ratio)
 	custom_player_height = get_settings_value("custom_player_height", TYPE_FLOAT, custom_player_height)
-	custom_player_armspan_to_height_ratio = get_settings_value(
-		"custom_player_armspan_to_height_ratio", TYPE_FLOAT, custom_player_armspan_to_height_ratio
-	)
+	custom_player_armspan_to_height_ratio = get_settings_value("custom_player_armspan_to_height_ratio", TYPE_FLOAT, custom_player_armspan_to_height_ratio)
 	laser_color = get_settings_value("laser_color", TYPE_COLOR, laser_color)
 	movement_type = get_settings_value("movement_type", TYPE_INT, movement_type)
 

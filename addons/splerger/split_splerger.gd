@@ -38,6 +38,7 @@ static func _get_num_splits_z(si: _SplitInfo) -> int:
 		splits = 1
 	return splits
 
+
 # split a mesh according to the grid size
 static func split(
 	mesh_instance: MeshInstance3D,
@@ -57,17 +58,7 @@ static func split(
 	si.y_splits = _get_num_splits_y(si)
 	si.z_splits = _get_num_splits_z(si)
 
-	print(
-		(
-			mesh_instance.get_name()
-			+ " : x_splits "
-			+ str(si.x_splits)
-			+ " y_splits "
-			+ str(si.y_splits)
-			+ " z_splits "
-			+ str(si.z_splits)
-		)
-	)
+	print(mesh_instance.get_name() + " : x_splits " + str(si.x_splits) + " y_splits " + str(si.y_splits) + " z_splits " + str(si.z_splits))
 
 	## no need to split .. should never happen
 	if (si.x_splits + si.y_splits + si.z_splits) == 3:
@@ -81,7 +72,7 @@ static func split(
 	var mesh = mesh_instance.mesh
 
 	var mdt = MeshDataTool.new()
-	
+
 	var surface_tool: SurfaceTool = SurfaceTool.new()
 	surface_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
 	for surface_i in range(mesh.get_surface_count()):
@@ -119,18 +110,7 @@ static func split(
 	return true
 
 
-static func _split_mesh(
-	mdt: MeshDataTool,
-	orig_mi: MeshInstance3D,
-	surface_id: int,
-	grid_x: int,
-	grid_y: int,
-	grid_z: int,
-	si: _SplitInfo,
-	attachment_node: Node,
-	faces_assigned,
-	world_verts: PackedVector3Array
-):
+static func _split_mesh(mdt: MeshDataTool, orig_mi: MeshInstance3D, surface_id: int, grid_x: int, grid_y: int, grid_z: int, si: _SplitInfo, attachment_node: Node, faces_assigned, world_verts: PackedVector3Array):
 	print("\tsplit " + str(grid_x) + ", " + str(grid_y) + ", " + str(grid_z))
 
 	# find the subregion of the aabb
@@ -185,7 +165,7 @@ static func _split_mesh(
 		ind_mapping[i] = -1
 
 	var xform = orig_mi.global_transform
-	
+
 	for n in range(faces.size()):
 		var f = faces[n]
 		for i in range(3):
@@ -217,7 +197,6 @@ static func _split_mesh(
 		is_uv = mdt.get_vertex_uv(n) != Vector2()
 		is_bones = mdt.get_vertex_bones(n).size()
 		is_bone_weights = mdt.get_vertex_weights(n).size()
-		
 
 	for u in unique_verts.size():
 		var n = unique_verts[u]
@@ -241,10 +220,9 @@ static func _split_mesh(
 			st.set_weights(bone_weights)
 		st.add_vertex(vert - Vector3(grid_x * xgap, grid_y * ygap, grid_z * zgap))
 
-
 	for i in new_inds.size():
 		st.add_index(new_inds[i])
-		
+
 	st.commit(tmpMesh)
 
 	var new_mi: MeshInstance3D = MeshInstance3D.new()
@@ -257,9 +235,9 @@ static func _split_mesh(
 
 	new_mi.skeleton = orig_mi.skeleton
 	new_mi.skin = orig_mi.skin
-	
+
 	new_mi.transform = orig_mi.transform.translated(Vector3(grid_x * xgap, grid_y * ygap, grid_z * zgap))
-	
+
 	# add the new mesh as a child
 	attachment_node.add_child(new_mi, true)
 	new_mi.owner = attachment_node.owner
@@ -314,6 +292,7 @@ static func save_scene(node, filename):
 	var packed_scene = PackedScene.new()
 	packed_scene.pack(node)
 	ResourceSaver.save(packed_scene, filename)
+
 
 static func traverse_root_and_split(root: Node3D, grid_size: float = 0.9, grid_size_y: float = 0.9) -> void:
 	var instances: Array[Node] = root.find_children("*", "MeshInstance3D")

@@ -35,17 +35,8 @@ func _map_load_update(p_stage: int, p_stage_count: int) -> void:
 	state = StateTypes.RESOURCE_LOAD
 
 	if p_stage_count > 0:
-		set_progress(
-			(
-				VSKAssetManager.DOWNLOAD_PROGRESS_BAR_RATIO
-				+ (VSKAssetManager.BACKGROUND_LOAD_PROGRESS_BAR_RATIO * (float(p_stage) / float(p_stage_count)))
-			)
-		)
-		set_loading_status(
-			"{loading_asset}: {stage}/{stage_count}".format(
-				{"loading_asset": tr("TR_MENU_LOADING_ASSET"), "stage": str(p_stage), "stage_count": str(p_stage_count)}
-			)
-		)
+		set_progress(VSKAssetManager.DOWNLOAD_PROGRESS_BAR_RATIO + (VSKAssetManager.BACKGROUND_LOAD_PROGRESS_BAR_RATIO * (float(p_stage) / float(p_stage_count))))
+		set_loading_status("{loading_asset}: {stage}/{stage_count}".format({"loading_asset": tr("TR_MENU_LOADING_ASSET"), "stage": str(p_stage), "stage_count": str(p_stage_count)}))
 	else:
 		set_progress(0.0)
 		set_loading_status("{loading_asset}: ERROR".format({"loading_asset": tr("TR_MENU_LOADING_ASSET")}))
@@ -178,12 +169,7 @@ func peer_list_changed() -> void:
 
 		var myself = peer_list_tree.create_item(root)
 
-		myself.set_text(
-			0,
-			"{peer}_{current_peer_id} (me)".format(
-				{"peer": tr("TR_MENU_PEER"), "current_peer_id": str(NetworkManager.get_current_peer_id())}
-			)
-		)
+		myself.set_text(0, "{peer}_{current_peer_id} (me)".format({"peer": tr("TR_MENU_PEER"), "current_peer_id": str(NetworkManager.get_current_peer_id())}))
 
 		for peer_id in players:
 			var child = peer_list_tree.create_item(root)
@@ -217,11 +203,7 @@ func _update_data_progress() -> void:
 	else:
 		set_progress(0.0)
 
-	set_loading_status(
-		"{downloading_map}: {download_progress_string}".format(
-			{"downloading_map": tr("TR_MENU_DOWNLOADING_MAP"), "download_progress_string": download_progress_string}
-		)
-	)
+	set_loading_status("{downloading_map}: {download_progress_string}".format({"downloading_map": tr("TR_MENU_DOWNLOADING_MAP"), "download_progress_string": download_progress_string}))
 
 
 func _process(_delta: float) -> void:

@@ -117,9 +117,7 @@ func cast_validation_ray(p_length: float) -> Dictionary:
 		return {}
 
 	var start: Vector3 = laser_node.global_transform.origin
-	var end: Vector3 = (
-		laser_node.global_transform.origin + laser_node.global_transform.basis * (Vector3(0.0, 0.0, -p_length))
-	)
+	var end: Vector3 = laser_node.global_transform.origin + laser_node.global_transform.basis * (Vector3(0.0, 0.0, -p_length))
 	var parameters: PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.new()
 	parameters.from = start
 	parameters.to = end

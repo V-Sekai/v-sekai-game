@@ -5,6 +5,7 @@
 
 extends Speech
 
+
 func _ready() -> void:
 	if !Engine.is_editor_hint():
 		set_name("GodotSpeech")

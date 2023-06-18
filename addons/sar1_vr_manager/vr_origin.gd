@@ -86,18 +86,7 @@ func add_tracker(p_tracker_name: StringName) -> void:
 			component.tracker_added(controller)
 
 		if !active_controllers.has(p_tracker_name):
-			print(
-				(
-					"Adding tracker "
-					+ str(p_tracker_name)
-					+ " at "
-					+ str(self.get_path())
-					+ " name "
-					+ str(controller.tracker)
-					+ " and "
-					+ str(controller.name)
-				)
-			)
+			print("Adding tracker " + str(p_tracker_name) + " at " + str(self.get_path()) + " name " + str(controller.tracker) + " and " + str(controller.name))
 			active_controllers[p_tracker_name] = controller
 			add_child(controller, true)
 			tracker_added.emit(controller)
@@ -154,7 +143,7 @@ func _on_tracker_added(p_tracker_name: StringName, p_type: int) -> void:
 
 
 func _on_tracker_removed(p_tracker_name: StringName, p_type: int) -> void:
-	print("Removing hand for tracker %s type %s to VR Player" % [p_tracker_name,	vr_manager_const.get_tracker_type_name(p_type)])
+	print("Removing hand for tracker %s type %s to VR Player" % [p_tracker_name, vr_manager_const.get_tracker_type_name(p_type)])
 	remove_tracker(p_tracker_name)
 
 

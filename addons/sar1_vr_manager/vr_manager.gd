@@ -18,29 +18,13 @@ var interface_names: Array = []
 var flat_resolution: Vector2 = Vector2(1280, 720)
 
 # Names
-const body_awareness_names = [
-	"TR_VR_MANAGER_BODY_AWARENESS_HANDS_ONLY",
-	"TR_VR_MANAGER_BODY_AWARENESS_CONTROLLERS_ONLY",
-	"TR_VR_MANAGER_BODY_AWARENESS_FULL_BODY"
-]
-const turning_mode_names = [
-	"TR_VR_MANAGER_TURN_SMOOTH",
-	"TR_VR_MANAGER_TURN_30_DEGREES",
-	"TR_VR_MANAGER_TURN_45_DEGREES",
-	"TR_VR_MANAGER_TURN_90_DEGREES",
-	"TR_VR_MANAGER_TURN_CUSTOM"
-]
+const body_awareness_names = ["TR_VR_MANAGER_BODY_AWARENESS_HANDS_ONLY", "TR_VR_MANAGER_BODY_AWARENESS_CONTROLLERS_ONLY", "TR_VR_MANAGER_BODY_AWARENESS_FULL_BODY"]
+const turning_mode_names = ["TR_VR_MANAGER_TURN_SMOOTH", "TR_VR_MANAGER_TURN_30_DEGREES", "TR_VR_MANAGER_TURN_45_DEGREES", "TR_VR_MANAGER_TURN_90_DEGREES", "TR_VR_MANAGER_TURN_CUSTOM"]
 const play_position_names = ["TR_VR_MANAGER_PLAY_POSITION_STANDING", "TR_VR_MANAGER_PLAY_POSITION_SEATED"]
-const movement_orientation_names = [
-	"TR_VR_MANAGER_HEAD_ORIENTED_MOVEMENT",
-	"TR_VR_MANAGER_HAND_ORIENTED_MOVEMENT",
-	"TR_VR_MANAGER_PLAYSPACE_ORIENTED_MOVEMENT"
-]
+const movement_orientation_names = ["TR_VR_MANAGER_HEAD_ORIENTED_MOVEMENT", "TR_VR_MANAGER_HAND_ORIENTED_MOVEMENT", "TR_VR_MANAGER_PLAYSPACE_ORIENTED_MOVEMENT"]
 const vr_hmd_mirroring_names = ["TR_VR_MANAGER_UI_NO_MIRROR", "TR_VR_MANAGER_UI_MIRROR_VR"]
 const vr_control_type_names = ["TR_VR_MANAGER_CONTROL_TYPE_CLASSIC", "TR_VR_MANAGER_CONTROL_TYPE_DUAL"]
-const preferred_hand_oriented_movement_hand_names = [
-	"TR_VR_MANAGER_PREFERRED_HAND_ORIENTED_MOVEMENT_LEFT", "TR_VR_MANAGER_PREFERRED_HAND_ORIENTED_MOVEMENT_RIGHT"
-]
+const preferred_hand_oriented_movement_hand_names = ["TR_VR_MANAGER_PREFERRED_HAND_ORIENTED_MOVEMENT_LEFT", "TR_VR_MANAGER_PREFERRED_HAND_ORIENTED_MOVEMENT_RIGHT"]
 const movement_type_names = ["TR_VR_MANAGER_MOVEMENT_TELEPORTATION", "TR_VR_MANAGER_MOVEMENT_LOCOMOTION"]
 
 const vr_platform_const = preload("res://addons/sar1_vr_manager/vr_platform.gd")
@@ -182,11 +166,7 @@ func _on_interface_removed(p_interface_name: StringName) -> void:
 
 
 func _on_tracker_added(p_tracker_name: StringName, p_type: int) -> void:
-	print(
-		"Tracker added {tracker_name} type {tracker_type_name}".format(
-			{"tracker_name": p_tracker_name, "tracker_type_name": vr_manager_const.get_tracker_type_name(p_type)}
-		)
-	)
+	print("Tracker added {tracker_name} type {tracker_type_name}".format({"tracker_name": p_tracker_name, "tracker_type_name": vr_manager_const.get_tracker_type_name(p_type)}))
 
 	xr_tracker_count += 1
 
@@ -198,11 +178,7 @@ func _on_tracker_added(p_tracker_name: StringName, p_type: int) -> void:
 
 
 func _on_tracker_removed(p_tracker_name: StringName, p_type: int) -> void:
-	print(
-		"Tracker removed {tracker_name} type {tracker_type_name}".format(
-			{"tracker_name": p_tracker_name, "tracker_type_name": vr_manager_const.get_tracker_type_name(p_type)}
-		)
-	)
+	print("Tracker removed {tracker_name} type {tracker_type_name}".format({"tracker_name": p_tracker_name, "tracker_type_name": vr_manager_const.get_tracker_type_name(p_type)}))
 
 	xr_tracker_count -= 1
 
@@ -307,12 +283,7 @@ func apply_project_settings() -> void:
 		if !ProjectSettings.has_setting("vr/config/interfaces"):
 			ProjectSettings.set_setting("vr/config/interfaces", PackedStringArray())
 
-			var vr_interfaces_property_info: Dictionary = {
-				"name": "vr/config/interfaces",
-				"type": TYPE_PACKED_STRING_ARRAY,
-				"hint": PROPERTY_HINT_NONE,
-				"hint_string": ""
-			}
+			var vr_interfaces_property_info: Dictionary = {"name": "vr/config/interfaces", "type": TYPE_PACKED_STRING_ARRAY, "hint": PROPERTY_HINT_NONE, "hint_string": ""}
 
 			ProjectSettings.add_property_info(vr_interfaces_property_info)
 

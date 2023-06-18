@@ -59,6 +59,7 @@ func create_spatial_game_viewport() -> SubViewport:
 
 	return spatial_game_viewport
 
+
 func _ready() -> void:
 	if !Engine.is_editor_hint():
 		var viewport_result = get_viewport().size_changed.connect(self.update_viewports)

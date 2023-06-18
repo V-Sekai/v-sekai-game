@@ -86,13 +86,7 @@ func _refresh_controllers() -> void:
 func get_controller_movement_vector() -> Vector2:
 	var movement_vector: Vector2 = Vector2()
 
-	if (
-		hand_controllers.size() >= 2
-		and left_hand_controller
-		and right_hand_controller
-		and is_instance_valid(left_hand_controller)
-		and is_instance_valid(right_hand_controller)
-	):
+	if hand_controllers.size() >= 2 and left_hand_controller and right_hand_controller and is_instance_valid(left_hand_controller) and is_instance_valid(right_hand_controller):
 		movement_controller = left_hand_controller
 		movement_vector = movement_controller.get_vector2("primary")
 		if !VRManager.vr_user_preferences.strafe_movement:
@@ -115,11 +109,7 @@ func get_controller_movement_vector() -> Vector2:
 func get_controller_turning_vector() -> Vector2:
 	var turning_vector: Vector2 = Vector2()
 
-	if (
-		hand_controllers.size() >= 2
-		and is_instance_valid(left_hand_controller)
-		and is_instance_valid(right_hand_controller)
-	):
+	if hand_controllers.size() >= 2 and is_instance_valid(left_hand_controller) and is_instance_valid(right_hand_controller):
 		turning_controller = right_hand_controller
 
 		turning_vector = Vector2(turning_controller.get_vector2("primary").x, 0.0)
@@ -137,21 +127,9 @@ func get_controller_turning_vector() -> Vector2:
 
 func get_controller_direction() -> Basis:
 	if hand_controllers.size() == 2:
-		if (
-			(
-				VRManager.vr_user_preferences.preferred_hand_oriented_movement_hand
-				== VRManager.vr_user_preferences.hand_enum.LEFT_HAND
-			)
-			and left_hand_controller
-		):
+		if (VRManager.vr_user_preferences.preferred_hand_oriented_movement_hand == VRManager.vr_user_preferences.hand_enum.LEFT_HAND) and left_hand_controller:
 			return left_hand_controller.transform.basis
-		if (
-			(
-				VRManager.vr_user_preferences.preferred_hand_oriented_movement_hand
-				== VRManager.vr_user_preferences.hand_enum.RIGHT_HAND
-			)
-			and right_hand_controller
-		):
+		if (VRManager.vr_user_preferences.preferred_hand_oriented_movement_hand == VRManager.vr_user_preferences.hand_enum.RIGHT_HAND) and right_hand_controller:
 			return right_hand_controller.transform.basis
 	elif hand_controllers.size() == 1:
 		return hand_controllers[0].transform.basis

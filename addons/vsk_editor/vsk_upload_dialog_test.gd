@@ -45,13 +45,6 @@ static func generate_test_binary_data() -> Dictionary:
 
 func _on_TestUploadButton_pressed():
 	if GodotUro.godot_uro_api:
-		var result = await (GodotUro.godot_uro_api.dashboard_create_avatar_async(
-			{
-				"name": "test_avatar",
-				"description": "test_avatar_description",
-				"user_content_data": generate_test_binary_data(),
-				"user_content_preview": generate_test_image()
-			}
-		))
+		var result = await (GodotUro.godot_uro_api.dashboard_create_avatar_async({"name": "test_avatar", "description": "test_avatar_description", "user_content_data": generate_test_binary_data(), "user_content_preview": generate_test_image()}))
 
 		print(result)

@@ -19,9 +19,7 @@ func locomotion() -> void:
 
 	var input_direction: Vector3 = state_machine.get_input_direction()
 
-	state_machine.set_velocity(
-		input_direction * state_machine.actor_controller.walk_speed * state_machine.get_input_magnitude()
-	)
+	state_machine.set_velocity(input_direction * state_machine.actor_controller.walk_speed * state_machine.get_input_magnitude())
 
 	if state_machine.is_attempting_jumping():
 		change_state("Pre-Jump")

@@ -18,16 +18,7 @@ static func get_bone_global_transform(p_id: int, p_skeleton: Skeleton3D, p_local
 
 	for transform in p_local_transform_array:
 		if p_id >= len(transform):
-			push_error(
-				(
-					"Missing bone global transform: Transform "
-					+ JSON.stringify(transform)
-					+ " has length "
-					+ str(len(transform))
-					+ " id "
-					+ str(p_id)
-				)
-			)
+			push_error("Missing bone global transform: Transform " + JSON.stringify(transform) + " has length " + str(len(transform)) + " id " + str(p_id))
 			return return_transform
 		return_transform *= transform[p_id]
 
@@ -89,13 +80,4 @@ static func change_bone_rest(p_skeleton: Skeleton3D, bone_idx: int, bone_rest: T
 	p_skeleton.set_bone_pose_position(bone_idx, bone_rest.origin)
 	p_skeleton.set_bone_pose_scale(bone_idx, old_scale)
 	p_skeleton.set_bone_pose_rotation(bone_idx, new_rotation)
-	p_skeleton.set_bone_rest(
-		bone_idx,
-		Transform3D(
-			(
-				Basis(new_rotation)
-				* Basis(Vector3(1, 0, 0) * old_scale.x, Vector3(0, 1, 0) * old_scale.y, Vector3(0, 0, 1) * old_scale.z)
-			),
-			bone_rest.origin
-		)
-	)
+	p_skeleton.set_bone_rest(bone_idx, Transform3D(Basis(new_rotation) * Basis(Vector3(1, 0, 0) * old_scale.x, Vector3(0, 1, 0) * old_scale.y, Vector3(0, 0, 1) * old_scale.z), bone_rest.origin))

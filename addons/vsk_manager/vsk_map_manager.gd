@@ -75,11 +75,7 @@ func _set_loading_stage_count(p_url: String, p_stage_count: int):
 
 func _set_loading_stage(p_url: String, p_stage: int):
 	if p_url == _current_map_path:
-		print(
-			"Loading map {stage}/{stage_count}".format(
-				{"stage": str(p_stage), "stage_count": str(_loading_stage_count)}
-			)
-		)
+		print("Loading map {stage}/{stage_count}".format({"stage": str(p_stage), "stage_count": str(_loading_stage_count)}))
 
 		map_load_update.emit(p_stage, _loading_stage_count)
 
@@ -129,10 +125,7 @@ func instance_map(_p_strip_all_entities: bool) -> Node:
 		print("Instancing map...")
 		var map_instance: Node = _current_map_packed.instantiate()
 
-		if (
-			map_instance.get_script() != vsk_map_definition_const
-			and map_instance.get_script() != vsk_map_definition_runtime_const
-		):
+		if map_instance.get_script() != vsk_map_definition_const and map_instance.get_script() != vsk_map_definition_runtime_const:
 			assert(false, "Map does not have a map definition script at root!")
 			map_instance.queue_free()
 
@@ -159,28 +152,20 @@ static func instance_embedded_map_entities(p_map_instance: Node, p_invalid_scene
 				push_warning("Map entity id %s: invalid property info" % str(i))
 				continue
 
-			var _properties: Dictionary = p_map_instance.entity_instance_properties_list[
-				map_entity_instance_info.properties_id
-			]
+			var _properties: Dictionary = p_map_instance.entity_instance_properties_list[map_entity_instance_info.properties_id]
 
-			var scene_path: String = NetworkManager.network_replication_manager.get_scene_path_for_scene_id(
-				map_entity_instance_info.scene_id
-			)
+			var scene_path: String = NetworkManager.network_replication_manager.get_scene_path_for_scene_id(map_entity_instance_info.scene_id)
 			if p_invalid_scene_paths.has(scene_path):
 				push_warning("Map entity id %s: invalid entity '%s' embedded in map data" % [str(i), scene_path])
 				continue
 
 			if not scene_path.is_empty():
-				var packed_scene: PackedScene = NetworkManager.network_replication_manager.get_packed_scene_for_path(
-					scene_path
-				)
+				var packed_scene: PackedScene = NetworkManager.network_replication_manager.get_packed_scene_for_path(scene_path)
 				if not packed_scene:
 					continue
 
 				var map_entity_instance: Node = packed_scene.instantiate()
-				var logic_node: Node = map_entity_instance.get_node_or_null(
-					map_entity_instance.simulation_logic_node_path
-				)
+				var logic_node: Node = map_entity_instance.get_node_or_null(map_entity_instance.simulation_logic_node_path)
 				if not logic_node:
 					continue
 
@@ -201,14 +186,7 @@ func destroy_map() -> void:
 func request_map_load(p_map_path: String, p_bypass_whitelist: bool, p_skip_validation: bool) -> void:
 	_current_map_path = p_map_path
 
-	await (super.request_user_content_load(
-		p_map_path,
-		VSKAssetManager.user_content_type.USER_CONTENT_MAP,
-		p_bypass_whitelist,
-		p_skip_validation,
-		validator_map.valid_external_path_whitelist,
-		validator_map.valid_resource_whitelist
-	))
+	await (super.request_user_content_load(p_map_path, VSKAssetManager.user_content_type.USER_CONTENT_MAP, p_bypass_whitelist, p_skip_validation, validator_map.valid_external_path_whitelist, validator_map.valid_resource_whitelist))
 
 
 func cancel_map_load() -> void:

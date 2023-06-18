@@ -102,23 +102,11 @@ func _reload_avatars() -> void:
 		for avatar in avatar_list:
 			var id: String = avatar["id"]
 
-			avatar_dictionary[id] = {
-				"name": avatar["name"],
-				"description": avatar["description"],
-				"user_content_preview_url": GodotUro.get_base_url() + avatar["user_content_preview"],
-				"user_content_data_url": GodotUro.get_base_url() + avatar["user_content_data"]
-			}
+			avatar_dictionary[id] = {"name": avatar["name"], "description": avatar["description"], "user_content_preview_url": GodotUro.get_base_url() + avatar["user_content_preview"], "user_content_data_url": GodotUro.get_base_url() + avatar["user_content_data"]}
 
-			get_node(avatars_grid).add_item(
-				id, avatar["name"], GodotUro.get_base_url() + avatar["user_content_preview"]
-			)
+			get_node(avatars_grid).add_item(id, avatar["name"], GodotUro.get_base_url() + avatar["user_content_preview"])
 	else:
-		printerr(
-			(
-				"Dashboard avatars returned with error %s"
-				% GodotUro.godot_uro_helper_const.get_full_requester_error_string(async_result)
-			)
-		)
+		printerr("Dashboard avatars returned with error %s" % GodotUro.godot_uro_helper_const.get_full_requester_error_string(async_result))
 
 
 func _reload_maps() -> void:
@@ -132,21 +120,11 @@ func _reload_maps() -> void:
 		for map in map_list:
 			var id: String = map["id"]
 
-			map_dictionary[id] = {
-				"name": map["name"],
-				"description": map["description"],
-				"user_content_preview_url": GodotUro.get_base_url() + map["user_content_preview"],
-				"user_content_data_url": GodotUro.get_base_url() + map["user_content_data"]
-			}
+			map_dictionary[id] = {"name": map["name"], "description": map["description"], "user_content_preview_url": GodotUro.get_base_url() + map["user_content_preview"], "user_content_data_url": GodotUro.get_base_url() + map["user_content_data"]}
 
 			get_node(maps_grid).add_item(id, map["name"], GodotUro.get_base_url() + map["user_content_preview"])
 	else:
-		printerr(
-			(
-				"Dashboard maps returned with error %s"
-				% GodotUro.godot_uro_helper_const.get_full_requester_error_string(async_result)
-			)
-		)
+		printerr("Dashboard maps returned with error %s" % GodotUro.godot_uro_helper_const.get_full_requester_error_string(async_result))
 
 
 func _on_tab_changed(tab):

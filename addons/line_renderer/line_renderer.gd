@@ -90,12 +90,8 @@ func update(p_a: Vector3, p_b: Vector3):
 			geometry.begin(Mesh.PRIMITIVE_TRIANGLES)
 
 			var ab = p_b - p_a
-			var transform_start: Vector3 = (
-				(camera.global_transform.origin - ((p_a + p_b) / 2)).cross(ab).normalized() * thickness
-			)
-			var transform_end: Vector3 = (
-				(camera.global_transform.origin - ((p_a + p_b) / 2)).cross(ab).normalized() * thickness
-			)
+			var transform_start: Vector3 = (camera.global_transform.origin - ((p_a + p_b) / 2)).cross(ab).normalized() * thickness
+			var transform_end: Vector3 = (camera.global_transform.origin - ((p_a + p_b) / 2)).cross(ab).normalized() * thickness
 
 			var a_upper: Vector3 = p_a + transform_start
 			var b_upper: Vector3 = p_b + transform_end

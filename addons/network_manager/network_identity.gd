@@ -77,9 +77,7 @@ func _entity_ready() -> void:
 				entity_node.queue_free()
 				return
 
-		set_network_scene_id(
-			NetworkManager.network_replication_manager.get_network_scene_id_from_path(entity_node.scene_file_path)
-		)
+		set_network_scene_id(NetworkManager.network_replication_manager.get_network_scene_id_from_path(entity_node.scene_file_path))
 
 		entity_node.add_to_group("NetworkedEntities")
 

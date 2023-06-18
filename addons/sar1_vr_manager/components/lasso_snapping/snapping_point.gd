@@ -125,29 +125,19 @@ func calc_flick_velocity() -> Vector3:
 		var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 		var time = 1  # Make it there in one second.
 		var vertical_diff = flick_pos.y - global_transform.origin.y
-		var horizontal_vector = (
-			Vector3(flick_pos.x, 0, flick_pos.z) - Vector3(global_transform.origin.x, 0, global_transform.origin.z)
-		)
+		var horizontal_vector = Vector3(flick_pos.x, 0, flick_pos.z) - Vector3(global_transform.origin.x, 0, global_transform.origin.z)
 		var additional_air_time = 0
 		var vertical_velocity = 0.0
 		if gravity <= 0:  # If the world makes no sense.
 			return Vector3(horizontal_vector.x, vertical_diff, horizontal_vector.z).normalized() * flick_power
 		if vertical_diff > 0:
-			additional_air_time = (
-				pow(horizontal_vector.length() / (horizontal_vector.length() + vertical_diff), 4) * flick_power
-			)
+			additional_air_time = (pow(horizontal_vector.length() / (horizontal_vector.length() + vertical_diff), 4) * flick_power)
 			var base_v_velocity = sqrt(2 * gravity * vertical_diff)
 			vertical_velocity = base_v_velocity + (additional_air_time * gravity / 2)
 			time = (base_v_velocity) / gravity + (additional_air_time)
 		else:
-			additional_air_time = (
-				pow(horizontal_vector.length() / (horizontal_vector.length() - vertical_diff), 4) / flick_power
-			)
-			vertical_velocity = (
-				(vertical_diff / gravity)
-				+ (vertical_diff / horizontal_vector.length())
-				+ (additional_air_time * gravity / 2)
-			)
+			additional_air_time = (pow(horizontal_vector.length() / (horizontal_vector.length() - vertical_diff), 4) / flick_power)
+			vertical_velocity = ((vertical_diff / gravity) + (vertical_diff / horizontal_vector.length()) + (additional_air_time * gravity / 2))
 			time = (sqrt(abs(vertical_diff / gravity))) + additional_air_time / 1.5
 
 		var horizontal_velocity = horizontal_vector.length() / time
@@ -158,10 +148,7 @@ func calc_flick_velocity() -> Vector3:
 
 func _integrate_forces(state: PhysicsDirectBodyState3D):
 	if flick_parent_to_hand_on_snap_interact && snap_interacting:
-		if (
-			flick_target != null
-			&& (flick_target.global_transform.origin.distance_to(global_transform.origin) > size + 0.001)
-		):
+		if flick_target != null && (flick_target.global_transform.origin.distance_to(global_transform.origin) > size + 0.001):
 			state.linear_velocity = calc_flick_velocity()
 		elif flick_target != null:
 			var vector_to_target = flick_target.global_transform.origin - global_transform.origin

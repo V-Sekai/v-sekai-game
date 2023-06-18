@@ -38,55 +38,23 @@ func _physics_process(_p_delta: float):
 		cached_anim_tree["parameters/LeftHandBlend/blend_amount"] = 1.0
 		cached_anim_tree["parameters/RightHandBlend/blend_amount"] = 1.0
 
-		cached_anim_tree["parameters/LeftHandStateMachine/conditions/point"] = (
-			true if left_hand_gesture_id == VSKAvatarManager.HAND_POSE_POINT else false
-		)
-		cached_anim_tree["parameters/LeftHandStateMachine/conditions/fist"] = (
-			true if left_hand_gesture_id == VSKAvatarManager.HAND_POSE_FIST else false
-		)
-		cached_anim_tree["parameters/LeftHandStateMachine/conditions/gun"] = (
-			true if left_hand_gesture_id == VSKAvatarManager.HAND_POSE_GUN else false
-		)
-		cached_anim_tree["parameters/LeftHandStateMachine/conditions/neutral"] = (
-			true if left_hand_gesture_id == VSKAvatarManager.HAND_POSE_NEUTRAL else false
-		)
-		cached_anim_tree["parameters/LeftHandStateMachine/conditions/ok_sign"] = (
-			true if left_hand_gesture_id == VSKAvatarManager.HAND_POSE_OK_SIGN else false
-		)
-		cached_anim_tree["parameters/LeftHandStateMachine/conditions/open"] = (
-			true if left_hand_gesture_id == VSKAvatarManager.HAND_POSE_OPEN else false
-		)
-		cached_anim_tree["parameters/LeftHandStateMachine/conditions/victory"] = (
-			true if left_hand_gesture_id == VSKAvatarManager.HAND_POSE_VICTORY else false
-		)
-		cached_anim_tree["parameters/LeftHandStateMachine/conditions/thumbs_up"] = (
-			true if left_hand_gesture_id == VSKAvatarManager.HAND_POSE_THUMBS_UP else false
-		)
+		cached_anim_tree["parameters/LeftHandStateMachine/conditions/point"] = (true if left_hand_gesture_id == VSKAvatarManager.HAND_POSE_POINT else false)
+		cached_anim_tree["parameters/LeftHandStateMachine/conditions/fist"] = (true if left_hand_gesture_id == VSKAvatarManager.HAND_POSE_FIST else false)
+		cached_anim_tree["parameters/LeftHandStateMachine/conditions/gun"] = (true if left_hand_gesture_id == VSKAvatarManager.HAND_POSE_GUN else false)
+		cached_anim_tree["parameters/LeftHandStateMachine/conditions/neutral"] = (true if left_hand_gesture_id == VSKAvatarManager.HAND_POSE_NEUTRAL else false)
+		cached_anim_tree["parameters/LeftHandStateMachine/conditions/ok_sign"] = (true if left_hand_gesture_id == VSKAvatarManager.HAND_POSE_OK_SIGN else false)
+		cached_anim_tree["parameters/LeftHandStateMachine/conditions/open"] = (true if left_hand_gesture_id == VSKAvatarManager.HAND_POSE_OPEN else false)
+		cached_anim_tree["parameters/LeftHandStateMachine/conditions/victory"] = (true if left_hand_gesture_id == VSKAvatarManager.HAND_POSE_VICTORY else false)
+		cached_anim_tree["parameters/LeftHandStateMachine/conditions/thumbs_up"] = (true if left_hand_gesture_id == VSKAvatarManager.HAND_POSE_THUMBS_UP else false)
 
-		cached_anim_tree["parameters/RightHandStateMachine/conditions/point"] = (
-			true if right_hand_gesture_id == VSKAvatarManager.HAND_POSE_POINT else false
-		)
-		cached_anim_tree["parameters/RightHandStateMachine/conditions/fist"] = (
-			true if right_hand_gesture_id == VSKAvatarManager.HAND_POSE_FIST else false
-		)
-		cached_anim_tree["parameters/RightHandStateMachine/conditions/gun"] = (
-			true if right_hand_gesture_id == VSKAvatarManager.HAND_POSE_GUN else false
-		)
-		cached_anim_tree["parameters/RightHandStateMachine/conditions/neutral"] = (
-			true if right_hand_gesture_id == VSKAvatarManager.HAND_POSE_NEUTRAL else false
-		)
-		cached_anim_tree["parameters/RightHandStateMachine/conditions/ok_sign"] = (
-			true if right_hand_gesture_id == VSKAvatarManager.HAND_POSE_OK_SIGN else false
-		)
-		cached_anim_tree["parameters/RightHandStateMachine/conditions/open"] = (
-			true if right_hand_gesture_id == VSKAvatarManager.HAND_POSE_OPEN else false
-		)
-		cached_anim_tree["parameters/RightHandStateMachine/conditions/victory"] = (
-			true if right_hand_gesture_id == VSKAvatarManager.HAND_POSE_VICTORY else false
-		)
-		cached_anim_tree["parameters/RightHandStateMachine/conditions/thumbs_up"] = (
-			true if right_hand_gesture_id == VSKAvatarManager.HAND_POSE_THUMBS_UP else false
-		)
+		cached_anim_tree["parameters/RightHandStateMachine/conditions/point"] = (true if right_hand_gesture_id == VSKAvatarManager.HAND_POSE_POINT else false)
+		cached_anim_tree["parameters/RightHandStateMachine/conditions/fist"] = (true if right_hand_gesture_id == VSKAvatarManager.HAND_POSE_FIST else false)
+		cached_anim_tree["parameters/RightHandStateMachine/conditions/gun"] = (true if right_hand_gesture_id == VSKAvatarManager.HAND_POSE_GUN else false)
+		cached_anim_tree["parameters/RightHandStateMachine/conditions/neutral"] = (true if right_hand_gesture_id == VSKAvatarManager.HAND_POSE_NEUTRAL else false)
+		cached_anim_tree["parameters/RightHandStateMachine/conditions/ok_sign"] = (true if right_hand_gesture_id == VSKAvatarManager.HAND_POSE_OK_SIGN else false)
+		cached_anim_tree["parameters/RightHandStateMachine/conditions/open"] = (true if right_hand_gesture_id == VSKAvatarManager.HAND_POSE_OPEN else false)
+		cached_anim_tree["parameters/RightHandStateMachine/conditions/victory"] = (true if right_hand_gesture_id == VSKAvatarManager.HAND_POSE_VICTORY else false)
+		cached_anim_tree["parameters/RightHandStateMachine/conditions/thumbs_up"] = (true if right_hand_gesture_id == VSKAvatarManager.HAND_POSE_THUMBS_UP else false)
 	pass
 
 

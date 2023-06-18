@@ -146,12 +146,7 @@ const valid_resource_script_whitelist = [avatar_collidergroup_const, avatar_spri
 
 static func check_if_script_type_is_valid(p_script: Script, p_node_class: String) -> bool:
 	# FIXME: dictionary cannot be const????
-	var script_type_table = {
-		avatar_physics_const: ["Marker3D", "Node3D"],
-		avatar_definition_const: ["Marker3D", "Node3D"],
-		avatar_definition_runtime_const: ["Marker3D", "Node3D"],
-		vsk_pipeline_const: ["Node"]
-	}
+	var script_type_table = {avatar_physics_const: ["Marker3D", "Node3D"], avatar_definition_const: ["Marker3D", "Node3D"], avatar_definition_runtime_const: ["Marker3D", "Node3D"], vsk_pipeline_const: ["Node"]}
 	if typeof(script_type_table.get(p_script)) != TYPE_NIL:
 		var valid_classes: Array = script_type_table.get(p_script)
 		for class_str in valid_classes:

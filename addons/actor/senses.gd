@@ -23,9 +23,7 @@ func get_actor_eye_transform() -> Transform3D:
 
 
 func can_see_collider_point(p_point: Vector3, p_exclusion_array: Array = [], p_collision_bits: int = 1) -> bool:
-	var dss: PhysicsDirectSpaceState3D = entity_node.PhysicsServer3D.space_get_direct_state(
-		entity_node.get_world_3d().get_space()
-	)
+	var dss: PhysicsDirectSpaceState3D = entity_node.PhysicsServer3D.space_get_direct_state(entity_node.get_world_3d().get_space())
 	if dss:
 		camera_planes = camera_matrix.get_projection_planes(get_actor_eye_transform())
 
@@ -66,8 +64,6 @@ func can_see_collider_aabb(p_aabb: AABB, p_exclusion_array: Array = [], p_collis
 	return false
 
 
-func setup_camera_matrix(
-	p_fovy_degrees: float, p_aspect: float, p_z_near: float, p_z_far: float, p_flip_fov: float
-) -> void:
+func setup_camera_matrix(p_fovy_degrees: float, p_aspect: float, p_z_near: float, p_z_far: float, p_flip_fov: float) -> void:
 	camera_matrix = camera_matrix_const.new()
 	camera_matrix.set_perspective(p_fovy_degrees, p_aspect, p_z_near, p_z_far, p_flip_fov)

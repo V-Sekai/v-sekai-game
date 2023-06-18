@@ -9,9 +9,7 @@ const avatar_constants_const = preload("avatar_constants.gd")
 const bone_lib_const = preload("bone_lib.gd")
 
 
-static func find_mesh_instances_for_avatar_skeleton(
-	p_node: Node, p_skeleton: Skeleton3D, p_valid_mesh_instances: Array
-) -> Array:
+static func find_mesh_instances_for_avatar_skeleton(p_node: Node, p_skeleton: Skeleton3D, p_valid_mesh_instances: Array) -> Array:
 	if p_skeleton and p_node is MeshInstance3D:
 		var skeleton: Node = p_node.get_node_or_null(p_node.skeleton)
 		if skeleton == p_skeleton:
@@ -23,9 +21,7 @@ static func find_mesh_instances_for_avatar_skeleton(
 	return p_valid_mesh_instances
 
 
-static func get_chain(
-	p_skeleton: Skeleton3D, p_side: int, p_start_name: String, p_end_name: String, p_alt_start_name: String = ""
-) -> PackedInt32Array:
+static func get_chain(p_skeleton: Skeleton3D, p_side: int, p_start_name: String, p_end_name: String, p_alt_start_name: String = "") -> PackedInt32Array:
 	var direction_name: String = ""
 	if p_side == avatar_constants_const.SIDE_LEFT or p_side == avatar_constants_const.SIDE_RIGHT:
 		direction_name = avatar_constants_const.get_name_for_side(p_side)
@@ -101,30 +97,7 @@ static func get_root_chain(p_skeleton: Skeleton3D) -> PackedInt32Array:
 
 
 static func get_digit_chain(p_skeleton: Skeleton3D, p_side: int, p_digit: int) -> PackedInt32Array:
-	return get_chain(
-		p_skeleton,
-		p_side,
-		(
-			"%s%s"
-			% [
-				avatar_constants_const.get_name_for_digit(p_digit),
-				avatar_constants_const.get_name_for_digit_joint(
-					(
-						avatar_constants_const.DIGIT_JOINT_PROXIMAL
-						if p_digit == avatar_constants_const.DIGIT_THUMB
-						else avatar_constants_const.DIGIT_JOINT_METACARPAL
-					)
-				)
-			]
-		),
-		(
-			"%s%s"
-			% [
-				avatar_constants_const.get_name_for_digit(p_digit),
-				avatar_constants_const.get_name_for_digit_joint(avatar_constants_const.DIGIT_JOINT_DISTAL)
-			]
-		)
-	)
+	return get_chain(p_skeleton, p_side, "%s%s" % [avatar_constants_const.get_name_for_digit(p_digit), avatar_constants_const.get_name_for_digit_joint(avatar_constants_const.DIGIT_JOINT_PROXIMAL if p_digit == avatar_constants_const.DIGIT_THUMB else avatar_constants_const.DIGIT_JOINT_METACARPAL)], "%s%s" % [avatar_constants_const.get_name_for_digit(p_digit), avatar_constants_const.get_name_for_digit_joint(avatar_constants_const.DIGIT_JOINT_DISTAL)])
 
 
 static func get_root_transform(p_skeleton: Skeleton3D, p_bone_id: int) -> Transform3D:

@@ -39,15 +39,9 @@ func update_menu_options() -> void:
 		option_button.get_popup().clear()
 		# The order must match the enum in res://addons/vsk_avatar/vsk_avatar_definition_editor.gd
 		option_button.get_popup().add_item("Upload Avatar", avatar_definition_editor_const.MENU_OPTION_UPLOAD_AVATAR)
-		option_button.get_popup().add_item(
-			"Export Avatar Definition Locally", avatar_definition_editor_const.MENU_OPTION_EXPORT_AVATAR
-		)
-		option_button.get_popup().add_item(
-			"Save Left Hand Pose (Debug)", avatar_definition_editor_const.MENU_OPTION_EXPORT_LEFT_HAND_POSE
-		)
-		option_button.get_popup().add_item(
-			"Save Right Hand Pose (Debug)", avatar_definition_editor_const.MENU_OPTION_EXPORT_RIGHT_HAND_POSE
-		)
+		option_button.get_popup().add_item("Export Avatar Definition Locally", avatar_definition_editor_const.MENU_OPTION_EXPORT_AVATAR)
+		option_button.get_popup().add_item("Save Left Hand Pose (Debug)", avatar_definition_editor_const.MENU_OPTION_EXPORT_LEFT_HAND_POSE)
+		option_button.get_popup().add_item("Save Right Hand Pose (Debug)", avatar_definition_editor_const.MENU_OPTION_EXPORT_RIGHT_HAND_POSE)
 
 
 func _enter_tree() -> void:

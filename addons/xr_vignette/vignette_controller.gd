@@ -88,9 +88,7 @@ func _process(delta: float):
 		var camera_origin_diff: Vector3 = running_camera_xforms[0].origin - running_camera_xforms[-1].origin
 		var camera_basis_diff: Basis = running_camera_xforms[-1].basis.inverse() * running_camera_xforms[0].basis
 		camera_origin_diff.y = 0
-		var origin_origin_diff: Vector3 = (
-			xr_origin_node.transform.basis * (running_origin_xforms[0].origin - running_origin_xforms[-1].origin)
-		)
+		var origin_origin_diff: Vector3 = xr_origin_node.transform.basis * (running_origin_xforms[0].origin - running_origin_xforms[-1].origin)
 		var origin_basis_diff: Basis = running_origin_xforms[-1].basis.inverse() * running_origin_xforms[0].basis
 		origin_origin_diff.y = 0
 
@@ -105,31 +103,23 @@ func _process(delta: float):
 		#print(Plane(origin_origin_diff.length(), camera_origin_diff.length(), origin_ang_speed, camera_ang_speed))
 		#print(str(ang_speed_deg)+","+str( speed))
 
-		var move_vignette_amount: float = max(
-			preview_vignette, smoothstep(vignette_move_thresh.x, vignette_move_thresh.y, speed)
-		)
+		var move_vignette_amount: float = max(preview_vignette, smoothstep(vignette_move_thresh.x, vignette_move_thresh.y, speed))
 		if move_vignette_amount >= current_fadeout_move_amount:
 			current_fadeout_move_delay = fadeout_delay
 			current_fadeout_move_amount = move_vignette_amount
 		move_vignette_amount = max(current_fadeout_move_amount, move_vignette_amount)
 
-		var rotate_vignette_amount: float = smoothstep(
-			vignette_rotate_thresh_deg.x, vignette_rotate_thresh_deg.y, ang_speed_deg
-		)
+		var rotate_vignette_amount: float = smoothstep(vignette_rotate_thresh_deg.x, vignette_rotate_thresh_deg.y, ang_speed_deg)
 		if rotate_vignette_amount >= current_fadeout_rotate_amount:
 			current_fadeout_rotate_delay = fadeout_delay
 			current_fadeout_rotate_amount = rotate_vignette_amount
 		rotate_vignette_amount = max(current_fadeout_rotate_amount, rotate_vignette_amount)
 
 		var vignette_alpha: float = clamp(max(move_vignette_amount, rotate_vignette_amount) * 5.0, 0.0, 1.0)
-		var new_tunnel_visible: bool = (
-			vignette_alpha > 0.001 and enable_tunnel and (xr_camera_node.get_viewport().use_xr or preview_vignette > 0)
-		)
+		var new_tunnel_visible: bool = vignette_alpha > 0.001 and enable_tunnel and (xr_camera_node.get_viewport().use_xr or preview_vignette > 0)
 		if new_tunnel_visible != vignette_tunneling.visible:
 			vignette_tunneling.visible = new_tunnel_visible
-		var new_cage_visible: bool = (
-			vignette_alpha > 0.001 and enable_cage and (xr_camera_node.get_viewport().use_xr or preview_vignette > 0)
-		)
+		var new_cage_visible: bool = vignette_alpha > 0.001 and enable_cage and (xr_camera_node.get_viewport().use_xr or preview_vignette > 0)
 		if new_cage_visible != vignette_cage.visible:
 			vignette_cage.visible = new_cage_visible
 

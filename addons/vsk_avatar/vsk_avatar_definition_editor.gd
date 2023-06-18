@@ -156,9 +156,7 @@ func _save_file_at_path(p_path: String) -> void:
 
 	if save_option == SAVE_OPTION_AVATAR:
 		if vsk_exporter:
-			err = (vsk_exporter.export_avatar(
-				editor_plugin.get_editor_interface().get_edited_scene_root(), node, p_path
-			))
+			err = (vsk_exporter.export_avatar(editor_plugin.get_editor_interface().get_edited_scene_root(), node, p_path))
 		else:
 			err = avatar_callback_const.AVATAR_FAILED
 
@@ -167,9 +165,7 @@ func _save_file_at_path(p_path: String) -> void:
 		if node:
 			var skeleton: Skeleton3D = node._skeleton_node
 			if skeleton:
-				var hand_pose: Animation = hand_pose_exporter_const.generate_hand_pose_from_skeleton(
-					skeleton, true if save_option == SAVE_OPTION_RIGHT_HAND_POSE else false
-				)
+				var hand_pose: Animation = hand_pose_exporter_const.generate_hand_pose_from_skeleton(skeleton, true if save_option == SAVE_OPTION_RIGHT_HAND_POSE else false)
 
 				if hand_pose:
 					if (ResourceSaver.save(hand_pose, p_path, ResourceSaver.FLAG_RELATIVE_PATHS) & 0xffffffff) == OK:

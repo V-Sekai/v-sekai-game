@@ -5,9 +5,7 @@
 
 extends "res://addons/sar1_vr_manager/components/actions/vr_action.gd"  # vr_action.gd
 
-const vr_interaction_action_const = preload(
-	"res://addons/sar1_vr_manager/components/actions/salvage/vr_interaction_action.gd"
-)
+const vr_interaction_action_const = preload("res://addons/sar1_vr_manager/components/actions/salvage/vr_interaction_action.gd")
 const math_funcs_const = preload("res://addons/math_util/math_funcs.gd")
 
 var objects_within_range: Array = []

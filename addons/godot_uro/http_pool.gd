@@ -11,7 +11,7 @@ class Future:
 
 
 var next_request: int = 0
-var pending_requests: Dictionary = {} # int -> Future
+var pending_requests: Dictionary = {}  # int -> Future
 
 var http_client_pool: Array[HTTPClient]
 var total_http_clients: int = 0
@@ -89,20 +89,12 @@ class HTTPState:
 			var _poll_error: int = http.poll()
 			status = http.get_status()
 
-			if (
-				status == HTTPClient.STATUS_CONNECTED
-				or status == HTTPClient.STATUS_REQUESTING
-				or status == HTTPClient.STATUS_BODY
-			):
+			if status == HTTPClient.STATUS_CONNECTED or status == HTTPClient.STATUS_REQUESTING or status == HTTPClient.STATUS_BODY:
 				# done connecting!!
 				#print("Done Connect")
 				_connection_finished.emit(http)
 				# we have work to do
-			elif (
-				status != HTTPClient.STATUS_CONNECTING
-				and status != HTTPClient.STATUS_RESOLVING
-				and status != HTTPClient.STATUS_CONNECTED
-			):
+			elif status != HTTPClient.STATUS_CONNECTING and status != HTTPClient.STATUS_RESOLVING and status != HTTPClient.STATUS_CONNECTED:
 				busy = false
 				printerr("GodotUroRequester: could not connect to host: status = %s" % [str(http.get_status())])
 				# call callback
@@ -198,11 +190,7 @@ class HTTPState:
 			if connection is StreamPeerTLS:
 				var underlying: StreamPeer = connection.get_stream()
 				if underlying is StreamPeerTCP:
-					if (
-						status == HTTPClient.STATUS_CONNECTED
-						and underlying.get_connected_host() == hostname
-						and underlying.get_connected_port() == port
-					):
+					if status == HTTPClient.STATUS_CONNECTED and underlying.get_connected_host() == hostname and underlying.get_connected_port() == port:
 						#print("Found cached https connection " + str(hostname))
 						return http
 				else:
@@ -212,12 +200,7 @@ class HTTPState:
 						return http
 		elif not use_ssl and status == HTTPClient.STATUS_CONNECTED:
 			if connection is StreamPeerTCP:
-				if (
-					(not (connection is StreamPeerTLS))
-					and status == HTTPClient.STATUS_CONNECTED
-					and connection.get_connected_host() == hostname
-					and connection.get_connected_port() == port
-				):
+				if (not (connection is StreamPeerTLS)) and status == HTTPClient.STATUS_CONNECTED and connection.get_connected_host() == hostname and connection.get_connected_port() == port:
 					#print("Found cached http tcp connection " + str(hostname))
 					return http
 

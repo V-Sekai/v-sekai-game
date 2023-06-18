@@ -8,13 +8,7 @@ extends Node
 const hand_pose_const = preload("hand_pose.gd")
 
 
-static func create_pose_track_for_humanoid_bone(
-	p_animation: Animation,
-	p_base_path: String,
-	p_skeleton: Skeleton3D,
-	p_humanoid_bone_name: String,
-	p_transform: Transform3D
-) -> Animation:
+static func create_pose_track_for_humanoid_bone(p_animation: Animation, p_base_path: String, p_skeleton: Skeleton3D, p_humanoid_bone_name: String, p_transform: Transform3D) -> Animation:
 	if !p_skeleton:
 		return p_animation
 
@@ -56,39 +50,23 @@ static func create_animation_from_hand_pose(p_root_node: Node, p_skeleton: Skele
 
 					transform = Transform3D(Basis.from_euler(euler), Vector3())
 
-				animation = create_pose_track_for_humanoid_bone(
-					animation,
-					p_root_node.get_path_to(p_skeleton),
-					p_skeleton,
-					"%s_%s_%s_bone_name" % [digit, joint, side],
-					transform
-				)
+				animation = create_pose_track_for_humanoid_bone(animation, p_root_node.get_path_to(p_skeleton), p_skeleton, "%s_%s_%s_bone_name" % [digit, joint, side], transform)
 	return animation
 
 
-static func setup_animation_from_hand_pose(
-	p_animation_player: AnimationPlayer,
-	p_root_node: Node,
-	p_skeleton: Skeleton3D,
-	p_hand_pose_name: String,
-	p_hand_pose: RefCounted
-) -> void:
+static func setup_animation_from_hand_pose(p_animation_player: AnimationPlayer, p_root_node: Node, p_skeleton: Skeleton3D, p_hand_pose_name: String, p_hand_pose: RefCounted) -> void:
 	var animation: Animation = create_animation_from_hand_pose(p_root_node, p_skeleton, p_hand_pose)
 	var animation_library: AnimationLibrary = AnimationLibrary.new()
 	animation_library.add_animation(p_hand_pose_name, animation)
 	p_animation_player.add_animation_library("", animation_library)
 
 
-static func setup_animation_from_hand_pose_dictionary(
-	p_animation_player: AnimationPlayer, p_root_node: Node, p_skeleton: Skeleton3D, p_pose_dictionary: Dictionary
-) -> void:
+static func setup_animation_from_hand_pose_dictionary(p_animation_player: AnimationPlayer, p_root_node: Node, p_skeleton: Skeleton3D, p_pose_dictionary: Dictionary) -> void:
 	for key in p_pose_dictionary:
 		setup_animation_from_hand_pose(p_animation_player, p_root_node, p_skeleton, key, p_pose_dictionary[key])
 
 
-static func setup_default_hand_animations(
-	p_animation_player: AnimationPlayer, p_root_node: Node, p_skeleton: Skeleton3D
-) -> AnimationPlayer:
+static func setup_default_hand_animations(p_animation_player: AnimationPlayer, p_root_node: Node, p_skeleton: Skeleton3D) -> AnimationPlayer:
 	# Hand Animation
 	var hand_pose_default_const = load("res://addons/vsk_avatar/hand_poses/hand_pose_default_pose.tres")
 	var hand_pose_fist_const = load("res://addons/vsk_avatar/hand_poses/hand_pose_fist.tres")
@@ -100,29 +78,12 @@ static func setup_default_hand_animations(
 	var hand_pose_thumbs_up_const = load("res://addons/vsk_avatar/hand_poses/hand_pose_thumbs_up.tres")
 	var hand_pose_victory_const = load("res://addons/vsk_avatar/hand_poses/hand_pose_victory.tres")
 
-	setup_animation_from_hand_pose_dictionary(
-		p_animation_player,
-		p_root_node,
-		p_skeleton,
-		{
-			"DefaultPose": hand_pose_default_const,
-			"Neutral": hand_pose_neutral_const,
-			"Fist": hand_pose_fist_const,
-			"Point": hand_pose_point_const,
-			"Gun": hand_pose_gun_const,
-			"OKSign": hand_pose_ok_sign_const,
-			"ThumbsUp": hand_pose_thumbs_up_const,
-			"Victory": hand_pose_victory_const,
-			"Open": hand_pose_open_const
-		}
-	)
+	setup_animation_from_hand_pose_dictionary(p_animation_player, p_root_node, p_skeleton, {"DefaultPose": hand_pose_default_const, "Neutral": hand_pose_neutral_const, "Fist": hand_pose_fist_const, "Point": hand_pose_point_const, "Gun": hand_pose_gun_const, "OKSign": hand_pose_ok_sign_const, "ThumbsUp": hand_pose_thumbs_up_const, "Victory": hand_pose_victory_const, "Open": hand_pose_open_const})
 
 	return p_animation_player
 
 
-static func setup_animation_tree_hand_blend_tree(
-	p_animation_tree: AnimationTree, p_animation_player: AnimationPlayer, p_skeleton: Skeleton3D
-) -> AnimationTree:
+static func setup_animation_tree_hand_blend_tree(p_animation_tree: AnimationTree, p_animation_player: AnimationPlayer, p_skeleton: Skeleton3D) -> AnimationTree:
 	var default_avatar_tree_const = load("res://addons/vsk_avatar/animation/default_avatar_tree.tres")
 
 	if !p_skeleton:

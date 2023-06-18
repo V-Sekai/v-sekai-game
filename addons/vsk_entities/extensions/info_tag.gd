@@ -12,8 +12,7 @@ extends Node3D
 @export var progress_bar_nodepath: NodePath = NodePath()
 @export var progress_label_nodepath: NodePath = NodePath()
 
-@export
-var nametag: String = "V_SEKAI_PLAYER_NAMETAG_V_SEKAI_PLAYER_NAMETAG_V_SEKAI_PLAYER_NAMETAG_V_SEKAI_PLAYER_NAMETAG_V_SEKAI_PLAYER_NAMETAG_WITH_128_CHAR":
+@export var nametag: String = "V_SEKAI_PLAYER_NAMETAG_V_SEKAI_PLAYER_NAMETAG_V_SEKAI_PLAYER_NAMETAG_V_SEKAI_PLAYER_NAMETAG_V_SEKAI_PLAYER_NAMETAG_WITH_128_CHAR":
 	set = set_nametag
 
 
@@ -51,9 +50,7 @@ func _set_progress(p_progress: float) -> void:
 func set_background_load_stage(p_stage: int, p_stage_count: int) -> void:
 	var ratio: float = float(p_stage) / float(p_stage_count)
 
-	_set_progress(
-		VSKAssetManager.DOWNLOAD_PROGRESS_BAR_RATIO + (VSKAssetManager.BACKGROUND_LOAD_PROGRESS_BAR_RATIO * ratio)
-	)
+	_set_progress(VSKAssetManager.DOWNLOAD_PROGRESS_BAR_RATIO + (VSKAssetManager.BACKGROUND_LOAD_PROGRESS_BAR_RATIO * ratio))
 
 	var progress_label: Label3D = get_node_or_null(progress_label_nodepath)
 	if progress_label:

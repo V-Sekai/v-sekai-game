@@ -34,9 +34,7 @@ static func calc_redirection_basis(source: Vector3, center: Vector3):
 	return new_basis
 
 
-static func calc_redirection_dist(
-	point: Vector3, source: Vector3, center: Vector3, redirect_basis: Basis, redirect_direction: Vector2
-) -> float:
+static func calc_redirection_dist(point: Vector3, source: Vector3, center: Vector3, redirect_basis: Basis, redirect_direction: Vector2) -> float:
 	var point_vector = source - point
 	var center_vector = source - center
 	if point_vector.angle_to(center_vector) > PI / 4:  # Return if angle is more than 45 degrees away, we don't snap.

@@ -80,11 +80,7 @@ func _set_loading_stage_count(p_url: String, p_stage_count: int):
 
 
 func _set_loading_stage(p_url: String, p_stage: int):
-	print(
-		"Loading avatar {stage}/{stage_count}".format(
-			{"stage": str(p_stage), "stage_count": str(avatar_stage_map[p_url])}
-		)
-	)
+	print("Loading avatar {stage}/{stage_count}".format({"stage": str(p_stage), "stage_count": str(avatar_stage_map[p_url])}))
 
 	avatar_load_update.emit(p_url, p_stage, avatar_stage_map[p_url])
 
@@ -94,17 +90,8 @@ func cancel_avatar(p_avatar_path: String) -> void:
 
 
 func request_avatar(p_avatar_path: String, p_bypass_whitelist: bool, p_skip_validation: bool) -> void:
-	await request_user_content_load(
-		VSKAssetManager.loading_avatar_path, VSKAssetManager.user_content_type.USER_CONTENT_AVATAR, true, true, {}, {}
-	)
-	await request_user_content_load(
-		p_avatar_path,
-		VSKAssetManager.user_content_type.USER_CONTENT_AVATAR,
-		p_bypass_whitelist,
-		p_skip_validation,
-		validator_avatar.valid_external_path_whitelist,
-		validator_avatar.valid_resource_whitelist
-	)
+	await request_user_content_load(VSKAssetManager.loading_avatar_path, VSKAssetManager.user_content_type.USER_CONTENT_AVATAR, true, true, {}, {})
+	await request_user_content_load(p_avatar_path, VSKAssetManager.user_content_type.USER_CONTENT_AVATAR, p_bypass_whitelist, p_skip_validation, validator_avatar.valid_external_path_whitelist, validator_avatar.valid_resource_whitelist)
 
 
 func set_settings_values():
@@ -113,12 +100,8 @@ func set_settings_values():
 
 
 func get_settings_values() -> void:
-	use_avatar_physics = VSKUserPreferencesManager.get_value(
-		USER_PREFERENCES_SECTION_NAME, "use_avatar_physics", TYPE_BOOL, use_avatar_physics
-	)
-	show_nametags = VSKUserPreferencesManager.get_value(
-		USER_PREFERENCES_SECTION_NAME, "show_nametags", TYPE_BOOL, show_nametags
-	)
+	use_avatar_physics = VSKUserPreferencesManager.get_value(USER_PREFERENCES_SECTION_NAME, "use_avatar_physics", TYPE_BOOL, use_avatar_physics)
+	show_nametags = VSKUserPreferencesManager.get_value(USER_PREFERENCES_SECTION_NAME, "show_nametags", TYPE_BOOL, show_nametags)
 
 
 func set_settings_values_and_save() -> void:

@@ -79,9 +79,8 @@ func http_download_progressed(_http_state: RefCounted, _bytes: int, _total_bytes
 	#print("Download progressed " + str(bytes) + "/" + str(total_bytes))
 	pass
 
-func request(
-	p_path: String, p_payload: Dictionary, p_use_token: int, p_options: Dictionary = DEFAULT_OPTIONS
-) -> Result:
+
+func request(p_path: String, p_payload: Dictionary, p_use_token: int, p_options: Dictionary = DEFAULT_OPTIONS) -> Result:
 	var http_state = await http_pool.new_http_state()
 	if http_state == null:
 		return Result.new(godot_uro_helper_const.RequesterCode.CANT_CONNECT, ERR_CANT_CREATE, -1)
@@ -129,9 +128,7 @@ func request(
 				var payload_string: String = _dict_to_query_string(p_payload)
 				encoded_payload = payload_string.to_utf8_buffer()
 			"multipart":
-				var boundary_string: String = (
-					BOUNDARY_STRING_PREFIX + random_const.generate_insecure_unique_id(BOUNDARY_STRING_LENGTH)
-				)
+				var boundary_string: String = BOUNDARY_STRING_PREFIX + random_const.generate_insecure_unique_id(BOUNDARY_STRING_LENGTH)
 				headers.append("Content-Type: multipart/form-data; boundary=%s" % boundary_string)
 				encoded_payload = uro_requester_const._compose_multipart_body(p_payload, boundary_string)
 			_:
@@ -169,16 +166,12 @@ func request(
 			if response_code == HTTPClient.RESPONSE_OK:
 				return Result.new(godot_uro_helper_const.RequesterCode.OK, OK, response_code, data)
 			else:
-				return Result.new(
-					godot_uro_helper_const.RequesterCode.HTTP_RESPONSE_NOT_OK, FAILED, response_code, data
-				)
+				return Result.new(godot_uro_helper_const.RequesterCode.HTTP_RESPONSE_NOT_OK, FAILED, response_code, data)
 		else:
 			if response_code == HTTPClient.RESPONSE_OK:
 				return Result.new(godot_uro_helper_const.RequesterCode.JSON_PARSE_ERROR, FAILED, response_code, data)
 			else:
-				return Result.new(
-					godot_uro_helper_const.RequesterCode.HTTP_RESPONSE_NOT_OK, FAILED, response_code, data
-				)
+				return Result.new(godot_uro_helper_const.RequesterCode.HTTP_RESPONSE_NOT_OK, FAILED, response_code, data)
 	else:
 		printerr("GodotUroRequester: No response body!")
 		return Result.new(godot_uro_helper_const.RequesterCode.UNKNOWN_STATUS_ERROR, FAILED, response_code, data)
@@ -194,9 +187,7 @@ static func _compose_multipart_body(p_dictionary: Dictionary, p_boundary_string:
 		buffer.append_array(("\r\n--" + p_boundary_string + "\r\n").to_utf8_buffer())
 		var value = p_dictionary[key]
 		if value is String:
-			var disposition: PackedByteArray = (
-				('Content-Disposition: form-data; name="%s"\r\n\r\n' % key).to_utf8_buffer()
-			)
+			var disposition: PackedByteArray = ('Content-Disposition: form-data; name="%s"\r\n\r\n' % key).to_utf8_buffer()
 			var body: PackedByteArray = value.to_utf8_buffer()
 
 			buffer.append_array(disposition)
@@ -206,37 +197,25 @@ static func _compose_multipart_body(p_dictionary: Dictionary, p_boundary_string:
 			var filename: String = value.get("filename")
 			var data: PackedByteArray = value.get("data")
 
-			var disposition = (
-				(
-					'Content-Disposition: form-data; name="%s"; filename="%s"\r\nContent-Type: %s\r\n\r\n'
-					% [key, filename, content_type]
-				)
-				. to_utf8_buffer()
-			)
+			var disposition = ('Content-Disposition: form-data; name="%s"; filename="%s"\r\nContent-Type: %s\r\n\r\n' % [key, filename, content_type]).to_utf8_buffer()
 			var body: PackedByteArray = data
 
 			buffer.append_array(disposition)
 			buffer.append_array(body)
 		elif value is bool:
-			var disposition: PackedByteArray = (
-				('Content-Disposition: form-data; name="%s"\r\n\r\n' % key).to_utf8_buffer()
-			)
+			var disposition: PackedByteArray = ('Content-Disposition: form-data; name="%s"\r\n\r\n' % key).to_utf8_buffer()
 			var body: PackedByteArray = "true".to_utf8_buffer() if value == true else "false".to_utf8_buffer()
 
 			buffer.append_array(disposition)
 			buffer.append_array(body)
 		elif value is int:
-			var disposition: PackedByteArray = (
-				('Content-Disposition: form-data; name="%s"\r\n\r\n' % key).to_utf8_buffer()
-			)
+			var disposition: PackedByteArray = ('Content-Disposition: form-data; name="%s"\r\n\r\n' % key).to_utf8_buffer()
 			var body: PackedByteArray = value.to_string().to_utf8_buffer()
 
 			buffer.append_array(disposition)
 			buffer.append_array(body)
 		elif value is float:
-			var disposition: PackedByteArray = (
-				('Content-Disposition: form-data; name="%s"\r\n\r\n' % key).to_utf8_buffer()
-			)
+			var disposition: PackedByteArray = ('Content-Disposition: form-data; name="%s"\r\n\r\n' % key).to_utf8_buffer()
 			var body: PackedByteArray = value.to_string().to_utf8_buffer()
 
 			buffer.append_array(disposition)

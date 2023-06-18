@@ -66,19 +66,10 @@ func add_controller(p_controller: XRController3D, p_origin: XROrigin3D):
 		if controller_actions:
 			controller_actions.get_tracker_hand(hand)
 			p_controller.add_child(controller_actions, true)
-			if (
-				controller_actions.has_signal("on_action_pressed")
-				and controller_actions.has_signal("on_action_released")
-			):
-				if (
-					(controller_actions.connect("on_action_pressed", Callable(p_controller, "_on_action_pressed")))
-					!= OK
-				):
+			if controller_actions.has_signal("on_action_pressed") and controller_actions.has_signal("on_action_released"):
+				if (controller_actions.connect("on_action_pressed", Callable(p_controller, "_on_action_pressed"))) != OK:
 					printerr("Could not connect signal 'on_action_pressed' !")
-				if (
-					(controller_actions.connect("on_action_released", Callable(p_controller, "_on_action_released")))
-					!= OK
-				):
+				if (controller_actions.connect("on_action_released", Callable(p_controller, "_on_action_released"))) != OK:
 					printerr("Could not connect signal 'on_action_released' !")
 
 				p_controller.get_is_action_pressed_funcref = Callable(controller_actions, "is_action_pressed")

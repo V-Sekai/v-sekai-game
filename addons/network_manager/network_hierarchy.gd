@@ -37,9 +37,7 @@ static func decode_attachment_id(p_reader: Object) -> int:
 
 static func write_entity_parent_id(p_writer: Object, p_entity_hierarchy_node: Node) -> Object:
 	if p_entity_hierarchy_node and p_entity_hierarchy_node.get_entity_parent():
-		p_writer = encode_parent_id(
-			p_writer, p_entity_hierarchy_node.get_entity_parent().network_identity_node.network_instance_id
-		)
+		p_writer = encode_parent_id(p_writer, p_entity_hierarchy_node.get_entity_parent().network_identity_node.network_instance_id)
 	else:
 		p_writer.put_u32(NetworkManager.network_entity_manager.NULL_NETWORK_INSTANCE_ID)
 
@@ -108,15 +106,11 @@ func process_parenting():
 		get_entity_node().hierarchy_component_node.parent_entity_is_valid = true
 		if parent_id != network_entity_manager_const.NULL_NETWORK_INSTANCE_ID:
 			if NetworkManager.network_entity_manager.network_instance_ids.has(parent_id):
-				var network_identity: Node = NetworkManager.network_entity_manager.get_network_identity_for_instance_id(
-					parent_id
-				)
+				var network_identity: Node = NetworkManager.network_entity_manager.get_network_identity_for_instance_id(parent_id)
 				if network_identity:
 					var parent_instance: Node = network_identity.get_entity_node()
 					if entity_node.hierarchy_component_node:
-						entity_node.hierarchy_component_node.request_reparent_entity(
-							parent_instance.get_entity_ref(), attachment_id
-						)
+						entity_node.hierarchy_component_node.request_reparent_entity(parent_instance.get_entity_ref(), attachment_id)
 			else:
 				get_entity_node().hierarchy_component_node.parent_entity_is_valid = false
 				if entity_node.hierarchy_component_node:

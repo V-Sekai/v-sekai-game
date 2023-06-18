@@ -39,9 +39,7 @@ static func get_fallback_eye_offset(p_skeleton: Skeleton3D, eye_offset: Vector3)
 		var left_eye = p_skeleton.find_bone("LeftEye")
 		var right_eye = p_skeleton.find_bone("RightEye")
 		if left_eye != -1 and right_eye != -1:
-			var interp: Vector3 = p_skeleton.get_bone_global_rest(left_eye).origin.lerp(
-				p_skeleton.get_bone_global_rest(right_eye).origin, 0.5
-			)
+			var interp: Vector3 = p_skeleton.get_bone_global_rest(left_eye).origin.lerp(p_skeleton.get_bone_global_rest(right_eye).origin, 0.5)
 			interp.z += 0.5 * interp.distance_to(eye_offset)
 			return interp
 	return eye_offset
@@ -77,23 +75,13 @@ static func convert_vrm_instance(p_vrm_instance: Node3D) -> Node3D:
 				var fp_bone_id: int = get_first_person_bone_id(skeleton)
 				if fp_bone_id != -1:
 					head_global_position = bone_lib_const.get_bone_global_rest_transform(fp_bone_id, skeleton).origin
-					fp_global_position = (
-						(
-							bone_lib_const.get_bone_global_rest_transform(fp_bone_id, skeleton)
-							* Transform3D(Basis(), eye_offset)
-						)
-						. origin
-					)
+					fp_global_position = ((bone_lib_const.get_bone_global_rest_transform(fp_bone_id, skeleton) * Transform3D(Basis(), eye_offset)).origin)
 
 				if eye_offset.is_equal_approx(Vector3.ZERO):
 					fp_global_position = get_fallback_eye_offset(skeleton, fp_global_position)
 
-				fp_global_position = (
-					node_util_const.get_relative_global_transform(vsk_avatar_root, skeleton) * fp_global_position
-				)
-				head_global_position = (
-					node_util_const.get_relative_global_transform(vsk_avatar_root, skeleton) * head_global_position
-				)
+				fp_global_position = (node_util_const.get_relative_global_transform(vsk_avatar_root, skeleton) * fp_global_position)
+				head_global_position = (node_util_const.get_relative_global_transform(vsk_avatar_root, skeleton) * head_global_position)
 
 				# Avatar Physics
 				var secondary: Node = p_vrm_instance.get_node_or_null(p_vrm_instance.vrm_secondary)

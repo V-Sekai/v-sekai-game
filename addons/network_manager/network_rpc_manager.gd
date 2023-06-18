@@ -45,27 +45,19 @@ var pending_rset_unreliable_calls: Array = []
 
 
 func queue_reliable_rpc_call(p_entity: Node, p_target_id: int, p_method_id: int, p_args: Array):
-	pending_rpc_reliable_calls.push_back(
-		{"entity": p_entity, "target_id": p_target_id, "method_id": p_method_id, "args": p_args}
-	)
+	pending_rpc_reliable_calls.push_back({"entity": p_entity, "target_id": p_target_id, "method_id": p_method_id, "args": p_args})
 
 
 func queue_reliable_rset_call(p_entity: Node, p_target_id: int, p_property_id: int, p_value):
-	pending_rset_reliable_calls.push_back(
-		{"entity": p_entity, "target_id": p_target_id, "property_id": p_property_id, "value": p_value}
-	)
+	pending_rset_reliable_calls.push_back({"entity": p_entity, "target_id": p_target_id, "property_id": p_property_id, "value": p_value})
 
 
 func queue_unreliable_rpc_call(p_entity: Node, p_target_id: int, p_method_id: int, p_args: Array):
-	pending_rpc_unreliable_calls.push_back(
-		{"entity": p_entity, "target_id": p_target_id, "method_id": p_method_id, "args": p_args}
-	)
+	pending_rpc_unreliable_calls.push_back({"entity": p_entity, "target_id": p_target_id, "method_id": p_method_id, "args": p_args})
 
 
 func queue_unreliable_rset_call(p_entity: Node, p_target_id: int, p_property_id: int, p_value):
-	pending_rset_unreliable_calls.push_back(
-		{"entity": p_entity, "target_id": p_target_id, "property_id": p_property_id, "value": p_value}
-	)
+	pending_rset_unreliable_calls.push_back({"entity": p_entity, "target_id": p_target_id, "property_id": p_property_id, "value": p_value})
 
 
 func get_entity_root_node() -> Node:
@@ -139,20 +131,13 @@ func _network_manager_flush() -> void:
 	flush()
 
 
-func write_remote_command(
-	p_sender_id: int, p_rpc_call: Dictionary, p_type: int, p_network_writer_state: Object
-) -> void:
+func write_remote_command(p_sender_id: int, p_rpc_call: Dictionary, p_type: int, p_network_writer_state: Object) -> void:
 	var remote_command_network_writer: Object = create_rpc_command(p_sender_id, p_type, p_rpc_call)
 	p_network_writer_state.put_writer(remote_command_network_writer, remote_command_network_writer.get_position())
 
 
 func _network_manager_process(p_id: int, _delta: float) -> void:
-	if (
-		pending_rpc_reliable_calls.size() > 0
-		or pending_rpc_unreliable_calls.size() > 0
-		or pending_rset_reliable_calls.size() > 0
-		or pending_rset_unreliable_calls.size() > 0
-	):
+	if pending_rpc_reliable_calls.size() > 0 or pending_rpc_unreliable_calls.size() > 0 or pending_rset_reliable_calls.size() > 0 or pending_rset_unreliable_calls.size() > 0:
 		# Debugging information
 		# Debugging end
 
@@ -175,90 +160,40 @@ func _network_manager_process(p_id: int, _delta: float) -> void:
 			if network_manager.is_server() or network_manager.is_relay():
 				for rpc_call in pending_rpc_reliable_calls:
 					if rpc_call["target_id"] == synced_peer or rpc_call["target_id"] == 0:
-						write_remote_command(
-							p_id,
-							rpc_call,
-							network_constants_const.RELIABLE_ENTITY_RPC_COMMAND,
-							network_reliable_writer_state
-						)
+						write_remote_command(p_id, rpc_call, network_constants_const.RELIABLE_ENTITY_RPC_COMMAND, network_reliable_writer_state)
 				for rpc_call in pending_rset_reliable_calls:
 					if rpc_call["target_id"] == synced_peer or rpc_call["target_id"] == 0:
-						write_remote_command(
-							p_id,
-							rpc_call,
-							network_constants_const.RELIABLE_ENTITY_RSET_COMMAND,
-							network_reliable_writer_state
-						)
+						write_remote_command(p_id, rpc_call, network_constants_const.RELIABLE_ENTITY_RSET_COMMAND, network_reliable_writer_state)
 				for rpc_call in pending_rpc_unreliable_calls:
 					if rpc_call["target_id"] == synced_peer or rpc_call["target_id"] == 0:
-						write_remote_command(
-							p_id,
-							rpc_call,
-							network_constants_const.UNRELIABLE_ENTITY_RPC_COMMAND,
-							network_unreliable_writer_state
-						)
+						write_remote_command(p_id, rpc_call, network_constants_const.UNRELIABLE_ENTITY_RPC_COMMAND, network_unreliable_writer_state)
 				for rpc_call in pending_rset_unreliable_calls:
 					if rpc_call["target_id"] == synced_peer or rpc_call["target_id"] == 0:
-						write_remote_command(
-							p_id,
-							rpc_call,
-							network_constants_const.UNRELIABLE_ENTITY_RSET_COMMAND,
-							network_unreliable_writer_state
-						)
+						write_remote_command(p_id, rpc_call, network_constants_const.UNRELIABLE_ENTITY_RSET_COMMAND, network_unreliable_writer_state)
 			else:
 				if synced_peer == network_constants_const.SERVER_MASTER_PEER_ID:
 					for rpc_call in pending_rpc_reliable_calls:
-						write_remote_command(
-							p_id,
-							rpc_call,
-							network_constants_const.RELIABLE_ENTITY_RPC_COMMAND,
-							network_reliable_writer_state
-						)
+						write_remote_command(p_id, rpc_call, network_constants_const.RELIABLE_ENTITY_RPC_COMMAND, network_reliable_writer_state)
 					for rpc_call in pending_rset_reliable_calls:
-						write_remote_command(
-							p_id,
-							rpc_call,
-							network_constants_const.RELIABLE_ENTITY_RSET_COMMAND,
-							network_reliable_writer_state
-						)
+						write_remote_command(p_id, rpc_call, network_constants_const.RELIABLE_ENTITY_RSET_COMMAND, network_reliable_writer_state)
 					for rpc_call in pending_rpc_unreliable_calls:
-						write_remote_command(
-							p_id,
-							rpc_call,
-							network_constants_const.UNRELIABLE_ENTITY_RPC_COMMAND,
-							network_unreliable_writer_state
-						)
+						write_remote_command(p_id, rpc_call, network_constants_const.UNRELIABLE_ENTITY_RPC_COMMAND, network_unreliable_writer_state)
 					for rpc_call in pending_rset_unreliable_calls:
-						write_remote_command(
-							p_id,
-							rpc_call,
-							network_constants_const.UNRELIABLE_ENTITY_RSET_COMMAND,
-							network_unreliable_writer_state
-						)
+						write_remote_command(p_id, rpc_call, network_constants_const.UNRELIABLE_ENTITY_RSET_COMMAND, network_unreliable_writer_state)
 
 			if network_reliable_writer_state.get_position() > 0:
-				var raw_data: PackedByteArray = network_reliable_writer_state.get_raw_data(
-					network_reliable_writer_state.get_position()
-				)
-				network_manager.network_flow_manager.queue_packet_for_send(
-					ref_pool_const.new(raw_data), synced_peer, MultiplayerPeer.TRANSFER_MODE_RELIABLE
-				)
+				var raw_data: PackedByteArray = network_reliable_writer_state.get_raw_data(network_reliable_writer_state.get_position())
+				network_manager.network_flow_manager.queue_packet_for_send(ref_pool_const.new(raw_data), synced_peer, MultiplayerPeer.TRANSFER_MODE_RELIABLE)
 
 			if network_unreliable_writer_state.get_position() > 0:
-				var raw_data: PackedByteArray = network_unreliable_writer_state.get_raw_data(
-					network_unreliable_writer_state.get_position()
-				)
-				network_manager.network_flow_manager.queue_packet_for_send(
-					ref_pool_const.new(raw_data), synced_peer, MultiplayerPeer.TRANSFER_MODE_UNRELIABLE
-				)
+				var raw_data: PackedByteArray = network_unreliable_writer_state.get_raw_data(network_unreliable_writer_state.get_position())
+				network_manager.network_flow_manager.queue_packet_for_send(ref_pool_const.new(raw_data), synced_peer, MultiplayerPeer.TRANSFER_MODE_UNRELIABLE)
 
 		# Flush the pending RPC queues
 		flush()
 
 
-func decode_entity_remote_command(
-	p_packet_sender_id: int, p_reliable: bool, p_rpc: bool, p_network_reader: Object
-) -> Object:
+func decode_entity_remote_command(p_packet_sender_id: int, p_reliable: bool, p_rpc: bool, p_network_reader: Object) -> Object:
 	var network_entity_manager: Node = network_manager.network_entity_manager
 	var sender_id: int = p_packet_sender_id
 	var target_id: int = get_tree().get_multiplayer().get_unique_id()
@@ -341,9 +276,7 @@ func decode_entity_remote_command(
 							write_remote_command(sender_id, rpc_call, command_type, writer)
 							if writer.get_position() > 0:
 								var raw_data: PackedByteArray = writer.get_raw_data(writer.get_position())
-								network_manager.network_flow_manager.queue_packet_for_send(
-									ref_pool_const.new(raw_data), synced_peer, MultiplayerPeer.TRANSFER_MODE_RELIABLE
-								)
+								network_manager.network_flow_manager.queue_packet_for_send(ref_pool_const.new(raw_data), synced_peer, MultiplayerPeer.TRANSFER_MODE_RELIABLE)
 					else:
 						if synced_peers.has(target_id):
 							var writer: Object = rpc_unreliable_writers[target_id]
@@ -352,9 +285,7 @@ func decode_entity_remote_command(
 							write_remote_command(sender_id, rpc_call, command_type, writer)
 							if writer.get_position() > 0:
 								var raw_data: PackedByteArray = writer.get_raw_data(writer.get_position())
-								network_manager.network_flow_manager.queue_packet_for_send(
-									ref_pool_const.new(raw_data), target_id, MultiplayerPeer.TRANSFER_MODE_UNRELIABLE
-								)
+								network_manager.network_flow_manager.queue_packet_for_send(ref_pool_const.new(raw_data), target_id, MultiplayerPeer.TRANSFER_MODE_UNRELIABLE)
 						else:
 							printerr("RPC command has invalid target ID!")
 		else:
@@ -408,12 +339,7 @@ func _server_peer_disconnected(p_id: int) -> void:
 
 
 func is_command_valid(p_command: int) -> bool:
-	if (
-		p_command == network_constants_const.RELIABLE_ENTITY_RPC_COMMAND
-		or p_command == network_constants_const.RELIABLE_ENTITY_RSET_COMMAND
-		or p_command == network_constants_const.UNRELIABLE_ENTITY_RPC_COMMAND
-		or p_command == network_constants_const.UNRELIABLE_ENTITY_RSET_COMMAND
-	):
+	if p_command == network_constants_const.RELIABLE_ENTITY_RPC_COMMAND or p_command == network_constants_const.RELIABLE_ENTITY_RSET_COMMAND or p_command == network_constants_const.UNRELIABLE_ENTITY_RPC_COMMAND or p_command == network_constants_const.UNRELIABLE_ENTITY_RSET_COMMAND:
 		return true
 	else:
 		return false

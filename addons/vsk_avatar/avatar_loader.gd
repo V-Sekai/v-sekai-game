@@ -96,9 +96,7 @@ func load_model(p_bypass_whitelist: bool, p_skip_validation: bool) -> void:
 func load_error_avatar(p_err: int) -> void:
 	avatar_cleared.emit()
 
-	var error_avatar_path: String = VSKAssetManager.get_error_path(
-		VSKAssetManager.user_content_type.USER_CONTENT_AVATAR, p_err
-	)
+	var error_avatar_path: String = VSKAssetManager.get_error_path(VSKAssetManager.user_content_type.USER_CONTENT_AVATAR, p_err)
 
 	set_avatar_model_path(error_avatar_path)
 	load_model(true, true)

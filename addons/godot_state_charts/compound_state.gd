@@ -6,24 +6,24 @@ class_name CompoundState
 extends State
 
 ## The initial state which should be activated when this state is activated.
-@export_node_path("State") var initial_state:NodePath:
+@export_node_path("State") var initial_state: NodePath:
 	get:
 		return initial_state
 	set(value):
 		initial_state = value
-		update_configuration_warnings() 
-
+		update_configuration_warnings()
 
 ## The currently active substate.
-var _active_state:State = null
+var _active_state: State = null
 
 ## The initial state
-@onready var _initial_state:State = get_node_or_null(initial_state)
+@onready var _initial_state: State = get_node_or_null(initial_state)
 
 ## The history states of this compound state.
-var _history_states:Array[HistoryState] = []
+var _history_states: Array[HistoryState] = []
 ## Whether any of the history states needs a deep history.
 var _needs_deep_history = false
+
 
 func _state_init():
 	super._state_init()
@@ -31,7 +31,7 @@ func _state_init():
 	# check if we have any history states
 	for child in get_children():
 		if child is HistoryState:
-			var child_as_history_state:HistoryState = child as HistoryState
+			var child_as_history_state: HistoryState = child as HistoryState
 			_history_states.append(child_as_history_state)
 			# remember if any of the history states needs a deep history
 			_needs_deep_history = _needs_deep_history or child_as_history_state.deep
@@ -39,11 +39,11 @@ func _state_init():
 	# initialize all substates. find all children of type State and call _state_init on them.
 	for child in get_children():
 		if child is State:
-			var child_as_state:State = child as State
+			var child_as_state: State = child as State
 			child_as_state._state_init()
 
 
-func _state_enter(expect_transition:bool = false):
+func _state_enter(expect_transition: bool = false):
 	super._state_enter()
 	# activate the initial state unless we expect a transition
 	if not expect_transition:
@@ -54,7 +54,7 @@ func _state_enter(expect_transition:bool = false):
 			push_error("No initial state set for state '" + name + "'.")
 
 
-func _state_save(saved_state:SavedState, child_levels:int = -1):
+func _state_save(saved_state: SavedState, child_levels: int = -1):
 	super._state_save(saved_state, child_levels)
 
 	# in addition save all history states, as they are never active and normally would not be saved
@@ -66,7 +66,8 @@ func _state_save(saved_state:SavedState, child_levels:int = -1):
 	for history_state in _history_states:
 		history_state._state_save(parent, child_levels)
 
-func _state_restore(saved_state:SavedState, child_levels:int = -1):
+
+func _state_restore(saved_state: SavedState, child_levels: int = -1):
 	super._state_restore(saved_state, child_levels)
 
 	# in addition check if we are now active and if so determine the current active state
@@ -76,6 +77,7 @@ func _state_restore(saved_state:SavedState, child_levels:int = -1):
 			if child is State and child.active:
 				_active_state = child
 				break
+
 
 func _state_exit():
 	# if we have any history states, we need to save the current active state
@@ -100,7 +102,7 @@ func _state_exit():
 	super._state_exit()
 
 
-func _state_event(event:StringName) -> bool:
+func _state_event(event: StringName) -> bool:
 	if not active:
 		return false
 
@@ -116,14 +118,14 @@ func _state_event(event:StringName) -> bool:
 	return super._state_event(event)
 
 
-func _handle_transition(transition:Transition, source:State):
+func _handle_transition(transition: Transition, source: State):
 	# print("CompoundState._handle_transition: " + name + " from " + source.name + " to " + str(transition.to))
 	# resolve the target state
 	var target = transition.resolve_target()
 	if not target is State:
 		push_error("The target state '" + str(transition.to) + "' of the transition from '" + source.name + "' is not a state.")
 		return
-	
+
 	# the target state can be
 	# 0. this state. in this case exit this state and re-enter it. This can happen when
 	#    a child state transfers to its parent state.
@@ -145,8 +147,8 @@ func _handle_transition(transition:Transition, source:State):
 		# all good, now first deactivate the current state
 		if is_instance_valid(_active_state):
 			_active_state._state_exit()
-		
-		# now check if the target is a history state, if this is the 
+
+		# now check if the target is a history state, if this is the
 		# case, we need to restore the saved state
 		if target is HistoryState:
 			# print("Target is history state, restoring saved state.")
@@ -170,12 +172,12 @@ func _handle_transition(transition:Transition, source:State):
 		_active_state = target
 		_active_state._state_enter()
 		return
-		
+
 	if self.is_ancestor_of(target):
 		# find the child which is the ancestor of the new target.
 		for child in get_children():
 			if child.is_ancestor_of(target):
-				# found it. 
+				# found it.
 				# change active state if necessary
 				if _active_state != child:
 					if is_instance_valid(_active_state):
@@ -186,12 +188,12 @@ func _handle_transition(transition:Transition, source:State):
 					# the transition to the child state right after we activate it.
 					# this avoids the child needlessly entering the initial state
 					_active_state._state_enter(true)
-					
+
 				# ask child to handle the transition
 				child._handle_transition(transition, source)
 				return
 		return
-	
+
 	# ask the parent
 	get_parent()._handle_transition(transition, source)
 
@@ -200,13 +202,13 @@ func _get_configuration_warnings() -> PackedStringArray:
 	var warnings = super._get_configuration_warnings()
 	if get_child_count() == 0:
 		warnings.append("Compound states should have at least one child state.")
-		
+
 	var the_initial_state = get_node_or_null(initial_state)
-	
+
 	if not is_instance_valid(the_initial_state):
 		warnings.append("Initial state could not be resolved, is the path correct?")
-		
+
 	elif the_initial_state.get_parent() != self:
 		warnings.append("Initial state must be a direct child of this compound state.")
-	
+
 	return warnings

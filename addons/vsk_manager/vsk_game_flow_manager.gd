@@ -22,22 +22,7 @@ var connection_util_const = preload("res://addons/gd_util/connection_util.gd")
 ## to this singleton.
 ##
 
-var signal_table: Array = [
-	{"singleton": "VSKGameFlowManager", "signal": "gameflow_state_changed", "method": "_gameflow_state_changed"},
-	{"singleton": "VSKNetworkManager", "signal": "session_ready", "method": "_session_ready"},
-	{"singleton": "VSKNetworkManager", "signal": "server_disconnected", "method": "_server_disconnected"},
-	{"singleton": "VSKNetworkManager", "signal": "connection_killed", "method": "_connection_killed"},
-	{"singleton": "VSKMapManager", "signal": "map_load_callback", "method": "_map_load_callback"},
-	{"singleton": "VSKNetworkManager", "signal": "network_callback", "method": "_network_callback"},
-	{"singleton": "BackgroundLoader", "signal": "thread_started", "method": "quit_callback_increment"},
-	{"singleton": "BackgroundLoader", "signal": "thread_ended", "method": "quit_callback_decrement"},
-	{"singleton": "ScreenshotManager", "signal": "screenshot_requested", "method": "_screenshot_requested"},
-	{
-		"singleton": "SpatialGameViewportManager",
-		"signal": "viewport_updated",
-		"method": "_spatial_game_viewport_updated"
-	}
-]
+var signal_table: Array = [{"singleton": "VSKGameFlowManager", "signal": "gameflow_state_changed", "method": "_gameflow_state_changed"}, {"singleton": "VSKNetworkManager", "signal": "session_ready", "method": "_session_ready"}, {"singleton": "VSKNetworkManager", "signal": "server_disconnected", "method": "_server_disconnected"}, {"singleton": "VSKNetworkManager", "signal": "connection_killed", "method": "_connection_killed"}, {"singleton": "VSKMapManager", "signal": "map_load_callback", "method": "_map_load_callback"}, {"singleton": "VSKNetworkManager", "signal": "network_callback", "method": "_network_callback"}, {"singleton": "BackgroundLoader", "signal": "thread_started", "method": "quit_callback_increment"}, {"singleton": "BackgroundLoader", "signal": "thread_ended", "method": "quit_callback_decrement"}, {"singleton": "ScreenshotManager", "signal": "screenshot_requested", "method": "_screenshot_requested"}, {"singleton": "SpatialGameViewportManager", "signal": "viewport_updated", "method": "_spatial_game_viewport_updated"}]
 
 ##
 ## Is responsible for recording IK as motion capture data
@@ -111,36 +96,13 @@ var multiplayer_request: MultiplayerRequest = null
 ##
 ## Enum determining what state the apps gameflow is in.
 ##
-enum {
-	GAMEFLOW_STATE_UNDEFINED,
-	GAMEFLOW_STATE_PRELOADING,
-	GAMEFLOW_STATE_TITLE,
-	GAMEFLOW_STATE_INTERSTITIAL,
-	GAMEFLOW_STATE_INGAME
-}  # Unknown gameflow state  # When we are in the preloading screen before the title  # When we are in the title  # When we are in the loading screen  # When we are connected to a server
+enum { GAMEFLOW_STATE_UNDEFINED, GAMEFLOW_STATE_PRELOADING, GAMEFLOW_STATE_TITLE, GAMEFLOW_STATE_INTERSTITIAL, GAMEFLOW_STATE_INGAME }  # Unknown gameflow state  # When we are in the preloading screen before the title  # When we are in the title  # When we are in the loading screen  # When we are connected to a server
 
 ##
 ## Enum indicating an error from another subsystem telling us what kind
 ## of error message we should display.
 ##
-enum {
-	CALLBACK_STATE_NONE,
-	CALLBACK_STATE_KICKED_FROM_SERVER,
-	CALLBACK_STATE_SERVER_DISCONNECTED,
-	CALLBACK_STATE_MAP_UNKNOWN_FAILURE,
-	CALLBACK_STATE_MAP_NETWORK_FETCH_FAILED,
-	CALLBACK_STATE_MAP_RESOURCE_FAILED_TO_LOAD,
-	CALLBACK_STATE_MAP_NOT_WHITELISTED,
-	CALLBACK_STATE_MAP_FAILED_VALIDATION,
-	CALLBACK_STATE_GAME_MODE_LOAD_FAILED,
-	CALLBACK_STATE_GAME_MODE_NOT_WHITELISTED,
-	CALLBACK_STATE_HOST_GAME_FAILED,
-	CALLBACK_STATE_SHARD_REGISTRATION_FAILED,
-	CALLBACK_STATE_INVALID_MAP,
-	CALLBACK_STATE_NO_SERVER_INFO,
-	CALLBACK_STATE_NO_SERVER_INFO_VERSION,
-	CALLBACK_STATE_SERVER_INFO_VERSION_MISMATCH
-}
+enum { CALLBACK_STATE_NONE, CALLBACK_STATE_KICKED_FROM_SERVER, CALLBACK_STATE_SERVER_DISCONNECTED, CALLBACK_STATE_MAP_UNKNOWN_FAILURE, CALLBACK_STATE_MAP_NETWORK_FETCH_FAILED, CALLBACK_STATE_MAP_RESOURCE_FAILED_TO_LOAD, CALLBACK_STATE_MAP_NOT_WHITELISTED, CALLBACK_STATE_MAP_FAILED_VALIDATION, CALLBACK_STATE_GAME_MODE_LOAD_FAILED, CALLBACK_STATE_GAME_MODE_NOT_WHITELISTED, CALLBACK_STATE_HOST_GAME_FAILED, CALLBACK_STATE_SHARD_REGISTRATION_FAILED, CALLBACK_STATE_INVALID_MAP, CALLBACK_STATE_NO_SERVER_INFO, CALLBACK_STATE_NO_SERVER_INFO_VERSION, CALLBACK_STATE_SERVER_INFO_VERSION_MISMATCH }
 
 ##
 ## Enum indicating the the transition between an ingame and non-ingame state
@@ -334,16 +296,7 @@ func go_to_interstitial_screen() -> void:
 ## p_advertise_server tells whether we should attempt to register this server
 ## on a master server
 ##
-func host_server(
-	p_server_name: String,
-	p_map_path: String,
-	p_game_mode_path: String,
-	p_port: int,
-	p_max_players: int,
-	p_dedicated_server: bool,
-	p_advertise_server: bool,
-	p_max_retries: int
-) -> void:
+func host_server(p_server_name: String, p_map_path: String, p_game_mode_path: String, p_port: int, p_max_players: int, p_dedicated_server: bool, p_advertise_server: bool, p_max_retries: int) -> void:
 	if quit_flag:
 		return
 
@@ -455,16 +408,7 @@ func _process_multiplayer_request() -> void:
 	if gameflow_state == GAMEFLOW_STATE_INTERSTITIAL:
 		if multiplayer_request:
 			if multiplayer_request is MultiplayerRequestHost:
-				await (VSKNetworkManager.host_game(
-					multiplayer_request.server_name,
-					multiplayer_request.map_path,
-					multiplayer_request.game_mode_path,
-					multiplayer_request.port,
-					multiplayer_request.max_players,
-					multiplayer_request.dedicated_server,
-					multiplayer_request.advertise_server,
-					multiplayer_request.max_retries
-				))
+				await (VSKNetworkManager.host_game(multiplayer_request.server_name, multiplayer_request.map_path, multiplayer_request.game_mode_path, multiplayer_request.port, multiplayer_request.max_players, multiplayer_request.dedicated_server, multiplayer_request.advertise_server, multiplayer_request.max_retries))
 			elif multiplayer_request is MultiplayerRequestJoin:
 				VSKNetworkManager.join_game(multiplayer_request.ip, multiplayer_request.port)
 
@@ -597,20 +541,12 @@ func request_quit() -> void:
 ## Assigns custom inputs and callbacks to the InputManager singleton.
 ##
 func _setup_input_manager() -> void:
-	InputManager.add_new_axes(
-		"move_vertical", "move_forwards", "move_backwards", 0.0, 0.0, 1.0, false, InputManager.InputAxis.TYPE_ACTION, 0
-	)
-	InputManager.add_new_axes(
-		"move_horizontal", "move_right", "move_left", 0.0, 0.0, 1.0, false, InputManager.InputAxis.TYPE_ACTION, 0
-	)
+	InputManager.add_new_axes("move_vertical", "move_forwards", "move_backwards", 0.0, 0.0, 1.0, false, InputManager.InputAxis.TYPE_ACTION, 0)
+	InputManager.add_new_axes("move_horizontal", "move_right", "move_left", 0.0, 0.0, 1.0, false, InputManager.InputAxis.TYPE_ACTION, 0)
 	InputManager.add_new_axes("mouse_x", "", "", 0.0, 0.0, 0.01, false, InputManager.InputAxis.TYPE_MOUSE_MOTION, 0)
 	InputManager.add_new_axes("mouse_y", "", "", 0.0, 0.0, 0.01, false, InputManager.InputAxis.TYPE_MOUSE_MOTION, 1)
-	InputManager.add_new_axes(
-		"look_vertical", "look_up", "look_down", 0.0, 0.0, 0.1, false, InputManager.InputAxis.TYPE_ACTION
-	)
-	InputManager.add_new_axes(
-		"look_horizontal", "look_right", "look_left", 0.0, 0.0, 0.1, false, InputManager.InputAxis.TYPE_ACTION
-	)
+	InputManager.add_new_axes("look_vertical", "look_up", "look_down", 0.0, 0.0, 0.1, false, InputManager.InputAxis.TYPE_ACTION)
+	InputManager.add_new_axes("look_horizontal", "look_right", "look_left", 0.0, 0.0, 0.1, false, InputManager.InputAxis.TYPE_ACTION)
 
 	InputManager.assign_get_settings_value_funcref(VSKUserPreferencesManager, "get_value")
 	InputManager.assign_set_settings_value_funcref(VSKUserPreferencesManager, "set_value")

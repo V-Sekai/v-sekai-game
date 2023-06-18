@@ -255,16 +255,7 @@ static func check_if_script_type_is_valid(p_script: Script, p_node_class: String
 			if class_str == p_node_class:
 				return true
 
-	push_warning(
-		(
-			"Validator: Script failed check "
-			+ str(p_script)
-			+ "/"
-			+ str(p_script.resource_path)
-			+ " node_class "
-			+ p_node_class
-		)
-	)
+	push_warning("Validator: Script failed check " + str(p_script) + "/" + str(p_script.resource_path) + " node_class " + p_node_class)
 	return false
 
 
@@ -278,16 +269,7 @@ func is_script_valid_for_root(p_script: Script, p_node_class: String):
 	if valid_root_script_whitelist.find(p_script) != -1:
 		return map_validator_const.check_if_script_type_is_valid(p_script, p_node_class)
 
-	push_warning(
-		(
-			"Validator: Unknown root script "
-			+ str(p_script)
-			+ "/"
-			+ str(p_script.resource_path)
-			+ " node_class "
-			+ p_node_class
-		)
-	)
+	push_warning("Validator: Unknown root script " + str(p_script) + "/" + str(p_script.resource_path) + " node_class " + p_node_class)
 	return false
 
 
@@ -334,16 +316,7 @@ func is_script_valid_for_children(p_script: Script, p_node_class: String):
 	if valid_children_script_whitelist.find(p_script) != -1:
 		return map_validator_const.check_if_script_type_is_valid(p_script, p_node_class)
 
-	push_warning(
-		(
-			"Validator: Unknown children script "
-			+ str(p_script)
-			+ "/"
-			+ str(p_script.resource_path)
-			+ " node_class "
-			+ p_node_class
-		)
-	)
+	push_warning("Validator: Unknown children script " + str(p_script) + "/" + str(p_script.resource_path) + " node_class " + p_node_class)
 	return false
 
 
@@ -396,18 +369,7 @@ func is_valid_entity_script(p_script: Script) -> bool:
 	if p_script == entity_script:
 		return true
 
-	push_warning(
-		(
-			"Validator: Unknown entity script "
-			+ str(p_script)
-			+ "/"
-			+ str(p_script.resource_path)
-			+ " not "
-			+ str(entity_script)
-			+ "/"
-			+ str(entity_script.resource_path)
-		)
-	)
+	push_warning("Validator: Unknown entity script " + str(p_script) + "/" + str(p_script.resource_path) + " not " + str(entity_script) + "/" + str(entity_script.resource_path))
 	return false
 
 

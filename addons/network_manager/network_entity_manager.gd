@@ -151,11 +151,7 @@ func get_next_network_id() -> int:
 func register_network_instance_id(p_network_instance_id: int, p_network_identity: Node) -> void:
 	var _mutex_lock: RefCounted = mutex_lock_const.new(_mutex)
 
-	NetworkLogger.printl(
-		"Attempting to register network instance_id {network_instance_id}".format(
-			{"network_instance_id": str(p_network_instance_id)}
-		)
-	)
+	NetworkLogger.printl("Attempting to register network instance_id {network_instance_id}".format({"network_instance_id": str(p_network_instance_id)}))
 
 	if network_instance_ids.size() > max_networked_entities:
 		NetworkLogger.error("EXCEEDED MAXIMUM ALLOWED INSTANCE IDS!")
@@ -172,18 +168,10 @@ func register_network_instance_id(p_network_instance_id: int, p_network_identity
 func unregister_network_instance_id(p_network_instance_id: int) -> void:
 	var _mutex_lock: RefCounted = mutex_lock_const.new(_mutex)
 
-	NetworkLogger.printl(
-		"Attempting to unregister network instance_id {network_instance_id}".format(
-			{"network_instance_id": str(p_network_instance_id)}
-		)
-	)
+	NetworkLogger.printl("Attempting to unregister network instance_id {network_instance_id}".format({"network_instance_id": str(p_network_instance_id)}))
 
 	if !network_instance_ids.erase(p_network_instance_id):
-		NetworkLogger.error(
-			"Could not unregister network instantiate id: {network_instance_id}".format(
-				{"network_instance_id": str(p_network_instance_id)}
-			)
-		)
+		NetworkLogger.error("Could not unregister network instantiate id: {network_instance_id}".format({"network_instance_id": str(p_network_instance_id)}))
 	network_manager.emit_entity_network_id_unregistered(p_network_instance_id)
 
 
@@ -213,12 +201,7 @@ func _ready() -> void:
 	if !ProjectSettings.has_setting("network/config/networked_scenes"):
 		ProjectSettings.set_setting("network/config/networked_scenes", PackedStringArray())
 
-	var networked_objects_property_info: Dictionary = {
-		"name": "network/config/networked_scenes",
-		"type": TYPE_PACKED_STRING_ARRAY,
-		"hint": PROPERTY_HINT_FILE,
-		"hint_string": ""
-	}
+	var networked_objects_property_info: Dictionary = {"name": "network/config/networked_scenes", "type": TYPE_PACKED_STRING_ARRAY, "hint": PROPERTY_HINT_FILE, "hint_string": ""}
 
 	ProjectSettings.add_property_info(networked_objects_property_info)
 

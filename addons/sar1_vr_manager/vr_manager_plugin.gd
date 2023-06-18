@@ -25,9 +25,7 @@ func _get_plugin_name() -> String:
 
 func _enter_tree() -> void:
 	editor_interface = get_editor_interface()
-	add_autoload_singleton(
-		"SnappingSingleton", "res://addons/sar1_vr_manager/components/lasso_snapping/snapping_singleton.gd"
-	)
+	add_autoload_singleton("SnappingSingleton", "res://addons/sar1_vr_manager/components/lasso_snapping/snapping_singleton.gd")
 	add_autoload_singleton("VRManager", "res://addons/sar1_vr_manager/vr_manager.gd")
 
 

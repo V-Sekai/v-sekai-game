@@ -47,9 +47,7 @@ var signal_table: Array = [
 
 
 func write_entity_update_command(p_entity: Object, p_network_writer: Object) -> Object:
-	p_network_writer = network_manager.network_entity_manager.write_entity_instance_id(
-		p_entity.network_identity_node.network_instance_id, p_network_writer
-	)
+	p_network_writer = network_manager.network_entity_manager.write_entity_instance_id(p_entity.network_identity_node.network_instance_id, p_network_writer)
 	var entity_state: Object = p_entity.network_identity_node.get_state(null, false)
 	var entity_state_size = entity_state.get_position()
 	if entity_state_size >= 0xffff:
@@ -98,18 +96,12 @@ func scrape_and_send_state_data(p_id: int, p_synced_peer: int, p_entities: Array
 						is_valid_entity = true
 
 				if is_valid_entity:
-					var entity_command_network_writer: Object = create_entity_command(
-						network_constants_const.UPDATE_ENTITY_COMMAND, entity
-					)
-					network_writer_state.put_writer(
-						entity_command_network_writer, entity_command_network_writer.get_position()
-					)
+					var entity_command_network_writer: Object = create_entity_command(network_constants_const.UPDATE_ENTITY_COMMAND, entity)
+					network_writer_state.put_writer(entity_command_network_writer, entity_command_network_writer.get_position())
 
 	if network_writer_state.get_position() > 0:
 		var raw_data: PackedByteArray = network_writer_state.get_raw_data(network_writer_state.get_position())
-		network_manager.network_flow_manager.queue_packet_for_send(
-			ref_pool_const.new(raw_data), p_synced_peer, MultiplayerPeer.TRANSFER_MODE_UNRELIABLE_ORDERED
-		)
+		network_manager.network_flow_manager.queue_packet_for_send(ref_pool_const.new(raw_data), p_synced_peer, MultiplayerPeer.TRANSFER_MODE_UNRELIABLE_ORDERED)
 
 
 func _network_manager_process(p_id: int, _delta: float) -> void:
@@ -150,32 +142,19 @@ func decode_entity_update_command(p_packet_sender_id: int, p_network_reader: Obj
 		var invalid_sender_id = false
 		if !network_manager.is_relay():
 			# Only the server will accept state updates for entities directly and other clients will accept them from the host
-			if (
-				(network_manager.is_server() and network_instance_master == p_packet_sender_id)
-				or (
-					(p_packet_sender_id == network_constants_const.SERVER_MASTER_PEER_ID)
-					and network_instance_master != network_manager.get_current_peer_id()
-				)
-			):
+			if (network_manager.is_server() and network_instance_master == p_packet_sender_id) or ((p_packet_sender_id == network_constants_const.SERVER_MASTER_PEER_ID) and network_instance_master != network_manager.get_current_peer_id()):
 				network_identity_instance.update_state(p_network_reader, false)
 			else:
 				invalid_sender_id = true
 		else:
 			# In a non-authoritive context, everyone is responsible for their own state updates, though the server can override
-			if (
-				network_instance_master == p_packet_sender_id
-				or (p_packet_sender_id == network_constants_const.SERVER_MASTER_PEER_ID)
-			):
+			if network_instance_master == p_packet_sender_id or (p_packet_sender_id == network_constants_const.SERVER_MASTER_PEER_ID):
 				network_identity_instance.update_state(p_network_reader, false)
 			else:
 				invalid_sender_id = true
 
 		if invalid_sender_id:
-			NetworkLogger.error(
-				"Invalid state update sender id {packet_sender_id}!".format(
-					{"packet_sender_id": str(p_packet_sender_id)}
-				)
-			)
+			NetworkLogger.error("Invalid state update sender id {packet_sender_id}!".format({"packet_sender_id": str(p_packet_sender_id)}))
 	else:
 		p_network_reader.seek(p_network_reader.get_position() + entity_state_size)
 

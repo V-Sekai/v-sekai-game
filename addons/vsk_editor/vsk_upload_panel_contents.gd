@@ -52,9 +52,7 @@ func update_user_content_data(p_dictionary: Dictionary, p_updating_content: bool
 		get_node(name_line_edit_path).text = user_content_data.get("name", "NAME_NOT_FOUND")
 		get_node(description_text_edit_path).text = user_content_data.get("description", "DESC_NOT_FOUND")
 
-		get_node(saved_preview_texture_rect_path).textureUrl = (
-			GodotUro.get_base_url() + user_content_data.get("user_content_preview", "")
-		)
+		get_node(saved_preview_texture_rect_path).textureUrl = (GodotUro.get_base_url() + user_content_data.get("user_content_preview", ""))
 
 		get_node(update_preview_checkbox_path).button_pressed = false
 		get_node(update_preview_checkbox_path).disabled = false
@@ -98,17 +96,11 @@ func set_export_data_callback(p_callback: Callable) -> void:
 						var tr: TextureRect = get_node(new_preview_texture_rect_path)
 						tr.set_texture(new_preview_texture)
 						tr.ignore_texture_size = true
-						RenderingServer.viewport_set_update_mode(
-							viewport.get_viewport_rid(), RenderingServer.VIEWPORT_UPDATE_ALWAYS
-						)
+						RenderingServer.viewport_set_update_mode(viewport.get_viewport_rid(), RenderingServer.VIEWPORT_UPDATE_ALWAYS)
 						RenderingServer.viewport_attach_camera(viewport.get_viewport_rid(), camera.get_camera_rid())
 						#RenderingServer.texture_proxy_update(proxy_tex.get_rid(), new_viewport_texture_rid)
 						var preview_tex_rect = get_node(new_preview_texture_rect_path)
-						RenderingServer.request_frame_drawn_callback(
-							func(): RenderingServer.viewport_set_update_mode(
-								viewport.get_viewport_rid(), RenderingServer.VIEWPORT_UPDATE_DISABLED
-							)
-						)
+						RenderingServer.request_frame_drawn_callback(func(): RenderingServer.viewport_set_update_mode(viewport.get_viewport_rid(), RenderingServer.VIEWPORT_UPDATE_DISABLED))
 		else:
 			var vskeditor_preview_texture = node.get("vskeditor_preview_texture")
 			if vskeditor_preview_texture != null:
@@ -128,14 +120,7 @@ func _get_submission_data() -> Dictionary:
 	var is_public_checkbox: CheckBox = get_node(is_public_checkbox_path)
 
 	if name_line_edit and description_text_edit and update_preview_checkbox:
-		var submission_data: Dictionary = {
-			"name": name_line_edit.text,
-			"description": description_text_edit.text,
-			"update_preview": update_preview_checkbox.button_pressed,
-			"export_data_callback": export_data_callback,
-			"user_content_type": user_content_type,
-			"is_public": is_public_checkbox.button_pressed
-		}
+		var submission_data: Dictionary = {"name": name_line_edit.text, "description": description_text_edit.text, "update_preview": update_preview_checkbox.button_pressed, "export_data_callback": export_data_callback, "user_content_type": user_content_type, "is_public": is_public_checkbox.button_pressed}
 
 		if update_preview_checkbox.button_pressed and new_preview_texture != null:
 			submission_data["preview_image"] = new_preview_texture.get_image()
@@ -167,21 +152,11 @@ func _on_NameEditField_text_changed(_new_text):
 
 static func _update_viewport_from_project_settings(p_viewport: SubViewport) -> SubViewport:
 	var new_viewport: SubViewport = p_viewport
-	new_viewport.positional_shadow_atlas_size = ProjectSettings.get_setting(
-		"rendering/lights_and_shadows/positional_shadow/atlas_size"
-	)
-	new_viewport.positional_shadow_atlas_quad_0 = ProjectSettings.get_setting(
-		"rendering/lights_and_shadows/positional_shadow/atlas_quadrant_0_subdiv"
-	)
-	new_viewport.positional_shadow_atlas_quad_1 = ProjectSettings.get_setting(
-		"rendering/lights_and_shadows/positional_shadow/atlas_quadrant_1_subdiv"
-	)
-	new_viewport.positional_shadow_atlas_quad_2 = ProjectSettings.get_setting(
-		"rendering/lights_and_shadows/positional_shadow/atlas_quadrant_2_subdiv"
-	)
-	new_viewport.positional_shadow_atlas_quad_3 = ProjectSettings.get_setting(
-		"rendering/lights_and_shadows/positional_shadow/atlas_quadrant_3_subdiv"
-	)
+	new_viewport.positional_shadow_atlas_size = ProjectSettings.get_setting("rendering/lights_and_shadows/positional_shadow/atlas_size")
+	new_viewport.positional_shadow_atlas_quad_0 = ProjectSettings.get_setting("rendering/lights_and_shadows/positional_shadow/atlas_quadrant_0_subdiv")
+	new_viewport.positional_shadow_atlas_quad_1 = ProjectSettings.get_setting("rendering/lights_and_shadows/positional_shadow/atlas_quadrant_1_subdiv")
+	new_viewport.positional_shadow_atlas_quad_2 = ProjectSettings.get_setting("rendering/lights_and_shadows/positional_shadow/atlas_quadrant_2_subdiv")
+	new_viewport.positional_shadow_atlas_quad_3 = ProjectSettings.get_setting("rendering/lights_and_shadows/positional_shadow/atlas_quadrant_3_subdiv")
 
 	new_viewport.msaa_3d = ProjectSettings.get_setting("rendering/anti_aliasing/quality/msaa")
 	new_viewport.screen_space_aa = ProjectSettings.get_setting("rendering/anti_aliasing/quality/screen_space_aa")

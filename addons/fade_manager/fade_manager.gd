@@ -52,6 +52,7 @@ func execute_fade(p_start: Color, p_end: Color, p_time: float) -> void:
 		printerr("Failed to set tween property.")
 		return
 
+
 func skip_fade() -> void:
 	_reset_tween()
 

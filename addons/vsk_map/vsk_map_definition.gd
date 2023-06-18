@@ -6,9 +6,7 @@
 @tool
 extends "res://addons/vsk_map/vsk_map_definition_runtime.gd"
 
-const vsk_user_content_definition_helper_const = preload(
-	"res://addons/vsk_importer_exporter/vsk_user_content_definition_helper.gd"
-)
+const vsk_user_content_definition_helper_const = preload("res://addons/vsk_importer_exporter/vsk_user_content_definition_helper.gd")
 
 
 func add_pipeline(p_node: Node) -> void:

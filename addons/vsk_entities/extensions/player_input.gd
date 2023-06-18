@@ -62,13 +62,8 @@ func update_vr_camera_state():
 
 # Return the origin offset translated by the entity orientation
 func transform_origin_offset(p_offset: Vector3) -> Vector3:
-	var camera_yaw_basis: Basis = Basis.from_euler(
-		Vector3(0.0, _camera_controller_node.transform.basis.get_euler().y, 0.0)
-	)
-	var offset_accumulator_transformed: Vector3 = (
-		(camera_yaw_basis.z * Vector3(p_offset.z, 0.0, p_offset.z))
-		+ (camera_yaw_basis.x * Vector3(p_offset.x, 0.0, p_offset.x))
-	)
+	var camera_yaw_basis: Basis = Basis.from_euler(Vector3(0.0, _camera_controller_node.transform.basis.get_euler().y, 0.0))
+	var offset_accumulator_transformed: Vector3 = (camera_yaw_basis.z * Vector3(p_offset.z, 0.0, p_offset.z)) + (camera_yaw_basis.x * Vector3(p_offset.x, 0.0, p_offset.x))
 
 	return offset_accumulator_transformed
 
@@ -118,9 +113,7 @@ func update_representation_input(p_delta: float) -> void:
 	if InputManager.ingame_input_enabled():
 		mouse_turning_vector = (Vector2(InputManager.axes_values["mouse_x"], InputManager.axes_values["mouse_y"]))
 
-	var controller_turning_vector: Vector2 = Vector2(
-		InputManager.axes_values["look_horizontal"], InputManager.axes_values["look_vertical"]
-	)
+	var controller_turning_vector: Vector2 = Vector2(InputManager.axes_values["look_horizontal"], InputManager.axes_values["look_vertical"])
 
 	var input_x: float = (controller_turning_vector.x + mouse_turning_vector.x) * InputManager.look_x_direction
 	var input_y: float = (controller_turning_vector.y + mouse_turning_vector.y) * InputManager.look_y_direction

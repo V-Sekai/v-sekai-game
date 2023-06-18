@@ -12,9 +12,7 @@ const network_constants_const = preload("network_constants.gd")
 const network_writer_const = preload("network_writer.gd")
 const connection_util_const = preload("res://addons/gd_util/connection_util.gd")
 
-var signal_table: Array = [
-	{"singleton": "NetworkManager", "signal": "server_state_ready", "method": "_server_state_ready"}
-]
+var signal_table: Array = [{"singleton": "NetworkManager", "signal": "server_state_ready", "method": "_server_state_ready"}]
 
 var network_manager: Object
 
@@ -42,9 +40,7 @@ func ready_command(p_id: int) -> void:
 
 	if network_writer.get_position() > 0:
 		var raw_data: PackedByteArray = network_writer.get_raw_data(network_writer.get_position())
-		network_manager.network_flow_manager.queue_packet_for_send(
-			ref_pool_const.new(raw_data), p_id, MultiplayerPeer.TRANSFER_MODE_RELIABLE
-		)
+		network_manager.network_flow_manager.queue_packet_for_send(ref_pool_const.new(raw_data), p_id, MultiplayerPeer.TRANSFER_MODE_RELIABLE)
 
 
 func disconnect_command(p_disconnected_peer_id: int) -> void:
@@ -61,9 +57,7 @@ func disconnect_command(p_disconnected_peer_id: int) -> void:
 
 		if network_writer.get_position() > 0:
 			var raw_data: PackedByteArray = network_writer.get_raw_data(network_writer.get_position())
-			network_manager.network_flow_manager.queue_packet_for_send(
-				ref_pool_const.new(raw_data), synced_peer, MultiplayerPeer.TRANSFER_MODE_RELIABLE
-			)
+			network_manager.network_flow_manager.queue_packet_for_send(ref_pool_const.new(raw_data), synced_peer, MultiplayerPeer.TRANSFER_MODE_RELIABLE)
 
 
 func session_master_command(p_id: int, p_new_master: int) -> void:
@@ -75,20 +69,13 @@ func session_master_command(p_id: int, p_new_master: int) -> void:
 
 	if network_writer.get_position() > 0:
 		var raw_data: PackedByteArray = network_writer.get_raw_data(network_writer.get_position())
-		network_manager.network_flow_manager.queue_packet_for_send(
-			ref_pool_const.new(raw_data), p_id, MultiplayerPeer.TRANSFER_MODE_RELIABLE
-		)
+		network_manager.network_flow_manager.queue_packet_for_send(ref_pool_const.new(raw_data), p_id, MultiplayerPeer.TRANSFER_MODE_RELIABLE)
 
 
 func attempt_to_send_server_state_to_peer(p_peer_id: int):
 	if network_manager.server_state_ready:
-		if (
-			network_manager.peer_data[p_peer_id]["validation_state"]
-			== network_constants_const.validation_state_enum.VALIDATION_STATE_AWAITING_STATE
-		):
-			network_manager.peer_data[p_peer_id]["validation_state"] = (
-				network_constants_const.validation_state_enum.VALIDATION_STATE_STATE_SENT
-			)
+		if network_manager.peer_data[p_peer_id]["validation_state"] == network_constants_const.validation_state_enum.VALIDATION_STATE_AWAITING_STATE:
+			network_manager.peer_data[p_peer_id]["validation_state"] = (network_constants_const.validation_state_enum.VALIDATION_STATE_STATE_SENT)
 			network_manager.emit_requested_server_state(p_peer_id)
 
 
@@ -97,9 +84,7 @@ func attempt_to_send_server_state_to_peer(p_peer_id: int):
 	NetworkLogger.printl("requested_server_info...")
 	var rpc_sender_id: int = get_tree().get_multiplayer().get_remote_sender_id()
 
-	network_manager.received_peer_validation_state_update(
-		rpc_sender_id, network_constants_const.validation_state_enum.VALIDATION_STATE_INFO_SENT
-	)
+	network_manager.received_peer_validation_state_update(rpc_sender_id, network_constants_const.validation_state_enum.VALIDATION_STATE_INFO_SENT)
 
 	network_manager.emit_received_client_info(rpc_sender_id, p_client_info)
 	network_manager.emit_requested_server_info(rpc_sender_id)
@@ -142,9 +127,7 @@ func attempt_to_send_server_state_to_peer(p_peer_id: int):
 	var rpc_sender_id: int = get_tree().get_multiplayer().get_remote_sender_id()
 
 	# This peer is waiting for the server state, but we may not be able to send it yet if the server has not fully loaded, so sit tight...
-	network_manager.received_peer_validation_state_update(
-		rpc_sender_id, network_constants_const.validation_state_enum.VALIDATION_STATE_AWAITING_STATE
-	)
+	network_manager.received_peer_validation_state_update(rpc_sender_id, network_constants_const.validation_state_enum.VALIDATION_STATE_AWAITING_STATE)
 
 	attempt_to_send_server_state_to_peer(rpc_sender_id)
 
@@ -161,9 +144,7 @@ func decode_handshake_buffer(p_packet_sender_id: int, p_network_reader: Object, 
 		network_constants_const.STATE_REQUEST_COMMAND:
 			pass
 		network_constants_const.READY_COMMAND:
-			network_manager.peer_data[p_packet_sender_id].validation_state = (
-				network_constants_const.validation_state_enum.VALIDATION_STATE_SYNCED
-			)
+			network_manager.peer_data[p_packet_sender_id].validation_state = (network_constants_const.validation_state_enum.VALIDATION_STATE_SYNCED)
 		network_constants_const.DISCONNECT_COMMAND:
 			if p_network_reader.is_eof():
 				NetworkLogger.error("decode_handshake_buffer: eof!")
@@ -193,13 +174,7 @@ func decode_handshake_buffer(p_packet_sender_id: int, p_network_reader: Object, 
 
 
 func is_command_valid(p_command: int) -> bool:
-	if (
-		p_command == network_constants_const.INFO_REQUEST_COMMAND
-		or p_command == network_constants_const.STATE_REQUEST_COMMAND
-		or p_command == network_constants_const.READY_COMMAND
-		or p_command == network_constants_const.DISCONNECT_COMMAND
-		or p_command == network_constants_const.MAP_CHANGING_COMMAND
-	):
+	if p_command == network_constants_const.INFO_REQUEST_COMMAND or p_command == network_constants_const.STATE_REQUEST_COMMAND or p_command == network_constants_const.READY_COMMAND or p_command == network_constants_const.DISCONNECT_COMMAND or p_command == network_constants_const.MAP_CHANGING_COMMAND:
 		return true
 	else:
 		return false

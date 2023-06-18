@@ -331,20 +331,11 @@ func _proportions_changed() -> void:
 func calculate_proportions() -> void:
 	if VRManager.is_xr_active():
 		var player_height = VRManager.vr_user_preferences.custom_player_height
-		var origin_height_scale_offset: float = (
-			(avatar_eye_height + vr_constants_const.EYE_TO_TOP_OF_HEAD)
-			/ VRManager.vr_user_preferences.custom_player_height
-		)
-		var player_wrist_length = (
-			VRManager.vr_user_preferences.custom_player_height
-			* VRManager.vr_user_preferences.custom_player_armspan_to_height_ratio
-			* vr_constants_const.ARMSPAN_WRIST_SPAN_CONVERSION
-		)
+		var origin_height_scale_offset: float = (avatar_eye_height + vr_constants_const.EYE_TO_TOP_OF_HEAD) / VRManager.vr_user_preferences.custom_player_height
+		var player_wrist_length = VRManager.vr_user_preferences.custom_player_height * VRManager.vr_user_preferences.custom_player_armspan_to_height_ratio * vr_constants_const.ARMSPAN_WRIST_SPAN_CONVERSION
 		var origin_wrist_scale_offset: float = avatar_wristspan / player_wrist_length
 
-		VRManager.set_origin_world_scale(
-			lerpf(origin_height_scale_offset, origin_wrist_scale_offset, VRManager.vr_user_preferences.eye_to_arm_ratio)
-		)
+		VRManager.set_origin_world_scale(lerpf(origin_height_scale_offset, origin_wrist_scale_offset, VRManager.vr_user_preferences.eye_to_arm_ratio))
 		var stilts: float = (player_height * origin_height_scale_offset) - (player_height * origin_wrist_scale_offset)
 		height_offset = lerpf(0.0, stilts, VRManager.vr_user_preferences.eye_to_arm_ratio)
 	else:
@@ -362,23 +353,12 @@ static func _calculate_humanoid_wristspan(p_skeleton: Skeleton3D) -> float:
 	var right_upper_bone_name_id: int = p_skeleton.find_bone("RightUpperArm")
 
 	if left_upper_bone_name_id != bone_lib_const.NO_BONE and right_upper_bone_name_id != bone_lib_const.NO_BONE:
-		var left_upper_transform: Transform3D = bone_lib_const.get_bone_global_rest_transform(
-			left_upper_bone_name_id, p_skeleton
-		)
-		var right_upper_transform: Transform3D = bone_lib_const.get_bone_global_rest_transform(
-			right_upper_bone_name_id, p_skeleton
-		)
+		var left_upper_transform: Transform3D = bone_lib_const.get_bone_global_rest_transform(left_upper_bone_name_id, p_skeleton)
+		var right_upper_transform: Transform3D = bone_lib_const.get_bone_global_rest_transform(right_upper_bone_name_id, p_skeleton)
 
-		if (
-			left_shoulder_bone_name_id != bone_lib_const.NO_BONE
-			and right_shoulder_bone_name_id != bone_lib_const.NO_BONE
-		):
-			var left_shoulder_transform: Transform3D = bone_lib_const.get_bone_global_rest_transform(
-				left_shoulder_bone_name_id, p_skeleton
-			)
-			var right_shoulder_transform: Transform3D = bone_lib_const.get_bone_global_rest_transform(
-				right_shoulder_bone_name_id, p_skeleton
-			)
+		if left_shoulder_bone_name_id != bone_lib_const.NO_BONE and right_shoulder_bone_name_id != bone_lib_const.NO_BONE:
+			var left_shoulder_transform: Transform3D = bone_lib_const.get_bone_global_rest_transform(left_shoulder_bone_name_id, p_skeleton)
+			var right_shoulder_transform: Transform3D = bone_lib_const.get_bone_global_rest_transform(right_shoulder_bone_name_id, p_skeleton)
 
 			current_wristspan += (left_shoulder_transform.origin.distance_to(right_shoulder_transform.origin))
 
@@ -394,12 +374,8 @@ static func _calculate_humanoid_wristspan(p_skeleton: Skeleton3D) -> float:
 		var right_lower_bone_name_id: int = p_skeleton.find_bone("RightLowerArm")
 
 		if left_lower_bone_name_id != bone_lib_const.NO_BONE and right_lower_bone_name_id != bone_lib_const.NO_BONE:
-			var left_lower_transform: Transform3D = bone_lib_const.get_bone_global_rest_transform(
-				left_lower_bone_name_id, p_skeleton
-			)
-			var right_lower_transform: Transform3D = bone_lib_const.get_bone_global_rest_transform(
-				right_lower_bone_name_id, p_skeleton
-			)
+			var left_lower_transform: Transform3D = bone_lib_const.get_bone_global_rest_transform(left_lower_bone_name_id, p_skeleton)
+			var right_lower_transform: Transform3D = bone_lib_const.get_bone_global_rest_transform(right_lower_bone_name_id, p_skeleton)
 
 			var upper_to_lower = left_upper_transform.origin.distance_to(left_lower_transform.origin)
 			print(upper_to_lower)
@@ -412,12 +388,8 @@ static func _calculate_humanoid_wristspan(p_skeleton: Skeleton3D) -> float:
 			var right_hand_bone_name_id: int = p_skeleton.find_bone("RightHand")
 
 			if left_hand_bone_name_id != bone_lib_const.NO_BONE and right_hand_bone_name_id != bone_lib_const.NO_BONE:
-				var left_wrist_transform: Transform3D = bone_lib_const.get_bone_global_rest_transform(
-					left_hand_bone_name_id, p_skeleton
-				)
-				var right_wrist_transform: Transform3D = bone_lib_const.get_bone_global_rest_transform(
-					right_hand_bone_name_id, p_skeleton
-				)
+				var left_wrist_transform: Transform3D = bone_lib_const.get_bone_global_rest_transform(left_hand_bone_name_id, p_skeleton)
+				var right_wrist_transform: Transform3D = bone_lib_const.get_bone_global_rest_transform(right_hand_bone_name_id, p_skeleton)
 
 				var lower_to_hand = left_lower_transform.origin.distance_to(left_wrist_transform.origin)
 				print(lower_to_hand)
@@ -441,24 +413,15 @@ func _setup_avatar_eyes(_p_avatar_node: Node3D, p_skeleton: Skeleton3D) -> void:
 			var eye_right_bone_id: int = p_skeleton.find_bone("RightEye")
 
 			if eye_left_bone_id != bone_lib_const.NO_BONE and eye_right_bone_id != bone_lib_const.NO_BONE:
-				var eye_left_global_transform: Transform3D = bone_lib_const.get_bone_global_rest_transform(
-					eye_left_bone_id, p_skeleton
-				)
-				var eye_right_global_transform: Transform3D = bone_lib_const.get_bone_global_rest_transform(
-					eye_right_bone_id, p_skeleton
-				)
+				var eye_left_global_transform: Transform3D = bone_lib_const.get_bone_global_rest_transform(eye_left_bone_id, p_skeleton)
+				var eye_right_global_transform: Transform3D = bone_lib_const.get_bone_global_rest_transform(eye_right_bone_id, p_skeleton)
 
-				eye_global_transform = (
-					node_util_const.get_relative_global_transform(avatar_node, p_skeleton)
-					* eye_left_global_transform.interpolate_with(eye_right_global_transform, 0.5)
-				)
+				eye_global_transform = (node_util_const.get_relative_global_transform(avatar_node, p_skeleton) * eye_left_global_transform.interpolate_with(eye_right_global_transform, 0.5))
 
 				found_eyes = true
 
 		if !found_eyes:
-			eye_global_transform = Transform3D(
-				Basis(), Vector3(0.0, 1.0, 0.0) * (default_avatar_height - vr_constants_const.EYE_TO_TOP_OF_HEAD)
-			)
+			eye_global_transform = Transform3D(Basis(), Vector3(0.0, 1.0, 0.0) * (default_avatar_height - vr_constants_const.EYE_TO_TOP_OF_HEAD))
 
 	eye_global_transform = Transform3D(Basis(), eye_global_transform.origin)
 
@@ -473,10 +436,7 @@ func _setup_avatar_eyes(_p_avatar_node: Node3D, p_skeleton: Skeleton3D) -> void:
 		avatar_node.set_global_transform(Transform3D(AVATAR_BASIS, Vector3()))
 		var head_bone_id: int = p_skeleton.find_bone("Head")
 		if head_bone_id != bone_lib_const.NO_BONE:
-			var head_global_rest_transfrom: Transform3D = (
-				node_util_const.get_relative_global_transform(avatar_node, p_skeleton)
-				* bone_lib_const.get_bone_global_rest_transform(head_bone_id, p_skeleton)
-			)
+			var head_global_rest_transfrom: Transform3D = node_util_const.get_relative_global_transform(avatar_node, p_skeleton) * bone_lib_const.get_bone_global_rest_transform(head_bone_id, p_skeleton)
 
 			eye_offset_transform = (head_global_rest_transfrom.affine_inverse() * eye_global_transform)
 
@@ -484,11 +444,7 @@ func _setup_avatar_eyes(_p_avatar_node: Node3D, p_skeleton: Skeleton3D) -> void:
 	else:
 		avatar_node.set_transform(Transform3D(AVATAR_BASIS, Vector3()))
 		avatar_node.set_as_top_level(false)
-		avatar_wristspan = (
-			VRManager.vr_user_preferences.custom_player_height
-			* VRManager.vr_user_preferences.custom_player_armspan_to_height_ratio
-			* vr_constants_const.ARMSPAN_WRIST_SPAN_CONVERSION
-		)
+		avatar_wristspan = (VRManager.vr_user_preferences.custom_player_height * VRManager.vr_user_preferences.custom_player_armspan_to_height_ratio * vr_constants_const.ARMSPAN_WRIST_SPAN_CONVERSION)
 	var properties: Array[Dictionary] = _ik_space.get_property_list()
 	for p in properties:
 		if p.name == "eye_offset":
@@ -499,10 +455,7 @@ func _setup_avatar_mouth(p_avatar_node: Node, p_skeleton: Skeleton3D) -> void:
 	# Head
 	var head_global_transform: Transform3D = Transform3D()
 	if head_id != bone_lib_const.NO_BONE and p_skeleton:
-		head_global_transform = (
-			node_util_const.get_relative_global_transform(p_avatar_node, p_skeleton)
-			* bone_lib_const.get_bone_global_rest_transform(head_id, p_skeleton)
-		)
+		head_global_transform = (node_util_const.get_relative_global_transform(p_avatar_node, p_skeleton) * bone_lib_const.get_bone_global_rest_transform(head_id, p_skeleton))
 	else:
 		head_global_transform = Transform3D(Basis(), Vector3(0.0, 1.0, 0.0) * (default_avatar_height))
 
@@ -511,9 +464,7 @@ func _setup_avatar_mouth(p_avatar_node: Node, p_skeleton: Skeleton3D) -> void:
 	var mouth_global_transform: Transform3D
 	if mouth_spatial:
 		# Get the global transform of the mouth relative to the avatar root
-		mouth_global_transform = (
-			node_util_const.get_relative_global_transform(p_avatar_node, p_skeleton) * mouth_spatial.transform
-		)
+		mouth_global_transform = (node_util_const.get_relative_global_transform(p_avatar_node, p_skeleton) * mouth_spatial.transform)
 	else:
 		mouth_global_transform = head_global_transform
 
@@ -546,9 +497,7 @@ func _setup_hand_poses(p_avatar_node: Node, p_skeleton: Skeleton3D) -> void:
 		animation_tree.set_name("AnimationTree")
 		p_avatar_node.add_child(animation_tree)
 
-		animation_tree = (avatar_setup_const.setup_animation_tree_hand_blend_tree(
-			animation_tree, animation_player, p_skeleton
-		))
+		animation_tree = (avatar_setup_const.setup_animation_tree_hand_blend_tree(animation_tree, animation_player, p_skeleton))
 
 		var avatar_default_driver: Node = avatar_default_driver_const.new()
 		avatar_default_driver.set_name("DefaultAvatarDriver")
@@ -581,13 +530,7 @@ func apply_extra_cull_margin(start_node: Node):
 func setup_avatar_instantiate(p_avatar_node: Node3D) -> void:
 	avatar_skeleton = null
 
-	if (
-		p_avatar_node
-		and (
-			p_avatar_node.get_script() == avatar_definition_const
-			or p_avatar_node.get_script() == avatar_definition_runtime_const
-		)
-	):
+	if p_avatar_node and (p_avatar_node.get_script() == avatar_definition_const or p_avatar_node.get_script() == avatar_definition_runtime_const):
 		apply_extra_cull_margin(p_avatar_node)
 
 		avatar_node = p_avatar_node
@@ -620,10 +563,7 @@ func setup_avatar_instantiate(p_avatar_node: Node3D) -> void:
 
 
 func try_head_shrink() -> void:
-	if (
-		shrink_mode == int(shrink_enum.SHRINK)
-		or (shrink_mode == int(shrink_enum.DETERMINED_BY_VIEW) and _player_camera_controller)
-	):  # FIXME: and _player_camera_controller.camera_mode == player_camera_controller_const.CAMERA_FIRST_PERSON):
+	if shrink_mode == int(shrink_enum.SHRINK) or (shrink_mode == int(shrink_enum.DETERMINED_BY_VIEW) and _player_camera_controller):  # FIXME: and _player_camera_controller.camera_mode == player_camera_controller_const.CAMERA_FIRST_PERSON):
 		shrink_head()
 
 

@@ -42,7 +42,7 @@ var display_name_override: String = ""
 ## join a server if an ip commandline argument was provided, or attempt
 ## to go the main menu
 ##
-func _startup_complete() -> void:	
+func _startup_complete() -> void:
 	await VSKPreloadManager.all_preloading_done
 	var _skipped: bool = await VSKFadeManager.execute_fade(false).fade_complete
 
@@ -53,9 +53,7 @@ func _startup_complete() -> void:
 			map = VSKMapManager.get_default_map_path()
 
 		if map:
-			await VSKGameFlowManager.host_server(
-				server_name, map, game_mode, port, max_players, is_dedicated, is_public, max_retries
-			)
+			await VSKGameFlowManager.host_server(server_name, map, game_mode, port, max_players, is_dedicated, is_public, max_retries)
 		else:
 			VSKGameFlowManager.go_to_title(_skipped)
 
@@ -118,9 +116,7 @@ func execute_fade() -> void:
 ## class based on what it has parsed.
 ##
 func parse_commandline_args() -> void:
-	var commandline_argument_dictionary: Dictionary = commandline_arguments_const.parse_commandline_arguments(
-		OS.get_cmdline_args()
-	)
+	var commandline_argument_dictionary: Dictionary = commandline_arguments_const.parse_commandline_arguments(OS.get_cmdline_args())
 	display_name_override = ""
 	if Engine.is_editor_hint():
 		return
@@ -136,13 +132,9 @@ func parse_commandline_args() -> void:
 	if commandline_argument_dictionary.has("display_name"):
 		display_name_override = commandline_argument_dictionary["display_name"]
 	if commandline_argument_dictionary.has("use_flat"):
-		VRManager.vr_user_preferences.vr_mode_override = (
-			VRManager.vr_user_preferences.vr_mode_override_enum.VR_MODE_USE_FLAT
-		)
+		VRManager.vr_user_preferences.vr_mode_override = (VRManager.vr_user_preferences.vr_mode_override_enum.VR_MODE_USE_FLAT)
 	if commandline_argument_dictionary.has("use_vr"):
-		VRManager.vr_user_preferences.vr_mode_override = (
-			VRManager.vr_user_preferences.vr_mode_override_enum.VR_MODE_USE_VR
-		)
+		VRManager.vr_user_preferences.vr_mode_override = (VRManager.vr_user_preferences.vr_mode_override_enum.VR_MODE_USE_VR)
 	if commandline_argument_dictionary.has("dedicated"):
 		is_dedicated = true
 	if commandline_argument_dictionary.has("public"):

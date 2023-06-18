@@ -193,16 +193,7 @@ func _submit_button_pressed(p_upload_data: Dictionary) -> void:
 
 		var packed_scene_upload_failed_callback: Callable = self._packed_scene_upload_failed_callback
 
-		user_content_submission_requested.emit(
-			p_upload_data,
-			{
-				"packed_scene_created": packed_scene_created_callback,
-				"packed_scene_creation_failed": packed_scene_creation_failed_callback,
-				"packed_scene_pre_uploading": packed_scene_pre_uploading_callback,
-				"packed_scene_uploaded": packed_scene_uploaded_callback,
-				"packed_scene_upload_failed": packed_scene_upload_failed_callback
-			}
-		)
+		user_content_submission_requested.emit(p_upload_data, {"packed_scene_created": packed_scene_created_callback, "packed_scene_creation_failed": packed_scene_creation_failed_callback, "packed_scene_pre_uploading": packed_scene_pre_uploading_callback, "packed_scene_uploaded": packed_scene_uploaded_callback, "packed_scene_upload_failed": packed_scene_upload_failed_callback})
 	else:
 		printerr("Progress dialog is null!")
 
@@ -215,9 +206,7 @@ func _user_content_get_failed(p_result: Dictionary) -> void:
 	vsk_upload_dialog.hide()
 	vsk_progress_dialog.hide()
 
-	vsk_info_dialog.set_info_text(
-		"Failed with error: %s" % GodotUro.godot_uro_helper_const.get_full_requester_error_string(p_result)
-	)
+	vsk_info_dialog.set_info_text("Failed with error: %s" % GodotUro.godot_uro_helper_const.get_full_requester_error_string(p_result))
 	vsk_info_dialog.popup_centered_ratio()
 
 
@@ -387,14 +376,10 @@ func _packed_scene_creation_failed_created_callback(p_error_message: String) -> 
 	vsk_info_dialog.popup_centered_ratio()
 
 
-func _create_upload_dictionary(
-	p_name: String, p_description: String, p_packed_scene: PackedScene, p_image: Image, p_is_public: bool
-) -> Dictionary:
+func _create_upload_dictionary(p_name: String, p_description: String, p_packed_scene: PackedScene, p_image: Image, p_is_public: bool) -> Dictionary:
 	var dictionary: Dictionary = {"name": p_name, "description": p_description, "is_public": p_is_public}
 	if p_packed_scene:
-		var user_content_data: Dictionary = vsk_editor_const.get_upload_data_for_packed_scene(
-			vsk_exporter, p_packed_scene
-		)
+		var user_content_data: Dictionary = vsk_editor_const.get_upload_data_for_packed_scene(vsk_exporter, p_packed_scene)
 		if !user_content_data.is_empty():
 			dictionary["user_content_data"] = user_content_data
 		else:
@@ -406,9 +391,7 @@ func _create_upload_dictionary(
 	return dictionary
 
 
-func _packed_scene_pre_uploading_callback(
-	p_packed_scene: PackedScene, p_upload_data: Dictionary, p_callbacks: Dictionary
-) -> void:
+func _packed_scene_pre_uploading_callback(p_packed_scene: PackedScene, p_upload_data: Dictionary, p_callbacks: Dictionary) -> void:
 	print("VSKEditor::_packed_scene_pre_uploading_callback")
 
 	vsk_progress_dialog.title = "Scene uploading..."
@@ -431,9 +414,7 @@ func _packed_scene_pre_uploading_callback(
 
 		var result: Dictionary = {}
 		var type: int = p_upload_data["user_content_type"]
-		var upload_dictionary: Dictionary = _create_upload_dictionary(
-			upload_data_name, upload_data_description, p_packed_scene, upload_data_preview_image, upload_data_is_public
-		)
+		var upload_dictionary: Dictionary = _create_upload_dictionary(upload_data_name, upload_data_description, p_packed_scene, upload_data_preview_image, upload_data_is_public)
 
 		if !upload_dictionary.is_empty():
 			if database_id == "":
@@ -445,9 +426,7 @@ func _packed_scene_pre_uploading_callback(
 			else:
 				match type:
 					vsk_types_const.UserContentType.Avatar:
-						result = await GodotUro.godot_uro_api.dashboard_update_avatar_async(
-							database_id, upload_dictionary
-						)
+						result = await GodotUro.godot_uro_api.dashboard_update_avatar_async(database_id, upload_dictionary)
 					vsk_types_const.UserContentType.Map:
 						result = await GodotUro.godot_uro_api.dashboard_update_map_async(database_id, upload_dictionary)
 
@@ -460,12 +439,7 @@ func _packed_scene_pre_uploading_callback(
 
 				user_content_new_uro_id(node, database_id)
 			else:
-				p_callbacks["packed_scene_upload_failed"].call(
-					(
-						"Upload failed with error: %s"
-						% GodotUro.godot_uro_helper_const.get_full_requester_error_string(result)
-					)
-				)
+				p_callbacks["packed_scene_upload_failed"].call("Upload failed with error: %s" % GodotUro.godot_uro_helper_const.get_full_requester_error_string(result))
 		else:
 			p_callbacks["packed_scene_upload_failed"].call("Could not process upload data!")
 	else:

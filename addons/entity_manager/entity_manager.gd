@@ -175,9 +175,7 @@ func _create_entity_update_jobs() -> Array:
 	return jobs
 
 
-func get_dependent_entity_for_dependency(
-	p_entity_dependency: RefCounted, p_entity_dependent: RefCounted
-) -> RuntimeEntity:
+func get_dependent_entity_for_dependency(p_entity_dependency: RefCounted, p_entity_dependent: RefCounted) -> RuntimeEntity:
 	if !p_entity_dependency._entity:
 		printerr("Could not get entity for dependency!")
 		return null
@@ -236,25 +234,15 @@ func get_entity_last_transform_safe(p_target_entity: EntityRef) -> String:
 		return ""
 
 
-func send_entity_message(
-	p_source_entity: EntityRef, p_target_entity: EntityRef, p_message: String, p_message_args: Dictionary
-) -> void:
+func send_entity_message(p_source_entity: EntityRef, p_target_entity: EntityRef, p_message: String, p_message_args: Dictionary) -> void:
 	if check_bidirectional_dependency(p_source_entity, p_target_entity):
 		p_target_entity._entity._receive_entity_message(p_message, p_message_args)
 	else:
 		printerr("Could not send message to target entity! No dependency link!")
 
 
-static func create_entity_instance(
-	p_packed_scene: PackedScene,
-	p_name: String = "NetEntity",
-	p_master_id: int = network_constants_const.SERVER_MASTER_PEER_ID
-) -> Node:
-	print_debug(
-		"Creating entity instantiate {name} of type {type}".format(
-			{"name": p_name, "type": p_packed_scene.resource_path}
-		)
-	)
+static func create_entity_instance(p_packed_scene: PackedScene, p_name: String = "NetEntity", p_master_id: int = network_constants_const.SERVER_MASTER_PEER_ID) -> Node:
+	print_debug("Creating entity instantiate {name} of type {type}".format({"name": p_name, "type": p_packed_scene.resource_path}))
 	var instantiate: Node = p_packed_scene.instantiate()
 	instantiate.set_name(p_name)
 	instantiate.set_multiplayer_authority(p_master_id)
@@ -262,12 +250,7 @@ static func create_entity_instance(
 	return instantiate
 
 
-func instantiate_entity_and_setup(
-	p_packed_scene: PackedScene,
-	p_properties: Dictionary = {},
-	p_name: String = "NetEntity",
-	p_master_id: int = network_constants_const.SERVER_MASTER_PEER_ID
-) -> Node:
+func instantiate_entity_and_setup(p_packed_scene: PackedScene, p_properties: Dictionary = {}, p_name: String = "NetEntity", p_master_id: int = network_constants_const.SERVER_MASTER_PEER_ID) -> Node:
 	var instantiate: Node = entity_manager_const.create_entity_instance(p_packed_scene, p_name, p_master_id)
 
 	instantiate._entity_cache()
@@ -289,12 +272,7 @@ func instantiate_entity_and_setup(
 ##
 ## Return an EntityRef handle for the instantiate.
 ##
-func spawn_entity(
-	p_packed_scene: PackedScene,
-	p_properties: Dictionary = {},
-	p_name: String = "NetEntity",
-	p_master_id: int = network_constants_const.SERVER_MASTER_PEER_ID
-) -> EntityRef:
+func spawn_entity(p_packed_scene: PackedScene, p_properties: Dictionary = {}, p_name: String = "NetEntity", p_master_id: int = network_constants_const.SERVER_MASTER_PEER_ID) -> EntityRef:
 	var instantiate: Node = instantiate_entity_and_setup(p_packed_scene, p_properties, p_name, p_master_id)
 	if instantiate:
 		self.scene_tree_execution_command(scene_tree_execution_table.ADD_ENTITY, instantiate)
@@ -319,11 +297,7 @@ func _reparent_unsafe(p_entity: Node, p_entity_parent_ref: EntityRef, p_attachme
 
 func _process_reparenting() -> void:
 	for entity in reparent_pending:
-		_reparent_unsafe(
-			entity,
-			entity.hierarchy_component_node.pending_entity_parent_ref,
-			entity.hierarchy_component_node.pending_attachment_id
-		)
+		_reparent_unsafe(entity, entity.hierarchy_component_node.pending_entity_parent_ref, entity.hierarchy_component_node.pending_attachment_id)
 
 	reparent_pending.clear()
 

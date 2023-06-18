@@ -39,15 +39,8 @@ var token_refresh_in_progress: bool = false
 func is_signed_in() -> bool:
 	return signed_in
 
-func _update_session(
-	p_renewal_token: String,
-	p_access_token: String,
-	p_id: String,
-	p_username: String,
-	p_display_name: String,
-	p_user_privilege_rulesets: Dictionary,
-	p_signed_in: bool
-) -> void:
+
+func _update_session(p_renewal_token: String, p_access_token: String, p_id: String, p_username: String, p_display_name: String, p_user_privilege_rulesets: Dictionary, p_signed_in: bool) -> void:
 	if not godot_uro:
 		signed_in = false
 		return
@@ -94,15 +87,7 @@ func _load_session() -> void:
 
 
 func _create_session(p_procesed_result: Dictionary) -> void:
-	_update_session(
-		p_procesed_result["renewal_token"],
-		p_procesed_result["access_token"],
-		p_procesed_result["user_id"],
-		p_procesed_result["user_username"],
-		p_procesed_result["user_display_name"],
-		p_procesed_result["user_privilege_ruleset"],
-		true
-	)
+	_update_session(p_procesed_result["renewal_token"], p_procesed_result["access_token"], p_procesed_result["user_id"], p_procesed_result["user_username"], p_procesed_result["user_display_name"], p_procesed_result["user_privilege_ruleset"], true)
 
 
 func _clear_session() -> void:
@@ -135,12 +120,7 @@ func _process_result_and_delete(p_result: Dictionary) -> Dictionary:
 	var processed_result: Dictionary = godot_uro.godot_uro_helper_const.process_session_json(p_result)
 
 	if not godot_uro.godot_uro_helper_const.requester_result_is_ok(processed_result):
-		printerr(
-			(
-				"_process_result_and_delete: %s"
-				% godot_uro.godot_uro_helper_const.get_full_requester_error_string(processed_result)
-			)
-		)
+		printerr("_process_result_and_delete: %s" % godot_uro.godot_uro_helper_const.get_full_requester_error_string(processed_result))
 		return processed_result
 
 	_delete_session()
@@ -232,18 +212,10 @@ func sign_out() -> Dictionary:
 	return {}
 
 
-func register(
-	p_username: String,
-	p_email: String,
-	p_password: String,
-	p_password_confirmation: String,
-	p_email_notifications: bool
-) -> Dictionary:
+func register(p_username: String, p_email: String, p_password: String, p_password_confirmation: String, p_email_notifications: bool) -> Dictionary:
 	if godot_uro and godot_uro.godot_uro_api:
 		token_refresh_in_progress = true
-		var result = await godot_uro.godot_uro_api.register_async(
-			p_username, p_email, p_password, p_password_confirmation, p_email_notifications
-		)
+		var result = await godot_uro.godot_uro_api.register_async(p_username, p_email, p_password, p_password_confirmation, p_email_notifications)
 		if typeof(result) != TYPE_DICTIONARY:
 			push_error("Failed to get_profile_async: " + str(result))
 			return {}

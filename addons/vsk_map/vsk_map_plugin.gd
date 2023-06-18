@@ -42,10 +42,7 @@ func update_menu_options(p_current_node: Node3D) -> void:
 		if p_current_node:
 			# If we have a valid script, and the export and upload buttons
 			var current_script: Script = p_current_node.get_script()
-			if (
-				current_script == vsk_map_definition_editor_const.vsk_map_definition_const
-				or current_script == vsk_map_definition_editor_const.vsk_map_definition_runtime_const
-			):
+			if current_script == vsk_map_definition_editor_const.vsk_map_definition_const or current_script == vsk_map_definition_editor_const.vsk_map_definition_runtime_const:
 				option_button.get_popup().add_item("Export Map", vsk_map_definition_editor_const.MENU_OPTION_EXPORT_MAP)
 				option_button.get_popup().add_item("Upload Map", vsk_map_definition_editor_const.MENU_OPTION_UPLOAD_MAP)
 			elif current_script == null:
@@ -91,7 +88,7 @@ func refresh_edited_object() -> void:
 
 func _edit(p_object: Object) -> void:
 	current_edited_object = p_object
-	
+
 	if not current_edited_object:
 		return
 
@@ -116,11 +113,7 @@ func _handles(p_object: Object) -> bool:
 		return false
 
 	var current_script: Script = p_object.get_script()
-	if (
-		current_script == vsk_map_definition_editor_const.vsk_map_definition_const
-		or current_script == vsk_map_definition_editor_const.vsk_map_definition_runtime_const
-		or current_script == null
-	):
+	if current_script == vsk_map_definition_editor_const.vsk_map_definition_const or current_script == vsk_map_definition_editor_const.vsk_map_definition_runtime_const or current_script == null:
 		return true
 
 	return false

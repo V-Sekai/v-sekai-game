@@ -49,9 +49,7 @@ func set_loading_active(p_bool: bool) -> void:
 	_loading_active = p_bool
 
 
-func request_loading_task(
-	p_path: String, p_external_path_whitelist: Dictionary, p_type_whitelist: Dictionary, p_type_hint: String = ""
-) -> bool:
+func request_loading_task(p_path: String, p_external_path_whitelist: Dictionary, p_type_whitelist: Dictionary, p_type_hint: String = "") -> bool:
 	var new_loading_task: LoadingTask = LoadingTask.new(p_type_hint)
 	new_loading_task.bypass_whitelist = false
 	new_loading_task.external_path_whitelist = p_external_path_whitelist
@@ -106,11 +104,7 @@ func _destroy_loading_task(p_path) -> void:
 			push_error("Failed to erase loading task: {path}".format({"path": str(p_path)}))
 			return
 	else:
-		printerr(
-			"background_loader_destroy_loading_task: could not destroy loading task {path}".format(
-				{"path": str(p_path)}
-			)
-		)
+		printerr("background_loader_destroy_loading_task: could not destroy loading task {path}".format({"path": str(p_path)}))
 
 
 func _get_loading_task_paths() -> Dictionary:
@@ -128,15 +122,7 @@ func _task_cancelled(p_task: String) -> void:
 
 
 func _task_done(p_task: String, p_err: int, p_resource: Resource) -> void:
-	print_debug(
-		"background_loader_task_done: {task}, error: {err} resource_path: {resource_path}".format(
-			{
-				"task": str(p_task),
-				"err": str(p_err),
-				"resource_path": str(p_resource.resource_path) if p_resource else ""
-			}
-		)
-	)
+	print_debug("background_loader_task_done: {task}, error: {err} resource_path: {resource_path}".format({"task": str(p_task), "err": str(p_err), "resource_path": str(p_resource.resource_path) if p_resource else ""}))
 	task_done.emit(p_task, p_err, p_resource)
 
 
@@ -155,12 +141,15 @@ func _attempt_to_start_loading_thread() -> void:
 		if !_loading_thread.is_started():
 			_start_loading_thread()
 
+
 func _threaded_loading_complete() -> void:
 	_loading_thread.wait_to_finish()
 	print_debug("background_loader_thread_ended (success)")
 	thread_ended.emit()
 
 	_attempt_to_start_loading_thread()
+
+
 func _threaded_loading_method() -> void:
 	while get_loading_active() and !is_loading_task_queue_empty():
 		var tasks: Dictionary = _get_loading_task_paths()

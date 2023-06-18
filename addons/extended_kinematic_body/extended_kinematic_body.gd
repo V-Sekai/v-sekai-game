@@ -138,14 +138,9 @@ func extended_move(p_motion: Vector3, _p_slide_attempts: int) -> Vector3:
 							step_down_kinematic_result = move_and_collide(up * -step_height)
 						else:
 							virtual_step_offset = -step_up_kinematic_result.get_travel().length()
-							step_down_kinematic_result = move_and_collide(
-								(up * -step_height) + step_up_kinematic_result.get_remainder()
-							)
+							step_down_kinematic_result = move_and_collide((up * -step_height) + step_up_kinematic_result.get_remainder())
 
-						if (
-							step_down_kinematic_result != null
-							and _is_valid_kinematic_collision(step_down_kinematic_result)
-						):
+						if step_down_kinematic_result != null and _is_valid_kinematic_collision(step_down_kinematic_result):
 							virtual_step_offset += step_down_kinematic_result.get_travel().length()
 							motion = (up * -step_height)
 
@@ -162,10 +157,7 @@ func extended_move(p_motion: Vector3, _p_slide_attempts: int) -> Vector3:
 							if ray_result.is_empty() or !test_slope(ray_result.normal, up, slope_max_angle):
 								var slope_limit_fix: int = 2
 								while slope_limit_fix > 0:
-									if (
-										step_down_kinematic_result != null
-										and _is_valid_kinematic_collision(step_down_kinematic_result)
-									):
+									if step_down_kinematic_result != null and _is_valid_kinematic_collision(step_down_kinematic_result):
 										var step_down_normal: Vector3 = step_down_kinematic_result.get_normal()
 
 										# If you are now on a valid surface, break the loop
@@ -180,10 +172,7 @@ func extended_move(p_motion: Vector3, _p_slide_attempts: int) -> Vector3:
 											var slide_down_result: KinematicCollision3D = move_and_collide(motion)
 
 											# Accumulate this back into the visual step offset
-											if (
-												slide_down_result != null
-												and _is_valid_kinematic_collision(slide_down_result)
-											):
+											if slide_down_result != null and _is_valid_kinematic_collision(slide_down_result):
 												virtual_step_offset += slide_down_result.get_travel().length()
 											else:
 												virtual_step_offset = 0.0

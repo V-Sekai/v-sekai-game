@@ -96,9 +96,7 @@ func _instance_info_child_control(p_string: String) -> void:
 
 
 func _received_user_content_data(p_database_id: String, p_user_content_data: Dictionary) -> void:
-	print(
-		"_received user content for: '%s'. current_database_id: '%s'" % [str(p_database_id), str(current_database_id)]
-	)
+	print("_received user content for: '%s'. current_database_id: '%s'" % [str(p_database_id), str(current_database_id)])
 	control.update_user_content_data(p_user_content_data, not p_database_id.is_empty())
 
 

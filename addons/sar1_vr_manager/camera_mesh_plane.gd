@@ -58,12 +58,7 @@ func update_plane(p_lerp: float) -> void:
 
 			var lerp_position: float = lerpf(z_near, z_far, p_lerp)
 
-			set_transform(
-				Transform3D(
-					Basis.from_euler(Vector3(PI * 0.5, 0.0, 0.0)).scaled(Vector3(lerped_size.x, lerped_size.y, 1.0)),
-					Vector3(0.0, 0.0, -lerp_position)
-				)
-			)
+			set_transform(Transform3D(Basis.from_euler(Vector3(PI * 0.5, 0.0, 0.0)).scaled(Vector3(lerped_size.x, lerped_size.y, 1.0)), Vector3(0.0, 0.0, -lerp_position)))
 
 
 func set_distance(p_distance: float) -> void:

@@ -42,9 +42,7 @@ var origin_offset: Vector3 = Vector3()
 signal camera_mode_changed(p_camera_mode)
 
 
-func test_collision_point(
-	p_ds: PhysicsDirectSpaceState3D, p_distance: float, p_start: Vector3, p_end: Vector3
-) -> float:
+func test_collision_point(p_ds: PhysicsDirectSpaceState3D, p_distance: float, p_start: Vector3, p_end: Vector3) -> float:
 	var param: PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.new()
 	param.from = p_start
 	param.to = p_end

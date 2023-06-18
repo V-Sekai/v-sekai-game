@@ -47,9 +47,7 @@ static func get_sanitisied_bone_name_list(p_skeleton: Skeleton3D) -> PackedStrin
 	return sanitised_names
 
 
-static func get_bone_children_ids(
-	p_skeleton: Skeleton3D, p_id: int, p_children: PackedInt32Array = PackedInt32Array()
-) -> PackedInt32Array:
+static func get_bone_children_ids(p_skeleton: Skeleton3D, p_id: int, p_children: PackedInt32Array = PackedInt32Array()) -> PackedInt32Array:
 	var parent_id: int = p_skeleton.get_bone_parent(p_id)
 	if parent_id != -1:
 		p_children.push_back(parent_id)

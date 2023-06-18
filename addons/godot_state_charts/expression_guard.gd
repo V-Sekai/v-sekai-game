@@ -3,16 +3,16 @@
 class_name ExpressionGuard
 extends Guard
 
-var expression:String = ""
+var expression: String = ""
 
 
-func is_satisfied(_context_transition:Transition, context_state:State) -> bool:
+func is_satisfied(_context_transition: Transition, context_state: State) -> bool:
 	# walk up the tree to find the root state chart node
 	var root = context_state
 
 	while is_instance_valid(root) and not root is StateChart:
 		root = root.get_parent()
-	
+
 	if not is_instance_valid(root):
 		push_error("Could not find root state chart node, cannot evaluate expression")
 		return false
@@ -46,11 +46,6 @@ func is_satisfied(_context_transition:Transition, context_state:State) -> bool:
 
 func _get_property_list():
 	var properties = []
-	properties.append({
-		"name": "expression",
-		"type": TYPE_STRING,
-		"usage": PROPERTY_USAGE_DEFAULT,
-		"hint": PROPERTY_HINT_EXPRESSION
-	})
+	properties.append({"name": "expression", "type": TYPE_STRING, "usage": PROPERTY_USAGE_DEFAULT, "hint": PROPERTY_HINT_EXPRESSION})
 
 	return properties

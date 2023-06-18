@@ -26,10 +26,7 @@ func is_subnode_property_valid() -> bool:
 	if !Engine.is_editor_hint():
 		return true
 	else:
-		return (
-			not scene_file_path.is_empty()
-			or (is_inside_tree() and get_tree().edited_scene_root and get_tree().edited_scene_root == self)
-		)
+		return not scene_file_path.is_empty() or (is_inside_tree() and get_tree().edited_scene_root and get_tree().edited_scene_root == self)
 
 
 static func sub_property_path(p_property: String, p_sub_node_name: String) -> String:
