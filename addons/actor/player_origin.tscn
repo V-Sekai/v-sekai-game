@@ -7,6 +7,7 @@
 
 [sub_resource type="CameraAttributesPhysical" id="CameraAttributesPhysical_e7u4j"]
 auto_exposure_enabled = true
+auto_exposure_speed = 1.0
 frustum_focal_length = 22.0
 auto_exposure_min_exposure_value = 2.0
 

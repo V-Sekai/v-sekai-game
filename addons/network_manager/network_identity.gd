@@ -34,7 +34,8 @@ func set_network_scene_id(p_id: int) -> void:
 func on_predelete() -> void:
 	if !Engine.is_editor_hint():
 		if network_instance_id != network_entity_manager_const.NULL_NETWORK_INSTANCE_ID:
-			NetworkManager.network_entity_manager.unregister_network_instance_id(network_instance_id)
+			if NetworkManager.network_entity_manager != null:
+				NetworkManager.network_entity_manager.unregister_network_instance_id(network_instance_id)
 
 
 func get_state(p_writer, p_initial_state: bool):
