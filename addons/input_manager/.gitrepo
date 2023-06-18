@@ -6,7 +6,7 @@
 [subrepo]
 	remote = https://github.com/V-Sekai/input_manager
 	branch = main
-	commit = d7b8f81607b70c6c6a3233664d280abdded236c2
-	parent = 5faad9f1a71af2da2d95cafe5a6fdc6986210298
+	commit = 1fcbb3f3d6add57b0ae52fc429b6abc551532ac2
+	parent = 52f1fa77d9e58adb2600415d3cff6971226b7ca3
 	method = merge
 	cmdver = 0.4.6
