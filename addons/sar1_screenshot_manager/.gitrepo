@@ -6,7 +6,7 @@
 [subrepo]
 	remote = https://github.com/V-Sekai/sar1_screenshot_manager
 	branch = main
-	commit = ad8f190834d0969e2c3d38765e041e6472bc1950
-	parent = 5c0a55d8b946327c094afb2e605d85b2ed1896ec
+	commit = a1f4d6348f548f78872daa8e13364f14ccd837c4
+	parent = f02e5f3b299ed3ac4a93ed0d324b0f9ee62537d5
 	method = merge
 	cmdver = 0.4.6
