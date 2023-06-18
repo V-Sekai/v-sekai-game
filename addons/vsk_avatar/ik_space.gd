@@ -1,3 +1,8 @@
+# Copyright (c) 2018-present. This file is part of V-Sekai https://v-sekai.org/.
+# SaracenOne & K. S. Ernest (Fire) Lee & Lyuma & MMMaellon & Contributors
+# ik_space.gd
+# SPDX-License-Identifier: MIT
+
 extends Node3D
 
 signal external_trackers_changed

@@ -1,3 +1,8 @@
+# Copyright (c) 2018-present. This file is part of V-Sekai https://v-sekai.org/.
+# SaracenOne & K. S. Ernest (Fire) Lee & Lyuma & MMMaellon & Contributors
+# node_2d_simulation_logic.gd
+# SPDX-License-Identifier: MIT
+
 @tool
 extends "res://addons/entity_manager/simulation_logic.gd"  # simulation_logic.gd
 

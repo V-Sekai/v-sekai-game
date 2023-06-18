@@ -1,3 +1,8 @@
+# Copyright (c) 2018-present. This file is part of V-Sekai https://v-sekai.org/.
+# SaracenOne & K. S. Ernest (Fire) Lee & Lyuma & MMMaellon & Contributors
+# vr_lasso_action.gd
+# SPDX-License-Identifier: MIT
+
 extends "res://addons/sar1_vr_manager/components/actions/vr_action.gd"  # vr_action.gd
 @export var straight_color: Color = Color(247.0 / 255.0, 247.0 / 255.0, 1.0, 0.05)
 @export var unsnapped_color: Color = Color(247.0 / 255.0, 247.0 / 255.0, 1.0, 0.1)

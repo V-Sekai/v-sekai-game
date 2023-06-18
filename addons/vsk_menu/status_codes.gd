@@ -1,3 +1,8 @@
+# Copyright (c) 2018-present. This file is part of V-Sekai https://v-sekai.org/.
+# SaracenOne & K. S. Ernest (Fire) Lee & Lyuma & MMMaellon & Contributors
+# status_codes.gd
+# SPDX-License-Identifier: MIT
+
 const STATUS_CODE_PENDING = 0
 const STATUS_CODE_NO_USERNAME = 1
 const STATUS_CODE_NO_EMAIL = 2

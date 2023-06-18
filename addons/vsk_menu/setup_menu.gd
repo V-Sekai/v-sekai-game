@@ -1,3 +1,8 @@
+# Copyright (c) 2018-present. This file is part of V-Sekai https://v-sekai.org/.
+# SaracenOne & K. S. Ernest (Fire) Lee & Lyuma & MMMaellon & Contributors
+# setup_menu.gd
+# SPDX-License-Identifier: MIT
+
 extends "res://addons/vsk_menu/menu_view_controller.gd"  # menu_view_controller.gd
 
 @export var restart_notification_nodepath: NodePath = NodePath()

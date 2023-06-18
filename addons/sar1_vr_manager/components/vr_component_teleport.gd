@@ -1,3 +1,8 @@
+# Copyright (c) 2018-present. This file is part of V-Sekai https://v-sekai.org/.
+# SaracenOne & K. S. Ernest (Fire) Lee & Lyuma & MMMaellon & Contributors
+# vr_component_teleport.gd
+# SPDX-License-Identifier: MIT
+
 extends "res://addons/sar1_vr_manager/components/vr_component.gd"  # vr_component.gd
 
 var vr_teleport_action_const = load("res://addons/sar1_vr_manager/components/actions/vr_teleport_action.tscn")

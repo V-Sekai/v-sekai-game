@@ -1,3 +1,8 @@
+# Copyright (c) 2018-present. This file is part of V-Sekai https://v-sekai.org/.
+# SaracenOne & K. S. Ernest (Fire) Lee & Lyuma & MMMaellon & Contributors
+# snapping_point.gd
+# SPDX-License-Identifier: MIT
+
 extends "res://addons/vsk_entities/extensions/model_rigid_body.gd"
 
 @export var snapping_power: float = 1

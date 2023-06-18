@@ -1,3 +1,8 @@
+# Copyright (c) 2018-present. This file is part of V-Sekai https://v-sekai.org/.
+# SaracenOne & K. S. Ernest (Fire) Lee & Lyuma & MMMaellon & Contributors
+# vr_render_tree_action.gd
+# SPDX-License-Identifier: MIT
+
 extends "res://addons/sar1_vr_manager/components/actions/vr_action.gd"  # vr_action.gd
 
 var render_tree: Node3D = null

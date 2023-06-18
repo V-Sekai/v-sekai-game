@@ -1,3 +1,8 @@
+# Copyright (c) 2018-present. This file is part of V-Sekai https://v-sekai.org/.
+# SaracenOne & K. S. Ernest (Fire) Lee & Lyuma & MMMaellon & Contributors
+# snapping_singleton.gd
+# SPDX-License-Identifier: MIT
+
 extends Node
 
 var snapping_points: RefCounted = null

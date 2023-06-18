@@ -1,3 +1,8 @@
+# Copyright (c) 2018-present. This file is part of V-Sekai https://v-sekai.org/.
+# SaracenOne & K. S. Ernest (Fire) Lee & Lyuma & MMMaellon & Contributors
+# vr_component_advanced_movement.gd
+# SPDX-License-Identifier: MIT
+
 extends "res://addons/sar1_vr_manager/components/vr_component.gd"  # vr_component.gd
 
 const vr_advanced_movement_action = preload("actions/vr_advanced_movement_action.gd")

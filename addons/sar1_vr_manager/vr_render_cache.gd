@@ -1,3 +1,8 @@
+# Copyright (c) 2018-present. This file is part of V-Sekai https://v-sekai.org/.
+# SaracenOne & K. S. Ernest (Fire) Lee & Lyuma & MMMaellon & Contributors
+# vr_render_cache.gd
+# SPDX-License-Identifier: MIT
+
 const vr_render_tree_const = preload("vr_render_tree.gd")
 
 var render_mesh_cache: Dictionary = {}

@@ -1,3 +1,8 @@
+# Copyright (c) 2018-present. This file is part of V-Sekai https://v-sekai.org/.
+# SaracenOne & K. S. Ernest (Fire) Lee & Lyuma & MMMaellon & Contributors
+# immediate_shape_util.gd
+# SPDX-License-Identifier: MIT
+
 @tool
 
 const camera_matrix_util_const = preload("camera_matrix_util.gd")

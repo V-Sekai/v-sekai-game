@@ -1,3 +1,8 @@
+# Copyright (c) 2018-present. This file is part of V-Sekai https://v-sekai.org/.
+# SaracenOne & K. S. Ernest (Fire) Lee & Lyuma & MMMaellon & Contributors
+# register_screen.gd
+# SPDX-License-Identifier: MIT
+
 extends "res://addons/vsk_menu/setup_menu.gd"  # setup_menu.gd
 
 const password_input_const = preload("res://addons/vsk_menu/password_input.gd")

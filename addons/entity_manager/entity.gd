@@ -1,3 +1,8 @@
+# Copyright (c) 2018-present. This file is part of V-Sekai https://v-sekai.org/.
+# SaracenOne & K. S. Ernest (Fire) Lee & Lyuma & MMMaellon & Contributors
+# entity.gd
+# SPDX-License-Identifier: MIT
+
 @tool
 extends "res://addons/entity_manager/runtime_entity.gd"  # runtime_entity.gd
 class_name Entity

@@ -1,3 +1,8 @@
+# Copyright (c) 2018-present. This file is part of V-Sekai https://v-sekai.org/.
+# SaracenOne & K. S. Ernest (Fire) Lee & Lyuma & MMMaellon & Contributors
+# vr_component_lasso.gd
+# SPDX-License-Identifier: MIT
+
 extends "res://addons/sar1_vr_manager/components/vr_component.gd"
 
 # This will be added to the root of VR_origin. It is responsible for assigning
