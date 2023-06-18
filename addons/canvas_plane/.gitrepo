@@ -6,7 +6,7 @@
 [subrepo]
 	remote = https://github.com/V-Sekai/canvas_plane
 	branch = main
-	commit = 9b8ad5d71d178846ac1b13eae8e34e1a893fc688
-	parent = dba34120e94242276f92d0b0a52fcbebb3692608
+	commit = ff9d452b244c986a29902f0bc9ca1474c93b5395
+	parent = dff3376a7926c2ac8d02e18d584c397420689d62
 	method = merge
 	cmdver = 0.4.6
