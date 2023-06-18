@@ -6,7 +6,7 @@
 [subrepo]
 	remote = https://github.com/V-Sekai/sar1_mocap_manager
 	branch = main
-	commit = 21ba1bacc5c861aeca8fd5abd9ec60192251fbee
-	parent = b8cc957ae0519360f621137de4a4a8b3b61733b9
+	commit = 6799c8c94abe80633547596b7a61c87ef81a6db2
+	parent = 756711c41b7a2e82e6e93f25f50d2b4570baeed7
 	method = merge
 	cmdver = 0.4.6
