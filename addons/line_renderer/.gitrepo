@@ -6,7 +6,7 @@
 [subrepo]
 	remote = https://github.com/V-Sekai/line_renderer
 	branch = main
-	commit = b4dd9353ebb3ab20d6eca2f8970f3bb01f9f8c79
-	parent = f6a49dbeab272a42c45e6922a143591e8540ddf8
+	commit = bf26c1a92234b969a49106a1684f82165e625e3d
+	parent = 89344a414faad0eb86d3452187055288deb1025b
 	method = merge
 	cmdver = 0.4.6
