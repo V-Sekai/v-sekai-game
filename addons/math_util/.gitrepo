@@ -6,7 +6,7 @@
 [subrepo]
 	remote = https://github.com/V-Sekai/math_util
 	branch = main
-	commit = 6a55baf34f6b1b6450866d88d7a27d79f4baa5d7
-	parent = 1bc99597d01da9b50862580b62417769d8e70928
+	commit = b22eefc371ae74fa07980a777b9f820c605ccc5a
+	parent = c1b18884c8581e8617a2453b6a26caf58190731d
 	method = merge
 	cmdver = 0.4.6
