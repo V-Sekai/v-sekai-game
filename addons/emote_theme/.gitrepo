@@ -6,7 +6,7 @@
 [subrepo]
 	remote = https://github.com/V-Sekai/emote_theme
 	branch = main
-	commit = 1922cf0ff0adb25d027e12f72eed3ec2e9e1b27e
-	parent = 058c00ddacab81a355cc179b7b909167e84d3562
+	commit = c8f248b27bb8a7f53f9884a694ce67867067f520
+	parent = a8abc924e1febf8167f601247d1fff7ed3dc26b3
 	method = merge
 	cmdver = 0.4.6
