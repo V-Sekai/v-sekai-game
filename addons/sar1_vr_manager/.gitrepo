@@ -6,7 +6,7 @@
 [subrepo]
 	remote = https://github.com/V-Sekai/sar1_vr_manager
 	branch = main
-	commit = 7a514333bd882ee1a99e61e5047948074d3715b8
-	parent = 2330865bb62d3058cf06d78b2dc52ea36c281c0c
+	commit = caa9b21b4e5b05bd2e57710d8f760b819716b041
+	parent = 3dbf0819c5f336ba4a3367834581220bdd1aaaf0
 	method = merge
 	cmdver = 0.4.6
