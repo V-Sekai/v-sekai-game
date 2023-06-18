@@ -6,7 +6,7 @@
 [subrepo]
 	remote = https://github.com/V-Sekai/vsk_editor.git
 	branch = main
-	commit = 46194237ceafa62cc94124c07daf1f890f697479
-	parent = bae6e01af18d8c0ea88166948f552a439f60624b
+	commit = b24ca3a3e35cd96a6c7c8938b6700b94e713674a
+	parent = f527d8751a03f11ef6b1eb32c82544c5b16dde67
 	method = merge
 	cmdver = 0.4.6
