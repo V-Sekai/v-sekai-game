@@ -6,7 +6,7 @@
 [subrepo]
 	remote = https://github.com/V-Sekai/vsk_importer_exporter
 	branch = main
-	commit = c65acd4b1227dfd31033683aa48cb7a4827a3baf
-	parent = 3a519abb8f7624722861914ae5455067e9b19247
+	commit = 2c7ad373de0f08ba0cb769529b5580ffb36de3a5
+	parent = ed63ecd15a47c0d3a2c439e35adb0a494d802264
 	method = merge
 	cmdver = 0.4.6
