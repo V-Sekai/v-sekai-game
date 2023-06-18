@@ -92,3 +92,17 @@ https://godotengine.org/qa/903/how-to-save-a-scene-at-run-time
 # Notes
 
 When splitting by grid, the grid origin is the origin of the AABB bound in world space. The grid sizes are in world space. Note that split by grid does not split faces, and large faces than span more than one grid square will be assigned to only one grid square. There is also no duplication of faces, so the number of faces rendered when all the sub meshes are rendered is the same as the number in the original mesh.
+
+We want to make a room that is comfortable and easy to use. To do this, we need to think about how much space people need to move around and not bump their heads.
+
+We decided to use a smaller space between each level, which is 0.9 meters (90 centimeters). This gives more room for taller people and makes it easier to move around.
+
+Now, let's see how many times 0.9 meters fits into the total height of the room, which is 2.4 meters:
+
+ ```
+ 2.4 meters (total height) / 0.9 meters (space between levels) ≈ 2.67
+ ```
+
+With a 0.9-meter space between levels, we can fit about 2.67 levels in the 2.4-meter tall room. But we can't have a part of a level, so we can either have 2 full levels or 3 full levels, depending on what we need for our design.
+
+In short, using a 0.9-meter space between levels makes the room more comfortable and easy to use while still making good use of the available height. -->

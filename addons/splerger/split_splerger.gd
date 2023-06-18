@@ -8,7 +8,6 @@ class _SplitInfo:
 	var x_splits: int = 0
 	var y_splits: int = 1
 	var z_splits: int = 0
-	var use_local_space : bool = false
 
 
 static func _get_num_splits_x(si: _SplitInfo) -> int:
@@ -34,7 +33,6 @@ static func _get_num_splits_z(si: _SplitInfo) -> int:
 		splits = 1
 	return splits
 
-
 # split a mesh according to the grid size
 static func split(
 	mesh_instance: MeshInstance3D,
@@ -42,13 +40,11 @@ static func split(
 	attachment_node: Node,
 	grid_size: float,
 	grid_size_y: float,
-	use_local_space: float,
 ):
 	# save all the info we can into a class to avoid passing it around
 	var si: _SplitInfo = _SplitInfo.new()
 	si.grid_size = grid_size
 	si.grid_size_y = grid_size_y
-	si.use_local_space = use_local_space
 
 	# calculate the AABB
 	si.aabb = _calc_aabb(mesh_instance)
@@ -70,7 +66,11 @@ static func split(
 
 	## no need to split .. should never happen
 	if (si.x_splits + si.y_splits + si.z_splits) == 3:
-		print("WARNING - not enough splits, ignoring")
+		print("WARNING - not enough splits, moving without splitting")
+		var x_offset = (si.x_splits - 1) * grid_size
+		var y_offset = (si.y_splits - 1) * grid_size_y
+		var z_offset = (si.z_splits - 1) * grid_size
+		mesh_instance.transform.origin += Vector3(x_offset, y_offset, z_offset)
 		return false
 
 	var mesh = mesh_instance.mesh
@@ -82,7 +82,8 @@ static func split(
 	for surface_i in range(mesh.get_surface_count()):
 		surface_tool.append_from(mesh, surface_i, Transform3D())
 	surface_tool.generate_normals()
-	surface_tool.generate_tangents()
+	if mdt.get_vertex_count() and mdt.get_vertex_uv(0) != Vector2():
+		surface_tool.generate_tangents()
 	mdt.create_from_surface(surface_tool.commit(), surface_id)
 
 	var nVerts = mdt.get_vertex_count()
@@ -117,9 +118,9 @@ static func _split_mesh(
 	mdt: MeshDataTool,
 	orig_mi: MeshInstance3D,
 	surface_id: int,
-	grid_x: float,
-	grid_y: float,
-	grid_z: float,
+	grid_x: int,
+	grid_y: int,
+	grid_z: int,
 	si: _SplitInfo,
 	attachment_node: Node,
 	faces_assigned,
@@ -168,7 +169,6 @@ static func _split_mesh(
 				faces_assigned[f] = true
 
 	if faces.size() == 0:
-		print("\tno faces, ignoring...")
 		return
 
 	var new_inds = []
@@ -217,17 +217,11 @@ static func _split_mesh(
 	for u in unique_verts.size():
 		var n = unique_verts[u]
 		var vert = mdt.get_vertex(n)
-		
 		if is_normal:
 			var norm = mdt.get_vertex_normal(n)
-			if si.use_local_space == false:
-				norm = xform.basis * norm
-				norm = norm.normalized()
 			st.set_normal(norm)
 		if is_tangent:
 			var tangent = mdt.get_vertex_tangent(n)
-			if si.use_local_space == false:
-				tangent = Plane(xform * tangent.normal, tangent.d)
 			st.set_tangent(tangent)
 		if is_color:
 			var col = mdt.get_vertex_color(n)
@@ -240,10 +234,8 @@ static func _split_mesh(
 			st.set_bones(bones)
 			var bone_weights = mdt.get_vertex_weights(n)
 			st.set_weights(bone_weights)
-		if si.use_local_space == false:
-			print(xform.origin)
-			vert = xform * vert
-		st.add_vertex(vert)
+		st.add_vertex(vert - Vector3(grid_x * xgap, grid_y * ygap, grid_z * zgap))
+
 
 	for i in new_inds.size():
 		st.add_index(new_inds[i])
@@ -261,8 +253,7 @@ static func _split_mesh(
 	new_mi.skeleton = orig_mi.skeleton
 	new_mi.skin = orig_mi.skin
 	
-	if si.use_local_space:
-		new_mi.transform = orig_mi.transform
+	new_mi.transform = orig_mi.transform.translated(Vector3(grid_x * xgap, grid_y * ygap, grid_z * zgap))
 	
 	# add the new mesh as a child
 	attachment_node.add_child(new_mi, true)
@@ -299,6 +290,7 @@ static func _calc_aabb(mesh_instance: MeshInstance3D):
 	var aabb: AABB = mesh_instance.global_transform * mesh_instance.mesh.get_aabb()
 	# godot intersection doesn't work on borders ...
 	aabb = aabb.grow(0.1)
+	_check_aabb(aabb)
 	return aabb
 
 
@@ -318,11 +310,9 @@ static func save_scene(node, filename):
 	packed_scene.pack(node)
 	ResourceSaver.save(packed_scene, filename)
 
-
-static func traverse_root_and_split(root: Node3D, grid_size: float = 100.0, grid_size_y: float = 100.0) -> void:
-	var use_local_space: bool = true
+static func traverse_root_and_split(root: Node3D, grid_size: float = 0.9, grid_size_y: float = 0.9) -> void:
 	var instances: Array[Node] = root.find_children("*", "MeshInstance3D")
 	for node in instances:
 		var mesh_instance: MeshInstance3D = node
 		for surface_i in mesh_instance.mesh.get_surface_count():
-			split(mesh_instance, surface_i, mesh_instance.get_parent(), grid_size, grid_size_y, use_local_space)
+			split(mesh_instance, surface_i, mesh_instance.get_parent(), grid_size, grid_size_y)
