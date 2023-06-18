@@ -6,7 +6,7 @@
 [subrepo]
 	remote = https://github.com/V-Sekai/network_manager
 	branch = main
-	commit = b6aec72b74cc355172e55a29994a72b056425696
-	parent = 72e1576bd71e991dde6b32c8d60d65955216e262
+	commit = def9084d7289723d8607da8aaa8872691823b072
+	parent = 083a0e073b917d9bfc60ef49477c8a6a59c75e92
 	method = merge
 	cmdver = 0.4.6
