@@ -6,7 +6,7 @@
 [subrepo]
 	remote = https://github.com/V-Sekai/vsk_map
 	branch = main
-	commit = acd0215bdd97a08482a19382f7705e496aed0283
-	parent = 270777e5504e626a4b0a8ac0f2fb4d7288f7f0cf
+	commit = 7c483fad9005a5842c8555df0d1bd20b2552d27f
+	parent = 152955f7414edc1311e69205bc424b1e004e0b2c
 	method = merge
 	cmdver = 0.4.6
