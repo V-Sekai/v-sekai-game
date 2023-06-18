@@ -6,7 +6,7 @@
 [subrepo]
 	remote = https://github.com/V-Sekai/gd_util
 	branch = main
-	commit = f423589b8e2d703340bf8d541fa19f27b40c999d
-	parent = a64f8ff37b827b75c8b311d2c8049d213132da96
+	commit = d4a9b92a4703417c2675082a1553b2cab4482cec
+	parent = ade0ff35f1a7faa6ad9f35dff069a1ffe74d4df3
 	method = merge
 	cmdver = 0.4.6
