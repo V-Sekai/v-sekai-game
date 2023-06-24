@@ -131,6 +131,7 @@ window/vsync/vsync_mode.macos=1
 movie_writer/mjpeg_quality=1.0
 movie_writer/movie_file="../export.avi"
 import/use_multiple_threads=false
+run/main_run_args.macos="--xr-mode off"
 
 [editor_plugins]
 
@@ -562,6 +563,7 @@ quality/godrays/sample_number=50
 quality/godrays/use_pcf5=false
 quality/godrays/dither_amount=1.0
 driver/threads/thread_model.web=1
+driver/threads/thread_model.macos=1
 
 [services]
 
