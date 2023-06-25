@@ -9,7 +9,6 @@ script = ExtResource("2")
 progress_dialog_body = NodePath("ProgressDialogBody")
 
 [node name="ProgressDialogBody" parent="." instance=ExtResource("1")]
-anchors_preset = 15
 offset_left = 4.0
 offset_top = 4.0
 offset_right = -1496.0

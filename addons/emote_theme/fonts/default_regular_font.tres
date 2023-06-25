@@ -4,8 +4,5 @@
 
 [resource]
 base_font = ExtResource("1_dt8g7")
-opentype_features = {
-1667329140: 1
-}
 spacing_top = -1
 spacing_bottom = -1
