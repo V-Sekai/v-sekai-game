@@ -61,7 +61,6 @@ custom_minimum_size = Vector2(256, 256)
 layout_mode = 2
 texture = ExtResource("3_31etj")
 expand_mode = 3
-flip_v = true
 
 [node name="ButtonsVerticalContainer" type="VBoxContainer" parent="Panel/Container/Control/CenterContainer"]
 layout_mode = 2
