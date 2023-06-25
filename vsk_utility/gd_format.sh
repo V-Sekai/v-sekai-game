@@ -1,1 +1,1 @@
-gdformat .. --line-length=160
+gdformat .. --line-length=9999

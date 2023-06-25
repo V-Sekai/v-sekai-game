@@ -97,12 +97,7 @@ static func create_font(p_data: Font, p_scale: float, p_fallback: Array = []) ->
 
 
 static func generate_color(base_color: Color, multiplier: float) -> Color:
-	var new_color = Color(
-		clamp(base_color.r * multiplier, 0, 1),
-		clamp(base_color.g * multiplier, 0, 1),
-		clamp(base_color.b * multiplier, 0, 1),
-		base_color.a
-	)
+	var new_color = Color(clamp(base_color.r * multiplier, 0, 1), clamp(base_color.g * multiplier, 0, 1), clamp(base_color.b * multiplier, 0, 1), base_color.a)
 	return new_color
 
 
@@ -803,7 +798,7 @@ func generate_emote_theme(p_theme_class, p_scale: float) -> Theme:
 	style_content_panel_vp.resource_name = "StyleContentPanelVP"
 	style_content_panel_vp.content_margin_left = border_width * 2
 	style_content_panel_vp.content_margin_right = DEFAULT_MARGIN_SIZE * p_scale
-	style_content_panel_vp.content_margin_bottom =  border_width * 2
+	style_content_panel_vp.content_margin_bottom = border_width * 2
 	style_content_panel_vp.content_margin_top = border_width * 2
 	theme.set_stylebox("panel", "TabContainer", style_content_panel)
 	theme.set_stylebox("Content", "EditorStyles", style_content_panel_vp)

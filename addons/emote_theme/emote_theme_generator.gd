@@ -6,6 +6,7 @@
 @tool
 extends EditorScript
 
+
 func _run():
 	var emote_theme = EmoteTheme.new()
 	var theme = emote_theme.generate_emote_theme(Theme, 1.0)
