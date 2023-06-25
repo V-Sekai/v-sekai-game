@@ -2,4 +2,4 @@
 
 [resource]
 auto_exposure_enabled = true
-frustum_focal_length = 22.0
+frustum_focal_length = 1.0

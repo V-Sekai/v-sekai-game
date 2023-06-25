@@ -3,13 +3,8 @@
 [ext_resource type="Script" path="res://addons/sar1_vr_manager/vr_origin.gd" id="1"]
 [ext_resource type="Script" path="res://addons/sar1_vr_manager/camera_mesh_plane.gd" id="2"]
 [ext_resource type="Environment" uid="uid://cp0t8jp2ellve" path="res://vsk_default/environments/default_env.tres" id="2_4cjpt"]
+[ext_resource type="CameraAttributesPhysical" uid="uid://4lj277x5ouf4" path="res://addons/actor/physical_camera_attributes.tres" id="3_kd4o2"]
 [ext_resource type="Script" path="res://addons/xr_vignette/vignette_controller.gd" id="7_imwy0"]
-
-[sub_resource type="CameraAttributesPhysical" id="CameraAttributesPhysical_e7u4j"]
-auto_exposure_enabled = true
-auto_exposure_speed = 1.0
-frustum_focal_length = 22.0
-auto_exposure_min_exposure_value = 2.0
 
 [sub_resource type="PlaneMesh" id="3"]
 size = Vector2(1, 1)
@@ -21,7 +16,7 @@ script = ExtResource("1")
 [node name="ARVRCamera" type="XRCamera3D" parent="."]
 transform = Transform3D(0.571315, 0, 0.820731, 0, 1, 0, -0.820731, 0, 0.571315, 0, 0, 0)
 environment = ExtResource("2_4cjpt")
-attributes = SubResource("CameraAttributesPhysical_e7u4j")
+attributes = ExtResource("3_kd4o2")
 
 [node name="DebugPanel" type="MeshInstance3D" parent="ARVRCamera"]
 transform = Transform3D(436.413, 0, 0, 0, 2.67226e-14, -436.413, 0, 1, 6.12323e-17, 0, 0, -400.045)
