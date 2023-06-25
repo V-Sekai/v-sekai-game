@@ -5,13 +5,10 @@
 [ext_resource type="PackedScene" uid="uid://rgidoa3biuq8" path="res://addons/vsk_menu/main_menu/vsk_avatar_selector_popup.tscn" id="3"]
 
 [node name="NetworkSetup" type="Control"]
-modulate = Color(0.968627, 0.917647, 0.929412, 1)
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
 script = ExtResource("1")
 name_input_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/NameContainer/NameLineEdit")
 avatar_input_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/AvatarContainer/AvatarContainer/AvatarLineEdit")

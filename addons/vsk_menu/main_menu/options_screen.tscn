@@ -5,7 +5,6 @@
 [ext_resource type="PackedScene" uid="uid://tt3cnvs3qqlq" path="res://addons/vsk_menu/vsk_large_button.tscn" id="4"]
 
 [node name="OptionsScreen" type="Control"]
-modulate = Color(0.968627, 0.917647, 0.929412, 1)
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

@@ -3,7 +3,6 @@
 [ext_resource type="Script" path="res://addons/vsk_menu/preloading_screen.gd" id="1"]
 
 [node name="PreloadingScreen" type="Control"]
-modulate = Color(0.968627, 0.917647, 0.929412, 1)
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

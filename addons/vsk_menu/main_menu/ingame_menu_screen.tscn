@@ -6,7 +6,6 @@
 [ext_resource type="Texture2D" uid="uid://mwvsa6uo0xhh" path="res://vsk_default/icon/v_sekai_logo.png" id="3"]
 
 [node name="IngameMenuScreen" type="Control"]
-modulate = Color(0.968627, 0.917647, 0.929412, 1)
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

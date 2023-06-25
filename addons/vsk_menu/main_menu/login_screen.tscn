@@ -4,7 +4,6 @@
 [ext_resource type="PackedScene" uid="uid://qrrk0xuopfpw" path="res://addons/vsk_menu/password_input.tscn" id="2"]
 
 [node name="LoginScreen" type="Control"]
-modulate = Color(0.968627, 0.917647, 0.929412, 1)
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

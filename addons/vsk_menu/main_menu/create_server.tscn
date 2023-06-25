@@ -5,7 +5,6 @@
 [ext_resource type="PackedScene" uid="uid://dk2gjd62tt2hc" path="res://addons/vsk_menu/main_menu/vsk_map_selector_popup.tscn" id="3"]
 
 [node name="CreateServer" type="Control"]
-modulate = Color(0.968627, 0.917647, 0.929412, 1)
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
