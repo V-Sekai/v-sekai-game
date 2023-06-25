@@ -61,8 +61,8 @@ func _ready():
 	vbox_container.offset_left = MARGIN_SIZE
 	vbox_container.offset_bottom = -MARGIN_SIZE
 	vbox_container.offset_right = -MARGIN_SIZE
-
-	assert(vsk_editor)
+	if not vsk_editor:
+		return
 	if vsk_editor.session_deletion_complete.connect(self._session_deletion_complete) != OK:
 		printerr("Could not connect signal 'session_deletion_complete'")
 

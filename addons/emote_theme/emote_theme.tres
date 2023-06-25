@@ -240,6 +240,9 @@ content_margin_bottom = -8.0
 
 [sub_resource type="FontVariation" id="FontVariation_heqxt"]
 base_font = ExtResource("1_bi4nq")
+opentype_features = {
+1667329140: 0
+}
 spacing_top = -1
 spacing_bottom = -1
 
