@@ -13,7 +13,7 @@
         "cwd": "${workspaceFolder}/vsk_godot"
       },
       "command": [
-        "scons verbose=no warnings=no werror=yes dev_build=yes precision=double use_llvm=yes use_mingw=yes LINKFLAGS='-Wl,-pdb=' CCFLAGS='-g -gcodeview' use_scu=yes compiledb=yes optimize=speed_trace use_static_cpp=true target=editor"
+        "scons verbose=no warnings=no werror=yes dev_build=no precision=double use_llvm=yes use_mingw=yes LINKFLAGS='-Wl,-pdb=' CCFLAGS='-g -gcodeview' compiledb=yes optimize=speed_trace use_static_cpp=true target=editor"
       ],
       "problemMatcher": [],
       "group": {
@@ -36,7 +36,6 @@
         "isDefault": true
       }
     },
-    
     {
       "label": "Godot Checkout Godot",
       "type": "shell",
@@ -51,7 +50,9 @@
         "kind": "build",
         "isDefault": true
       },
-      "dependsOn": ["Godot fetch"]
+      "dependsOn": [
+        "Godot fetch"
+      ]
     }
   ]
 }
