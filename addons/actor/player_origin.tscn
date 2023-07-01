@@ -28,3 +28,9 @@ distance = 0.1
 [node name="VignetteController" type="Node3D" parent="ARVRCamera"]
 process_priority = 1000000
 script = ExtResource("7_imwy0")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0

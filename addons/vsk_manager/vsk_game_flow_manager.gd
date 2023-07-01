@@ -109,10 +109,6 @@ enum { CALLBACK_STATE_NONE, CALLBACK_STATE_KICKED_FROM_SERVER, CALLBACK_STATE_SE
 ##
 enum { NO_INGAME_STATE_CHANGED, INGAME_STARTED, INGAME_ENDED }
 
-enum { GAME_FULLSCREEN, GAME_NON_FULLSCREEN }
-
-var fullscreen: int = GAME_NON_FULLSCREEN
-
 ##
 ## Are we requesting to quit the application
 ##
@@ -696,13 +692,6 @@ func _input(p_event: InputEvent) -> void:
 		await go_to_title(false)
 	elif p_event.is_action_released("ui_cancel") and gameflow_state == GAMEFLOW_STATE_TITLE:
 		await go_to_title(false)
-
-	if p_event.is_action_released("fullscreen") and fullscreen == GAME_NON_FULLSCREEN:
-		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN)
-		fullscreen = GAME_FULLSCREEN
-	elif p_event.is_action_released("fullscreen") and fullscreen == GAME_FULLSCREEN:
-		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
-		fullscreen = GAME_NON_FULLSCREEN
 
 	# Send input events to game viewport
 	if game_viewport:
