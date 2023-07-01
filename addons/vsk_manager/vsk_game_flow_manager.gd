@@ -600,6 +600,14 @@ func _spatial_game_viewport_updated(p_viewport: SubViewport):
 		FlatViewport.texture_rect_ingame.texture = game_viewport.get_texture()
 
 
+func set_viewport(new_viewport: SubViewport) -> void:
+	game_viewport = new_viewport
+	add_child(game_viewport, true)
+	game_viewport.owner = self
+	FlatViewport.texture_rect_ingame.texture = game_viewport.get_texture()
+	var viewport_path = game_viewport.owner.get_path_to(game_viewport)
+	FlatViewport.texture_rect_ingame.texture.viewport_path = viewport_path
+
 ##
 ## Creates a secondary viewport for the gameroot.
 ##

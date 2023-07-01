@@ -186,7 +186,6 @@ process_priority = 1
 arm_elbow_direction_offset = 90.0
 arm_upper_arm_twist_offset = 90.0
 arm_pole_offset = Vector3(15, 90, 60)
-leg_lower_leg_twist_offset = -180.0
 
 [node name="InfoTag" parent="TargetSmooth" instance=ExtResource("21")]
 visible = false

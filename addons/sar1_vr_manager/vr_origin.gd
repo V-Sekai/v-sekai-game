@@ -22,6 +22,10 @@ const vr_component_lasso_const = preload("components/vr_component_lasso.gd")
 const vr_component_hand_pose_const = preload("components/vr_component_hand_pose.gd")
 const vr_component_teleport_const = preload("components/vr_component_teleport.gd")
 
+var vr_camera: Camera3D = null
+var desktop_camera: Camera3D = null
+var desktop_viewport: Viewport = null
+
 var components: Array = []
 
 signal tracker_added(p_positional_tracker: XRPositionalTracker)
@@ -192,6 +196,22 @@ func _ready() -> void:
 	if VRManager.tracker_removed.connect(self._on_tracker_removed) != OK:
 		printerr("tracker_removed could not be connected")
 
+	vr_camera = get_node("ARVRCamera")
+	
+	desktop_viewport = SubViewport.new()
+	desktop_viewport.name = "DesktopViewport"
+	add_child(desktop_viewport)
+	desktop_viewport.owner = self
+	VSKGameFlowManager.set_viewport(desktop_viewport)
+	desktop_viewport.size = DisplayServer.window_get_size(0)
+	
+	desktop_camera = Camera3D.new()
+	desktop_camera.name = "DesktopCamera"
+	desktop_viewport.add_child(desktop_camera)
+	desktop_camera.owner = self
+	desktop_camera.attributes = CameraAttributesPractical.new()
+	desktop_camera.environment = load("res://vsk_default/environments/default_env.tres")
+	desktop_camera.global_transform = vr_camera.global_transform
 
 func _exit_tree() -> void:
 	if VRManager.xr_origin == self:
@@ -216,3 +236,6 @@ func _enter_tree() -> void:
 
 	create_components()
 	setup_components()
+
+func _process(delta):
+	desktop_camera.global_transform = vr_camera.global_transform
