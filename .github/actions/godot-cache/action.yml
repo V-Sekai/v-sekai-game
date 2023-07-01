@@ -11,8 +11,8 @@ runs:
   using: "composite"
   steps:
     # Upload cache on completion and check it out now
-    - name: Load .scons_cache directory
-      uses: actions/cache@v3
+    - name: Always upload .scons_cache directory
+      uses: pat-s/always-upload-cache@v3.0.11
       with:
         path: ${{inputs.scons-cache}}
         key: ${{inputs.cache-name}}-${{env.GODOT_BASE_BRANCH}}-${{github.ref}}-${{github.sha}}
