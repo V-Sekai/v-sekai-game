@@ -16,7 +16,7 @@ var left_hand_controller: XRController3D = null
 var right_hand_controller: XRController3D = null
 
 
-func tracker_added(p_tracker: XRController3D) -> void:  # vr_controller_tracker_const
+func tracker_added(p_tracker: XRController3D) -> void:
 	var tracker_hand: int = p_tracker.get_tracker_hand()
 	match tracker_hand:
 		XRPositionalTracker.TRACKER_HAND_LEFT:

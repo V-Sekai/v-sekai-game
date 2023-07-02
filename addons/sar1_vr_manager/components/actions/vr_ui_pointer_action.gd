@@ -11,7 +11,7 @@ const LASER_HIT_SIZE = 0.01
 const UI_COLLISION_LAYER = 0x02
 
 const line_renderer_const = preload("res://addons/line_renderer/line_renderer.gd")
-var is_active_selector: bool = false
+var is_active_selector: bool = true
 var valid_ray_result: Dictionary = {}
 
 @export var maxiumum_ray_length: float = 10.0
@@ -29,6 +29,7 @@ signal requested_as_ui_selector(p_hand)
 
 func _on_action_pressed(p_action: String) -> void:
 	super._on_action_pressed(p_action)
+	print("_on_action_pressed called with action: ", p_action)  # Debug print
 	match p_action:
 		"/menu/menu_interaction", "trigger_click":
 			var current_msec: int = Time.get_ticks_msec()
@@ -44,6 +45,7 @@ func _on_action_pressed(p_action: String) -> void:
 					valid_ray_result["collider"].on_pointer_pressed(valid_ray_result["position"], is_doubleclick)
 
 			last_click_time = Time.get_ticks_msec()
+			print("last_click_time updated: ", last_click_time)  # Debug print
 
 
 func _on_action_released(p_action: String) -> void:
@@ -98,7 +100,6 @@ func _ready() -> void:
 
 
 func _exit_tree() -> void:
-	#take the laser with it
 	if laser_node:
 		laser_node.queue_free()
 	if laser_hit_node:
@@ -106,6 +107,7 @@ func _exit_tree() -> void:
 
 
 func cast_validation_ray(p_length: float) -> Dictionary:
+	print("cast_validation_ray called with length: ", p_length)  # Debug print
 	if not is_inside_tree():
 		return {}
 
@@ -129,6 +131,7 @@ func cast_validation_ray(p_length: float) -> Dictionary:
 	laser_hit_node.global_transform = Transform3D(global_transform.basis, end)
 
 	if ray_result:
+		print("ray_result obtained: ", ray_result)  # Debug print
 		if ray_result["collider"].has_method("validate_pointer"):
 			if ray_result["collider"].validate_pointer(ray_result["normal"]):
 				laser_node.start = start
@@ -140,8 +143,10 @@ func cast_validation_ray(p_length: float) -> Dictionary:
 
 	return {}
 
+var frame_counter = 0
 
 func update_ray() -> void:
+	print("is_active_selector %s" % is_active_selector)
 	if is_active_selector and VRManager.xr_active:
 		valid_ray_result = cast_validation_ray(maxiumum_ray_length)
 		if !valid_ray_result.is_empty() and is_active_selector:
@@ -156,4 +161,6 @@ func update_ray() -> void:
 
 
 func _physics_process(_delta: float) -> void:
-	update_ray()
+	frame_counter += 1
+	if frame_counter % 10 == 0:  # Only update every 10 frames
+		update_ray()
