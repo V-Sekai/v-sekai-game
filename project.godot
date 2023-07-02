@@ -16,6 +16,7 @@ config/quit_on_go_back=false
 config/features=PackedStringArray("4.0", "Double Precision")
 run/flush_stdout_on_print.debug=false
 boot_splash/bg_color=Color(0.227451, 0.054902, 0.054902, 1)
+boot_splash/show_image=false
 boot_splash/fullsize=false
 config/icon="res://vsk_default/icon/groups_logo.svg"
 config/loading_scene="res://vsk_default/scenes/network_lobby.tscn"
