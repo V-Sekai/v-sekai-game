@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://87wfk6bjaa26"
-path.s3tc="res://.godot/imported/groups_logo.svg-9c13bf63f948218b509c95f2cd7f3e21.s3tc.ctex"
+uid="uid://by6bh4do5u410"
+path.s3tc="res://.godot/imported/groups_logo_no_bg.svg-228273fc72e46d3f8804e58bf0c35222.s3tc.ctex"
 metadata={
 "has_editor_variant": true,
 "imported_formats": ["s3tc_bptc"],
@@ -12,8 +12,8 @@ metadata={
 
 [deps]
 
-source_file="res://vsk_default/icon/groups_logo.svg"
-dest_files=["res://.godot/imported/groups_logo.svg-9c13bf63f948218b509c95f2cd7f3e21.s3tc.ctex"]
+source_file="res://vsk_default/icon/groups_logo_no_bg.svg"
+dest_files=["res://.godot/imported/groups_logo_no_bg.svg-228273fc72e46d3f8804e58bf0c35222.s3tc.ctex"]
 
 [params]
 
@@ -27,12 +27,12 @@ mipmaps/generate=true
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
-process/fix_alpha_border=false
+process/fix_alpha_border=true
 process/premult_alpha=false
 process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
-process/size_limit=0
+process/size_limit=2048
 detect_3d/compress_to=0
 svg/scale=1.0
 editor/scale_with_editor_scale=true
