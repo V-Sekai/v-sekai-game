@@ -598,6 +598,8 @@ func _spatial_game_viewport_updated(p_viewport: SubViewport):
 
 func set_viewport(new_viewport: SubViewport) -> void:
 	game_viewport = new_viewport
+	if game_viewport.get_parent() != null:
+		game_viewport.get_parent().remove_child(game_viewport)
 	add_child(game_viewport, true)
 	game_viewport.owner = self
 	FlatViewport.texture_rect_ingame.texture = game_viewport.get_texture()
