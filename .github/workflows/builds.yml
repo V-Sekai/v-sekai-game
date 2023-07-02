@@ -23,7 +23,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: Editor Linux (target=editor,deploy=true,deploy-platform=windows,deploy-platform-target=template_release)
+          - name: linux_editor_win_deploy
             cache-name: linux-editor-deploy-windows-editor
             target: editor
             tests: false
@@ -38,7 +38,7 @@ jobs:
             deploy-platform: windows
             deploy-platform-target: editor
 
-          - name: Editor Linux (target=editor,deploy=true,deploy-platform=linux,deploy-platform-target=template_release)
+          - name: linux_editor_linux_deploy
             cache-name: linux-editor-deploy-linux-editor
             target: editor
             tests: false
