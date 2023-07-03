@@ -17,10 +17,10 @@ const function_pointer_receiver_const = preload("function_pointer_receiver.gd")
 	set = set_canvas_anchor_y
 
 # Defaults to 16:9
-@export var canvas_width: float = 1920:
+@export var canvas_width: float = DisplayServer.screen_get_size(0).x:
 	set = set_canvas_width
 
-@export var canvas_height: float = 1080:
+@export var canvas_height: float = DisplayServer.screen_get_size(0).y:
 	set = set_canvas_height
 
 @export var canvas_scale: float = 0.01:
@@ -52,20 +52,13 @@ var previous_mouse_position: Vector2 = Vector2()
 var mouse_mask: int = 0
 
 
-func get_spatial_origin_to_canvas_position(p_origin: Vector3) -> Vector2:
-	var transform_scale: Vector2 = Vector2(global_transform.basis.get_scale().x, global_transform.basis.get_scale().y)
+func global_to_viewport(p_origin: Vector3) -> Vector2:
+	var t: Transform3D = global_transform
+	var at = t.inverse() * p_origin
+	at.x = ((at.x / canvas_width) + 0.5) * canvas_width
+	at.y = (0.5 - (at.y / canvas_height)) * canvas_height
 
-	var inverse_transform: Vector2 = Vector2(1.0, 1.0) / transform_scale
-	var point: Vector2 = Vector2(p_origin.x, p_origin.y) * inverse_transform * inverse_transform
-
-	var ratio: Vector2 = Vector2(0.5, 0.5) + (point / canvas_scale) / ((Vector2(canvas_width, canvas_height) * canvas_scale) * 0.5)
-	ratio.y = 1.0 - ratio.y  # Flip the Y-axis
-
-	var canvas_position: Vector2 = ratio * Vector2(canvas_width, canvas_height)
-
-	print(canvas_position)
-
-	return canvas_position
+	return Vector2(at.x, at.y)
 
 
 func _update() -> void:
@@ -149,57 +142,55 @@ func _set_mesh_material(p_material: Material) -> void:
 			mesh.surface_set_material(0, p_material)
 
 
-func on_pointer_pressed(p_position: Vector3, p_doubleclick: bool) -> void:
-	var position_2d: Vector2 = get_spatial_origin_to_canvas_position(p_position)
+func on_pointer_moved(from, to):
+	var local_from = global_to_viewport(from)
+	var local_to = global_to_viewport(to)
+
+	# Let's mimic a mouse
+	var event = InputEventMouseMotion.new()
+	event.set_position(local_to)
+	event.set_global_position(local_to)
+	event.set_relative(local_to - local_from) # should this be scaled/warped?
+	event.set_button_mask(mouse_mask)
+	event.set_pressure(mouse_mask)
+
+	if viewport:
+		viewport.push_input(event)
+	previous_mouse_position = local_to
+
+func on_pointer_pressed(at, p_doubleclick: bool):
+	var local_at = global_to_viewport(at)
 
 	# Let's mimic a mouse
 	mouse_mask = 1
-	var event: InputEventMouseButton = InputEventMouseButton.new()
-	event.set_button_index(MouseButton.MOUSE_BUTTON_LEFT)
+	var event = InputEventMouseButton.new()
+	event.set_button_index(1)
 	event.set_pressed(true)
-	event.set_position(position_2d)
-	event.set_global_position(position_2d)
+	event.set_position(local_at)
+	event.set_global_position(local_at)
 	event.set_button_mask(mouse_mask)
 	event.set_double_click(p_doubleclick)
 
-	#get_tree().set_input_as_handled()
-	viewport.push_input(event)
-	previous_mouse_position = position_2d
+	if viewport:
+		viewport.push_input(event)
+	previous_mouse_position = local_at
 
-
-func on_pointer_release(p_position: Vector3) -> void:
-	var position_2d: Vector2 = get_spatial_origin_to_canvas_position(p_position)
+func on_pointer_release(at, p_doubleclick: bool):
+	var local_at = global_to_viewport(at)
 
 	# Let's mimic a mouse
 	mouse_mask = 0
-	var event: InputEventMouseButton = InputEventMouseButton.new()
-	event.set_button_index(MOUSE_BUTTON_LEFT)
+	var event = InputEventMouseButton.new()
+	event.set_button_index(1)
 	event.set_pressed(false)
-	event.set_position(position_2d)
-	event.set_global_position(position_2d)
+	event.set_position(local_at)
+	event.set_global_position(local_at)
 	event.set_button_mask(mouse_mask)
+	event.set_double_click(p_doubleclick)
 
-	#get_tree().set_input_as_handled()
-	viewport.push_input(event)
-	previous_mouse_position = position_2d
-
-
-##
-## func on_pointer_moved(p_position : Vector3) -> void:
-## 	# Disabled temporarily because virtual mouse movement events buggy
-## 	var position_2d : Vector2 = get_spatial_origin_to_canvas_position(p_position)
-##
-## 	if position_2d != previous_mouse_position:
-## 		var event : InputEventMouseMotion = InputEventMouseMotion.new()
-## 		event.set_position(position_2d)
-## 		event.set_global_position(position_2d)
-## 		event.set_relative(position_2d - previous_mouse_position) # should this be scaled/warped?
-## 		event.set_button_mask(mouse_mask)
-##
-## 		#get_tree().set_input_as_handled()
-## 		viewport.push_input(event)
-## 		previous_mouse_position = position_2d
-
+	if viewport:
+		viewport.push_input(event)
+	previous_mouse_position = local_at
 
 func _process(_delta: float) -> void:
 	_update()

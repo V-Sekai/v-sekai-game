@@ -14,7 +14,7 @@ func _exit_tree():
 
 func untransform_position(p_vector: Vector3) -> Vector3:
 	print("Untransforming position: ", p_vector)
-	var result = p_vector * global_transform.basis
+	var result = global_transform.basis * p_vector
 	print("Result: ", result)
 	return result
 
@@ -22,7 +22,7 @@ func untransform_position(p_vector: Vector3) -> Vector3:
 func untransform_normal(p_normal: Vector3) -> Vector3:
 	print("Untransforming normal: ", p_normal)
 	var current_basis: Basis = global_transform.basis.orthonormalized()
-	var result = p_normal * current_basis.inverse()
+	var result = current_basis.inverse() * p_normal
 	print("Result: ", result)
 	return result
 
@@ -30,7 +30,7 @@ func untransform_normal(p_normal: Vector3) -> Vector3:
 func validate_pointer(p_normal: Vector3) -> bool:
 	print("Validating pointer: ", p_normal)
 	var transform_normal: Vector3 = untransform_normal(p_normal)
-	if transform_normal.z <= 0.0:
+	if transform_normal.z > 0.0:
 		print("Pointer is valid.")
 		return true
 	else:
