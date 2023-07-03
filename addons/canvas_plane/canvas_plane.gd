@@ -148,7 +148,6 @@ func on_pointer_moved(from, to):
 
 	# Let's mimic a mouse
 	var event = InputEventMouseMotion.new()
-	event.set_position(local_to)
 	event.set_global_position(local_to)
 	event.set_relative(local_to - local_from) # should this be scaled/warped?
 	event.set_button_mask(mouse_mask)
@@ -166,7 +165,6 @@ func on_pointer_pressed(at, p_doubleclick: bool):
 	var event = InputEventMouseButton.new()
 	event.set_button_index(1)
 	event.set_pressed(true)
-	event.set_position(local_at)
 	event.set_global_position(local_at)
 	event.set_button_mask(mouse_mask)
 	event.set_double_click(p_doubleclick)
@@ -183,7 +181,6 @@ func on_pointer_release(at, p_doubleclick: bool):
 	var event = InputEventMouseButton.new()
 	event.set_button_index(1)
 	event.set_pressed(false)
-	event.set_position(local_at)
 	event.set_global_position(local_at)
 	event.set_button_mask(mouse_mask)
 	event.set_double_click(p_doubleclick)
