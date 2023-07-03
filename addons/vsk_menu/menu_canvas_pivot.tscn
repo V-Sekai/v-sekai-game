@@ -16,5 +16,3 @@ canvas_height = 1080.0
 canvas_scale = 0.007
 interactable = true
 translucent = true
-collision_mask = 2
-collision_layer = 2
