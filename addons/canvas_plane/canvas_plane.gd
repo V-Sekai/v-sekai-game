@@ -32,8 +32,8 @@ const function_pointer_receiver_const = preload("function_pointer_receiver.gd")
 @export var translucent: bool = false:
 	set = set_translucent
 
-@export_flags_3d_physics var collision_mask: int = 0
-@export_flags_3d_physics var collision_layer: int = 0
+@export_flags_3d_physics var collision_mask: int = 2
+@export_flags_3d_physics var collision_layer: int = 2
 
 # Render
 var spatial_root: Node3D = null
@@ -55,10 +55,16 @@ var mouse_mask: int = 0
 func global_to_viewport(p_origin: Vector3) -> Vector2:
 	var t: Transform3D = global_transform
 	var at = t.inverse() * p_origin
-	at.x = ((at.x / canvas_width) + 0.5) * canvas_width
-	at.y = (0.5 - (at.y / canvas_height)) * canvas_height
+
+	if canvas_width == 0 or canvas_height == 0:
+		print("Error: Canvas width and height must be non-zero.")
+		return Vector2()
+
+	at.x = (at.x / canvas_width) + 0.5
+	at.y = 0.5 - (at.y / canvas_height)
 
 	return Vector2(at.x, at.y)
+
 
 
 func _update() -> void:
@@ -151,14 +157,15 @@ func on_pointer_moved(from, to):
 	event.set_global_position(local_to)
 	event.set_relative(local_to - local_from) # should this be scaled/warped?
 	event.set_button_mask(mouse_mask)
-	event.set_pressure(mouse_mask)
+	event.set_pressure(0.5)
 
 	if viewport:
 		viewport.push_input(event)
 	previous_mouse_position = local_to
 
+
 func on_pointer_pressed(at, p_doubleclick: bool):
-	var local_at = global_to_viewport(at)
+	var local_at: Vector2 = global_to_viewport(at)
 
 	# Let's mimic a mouse
 	mouse_mask = 1
@@ -172,6 +179,7 @@ func on_pointer_pressed(at, p_doubleclick: bool):
 	if viewport:
 		viewport.push_input(event)
 	previous_mouse_position = local_at
+
 
 func on_pointer_release(at, p_doubleclick: bool):
 	var local_at = global_to_viewport(at)
