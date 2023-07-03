@@ -55,8 +55,8 @@ var mouse_mask: int = 0
 func global_to_viewport(p_origin: Vector3) -> Vector2:
 	var t: Transform3D = global_transform
 	var at = t.inverse() * p_origin
-	at.x = ((at.x / canvas_width) + 0.5) * canvas_width
-	at.y = (0.5 - (at.y / canvas_height)) * canvas_height
+	at.x *= canvas_width
+	at.y *= canvas_height
 
 	return Vector2(at.x, at.y)
 
