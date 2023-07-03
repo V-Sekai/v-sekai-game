@@ -8,7 +8,7 @@ script = ExtResource("1")
 canvas_plane_nodepath = NodePath("CanvasPlane")
 
 [node name="CanvasPlane" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0.18, -4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0.18, -3.93)
 script = ExtResource("2")
 canvas_anchor_y = 1.0
 canvas_width = 1920.0

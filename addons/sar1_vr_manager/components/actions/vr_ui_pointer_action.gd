@@ -107,7 +107,6 @@ func _exit_tree() -> void:
 
 
 func cast_validation_ray(p_length: float) -> Dictionary:
-	print("cast_validation_ray called with length: ", p_length)  # Debug print
 	if not is_inside_tree():
 		return {}
 
@@ -131,7 +130,6 @@ func cast_validation_ray(p_length: float) -> Dictionary:
 	laser_hit_node.global_transform = Transform3D(global_transform.basis, end)
 
 	if ray_result:
-		print("ray_result obtained: ", ray_result)  # Debug print
 		if ray_result["collider"].has_method("validate_pointer"):
 			if ray_result["collider"].validate_pointer(ray_result["normal"]):
 				laser_node.start = start
@@ -146,7 +144,6 @@ func cast_validation_ray(p_length: float) -> Dictionary:
 var frame_counter = 0
 
 func update_ray() -> void:
-	print("is_active_selector %s" % is_active_selector)
 	if is_active_selector and VRManager.xr_active:
 		valid_ray_result = cast_validation_ray(maxiumum_ray_length)
 		if !valid_ray_result.is_empty() and is_active_selector:
