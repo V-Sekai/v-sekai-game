@@ -79,7 +79,7 @@ func _update() -> void:
 
 			if interactable:
 				var box_shape = BoxShape3D.new()
-				box_shape.set_size(Vector3(canvas_width * 0.5 * 0.5, canvas_height * 0.5 * 0.5, 0.0))
+				box_shape.set_size(Vector3(canvas_width * 0.5, canvas_height * 0.5, 0.0))
 				collision_shape.set_shape(box_shape)
 
 				pointer_receiver.add_child(collision_shape, true)
