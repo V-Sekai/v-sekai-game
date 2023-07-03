@@ -18,8 +18,10 @@ var right_ui_pointer_action: Node3D = null
 
 
 func _on_requested_as_ui_selector(p_node: Node) -> void:
-	if p_node.has_method("activate_ui_selector"):
-		p_node.activate_ui_selector()
+	for child in get_children():
+		if child is vr_controller_tracker_const:
+			child.deactivate_ui_selector()
+	p_node.activate_ui_selector()
 
 
 func _requested_as_ui_selector(p_hand: int) -> void:

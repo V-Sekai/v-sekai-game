@@ -1,16 +1,8 @@
 extends Area3D
 
-const math_funcs_const = preload("res://addons/math_util/math_funcs.gd")
-
 signal pointer_pressed(p_at)
 signal pointer_moved(p_at, p_from)
 signal pointer_release(p_at)
-
-func _ready():
-	print("Initialising function_pointer_receiver.")
-
-func _exit_tree():
-	print("Exiting function_pointer_receiver.")
 
 func untransform_position(p_vector: Vector3) -> Vector3:
 	var result = global_transform.basis * p_vector
@@ -32,7 +24,6 @@ func validate_pointer(p_normal: Vector3) -> bool:
 
 
 func on_pointer_pressed(p_position: Vector3, p_doubleclick: bool) -> void:
-	print("Pointer pressed at position: ", p_position, " Double click: ", p_doubleclick)
 	pointer_pressed.emit(untransform_position(p_position), p_doubleclick)
 	print("Signal 'pointer_pressed' emitted.")
 

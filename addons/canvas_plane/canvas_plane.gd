@@ -248,17 +248,17 @@ func _ready() -> void:
 	pointer_receiver = function_pointer_receiver_const.new()
 	pointer_receiver.set_name("PointerReceiver")
 
-	if pointer_receiver.pointer_pressed.connect(self.on_pointer_pressed) != OK:
+	if pointer_receiver.pointer_pressed.connect(Callable(self, "on_pointer_pressed")) != OK:
 		printerr("Failed to connect pointer_receiver.pointer_pressed signal.")
 		return
 
-	if pointer_receiver.pointer_release.connect(self.on_pointer_release) != OK:
+	if pointer_receiver.pointer_release.connect(Callable(self, "on_pointer_release")) != OK:
 		printerr("Failed to connect pointer_receiver.pointer_release signal.")
 		return
 
-	# if pointer_receiver.pointer_moved.connect(self.on_pointer_moved) != OK:
-	# 	printerr("Failed to connect pointer_receiver.pointer_moved signal.")
-	# 	return
+	if pointer_receiver.pointer_moved.connect(Callable(self, "on_pointer_moved")) != OK:
+		printerr("Failed to connect pointer_receiver.pointer_moved signal.")
+		return
 
 	pointer_receiver.collision_mask = collision_mask
 	pointer_receiver.collision_layer = collision_layer

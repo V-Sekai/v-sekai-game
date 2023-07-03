@@ -45,7 +45,7 @@ func _on_action_pressed(p_action: String) -> void:
 					valid_ray_result["collider"].on_pointer_pressed(valid_ray_result["position"], is_doubleclick)
 
 			last_click_time = Time.get_ticks_msec()
-			print("last_click_time updated: ", last_click_time)  # Debug print
+			print("last_click_time updated milliseconds: ", last_click_time)
 
 
 func _on_action_released(p_action: String) -> void:

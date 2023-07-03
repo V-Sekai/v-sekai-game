@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://4r6ao13ste61"]
+[gd_scene load_steps=10 format=3 uid="uid://4r6ao13ste61"]
 
 [ext_resource type="Script" path="res://addons/sar1_vr_manager/components/actions/vr_lasso_action.gd" id="1_lbith"]
 [ext_resource type="Material" uid="uid://cqyb4m66nqgy6" path="res://addons/sar1_vr_manager/materials/laser.tres" id="2"]
@@ -22,10 +22,6 @@ shader_parameter/main_texture = ExtResource("5_wun48")
 
 [sub_resource type="QuadMesh" id="3"]
 resource_local_to_scene = true
-
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_3w4na"]
-radius = 0.0357738
-height = 3.95705
 
 [node name="snap_pointer" type="Node3D"]
 script = ExtResource("1_lbith")
@@ -60,14 +56,3 @@ skeleton = NodePath("")
 
 [node name="PickupAction" type="Node3D" parent="."]
 script = ExtResource("6_7qtc8")
-
-[node name="PickupArea" type="Area3D" parent="PickupAction"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.03, 0.115)
-collision_layer = 50
-collision_mask = 50
-input_ray_pickable = false
-monitorable = false
-
-[node name="CollisionShape" type="CollisionShape3D" parent="PickupAction/PickupArea"]
-transform = Transform3D(1, 0, 0, 0, 6.12323e-17, 1, 0, -1, 6.12323e-17, 0, 0.028775, -2)
-shape = SubResource("CapsuleShape3D_3w4na")
