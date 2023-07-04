@@ -27,7 +27,7 @@ jobs:
             cache-name: linux-editor-deploy-windows-editor
             target: editor
             tests: false
-            sconsflags: use_llvm=yes linker=gold deprecate=no
+            sconsflags: use_llvm=yes linker=gold deprecate=no module_mono_enabled=yes 
             doc-test: false
             bin: "./bin/godot.linuxbsd.editor.x86_64.llvm.mono"
             deploy-bin: "./bin/godot.windows.editor.x86_64.llvm.mono.exe"
@@ -43,7 +43,7 @@ jobs:
             cache-name: linux-editor-deploy-linux-editor
             target: editor
             tests: false
-            sconsflags: use_llvm=yes linker=gold deprecate=no
+            sconsflags: use_llvm=yes linker=gold deprecate=no module_mono_enabled=yes 
             doc-test: false
             bin: "./bin/godot.linuxbsd.editor.x86_64.llvm.mono"
             deploy-bin: "./bin/godot.linuxbsd.editor.x86_64.llvm.mono"
