@@ -29,9 +29,10 @@ jobs:
             tests: false
             sconsflags: use_llvm=yes linker=gold deprecate=no
             doc-test: false
-            bin: "./bin/godot.linuxbsd.editor.x86_64.llvm"
-            deploy-bin: "./bin/godot.windows.editor.x86_64.llvm.exe"
+            bin: "./bin/godot.linuxbsd.editor.x86_64.llvm.mono"
+            deploy-bin: "./bin/godot.windows.editor.x86_64.llvm.mono.exe"
             proj-conv: false
+            build-mono: true
             artifact: true
             platform: linuxbsd
             deploy: true
@@ -44,9 +45,10 @@ jobs:
             tests: false
             sconsflags: use_llvm=yes linker=gold deprecate=no
             doc-test: false
-            bin: "./bin/godot.linuxbsd.editor.x86_64.llvm"
-            deploy-bin: "./bin/godot.linuxbsd.editor.x86_64.llvm"
+            bin: "./bin/godot.linuxbsd.editor.x86_64.llvm.mono"
+            deploy-bin: "./bin/godot.linuxbsd.editor.x86_64.llvm.mono"
             proj-conv: false
+            build-mono: true
             artifact: true
             platform: linuxbsd
             deploy: true
