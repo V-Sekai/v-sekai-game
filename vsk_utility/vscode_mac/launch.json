@@ -14,13 +14,9 @@
       "name": "Build the editor",
       "type": "lldb",
       "request": "launch",
-      "args": [
-        "--path",
-        "vsk_game",
-        "-e",
-      ],
+      "args": ["--path", "v-sekai-game", "-e"],
       "cwd": "${workspaceFolder}",
-      "program": "${workspaceFolder}/vsk_godot/bin/godot.macos.editor.double.x86_64",
+      "program": "${workspaceFolder}/vsk_godot/bin/godot.macos.editor.dev.double.arm64",
       "preLaunchTask": "Godot Engine"
     }
   ]
