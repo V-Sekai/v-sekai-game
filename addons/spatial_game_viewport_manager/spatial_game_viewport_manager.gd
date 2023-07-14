@@ -7,7 +7,6 @@
 extends Node
 
 var spatial_game_viewport: SubViewport = null
-var spatial_secondary_viewport: SubViewport = null
 
 signal viewport_updated(p_viewport)
 
@@ -15,9 +14,6 @@ signal viewport_updated(p_viewport)
 func update_viewports() -> void:
 	if spatial_game_viewport:
 		_update_viewport(spatial_game_viewport, VRManager.is_xr_active())
-
-	if spatial_secondary_viewport:
-		_update_viewport(spatial_secondary_viewport, false)
 
 
 func _update_viewport(p_viewport: SubViewport, p_use_vr: bool) -> void:
@@ -33,19 +29,6 @@ func _update_viewport(p_viewport: SubViewport, p_use_vr: bool) -> void:
 	p_viewport.audio_listener_enable_3d = true
 
 	viewport_updated.emit(p_viewport)
-
-
-func create_spatial_secondary_viewport() -> SubViewport:
-	if spatial_secondary_viewport:
-		printerr("SpatialGameCameraViewport has already been created")
-		return spatial_secondary_viewport
-
-	spatial_secondary_viewport = SubViewport.new()
-	spatial_secondary_viewport.name = "SecondaryViewport"
-
-	spatial_secondary_viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
-
-	return spatial_secondary_viewport
 
 
 func create_spatial_game_viewport() -> SubViewport:

@@ -237,6 +237,8 @@ class HTTPState:
 		return ret
 
 	func release():
+		if not http_pool:
+			return
 		#print("Do release")
 		if http_pool.http_tick.is_connected(self.http_tick):
 			http_pool.http_tick.disconnect(self.http_tick)
