@@ -32,11 +32,11 @@ func get_canvas_plane() -> Node3D:
 		return null
 
 
-const MIN_DOT: float = 0.92
-const MAX_DOT: float = 0.99
+const MIN_DOT: float = 0.85
+const MAX_DOT: float = 0.95
 const MAX_DISTANCE: float = 0.5
 const MIN_DISTANCE: float = 0.1
-const SPEED_MULTIPLIER: float = 2.0
+const SPEED_MULTIPLIER: float = 1.0
 
 var first_transform_has_occured: bool = false
 var is_transforming: bool = true
