@@ -1,6 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://mutjc1fjx2ns"]
-
-[ext_resource type="Texture2D" uid="uid://by6bh4do5u410" path="res://vsk_default/icon/groups_logo_no_bg.svg" id="1_0thvt"]
+[gd_scene load_steps=4 format=3 uid="uid://mutjc1fjx2ns"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_qqa8l"]
 size = Vector3(74, 0.1, 74)
@@ -86,15 +84,3 @@ autowrap_mode = 3
 width = 1000.0
 metadata/_edit_group_ = true
 metadata/_edit_lock_ = true
-
-[node name="Sprite3D" type="Sprite3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -35, 2, -4)
-texture = ExtResource("1_0thvt")
-
-[node name="Label3D" type="Label3D" parent="Sprite3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1)
-text = "Groups Floating Logo"
-font_size = 64
-outline_size = 0
-uppercase = true
-autowrap_mode = 3

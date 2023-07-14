@@ -17,10 +17,10 @@ const function_pointer_receiver_const = preload("function_pointer_receiver.gd")
 	set = set_canvas_anchor_y
 
 # Defaults to 16:9
-@export var canvas_width: float = 1920:
+@export var canvas_width: float = DisplayServer.screen_get_size(0).x:
 	set = set_canvas_width
 
-@export var canvas_height: float = 1080:
+@export var canvas_height: float = DisplayServer.screen_get_size(0).y:
 	set = set_canvas_height
 
 @export var canvas_scale: float = 0.01:
@@ -32,8 +32,8 @@ const function_pointer_receiver_const = preload("function_pointer_receiver.gd")
 @export var translucent: bool = false:
 	set = set_translucent
 
-@export_flags_3d_physics var collision_mask: int = 0
-@export_flags_3d_physics var collision_layer: int = 0
+@export_flags_3d_physics var collision_mask: int = 2
+@export_flags_3d_physics var collision_layer: int = 2
 
 # Render
 var spatial_root: Node3D = null
@@ -52,20 +52,19 @@ var previous_mouse_position: Vector2 = Vector2()
 var mouse_mask: int = 0
 
 
-func get_spatial_origin_to_canvas_position(p_origin: Vector3) -> Vector2:
-	var transform_scale: Vector2 = Vector2(global_transform.basis.get_scale().x, global_transform.basis.get_scale().y)
+func global_to_viewport(p_origin: Vector3) -> Vector2:
+	var t: Transform3D = global_transform
+	var at = t.inverse() * p_origin
 
-	var inverse_transform: Vector2 = Vector2(1.0, 1.0) / transform_scale
-	var point: Vector2 = Vector2(p_origin.x, p_origin.y) * inverse_transform * inverse_transform
+	if canvas_width == 0 or canvas_height == 0:
+		print("Error: Canvas width and height must be non-zero.")
+		return Vector2()
 
-	var ratio: Vector2 = Vector2(0.5, 0.5) + (point / canvas_scale) / ((Vector2(canvas_width, canvas_height) * canvas_scale) * 0.5)
-	ratio.y = 1.0 - ratio.y  # Flip the Y-axis
+	at.x = (at.x / canvas_width) + 0.5
+	at.y = 0.5 - (at.y / canvas_height)
 
-	var canvas_position: Vector2 = ratio * Vector2(canvas_width, canvas_height)
+	return Vector2(at.x, at.y)
 
-	print(canvas_position)
-
-	return canvas_position
 
 
 func _update() -> void:
@@ -86,7 +85,7 @@ func _update() -> void:
 
 			if interactable:
 				var box_shape = BoxShape3D.new()
-				box_shape.set_size(Vector3(canvas_width * 0.5 * 0.5, canvas_height * 0.5 * 0.5, 0.0))
+				box_shape.set_size(Vector3(canvas_width * 0.5, canvas_height * 0.5, 0.0))
 				collision_shape.set_shape(box_shape)
 
 				pointer_receiver.add_child(collision_shape, true)
@@ -149,57 +148,54 @@ func _set_mesh_material(p_material: Material) -> void:
 			mesh.surface_set_material(0, p_material)
 
 
-func on_pointer_pressed(p_position: Vector3, p_doubleclick: bool) -> void:
-	var position_2d: Vector2 = get_spatial_origin_to_canvas_position(p_position)
+func on_pointer_moved(from, to):
+	var local_from = global_to_viewport(from)
+	var local_to = global_to_viewport(to)
+
+	# Let's mimic a mouse
+	var event = InputEventMouseMotion.new()
+	event.set_global_position(local_to)
+	event.set_relative(local_to - local_from) # should this be scaled/warped?
+	event.set_button_mask(mouse_mask)
+	event.set_pressure(0.5)
+
+	if viewport:
+		viewport.push_input(event)
+	previous_mouse_position = local_to
+
+
+func on_pointer_pressed(at, p_doubleclick: bool):
+	var local_at: Vector2 = global_to_viewport(at)
 
 	# Let's mimic a mouse
 	mouse_mask = 1
-	var event: InputEventMouseButton = InputEventMouseButton.new()
-	event.set_button_index(MouseButton.MOUSE_BUTTON_LEFT)
+	var event = InputEventMouseButton.new()
+	event.set_button_index(1)
 	event.set_pressed(true)
-	event.set_position(position_2d)
-	event.set_global_position(position_2d)
+	event.set_global_position(local_at)
 	event.set_button_mask(mouse_mask)
 	event.set_double_click(p_doubleclick)
 
-	#get_tree().set_input_as_handled()
-	viewport.push_input(event)
-	previous_mouse_position = position_2d
+	if viewport:
+		viewport.push_input(event)
+	previous_mouse_position = local_at
 
 
-func on_pointer_release(p_position: Vector3) -> void:
-	var position_2d: Vector2 = get_spatial_origin_to_canvas_position(p_position)
+func on_pointer_release(at, p_doubleclick: bool):
+	var local_at = global_to_viewport(at)
 
 	# Let's mimic a mouse
 	mouse_mask = 0
-	var event: InputEventMouseButton = InputEventMouseButton.new()
-	event.set_button_index(MOUSE_BUTTON_LEFT)
+	var event = InputEventMouseButton.new()
+	event.set_button_index(1)
 	event.set_pressed(false)
-	event.set_position(position_2d)
-	event.set_global_position(position_2d)
+	event.set_global_position(local_at)
 	event.set_button_mask(mouse_mask)
+	event.set_double_click(p_doubleclick)
 
-	#get_tree().set_input_as_handled()
-	viewport.push_input(event)
-	previous_mouse_position = position_2d
-
-
-##
-## func on_pointer_moved(p_position : Vector3) -> void:
-## 	# Disabled temporarily because virtual mouse movement events buggy
-## 	var position_2d : Vector2 = get_spatial_origin_to_canvas_position(p_position)
-##
-## 	if position_2d != previous_mouse_position:
-## 		var event : InputEventMouseMotion = InputEventMouseMotion.new()
-## 		event.set_position(position_2d)
-## 		event.set_global_position(position_2d)
-## 		event.set_relative(position_2d - previous_mouse_position) # should this be scaled/warped?
-## 		event.set_button_mask(mouse_mask)
-##
-## 		#get_tree().set_input_as_handled()
-## 		viewport.push_input(event)
-## 		previous_mouse_position = position_2d
-
+	if viewport:
+		viewport.push_input(event)
+	previous_mouse_position = local_at
 
 func _process(_delta: float) -> void:
 	_update()
@@ -257,17 +253,17 @@ func _ready() -> void:
 	pointer_receiver = function_pointer_receiver_const.new()
 	pointer_receiver.set_name("PointerReceiver")
 
-	if pointer_receiver.pointer_pressed.connect(self.on_pointer_pressed) != OK:
+	if pointer_receiver.pointer_pressed.connect(Callable(self, "on_pointer_pressed")) != OK:
 		printerr("Failed to connect pointer_receiver.pointer_pressed signal.")
 		return
 
-	if pointer_receiver.pointer_release.connect(self.on_pointer_release) != OK:
+	if pointer_receiver.pointer_release.connect(Callable(self, "on_pointer_release")) != OK:
 		printerr("Failed to connect pointer_receiver.pointer_release signal.")
 		return
 
-	# if pointer_receiver.pointer_moved.connect(self.on_pointer_moved) != OK:
-	# 	printerr("Failed to connect pointer_receiver.pointer_moved signal.")
-	# 	return
+	if pointer_receiver.pointer_moved.connect(Callable(self, "on_pointer_moved")) != OK:
+		printerr("Failed to connect pointer_receiver.pointer_moved signal.")
+		return
 
 	pointer_receiver.collision_mask = collision_mask
 	pointer_receiver.collision_layer = collision_layer
