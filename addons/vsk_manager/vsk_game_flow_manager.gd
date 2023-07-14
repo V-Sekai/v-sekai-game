@@ -606,35 +606,6 @@ func set_viewport(new_viewport: SubViewport) -> void:
 	var viewport_path = game_viewport.owner.get_path_to(game_viewport)
 	FlatViewport.texture_rect_ingame.texture.viewport_path = viewport_path
 
-##
-## Creates a secondary viewport for the gameroot.
-##
-func _setup_viewports() -> void:
-	if !game_viewport:
-		game_viewport = SpatialGameViewportManager.create_spatial_game_viewport()
-		add_child(game_viewport, true)
-		game_viewport.owner = self
-	FlatViewport.texture_rect_ingame.texture = game_viewport.get_texture()
-	var viewport_path = game_viewport.owner.get_path_to(game_viewport)
-	FlatViewport.texture_rect_ingame.texture.viewport_path = viewport_path
-
-	if !secondary_viewport:
-		secondary_viewport = SpatialGameViewportManager.create_spatial_secondary_viewport()
-		add_child(secondary_viewport, true)
-		secondary_viewport.owner = self
-
-	if !gameroot:
-		gameroot = Node3D.new()
-		gameroot.set_name("Gameroot")
-
-	if gameroot.is_inside_tree():
-		gameroot.get_parent().remove_child(gameroot)
-
-	game_viewport.add_child(gameroot, true)
-	FlatViewport.texture_rect_ingame.visible = true
-
-	SpatialGameViewportManager.update_viewports()
-
 
 ##
 ## Runs setup phase on EntityManager
@@ -721,7 +692,26 @@ func setup() -> void:
 	_setup_mocap_manager()
 	connection_util_const.connect_signal_table(signal_table, self)
 
-	_setup_viewports()
+	if !game_viewport:
+		game_viewport = SpatialGameViewportManager.create_spatial_game_viewport()
+		add_child(game_viewport, true)
+		game_viewport.owner = self
+	FlatViewport.texture_rect_ingame.texture = game_viewport.get_texture()
+	var viewport_path = game_viewport.owner.get_path_to(game_viewport)
+	FlatViewport.texture_rect_ingame.texture.viewport_path = viewport_path
+
+	if !gameroot:
+		gameroot = Node3D.new()
+		gameroot.set_name("Gameroot")
+
+	if gameroot.is_inside_tree():
+		gameroot.get_parent().remove_child(gameroot)
+
+	game_viewport.add_child(gameroot, true)
+	FlatViewport.texture_rect_ingame.visible = true
+
+	SpatialGameViewportManager.update_viewports()
+	
 	_assign_gameroots()
 	_connect_pre_quitting_signals()
 
