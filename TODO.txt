@@ -1,0 +1,10 @@
+[MAKE SURE TO DELETE AFTER AM DONE]
+
+My Dearest TODO(Fix VR Laser Input):
+	[] Figure out why the fuck that happens
+	[] Attempt to fix the issue
+	[] Spend an hour or five before giving up
+	[] Then out of no where figure out a solution
+	[] Put in solution
+	[] Repeat until satisfied
+	[] 418 I am a teapot
