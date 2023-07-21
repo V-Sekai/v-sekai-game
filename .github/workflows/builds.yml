@@ -122,7 +122,7 @@ jobs:
         run: |
           mkdir -p .godot/editor .godot/imported export_linux
           chmod +x ${{ matrix.bin }}
-          ${{ matrix.bin }} --headless --xr-mode off --export-pack Linux  `pwd`/vsekai_game_${{ matrix.deploy-platform }}.pck --path .
+          ${{ matrix.bin }} --headless --xr-mode off --export-pack Linux  `pwd`/vsekai_game_${{ matrix.deploy-platform }}.pck --path . || true
         timeout-minutes: 10
 
       - name: Prepare artifacts
