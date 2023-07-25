@@ -55,7 +55,6 @@ class HTTPState:
 
 	func cancel() -> void:
 		if busy:
-			#print("uro request cancelled!")
 			cancelled = true
 		else:
 			self.completed.emit.call_deferred(null)
@@ -71,7 +70,6 @@ class HTTPState:
 			if terminated:
 				if file:
 					file.close()
-				# call callback
 				_connection_finished.emit(null)
 				return
 
@@ -81,23 +79,17 @@ class HTTPState:
 				cancelled = false
 				busy = false
 				http.close()
-				# call callback
 				_connection_finished.emit(null)
 				return
 
-			# if http.get_status() == HTTPClient.STATUS_CONNECTING or http.get_status() == HTTPClient.STATUS_RESOLVING:
 			var _poll_error: int = http.poll()
 			status = http.get_status()
 
 			if status == HTTPClient.STATUS_CONNECTED or status == HTTPClient.STATUS_REQUESTING or status == HTTPClient.STATUS_BODY:
-				# done connecting!!
-				#print("Done Connect")
 				_connection_finished.emit(http)
-				# we have work to do
 			elif status != HTTPClient.STATUS_CONNECTING and status != HTTPClient.STATUS_RESOLVING and status != HTTPClient.STATUS_CONNECTED:
 				busy = false
 				printerr("GodotUroRequester: could not connect to host: status = %s" % [str(http.get_status())])
-				# call callback
 				_connection_finished.emit(null)
 				return
 			else:
@@ -107,12 +99,10 @@ class HTTPState:
 			if terminated:
 				if file:
 					file.close()
-				# call callback
 				_request_finished.emit(false)
 				return
 
 			if status != HTTPClient.STATUS_REQUESTING and status != HTTPClient.STATUS_BODY:
-				#print("Invalid status! " + str(status))
 				_request_finished.emit(false)
 				return
 
@@ -122,13 +112,10 @@ class HTTPState:
 				cancelled = false
 				busy = false
 				http.close()
-				# call callback
 				_request_finished.emit(false)
 				return
 
 			if status == HTTPClient.STATUS_REQUESTING:
-				#print("Requesting-ing")
-
 				http.poll()
 				if status == HTTPClient.STATUS_BODY:
 					response_code = http.get_response_code()
@@ -149,7 +136,6 @@ class HTTPState:
 
 			var last_yield = Time.get_ticks_msec()
 			while status == HTTPClient.STATUS_BODY:
-				#print("Body-ing")
 				var _poll_error: int = http.poll()
 
 				var chunk = http.read_response_body_chunk()
@@ -165,7 +151,6 @@ class HTTPState:
 				var time = Time.get_ticks_msec()
 
 				status = http.get_status()
-				# #print("FINAL STATUS: " + str(status))
 				if status == HTTPClient.STATUS_CONNECTION_ERROR and !terminated and !cancelled:
 					if file:
 						file.close()
@@ -191,17 +176,13 @@ class HTTPState:
 				var underlying: StreamPeer = connection.get_stream()
 				if underlying is StreamPeerTCP:
 					if status == HTTPClient.STATUS_CONNECTED and underlying.get_connected_host() == hostname and underlying.get_connected_port() == port:
-						#print("Found cached https connection " + str(hostname))
 						return http
 				else:
-					# We don't know where it's connected to:
 					if status == HTTPClient.STATUS_CONNECTED:
-						#print("Found cached https connection. Assuming " + str(hostname))
 						return http
 		elif not use_ssl and status == HTTPClient.STATUS_CONNECTED:
 			if connection is StreamPeerTCP:
 				if (not (connection is StreamPeerTLS)) and status == HTTPClient.STATUS_CONNECTED and connection.get_connected_host() == hostname and connection.get_connected_port() == port:
-					#print("Found cached http tcp connection " + str(hostname))
 					return http
 
 		status = http.get_status()
@@ -216,13 +197,10 @@ class HTTPState:
 				printerr("GodotUroRequester: could not connect to host: returned error %s" % str(connect_err))
 				http.close()
 				http = HTTPClient.new()
-				# call callback
 				return null
 
 		http_pool.http_tick.connect(self.http_tick)
-		#print("Waiting for connection to succeed to " + str(hostname))
 		var ret = await self._connection_finished
-		#print("Connection succeeded to " + str(hostname))
 		http_pool.http_tick.disconnect(self.http_tick)
 		return ret
 
@@ -230,9 +208,6 @@ class HTTPState:
 		sent_request = true
 		http_pool.http_tick.connect(self.http_tick)
 		var ret = await self._request_finished
-		http_pool.http_tick.disconnect(self.http_tick)
-		#print("Call deferred release")
-		# FIXME: self.release.call_deferred() doesn't seem to work. Please call release() manually for now.
 		call_deferred("release")
 		return ret
 
