@@ -44,15 +44,11 @@ func _enter_tree() -> void:
 	uro_button.set_button_icon(uro_logo_png)
 	uro_button.set_tooltip_text("Access the Uro Menu.")
 	uro_button.set_flat(true)
-	uro_button.set_disabled(false)  # true
+	uro_button.set_disabled(false)
 
 	add_control_to_container(CONTAINER_TOOLBAR, uro_button)
 
-	# FIXME: WAT. The next link can't be rsun because we haven't run the previous line yet.
-	# but now this creates a syntax error :'-(
-	# Existing projects won't have this problem because VSKEditor is already defined as singleton
-	# from the previous iteration
-	call_deferred("setup_vskeditor", editor_interface.get_viewport(), uro_button, editor_interface, undo_redo)
+	VSKEditor.setup_editor(get_editor_interface().get_editor_main_screen(), uro_button, editor_interface)
 
 	uro_button.call_deferred("set_disabled", false)  # What keeps disabling this button?!
 
