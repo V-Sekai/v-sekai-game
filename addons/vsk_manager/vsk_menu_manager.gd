@@ -17,7 +17,7 @@ extends Node
 #           at: GDScript::reload (res://addons/vsk_manager/vsk_menu_manager.gd:4)
 var ingame_gui_const = load("res://addons/vsk_menu/ingame_menu/ingame_gui.tscn")
 var preloading_screen_const = load("res://addons/vsk_menu/main_menu/preloading_screen.tscn")
-var outgame_root_vr_const = load("res://addons/vsk_manager/outgame_root_vr.tscn")
+var outgame_root_vr_const = load("res://addons/vsk_manager/outside_game_root_vr.tscn")
 var menu_canvas_pivot_const = load("res://addons/vsk_menu/menu_canvas_pivot.tscn")
 
 var title_screen_packed_scene: PackedScene = null

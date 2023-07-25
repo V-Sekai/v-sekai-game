@@ -6,8 +6,6 @@
 @tool
 extends "res://addons/vsk_importer_exporter/vsk_validator.gd"
 
-const canvas_3d_anchor = preload("res://addons/canvas_plane/canvas_3d_anchor.gd")
-const canvas_3d_script = preload("res://addons/canvas_plane/canvas_3d.gd")
 const map_validator_const = preload("res://addons/vsk_importer_exporter/vsk_map_validator.gd")
 
 # FIXME: dictionary cannot be const????
@@ -184,8 +182,6 @@ var valid_external_path_whitelist = {
 	"res://vsk_default/import/beachball/Scene_-_Root.tres": true,
 	"res://vsk_default/import/basketball_reexport/Scene_-_Root.tres": true,
 	"res://addons/vsk_map/vsk_map_entity_instance_record.gd": true,
-	"res://addons/canvas_plane/canvas_3d_anchor.gd": true,
-	"res://addons/canvas_plane/canvas_3d.gd": true,
 	"res://addons/network_manager/network_identity.gd": true,
 	"res://addons/vsk_entities/extensions/test_entity_rpc_table.gd": true,
 	"res://addons/network_manager/network_logic.gd": true,
@@ -236,8 +232,6 @@ static func check_if_script_type_is_valid(p_script: Script, p_node_class: String
 		map_definition: ["Position3D", "Marker3D", "Node3D"],
 		map_definition_runtime: ["Position3D", "Marker3D", "Node3D"],
 		vsk_uro_pipeline: ["Node"],
-		canvas_3d_anchor: ["Node3D"],
-		canvas_3d_script: ["Node3D"],
 		entity_identity: ["Node"],
 		entity_network_logic: ["Node"],
 		entity_transform_notification: ["Node3D"],
@@ -297,8 +291,6 @@ func is_script_valid_for_children(p_script: Script, p_node_class: String):
 	var valid_children_script_whitelist = [
 		network_spawn_const,
 		vsk_uro_pipeline,
-		canvas_3d_script,
-		canvas_3d_anchor,
 		entity_identity,
 		entity_rpc_table,
 		entity_network_logic,
@@ -370,20 +362,6 @@ func is_valid_entity_script(p_script: Script) -> bool:
 		return true
 
 	push_warning("Validator: Unknown entity script " + str(p_script) + "/" + str(p_script.resource_path) + " not " + str(entity_script) + "/" + str(entity_script.resource_path))
-	return false
-
-
-func is_valid_canvas_3d(p_script: Script, p_node_class: String) -> bool:
-	if p_script == canvas_3d_script and p_node_class == "Node3D":
-		return true
-
-	return false
-
-
-func is_valid_canvas_3d_anchor(p_script: Script, p_node_class: String) -> bool:
-	if p_script == canvas_3d_anchor and p_node_class == "Node3D":
-		return true
-
 	return false
 
 
