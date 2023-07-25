@@ -51,7 +51,7 @@ func _enter_tree() -> void:
 	var bone_icon: Texture = editor_interface.get_base_control().get_theme_icon("BoneAttachment", "EditorIcons")
 
 	avatar_definition_editor = avatar_definition_editor_const.new(self, clear_icon, bone_icon)
-	editor_interface.get_viewport().call_deferred("add_child", avatar_definition_editor)
+	editor_interface.get_editor_main_screen().add_child.call_deferred("avatar_definition_editor")
 
 	option_button = MenuButton.new()
 	option_button.set_switch_on_hover(true)
