@@ -6,7 +6,7 @@
 [subrepo]
 	remote = https://github.com/V-Sekai/vsk_avatar
 	branch = main
-	commit = e74dec263bc287fe91d1e8f861670c7cf9b27dd3
-	parent = 77bb25ad90addbc302973da5e151d508708294b3
+	commit = 04bb27816aff6915c279a34aa9e31c5241c15366
+	parent = 49025f0e4d5f34a2034c506d3573fb72420e60e3
 	method = merge
 	cmdver = 0.4.6
