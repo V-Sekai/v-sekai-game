@@ -9,13 +9,11 @@ const mtoon_trans_zwrite: Shader = preload("mtoon_trans_zwrite.gdshader")
 const mtoon_trans_zwrite_cull_off: Shader = preload("mtoon_trans_zwrite_cull_off.gdshader")
 const mtoon_outline: Shader = preload("mtoon_outline.gdshader")
 
-
 func _can_handle(object: Object) -> bool:
 	if object != null and object is ShaderMaterial:
 		if object.shader != null and object.shader.resource_path.find("/mtoon") != -1 and object.shader.resource_path.find("/mtoon_outline") == -1:
 			return true
 	return false
-
 
 var first_property: EditorProperty = null
 var last_tex_property: String = ""
@@ -26,7 +24,7 @@ var property_name_to_editor: Dictionary = {}.duplicate()
 #	for chld in n.get_children():
 #		_dump_tree(chld, ind + "    ")
 
-const color_properties: Array = ["_Color", "_ShadeColor", "_RimColor", "_EmissionColor", "_OutlineColor"]
+const color_properties: Array = ["_Color", "_ShadeColor", "_RimColor", "_EmissionColor", "_OutlineColor", "_MatcapColor"]
 
 const property_headers: Dictionary = {
 	"_Color": "Color",
@@ -41,7 +39,37 @@ const property_headers: Dictionary = {
 	"_DebugMode": "Debugging Options",
 }
 
-var property_text: Dictionary = {"_AlphaCutoutEnable": ["Rendering Type", "TransparentWithZWrite mode can cause problems with rendering."], "_Color": ["Lit Color, Alpha", "Lit (RGB), Alpha (A)"], "_ShadeColor": ["Shade Color", "Shade (RGB)"], "_Cutoff": ["Alpha Cutoff", "Discard pixels below this value in Cutout mode"], "_SphereAdd": ["MatCap", "Additive Sphere map / MatCap Texture (RGB)", false], "_ShadeToony": ["Shading Toony", "0.0 is Lambert. Higher value get toony shading."], "_BumpScale": ["Normal Map", "Normal Map and Multiplier for normals in tangent space"], "_ShadeShift": ["Shading Shift", "Zero is Default. Negative value increase lit area. Positive value increase shade area."], "_ReceiveShadowRate": ["Shadow Receive", "Texture (R) * Rate. White is Default. Black attenuates shadows."], "_ShadingGradeRate": ["Shading Grade", "Lit & Shade Mixing Multiplier: Texture (R) * Rate. Compatible with UTS2 ShadingGradeMap. White is Default. Black amplifies shade."], "_LightColorAttenuation": ["Light Color Atten", "Light Color Attenuation"], "_IndirectLightIntensity": ["GI Intensity", "Indirect Light Intensity"], "_EmissionColor": ["Emission", "Emission Color (RGB)"], "_RimColor": ["Rim Color", "Rim Color (RGB)"], "_RimLightingMix": ["Lighting Mix", "Rim Lighting Mix"], "_RimFresnelPower": ["Fresnel Power", "If you increase this value, you get sharper rim light."], "_RimLift": ["Rim Lift", "If you increase this value, you can lift rim light."], "_OutlineWidthMode": ["Mode", "None = outline pass disabled; World = outline in world coordinates; Screen = screen pixel thickness"], "_OutlineWidth": ["Width", "Outline Width"], "_OutlineScaledMaxDistance": ["Outline Scaled Dist", "Width Scaled Max Distance"], "_OutlineColorMode": ["Color Mode", "FixedColor = unshaded; MixedLighting = match environment light (recommended)"], "_OutlineColor": ["Outline Color", "Outline Color (RGB)"], "_OutlineLightingMix": ["Outline Mix", "Outline Lighting Mix"], "_MainTex_ST": ["Offset", "UV Scale (X,Y), UV Offset (X,Y)"], "_UvAnimMaskTexture": ["UV Anim Mask", "Auto Animation Mask Texture (R)", false], "_UvAnimScrollX": ["UV Scroll X", "Scroll X (per second)"], "_UvAnimScrollY": ["UV Scroll Y", "Scroll Y (per second)"], "_UvAnimRotation": ["UV Rotation", "Rotation value (per second)"], "_DebugMode": ["Visualize", "Debugging Visualization: Normal or Lighting"]}
+const property_text: Dictionary = {
+	"_AlphaCutoutEnable": ["Rendering Type", "TransparentWithZWrite mode can cause problems with rendering."],
+	"_Color": ["Lit Color, Alpha", "Lit (RGB), Alpha (A)"],
+	"_ShadeColor": ["Shade Color", "Shade (RGB)"],
+	"_Cutoff": ["Alpha Cutoff", "Discard pixels below this value in Cutout mode"],
+	"_MatcapColor": ["MatCap Color", "Color multiplied with Additive Sphere map / MatCap Texture (RGB)"],
+	"_ShadeToony": ["Shading Toony", "0.0 is Lambert. Higher value get toony shading."],
+	"_BumpScale": ["Normal Map", "Normal Map and Multiplier for normals in tangent space"],
+	"_ShadeShift": ["Shading Shift", "Zero is Default. Negative value increase lit area. Positive value increase shade area."],
+	"_ReceiveShadowRate": ["Shadow Receive", "Texture (R) * Rate. White is Default. Black attenuates shadows."],
+	"_ShadingGradeRate": ["Shading Grade", "Lit & Shade Mixing Multiplier: Texture (R) * Rate. Compatible with UTS2 ShadingGradeMap. White is Default. Black amplifies shade."],
+	"_LightColorAttenuation": ["Light Color Atten", "Light Color Attenuation"],
+	"_IndirectLightIntensity": ["GI Intensity", "Indirect Light Intensity"],
+	"_EmissionColor": ["Emission", "Emission Color (RGB)"],
+	"_RimColor": ["Rim Color", "Rim Color (RGB)"],
+	"_RimLightingMix": ["Lighting Mix", "Rim Lighting Mix"],
+	"_RimFresnelPower": ["Fresnel Power", "If you increase this value, you get sharper rim light."],
+	"_RimLift": ["Rim Lift", "If you increase this value, you can lift rim light."],
+	"_OutlineWidthMode": ["Mode", "None = outline pass disabled; World = outline in world coordinates; Screen = screen pixel thickness"],
+	"_OutlineWidth": ["Width", "Outline Width"],
+	"_OutlineScaledMaxDistance": ["Outline Scaled Dist", "Width Scaled Max Distance"],
+	"_OutlineColorMode": ["Color Mode", "FixedColor = unshaded; MixedLighting = match environment light (recommended)"],
+	"_OutlineColor": ["Outline Color", "Outline Color (RGB)"],
+	"_OutlineLightingMix": ["Outline Mix", "Outline Lighting Mix"],
+	"_MainTex_ST": ["Offset", "UV Scale (X,Y), UV Offset (X,Y)"],
+	"_UvAnimMaskTexture": ["UV Anim Mask", "Auto Animation Mask Texture (R)", false],
+	"_UvAnimScrollX": ["UV Scroll X", "Scroll X (per second)"],
+	"_UvAnimScrollY": ["UV Scroll Y", "Scroll Y (per second)"],
+	"_UvAnimRotation": ["UV Rotation", "Rotation value (per second)"],
+	"_DebugMode": ["Visualize", "Debugging Visualization: Normal or Lighting"]
+}
 
 const single_line_properties = {
 	"_MainTex": "_Color",
@@ -52,10 +80,11 @@ const single_line_properties = {
 	"_RimTexture": "_RimColor",
 	"_EmissionMap": "_EmissionColor",
 	"_OutlineWidthTexture": "_OutlineWidth",
+	"_SphereAdd": "_MatcapColor",
 }
 
 const single_line_after_properties = {
-	"_SphereAdd": "_EmissionColor",
+	# "_SphereAdd": "_EmissionColor",
 	"_UvAnimMaskTexture": "_MainTex_ST",
 }
 
@@ -86,13 +115,12 @@ const steps = {
 	"_OutlineScaledMaxDistance": 0.0,
 }
 
-
 func merge_single_line_properties(label: String, outer_prop: Control, inner_prop: Control) -> void:
 	var parent_vbox: Control = outer_prop.get_parent()
 	parent_vbox.remove_child(inner_prop)
 	inner_prop.label = ""
 	outer_prop.label = label
-	var sub_picker: Control = outer_prop.get_child(outer_prop.get_child_count() - 1)
+	var sub_picker: Control = outer_prop.get_child(outer_prop.get_child_count()-1)
 	outer_prop.remove_child(sub_picker)
 	sub_picker.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	sub_picker.size_flags_vertical = 0
@@ -111,12 +139,10 @@ func merge_single_line_properties(label: String, outer_prop: Control, inner_prop
 	outer_prop.add_child(inner_prop, true)
 	outer_prop.add_child(new_hbox, true)
 
-
 # Copy texture modifications to next_pass material
 func _texture_property_changed(texture_property: EditorProperty, object: ShaderMaterial, property_name: StringName, value: Variant) -> void:
 	if MToonProperty.has_outline_pass_static(object):
 		object.next_pass[texture_property.get_edited_property()] = value
-
 
 func _process_tex_property(object: ShaderMaterial) -> void:
 	var prop = last_tex_property
@@ -132,17 +158,14 @@ func _process_tex_property(object: ShaderMaterial) -> void:
 		if new_parent != null:
 			parent_vbox.remove_child(texture_property)
 			new_parent.add_sibling(texture_property)
-			texture_property.label = property_text.get(prop, ["texture_property.label", ""])[0]
+			texture_property.label = property_text.get(prop, ["texture_property.label",""])[0]
 			property_name_to_editor[prop] = texture_property
-
 
 func do_unfold_section(editor_inspector_section: Node) -> void:
 	editor_inspector_section.unfold()
 
-
 #func parse_category(object_: Object, category: String) -> void:
 #	print("Category " + str(category))
-
 
 func _parse_end(object_: Object) -> void:
 	var object: ShaderMaterial = object_
@@ -153,7 +176,7 @@ func _parse_end(object_: Object) -> void:
 		var parent_vbox: Control = first_property.get_parent()
 		do_unfold_section(parent_vbox.get_parent())
 		for prop in property_name_to_editor:
-			property_name_to_editor[prop].set_tooltip_text("shader_parameter/" + prop + "\n" + property_text.get(prop, ["", ""])[1])
+			property_name_to_editor[prop].set_tooltip_text("shader_parameter/" + prop + "\n" + property_text.get(prop, ["",""])[1])
 		for param in property_headers:
 			var property_editor: Control = property_name_to_editor.get(param)
 			if property_editor != null:
@@ -180,8 +203,7 @@ func _parse_end(object_: Object) -> void:
 				label.add_theme_color_override("font_color", Color(round(c.r), round(c.g), round(c.b), 1.0))
 				property_name_to_editor[label.text] = hbox_container
 		property_name_to_editor["_OutlineWidthMode"].hide_if_value = {
-			0:
-			[
+			0: [
 				property_name_to_editor["_OutlineColorMode"],
 				property_name_to_editor["_OutlineColor"],
 				property_name_to_editor["_OutlineLightingMix"],
@@ -189,16 +211,15 @@ func _parse_end(object_: Object) -> void:
 				property_name_to_editor["_OutlineScaledMaxDistance"],
 				property_name_to_editor["Outline Color"],
 			],
-			1:
-			[
+			1: [
 				property_name_to_editor["_OutlineScaledMaxDistance"],
 			],
-			2: [],
+			2: [
+			],
 		}
 		property_name_to_editor["_OutlineWidthMode"]._update_property()
 		property_name_to_editor["_AlphaCutoutEnable"].hide_if_value = {
-			0:
-			[
+			0: [
 				property_name_to_editor["_Cutoff"],
 			],
 			1: [],
@@ -207,10 +228,8 @@ func _parse_end(object_: Object) -> void:
 		first_property = null
 		property_name_to_editor = {}.duplicate()
 
-
 func is_a_shader_parameter(path: String) -> bool:
 	return path.begins_with("shader_parameter/")
-
 
 func _parse_property(object_: Object, type, path: String, hint, hint_text: String, usage, wide: bool) -> bool:
 	var object: ShaderMaterial = object_
@@ -259,11 +278,8 @@ func _parse_property(object_: Object, type, path: String, hint, hint_text: Strin
 		return true
 	return false
 
-
-class MToonProperty:
-	extends EditorProperty
+class MToonProperty extends EditorProperty:
 	var edited_object: ShaderMaterial = null
-
 	func get_edited_object_hack() -> ShaderMaterial:
 		return edited_object
 
@@ -275,7 +291,7 @@ class MToonProperty:
 	func _make_custom_tooltip(text: String) -> Object:
 		var label: Label = Label.new()
 		label.text = text + self.tooltip
-		label.custom_minimum_size = Vector2(200, 30)
+		label.custom_minimum_size = Vector2(200,30)
 		return label
 
 	func get_tooltip_text() -> String:
@@ -318,12 +334,10 @@ class MToonProperty:
 		slider.custom_minimum_size = Vector2(50.0, 20.0)
 		slider.value_changed.connect(self._value_changed)
 
-	func emit_changed(prop: StringName, val: Variant, field: StringName = &"", changing: bool = false) -> void:
+	func emit_changed(prop : StringName, val : Variant, field : StringName = &"", changing : bool = false) -> void:
 		get_edited_object_hack()[prop] = val
 
-
-class RenderingTypeInspector:
-	extends MToonProperty
+class RenderingTypeInspector extends MToonProperty:
 	var dropdown: OptionButton = OptionButton.new()
 	var cull_off_checkbox: CheckBox = CheckBox.new()
 	var rendering_type_box: VBoxContainer = VBoxContainer.new()
@@ -344,31 +358,29 @@ class RenderingTypeInspector:
 		dropdown.item_selected.connect(self._item_selected)
 
 	func _cull_toggled(value: bool) -> void:
-		if updating:
-			return
+		if updating: return
 		_update_shader(dropdown.selected, value)
 
 	func _item_selected(option_idx: int) -> void:
-		if updating:
-			return
+		if updating: return
 		_update_shader(option_idx, cull_off_checkbox.button_pressed)
 
 	func _update_shader(option_idx: int, cull_off: bool) -> void:
 		var shader_name: String = get_edited_object_hack().shader.resource_path.split("/")[-1]
 		match option_idx:
-			0:  # Opaque
+			0: # Opaque
 				emit_changed(get_edited_property(), 0)
 				set_outline_prop(get_edited_property(), 0)
 				get_edited_object_hack().shader = mtoon_cull_off if cull_off else mtoon
-			1:  # Cutout
+			1: # Cutout
 				emit_changed(get_edited_property(), 1)
 				set_outline_prop(get_edited_property(), 1)
 				get_edited_object_hack().shader = mtoon_cull_off if cull_off else mtoon
-			2:  # Transparent
+			2: # Transparent
 				emit_changed(get_edited_property(), 0)
 				set_outline_prop(get_edited_property(), 0)
 				get_edited_object_hack().shader = mtoon_trans_cull_off if cull_off else mtoon_trans
-			3:  # TransparentWithZWrite
+			3: # TransparentWithZWrite
 				emit_changed(get_edited_property(), 0)
 				set_outline_prop(get_edited_property(), 0)
 				get_edited_object_hack().shader = mtoon_trans_zwrite_cull_off if cull_off else mtoon_trans_zwrite
@@ -389,9 +401,7 @@ class RenderingTypeInspector:
 		cull_off_checkbox.button_pressed = cull_off
 		updating = false
 
-
-class OutlineModeInspector:
-	extends MToonProperty
+class OutlineModeInspector extends MToonProperty:
 	var dropdown: OptionButton = OptionButton.new()
 
 	func _init(tooltip: String) -> void:
@@ -403,9 +413,9 @@ class OutlineModeInspector:
 		add_focusable(dropdown)
 		dropdown.item_selected.connect(self._item_selected)
 
+
 	func _item_selected(option_idx: int) -> void:
-		if updating:
-			return
+		if updating: return
 		var next_pass: Material = get_edited_object_hack().next_pass
 		var has_outline: bool = has_outline_pass()
 		if option_idx == 0 and has_outline:
@@ -429,9 +439,7 @@ class OutlineModeInspector:
 		update_hidden_props(val)
 		updating = false
 
-
-class OutlineColorModeInspector:
-	extends MToonProperty
+class OutlineColorModeInspector extends MToonProperty:
 	var dropdown: OptionButton = OptionButton.new()
 
 	func _init(tooltip: String) -> void:
@@ -443,8 +451,7 @@ class OutlineColorModeInspector:
 		dropdown.item_selected.connect(self._item_selected)
 
 	func _item_selected(option_idx: int) -> void:
-		if updating:
-			return
+		if updating: return
 		emit_changed(get_edited_property(), option_idx)
 		set_outline_prop(get_edited_property(), option_idx)
 
@@ -456,9 +463,7 @@ class OutlineColorModeInspector:
 		dropdown.selected = val
 		updating = false
 
-
-class DebugModeInspector:
-	extends MToonProperty
+class DebugModeInspector extends MToonProperty:
 	var dropdown: OptionButton = OptionButton.new()
 
 	func _init(tooltip: String) -> void:
@@ -471,8 +476,7 @@ class DebugModeInspector:
 		dropdown.item_selected.connect(self._item_selected)
 
 	func _item_selected(option_idx: int) -> void:
-		if updating:
-			return
+		if updating: return
 		emit_changed(get_edited_property(), option_idx)
 		set_outline_prop(get_edited_property(), option_idx)
 
@@ -484,11 +488,8 @@ class DebugModeInspector:
 		dropdown.selected = val
 		updating = false
 
-
-class ReserveInspector:
-	extends MToonProperty
+class ReserveInspector extends MToonProperty:
 	var hbox: HBoxContainer = HBoxContainer.new()
-
 	func _init(tooltip: String) -> void:
 		self.tooltip = tooltip
 		add_child(hbox, true)
@@ -496,9 +497,7 @@ class ReserveInspector:
 	func _update_property() -> void:
 		pass
 
-
-class SpinInspector:
-	extends MToonProperty
+class SpinInspector extends MToonProperty:
 	var x_input: Range = EditorSpinSlider.new()
 
 	func _init(tooltip: String, minval: float, maxval: float, step: float) -> void:
@@ -538,9 +537,7 @@ class SpinInspector:
 		x_input.value = this_value
 		updating = false
 
-
-class ScaleOffsetInspector:
-	extends MToonProperty
+class ScaleOffsetInspector extends MToonProperty:
 	var hbox: HBoxContainer = HBoxContainer.new()
 	var x_input: Range = EditorSpinSlider.new()
 	var y_input: Range = EditorSpinSlider.new()
@@ -572,7 +569,7 @@ class ScaleOffsetInspector:
 	func _update_property() -> void:
 		var st_value: Variant = get_edited_object_hack()[get_edited_property()]
 		if typeof(st_value) == TYPE_NIL:
-			st_value = Vector4(1, 1, 0, 0)
+			st_value = Vector4(1,1,0,0)
 		updating = true
 		x_input.value = st_value.x
 		y_input.value = st_value.y
@@ -580,16 +577,14 @@ class ScaleOffsetInspector:
 		w_input.value = st_value.w
 		updating = false
 
-
-class LinearColorInspector:
-	extends MToonProperty
+class LinearColorInspector extends MToonProperty:
 	var color_picker: ColorPickerButton = ColorPickerButton.new()
 	var color_picker2: ColorPickerButton = ColorPickerButton.new()
 	var picker_box: HBoxContainer = HBoxContainer.new()
 
 	func _init(tooltip: String, allow_alpha: bool) -> void:
 		self.tooltip = tooltip
-		add_child(color_picker)  # picker_box)
+		add_child(color_picker) # picker_box)
 		#picker_box.add_child(color_picker, true)
 		add_focusable(color_picker)
 		#picker_box.add_child(color_picker2, true)
@@ -602,7 +597,7 @@ class LinearColorInspector:
 	func _color_changed(new_color: Color) -> void:
 		if updating:
 			return
-		var new_val: Vector4 = Vector4(new_color.r, new_color.g, new_color.b, new_color.a)
+		var new_val: Color = Color(new_color.r, new_color.g, new_color.b, new_color.a)
 		emit_changed(get_edited_property(), new_val)
 		set_outline_prop(get_edited_property(), new_val)
 
@@ -610,10 +605,10 @@ class LinearColorInspector:
 		var linear_color: Variant = get_edited_object_hack()[get_edited_property()]
 		if typeof(linear_color) == TYPE_NIL:
 			const defaults = {
-				"_Color": Vector4(1.0, 1.0, 1.0, 1.0),
-				"_ShadeColor": Vector4(0.97, 0.81, 0.86, 1.0),
+				"_Color": Color(1.0,1.0,1.0,1.0),
+				"_ShadeColor": Color(0.97, 0.81, 0.86, 1.0),
 			}
-			linear_color = defaults.get(str(get_edited_property()).split("/")[-1], Vector4(0, 0, 0, 1))
+			linear_color = defaults.get(str(get_edited_property()).split("/")[-1], Color(0,0,0,1))
 		updating = true
-		color_picker.color = Color(linear_color.x, linear_color.y, linear_color.z, linear_color.w)
+		color_picker.color = linear_color
 		updating = false
