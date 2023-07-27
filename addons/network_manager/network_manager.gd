@@ -191,11 +191,11 @@ func _peer_packet(p_id: int, p_packet: PackedByteArray) -> void:
 
 
 func has_active_peer() -> bool:
-	return get_tree().get_multiplayer().has_multiplayer_peer() and (get_tree().get_multiplayer().multiplayer_peer.get_connection_status() != MultiplayerPeer.CONNECTION_DISCONNECTED)
+	return get_tree() and get_tree().get_multiplayer() and  get_tree().get_multiplayer().has_multiplayer_peer() and (get_tree().get_multiplayer().multiplayer_peer.get_connection_status() != MultiplayerPeer.CONNECTION_DISCONNECTED)
 
 
 func is_server() -> bool:
-	return !has_active_peer() or get_tree().get_multiplayer().is_server()
+	return (get_tree() and !has_active_peer()) or (get_tree() and get_tree().get_multiplayer().is_server())
 
 
 func is_session_master() -> bool:
