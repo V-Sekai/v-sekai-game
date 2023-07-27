@@ -6,9 +6,7 @@
 @tool
 extends Node3D
 
-const springbone_class: GDScript = preload("res://addons/vrm/vrm_springbone.gd")
-const collidergroup_class: GDScript = preload("res://addons/vrm/vrm_collidergroup.gd")
-
+const springbone_class: GDScript = preload("res://addons/vrm/1.0/VRMC_springBone.gd")
 # Based on Tokage's VRM physics implementation
 
 @export var spring_bones: Array
