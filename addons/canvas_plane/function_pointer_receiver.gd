@@ -1,3 +1,8 @@
+# Copyright (c) 2018-present. This file is part of V-Sekai https://v-sekai.org/.
+# SaracenOne & K. S. Ernest (Fire) Lee & Lyuma & MMMaellon & Contributors
+# function_pointer_receiver.gd
+# SPDX-License-Identifier: MIT
+
 extends Area3D
 
 signal pointer_pressed(p_at)
