@@ -4,9 +4,9 @@
 ; git-subrepo command. See https://github.com/ingydotnet/git-subrepo#readme
 ;
 [subrepo]
-	remote = https://github.com/V-Sekai/godot-vrm
-	branch = only-mtoon1-addon
-	commit = ac7ae5bc0caefe04b44a5ca82a7c6a51e3b12edc
-	parent = b52cdb266860addc34de4888b87deb5b1de7e164
+	remote = https://github.com/V-Sekai/Godot-MToon-Shader
+	branch = main
+	commit = a5fe0ef8a5b6181324005eae53d8a22be3393a45
+	parent = 78f71a8c62233ce46aecc066d009855718f51cc2
 	method = merge
 	cmdver = 0.4.6
