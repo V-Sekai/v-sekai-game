@@ -1,0 +1,28 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "commitType": "docs",
+  "commitConvention": "angular",
+  "contributors": [
+    {
+      "login": "SaracenOne",
+      "name": "Saracen",
+      "avatar_url": "https://avatars.githubusercontent.com/u/12756047?v=4",
+      "profile": "https://github.com/SaracenOne",
+      "contributions": [
+        "code",
+        "design",
+        "ideas"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "skipCi": false,
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "projectName": "v-sekai-game",
+  "projectOwner": "V-Sekai"
+}
