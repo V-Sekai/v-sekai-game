@@ -37,7 +37,17 @@
       "profile": "http://tokage.info/lab",
       "contributions": [
         "design",
-        "code"
+        "code",
+        ]
+    },
+    {
+      "login": "lyuma",
+      "name": "lyuma",
+      "avatar_url": "https://avatars.githubusercontent.com/u/39946030?v=4",
+      "profile": "https://github.com/lyuma",
+      "contributions": [
+        "code",
+        "infra"
       ]
     }
   ],
