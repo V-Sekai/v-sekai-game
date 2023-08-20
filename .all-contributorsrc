@@ -1,0 +1,29 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "commitType": "docs",
+  "commitConvention": "angular",
+  "contributors": [
+    {
+      "login": "lyuma",
+      "name": "lyuma",
+      "avatar_url": "https://avatars.githubusercontent.com/u/39946030?v=4",
+      "profile": "https://github.com/lyuma",
+      "contributions": [
+        "code",
+        "design",
+        "research",
+        "ideas"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "skipCi": true,
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "projectName": "v-sekai-game",
+  "projectOwner": "V-Sekai"
+}
