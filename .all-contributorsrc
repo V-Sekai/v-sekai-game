@@ -29,6 +29,16 @@
         "research",
         "ideas"
       ]
+    },
+    {
+      "login": "TokageItLab",
+      "name": "Silc Lizard (Tokage) Renew",
+      "avatar_url": "https://avatars.githubusercontent.com/u/61938263?v=4",
+      "profile": "http://tokage.info/lab",
+      "contributions": [
+        "design",
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
