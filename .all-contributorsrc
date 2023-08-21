@@ -58,6 +58,16 @@
       "contributions": [
         "translation"
       ]
+    },
+    {
+      "login": "MMMaellon",
+      "name": "MMMaellon",
+      "avatar_url": "https://avatars.githubusercontent.com/u/52807725?v=4",
+      "profile": "https://github.com/MMMaellon",
+      "contributions": [
+        "code",
+        "design"
+      ]
     }
   ],
   "contributorsPerLine": 7,
