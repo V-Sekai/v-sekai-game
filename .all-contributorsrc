@@ -68,6 +68,16 @@
         "code",
         "design"
       ]
+    },
+    {
+      "login": "s-ilent",
+      "name": "Silent",
+      "avatar_url": "https://avatars.githubusercontent.com/u/16026653?v=4",
+      "profile": "http://s-ilent.gitlab.io/",
+      "contributions": [
+        "design",
+        "ideas"
+      ]
     }
   ],
   "contributorsPerLine": 7,
