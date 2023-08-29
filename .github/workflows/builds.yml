@@ -1,7 +1,11 @@
 name: 🐧 Linux Builds
-on: [push, pull_request]
 
-# Global Settings
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
 env:
   # Only used for the cache key. Increment version to force clean build.
   GODOT_BASE_BRANCH: master
