@@ -27,9 +27,7 @@ V-Sekai is an open-source project that aims to bring social VR/VRSNS/metaverse c
 
 V-Sekai is still in a pre-release state. We don't offer pre-packaged downloads yet. It's highly experimental and still being evaluated for security. Use at your own risk.
 
-We also provide [preview builds](https://v-sekai.github.io/manuals/features/play_latest.html).
-
-## How do I build it?
+## How do I help contribute?
 
 V-Sekai requires our [custom Godot Engine fork](https://github.com/v-sekai/godot) found under the `groups-4.2` branch. For information about building the Godot Engine, see the [official documentation](https://docs.godotengine.org/en/latest/contributing/development/compiling/).
 
