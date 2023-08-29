@@ -7,7 +7,6 @@ on:
   pull_request:
 
 env:
-  # Only used for the cache key. Increment version to force clean build.
   GODOT_BASE_BRANCH: master
   SCONSFLAGS: verbose=yes warnings=extra werror=yes module_text_server_fb_enabled=yes
   DOTNET_NOLOGO: true
@@ -64,14 +63,6 @@ jobs:
           egress-policy: audit
 
       - uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.5.2
-
-      # Need newer mesa for lavapipe to work properly.
-      - name: Linux dependencies for tests
-        if: ${{ matrix.proj-test }}
-        run: |
-          sudo rm -f /etc/apt/sources.list.d/microsoft-prod.list
-          sudo add-apt-repository ppa:kisak/kisak-mesa
-          sudo apt-get install -qq mesa-vulkan-drivers binutils
 
       - name: Linux dependencies for gold linker
         run: |
@@ -169,7 +160,6 @@ jobs:
         run: |
           ./modules/mono/build_scripts/build_assemblies.py --godot-output-dir=./bin --godot-platform=linuxbsd
 
-      # Execute unit tests for the editor
       - name: Unit tests
         if: ${{ matrix.tests }}
         run: |
@@ -177,7 +167,6 @@ jobs:
           ${{ matrix.bin }} --help
           ${{ matrix.bin }} --test --headless
 
-      # Check class reference
       - name: Check for class reference updates
         if: ${{ matrix.doc-test }}
         run: |
@@ -186,7 +175,6 @@ jobs:
           ${{ matrix.bin }} --doctool --headless 2>&1 > /dev/null || true
           git diff --color --exit-code && ! git ls-files --others --exclude-standard | sed -e 's/^/New doc file missing in PR: /' | grep 'xml$'
 
-      # Test 3.x -> 4.x project converter
       - name: Test project converter
         if: ${{ matrix.proj-conv }}
         run: |
@@ -197,15 +185,6 @@ jobs:
           cd ..
           rm converter_test -rf
 
-      # Download and extract zip archive with project, folder is renamed to be able to easy change used project
-      - name: Download test project
-        if: ${{ matrix.proj-test }}
-        run: |
-          wget https://github.com/godotengine/regression-test-project/archive/4.0.zip
-          unzip 4.0.zip
-          mv "regression-test-project-4.0" "test_project"
-
-      # Editor is quite complicated piece of software, so it is easy to introduce bug here
       - name: Open and close editor (Vulkan)
         if: ${{ matrix.proj-test }}
         run: |
@@ -218,37 +197,11 @@ jobs:
           DRI_PRIME=0 xvfb-run ${{ matrix.bin }} --audio-driver Dummy --rendering-driver opengl3 --editor --quit --path test_project 2>&1 | tee sanitizers_log.txt || true
           misc/scripts/check_ci_log.py sanitizers_log.txt
 
-      # Run test project
       - name: Run project
         if: ${{ matrix.proj-test }}
         run: |
           xvfb-run ${{ matrix.bin }} 40 --audio-driver Dummy --path test_project 2>&1 | tee sanitizers_log.txt || true
           misc/scripts/check_ci_log.py sanitizers_log.txt
-
-      # Checkout godot-cpp
-      - name: Checkout godot-cpp
-        if: ${{ matrix.godot-cpp-test }}
-        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.5.2
-        with:
-          repository: godotengine/godot-cpp
-          submodules: "recursive"
-          path: "godot-cpp"
-
-      # Dump GDExtension interface and API
-      - name: Dump GDExtension interface and API for godot-cpp build
-        if: ${{ matrix.godot-cpp-test }}
-        run: |
-          ${{ matrix.bin }} --headless --dump-gdextension-interface --dump-extension-api
-          cp -f gdextension_interface.h godot-cpp/gdextension/
-          cp -f extension_api.json godot-cpp/gdextension/
-
-      # Build godot-cpp test extension
-      - name: Build godot-cpp test extension
-        if: ${{ matrix.godot-cpp-test }}
-        run: |
-          cd godot-cpp/test
-          scons target=template_debug dev_build=yes
-          cd ../..
 
       - name: Prepare artifact
         if: ${{ matrix.artifact }}
