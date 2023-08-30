@@ -42,7 +42,7 @@ runs:
     - name: Scons Build
       shell: sh
       env:
-        SCONSFLAGS: ${{ inputs.sconsflags }}
+        SCONSFLAGS: ${{ inputs.sconsflags }} use_scu=yes
         SCONS_CACHE: ${{ inputs.scons-cache }}
         SCONS_CACHE_LIMIT: ${{ inputs.scons-cache-limit }}
       run: |
