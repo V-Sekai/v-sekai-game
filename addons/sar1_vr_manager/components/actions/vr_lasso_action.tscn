@@ -1,11 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://4r6ao13ste61"]
+[gd_scene load_steps=8 format=3 uid="uid://4r6ao13ste61"]
 
 [ext_resource type="Script" path="res://addons/sar1_vr_manager/components/actions/vr_lasso_action.gd" id="1_lbith"]
-[ext_resource type="Material" uid="uid://cqyb4m66nqgy6" path="res://addons/sar1_vr_manager/materials/laser.tres" id="2"]
 [ext_resource type="Material" uid="uid://dceqxufojv3q8" path="res://addons/sar1_vr_manager/materials/curved_laser.tres" id="3"]
 [ext_resource type="Shader" path="res://addons/sar1_vr_manager/materials/circle.gdshader" id="4"]
 [ext_resource type="Texture2D" uid="uid://cjg0fyr6ipms8" path="res://addons/sar1_vr_manager/components/actions/snap_circle.svg" id="5_wun48"]
-[ext_resource type="Script" path="res://addons/sar1_vr_manager/components/actions/vr_ui_pointer_action.gd" id="6_7qtc8"]
 
 [sub_resource type="PlaneMesh" id="1"]
 size = Vector2(0.05, 1)
@@ -25,16 +23,10 @@ resource_local_to_scene = true
 
 [node name="snap_pointer" type="Node3D"]
 script = ExtResource("1_lbith")
-straight_laser = NodePath("straight_laser")
+snap_circle_color = Color(0.678431, 0.847059, 0.901961, 1)
 snapped_laser = NodePath("snap_laser")
 primary_circle = NodePath("primary_snap_circle")
 secondary_circle = NodePath("secondary_snap_circle")
-
-[node name="straight_laser" type="MeshInstance3D" parent="."]
-material_override = ExtResource("2")
-cast_shadow = 0
-mesh = SubResource("1")
-skeleton = NodePath("")
 
 [node name="snap_laser" type="MeshInstance3D" parent="."]
 material_override = ExtResource("3")
@@ -53,6 +45,3 @@ material_override = SubResource("2")
 cast_shadow = 0
 mesh = SubResource("3")
 skeleton = NodePath("")
-
-[node name="PickupAction" type="Node3D" parent="."]
-script = ExtResource("6_7qtc8")

@@ -17,10 +17,10 @@ const function_pointer_receiver_const = preload("function_pointer_receiver.gd")
 	set = set_canvas_anchor_y
 
 # Defaults to 16:9
-@export var canvas_width: float = DisplayServer.screen_get_size(0).x:
+@export var canvas_width: float = DisplayServer.window_get_size(0).x:
 	set = set_canvas_width
 
-@export var canvas_height: float = DisplayServer.screen_get_size(0).y:
+@export var canvas_height: float = DisplayServer.window_get_size(0).y:
 	set = set_canvas_height
 
 @export var canvas_scale: float = 0.01:
@@ -44,8 +44,8 @@ var viewport: SubViewport = null
 var control_root: Control = null
 
 # Collision
-var pointer_receiver: Area3D = null  # function_pointer_receiver_const
-var collision_shape: CollisionShape3D = null
+var pointer_receiver: Area3D = null
+var collision_shape: CollisionShape3D = CollisionShape3D.new()
 
 # Interaction
 var previous_mouse_position: Vector2 = Vector2()
@@ -53,18 +53,19 @@ var mouse_mask: int = 0
 
 
 func global_to_viewport(p_origin: Vector3) -> Vector2:
-	var t: Transform3D = global_transform
-	var at = t.inverse() * p_origin
-
-	if canvas_width == 0 or canvas_height == 0:
-		print("Error: Canvas width and height must be non-zero.")
-		return Vector2()
-
-	at.x = (at.x / canvas_width) + 0.5
-	at.y = 0.5 - (at.y / canvas_height)
-
-	return Vector2(at.x, at.y)
-
+	print(p_origin)
+	print(global_transform)
+	print(canvas_width)
+	print(canvas_height)
+	print(canvas_scale)	
+	var transform_scale: Vector2 = Vector2(global_transform.basis.get_scale().x, global_transform.basis.get_scale().y)
+	var inverse_transform: Vector2 = Vector2(1.0, 1.0) / transform_scale
+	var point: Vector2 = Vector2(p_origin.x, p_origin.y) * inverse_transform * inverse_transform
+	var ratio: Vector2 = Vector2(0.5, 0.5) + (point / canvas_scale) / ((Vector2(canvas_width, canvas_height) * canvas_scale) * 0.5)
+	ratio.y = 1.0 - ratio.y  # Flip the Y-axis
+	var canvas_position: Vector2 = ratio * Vector2(canvas_width, canvas_height)
+	print(canvas_position)
+	return canvas_position
 
 
 func _update() -> void:
@@ -77,20 +78,31 @@ func _update() -> void:
 	if mesh_instance:
 		mesh_instance.set_position(Vector3(canvas_width_offset, canvas_height_offset, 0))
 
-	if pointer_receiver:
-		pointer_receiver.set_position(Vector3(canvas_width_offset, canvas_height_offset, 0))
-		if collision_shape:
-			if collision_shape.is_inside_tree():
-				collision_shape.get_parent().remove_child(collision_shape)
+	if pointer_receiver == null:
+		pointer_receiver = function_pointer_receiver_const.new()
+		spatial_root.add_child(pointer_receiver)
+	pointer_receiver.set_position(Vector3(canvas_width_offset, canvas_height_offset, 0))
+	if collision_shape:
+		if interactable:
+			var box_shape = BoxShape3D.new()
+			box_shape.set_size(Vector3(canvas_width * 0.5, canvas_height * 0.5, 0.0))
+			collision_shape.set_shape(box_shape)
 
-			if interactable:
-				var box_shape = BoxShape3D.new()
-				box_shape.set_size(Vector3(canvas_width * 0.5, canvas_height * 0.5, 0.0))
-				collision_shape.set_shape(box_shape)
+			pointer_receiver.add_child(collision_shape)
+			pointer_receiver.set_name("PointerReceiver")
+			pointer_receiver.collision_mask = collision_mask
+			pointer_receiver.collision_layer = collision_layer
 
-				pointer_receiver.add_child(collision_shape, true)
-			else:
-				collision_shape.set_shape(null)
+			if pointer_receiver.pointer_pressed.connect(Callable(self, "on_pointer_pressed")) != OK:
+				printerr("Failed to connect pointer_receiver.pointer_pressed signal.")
+
+			if pointer_receiver.pointer_release.connect(Callable(self, "on_pointer_release")) != OK:
+				printerr("Failed to connect pointer_receiver.pointer_release signal.")
+
+			if pointer_receiver.pointer_moved.connect(Callable(self, "on_pointer_moved")) != OK:
+				printerr("Failed to connect pointer_receiver.pointer_moved signal.")
+		else:
+			collision_shape.set_shape(null)
 
 	if spatial_root:
 		spatial_root.set_scale(Vector3(canvas_scale, canvas_scale, canvas_scale))
@@ -148,9 +160,9 @@ func _set_mesh_material(p_material: Material) -> void:
 			mesh.surface_set_material(0, p_material)
 
 
-func on_pointer_moved(from, to):
-	var local_from = global_to_viewport(from)
-	var local_to = global_to_viewport(to)
+func on_pointer_moved(from: Vector3, to: Vector3):
+	var local_from: Vector2 = global_to_viewport(from)
+	var local_to: Vector2 = global_to_viewport(to)
 
 	# Let's mimic a mouse
 	var event = InputEventMouseMotion.new()
@@ -164,7 +176,7 @@ func on_pointer_moved(from, to):
 	previous_mouse_position = local_to
 
 
-func on_pointer_pressed(at, p_doubleclick: bool):
+func on_pointer_pressed(at: Vector3, p_doubleclick: bool):
 	var local_at: Vector2 = global_to_viewport(at)
 
 	# Let's mimic a mouse
@@ -177,12 +189,12 @@ func on_pointer_pressed(at, p_doubleclick: bool):
 	event.set_double_click(p_doubleclick)
 
 	if viewport:
-		viewport.push_input(event)
+		viewport.push_unhandled_input(event)
 	previous_mouse_position = local_at
 
 
-func on_pointer_release(at, p_doubleclick: bool):
-	var local_at = global_to_viewport(at)
+func on_pointer_release(at: Vector3, p_doubleclick: bool):
+	var local_at: Vector2 = global_to_viewport(at)
 
 	# Let's mimic a mouse
 	mouse_mask = 0
@@ -194,7 +206,7 @@ func on_pointer_release(at, p_doubleclick: bool):
 	event.set_double_click(p_doubleclick)
 
 	if viewport:
-		viewport.push_input(event)
+		viewport.push_unhandled_input(event)
 	previous_mouse_position = local_at
 
 func _process(_delta: float) -> void:
@@ -248,30 +260,6 @@ func _ready() -> void:
 	mesh_instance.set_skeleton_path(NodePath())
 	mesh_instance.set_cast_shadows_setting(GeometryInstance3D.SHADOW_CASTING_SETTING_OFF)
 	spatial_root.add_child(mesh_instance, true)
-
-	# Collision
-	pointer_receiver = function_pointer_receiver_const.new()
-	pointer_receiver.set_name("PointerReceiver")
-
-	if pointer_receiver.pointer_pressed.connect(Callable(self, "on_pointer_pressed")) != OK:
-		printerr("Failed to connect pointer_receiver.pointer_pressed signal.")
-		return
-
-	if pointer_receiver.pointer_release.connect(Callable(self, "on_pointer_release")) != OK:
-		printerr("Failed to connect pointer_receiver.pointer_release signal.")
-		return
-
-	if pointer_receiver.pointer_moved.connect(Callable(self, "on_pointer_moved")) != OK:
-		printerr("Failed to connect pointer_receiver.pointer_moved signal.")
-		return
-
-	pointer_receiver.collision_mask = collision_mask
-	pointer_receiver.collision_layer = collision_layer
-	spatial_root.add_child(pointer_receiver, true)
-
-	collision_shape = CollisionShape3D.new()
-	collision_shape.set_name("CollisionShape3D")
-	pointer_receiver.add_child(collision_shape, true)
 
 	# Generate the unique material
 	material = StandardMaterial3D.new()

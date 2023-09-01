@@ -10,7 +10,7 @@ signal pointer_moved(p_at, p_from)
 signal pointer_release(p_at)
 
 func untransform_position(p_vector: Vector3) -> Vector3:
-	var result = global_transform.basis * p_vector
+	var result = p_vector * global_transform
 	return result
 
 
