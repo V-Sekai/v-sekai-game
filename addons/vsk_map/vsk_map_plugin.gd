@@ -53,8 +53,6 @@ func _enter_tree() -> void:
 	editor_interface = get_editor_interface()
 	map_definition_editor = vsk_map_definition_editor_const.new(self)
 
-	editor_interface.get_viewport().call_deferred("add_child", map_definition_editor, true)
-
 	option_button = MenuButton.new()
 	option_button.set_switch_on_hover(true)
 
@@ -63,6 +61,7 @@ func _enter_tree() -> void:
 	option_button.get_popup().id_pressed.connect(self._menu_option)
 	option_button.hide()
 
+	add_control_to_container(EditorPlugin.CONTAINER_SPATIAL_EDITOR_MENU, map_definition_editor)
 	add_control_to_container(EditorPlugin.CONTAINER_SPATIAL_EDITOR_MENU, option_button)
 
 
@@ -124,6 +123,7 @@ func _make_visible(p_visible: bool) -> void:
 		return
 	if p_visible:
 		if option_button:
+			print("Show vsk_map_menu.")
 			option_button.show()
 	else:
 		if option_button:
