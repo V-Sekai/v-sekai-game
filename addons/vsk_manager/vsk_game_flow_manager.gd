@@ -592,7 +592,8 @@ func _setup_mocap_manager() -> void:
 ## Callback for when a spatial game viewport has been updated
 ##
 func _spatial_game_viewport_updated(p_viewport: SubViewport):
-	pass
+	if p_viewport == game_viewport:
+		FlatViewport.texture_rect_ingame.texture = game_viewport.get_texture()
 
 
 func set_viewport(new_viewport: SubViewport) -> void:
@@ -601,6 +602,10 @@ func set_viewport(new_viewport: SubViewport) -> void:
 		game_viewport.get_parent().remove_child(game_viewport)
 	add_child(game_viewport, true)
 	game_viewport.owner = self
+	FlatViewport.texture_rect_ingame.texture = game_viewport.get_texture()
+	var viewport_path = game_viewport.owner.get_path_to(game_viewport)
+	FlatViewport.texture_rect_ingame.texture.viewport_path = viewport_path
+
 
 ##
 ## Runs setup phase on EntityManager
@@ -691,6 +696,9 @@ func setup() -> void:
 		game_viewport = SpatialGameViewportManager.create_spatial_game_viewport()
 		add_child(game_viewport, true)
 		game_viewport.owner = self
+	FlatViewport.texture_rect_ingame.texture = game_viewport.get_texture()
+	var viewport_path = game_viewport.owner.get_path_to(game_viewport)
+	FlatViewport.texture_rect_ingame.texture.viewport_path = viewport_path
 
 	if !gameroot:
 		gameroot = Node3D.new()
