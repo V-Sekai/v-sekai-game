@@ -131,7 +131,6 @@ window/vsync/vsync_mode.macos=1
 
 movie_writer/mjpeg_quality=1.0
 movie_writer/movie_file="../export.avi"
-run/main_run_args="--xr-mode off"
 import/use_multiple_threads=false
 run/main_run_args.macos="--xr-mode off"
 
