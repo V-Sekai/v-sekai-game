@@ -1,6 +1,6 @@
 # README
 
-Tested on msys2 Windows 11, Popos and Mac.
+Tested on msys2 Windows 11, Popos.
 
 ## Readme for fire
 
