@@ -97,7 +97,6 @@ VSKEntityManager="*res://addons/entity_manager/entity_manager.gd"
 NetworkManager="*res://addons/network_manager/network_manager.gd"
 ScreenshotManager="*res://addons/sar1_screenshot_manager/screenshot_manager.gd"
 ConnectionUtil="*res://addons/gd_util/connection_util.gd"
-DebugMenu="*res://addons/debug_menu/debug_menu.tscn"
 
 [compression]
 
