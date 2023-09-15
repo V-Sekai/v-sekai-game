@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://addons/vsk_menu/title_screen.gd" id="1"]
 [ext_resource type="Theme" uid="uid://b04ev0cbgpas" path="res://addons/emote_theme/emote_theme.tres" id="1_qxdo7"]
 [ext_resource type="PackedScene" uid="uid://bxaya8pq2i21c" path="res://addons/vsk_menu/main_menu/session_container.tscn" id="3"]
-[ext_resource type="Texture2D" uid="uid://mwvsa6uo0xhh" path="res://vsk_default/icon/v_sekai_logo.png" id="3_31etj"]
+[ext_resource type="Texture2D" uid="uid://bfemdvayr8jju" path="res://vsk_default/icon/v_sekai_logo.png" id="3_31etj"]
 [ext_resource type="PackedScene" uid="uid://tt3cnvs3qqlq" path="res://addons/vsk_menu/vsk_large_button.tscn" id="4"]
 
 [node name="TitleScreen" type="Control"]
@@ -100,7 +100,10 @@ alignment = 2
 layout_mode = 2
 
 [node name="ExitDialog" type="ConfirmationDialog" parent="."]
+size = Vector2i(225, 100)
 min_size = Vector2i(150, 52)
+max_size = Vector2i(800, 100)
+dialog_text = "TR_MENU_QUIT_MESSAGE"
 dialog_hide_on_ok = false
 
 [node name="AcceptDialog" type="AcceptDialog" parent="."]
