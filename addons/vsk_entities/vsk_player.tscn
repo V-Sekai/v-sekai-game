@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://cdfhmtsks1t0c"]
+[gd_scene load_steps=26 format=3 uid="uid://cdfhmtsks1t0c"]
 
 [ext_resource type="Script" path="res://addons/entity_manager/entity.gd" id="1"]
 [ext_resource type="Script" path="res://addons/entity_manager/transform_notification.gd" id="2"]
@@ -17,7 +17,6 @@
 [ext_resource type="Script" path="res://addons/vsk_entities/extensions/player_rpc_table.gd" id="16"]
 [ext_resource type="Script" path="res://addons/smoothing/smoothing.gd" id="17"]
 [ext_resource type="Script" path="res://addons/network_manager/network_transform.gd" id="18"]
-[ext_resource type="Script" path="res://addons/vsk_entities/extensions/pickup_controller.gd" id="19"]
 [ext_resource type="Script" path="res://addons/vsk_entities/extensions/player_teleport_controller.gd" id="20"]
 [ext_resource type="PackedScene" uid="uid://bpxjakh1f68nw" path="res://addons/vsk_entities/extensions/infotag.tscn" id="21"]
 [ext_resource type="Script" path="res://addons/network_manager/network_hierarchy.gd" id="22"]
@@ -31,6 +30,15 @@ radius = 0.4
 
 [node name="Player" type="Node3D"]
 script = ExtResource("1")
+transform_notification_node_path = NodePath("TransformNotification")
+hierarchy_component_node_path = NodePath("HierarchyComponent")
+simulation_logic_node_path = NodePath("PlayerController")
+network_identity_node_path = NodePath("NetworkIdentity")
+network_logic_node_path = NodePath("PlayerNetworkLogic")
+rpc_table_node_path = NodePath("PlayerRPCTable")
+simulation_logic_node/sprint_speed = 10.0
+simulation_logic_node/walk_speed = 5.0
+simulation_logic_node/fly_speed = 10.0
 simulation_logic_node/local_player_collision = 4
 simulation_logic_node/other_player_collision = 8
 simulation_logic_node/ik_space_path = NodePath("../TargetSmooth/Render/IKSpace")
@@ -61,6 +69,12 @@ _entity_node_path = NodePath("..")
 
 [node name="PlayerController" type="Node" parent="."]
 script = ExtResource("3")
+_entity_node_path = NodePath("..")
+_entity_type = "Player"
+_character_body_path = NodePath("../PlayerCharacterBody")
+_state_machine_path = NodePath("StateMachine")
+_third_person_render_node_path = NodePath("../TargetSmooth/Render/AvatarDisplay")
+_render_node_path = NodePath("../TargetSmooth/Render")
 _target_node_path = NodePath("../Target")
 _target_smooth_node_path = NodePath("../TargetSmooth")
 _camera_controller_node_path = NodePath("../TargetSmooth/PlayerCameraController")
@@ -75,10 +89,18 @@ other_player_collision = 8
 ik_space_path = NodePath("../TargetSmooth/Render/IKSpace")
 avatar_loader_path = NodePath("../AvatarLoader")
 avatar_display_path = NodePath("../TargetSmooth/Render/AvatarDisplay")
+_entity_node_path = NodePath("..")
+_entity_type = "Player"
+_character_body_path = NodePath("../PlayerCharacterBody")
 _state_machine_path = NodePath("StateMachine")
 _third_person_render_node_path = NodePath("../TargetSmooth/Render/AvatarDisplay")
 _render_node_path = NodePath("../TargetSmooth/Render")
+_entity_node_path = NodePath("..")
+_entity_type = "Player"
 _character_body_path = NodePath("../PlayerCharacterBody")
+_entity_node_path = NodePath("..")
+_entity_type = "Player"
+_entity_node_path = NodePath("..")
 _entity_type = "Player"
 _entity_node_path = NodePath("..")
 
@@ -87,25 +109,32 @@ actor_controller_path = NodePath("..")
 
 [node name="PlayerNetworkLogic" type="Node" parent="."]
 script = ExtResource("6")
+_entity_node_path = NodePath("..")
 cached_writer_size = 256
 _entity_node_path = NodePath("..")
 
 [node name="NetworkHierarchy" type="Node" parent="PlayerNetworkLogic"]
 script = ExtResource("22")
+_entity_node_path = NodePath("../..")
 sync_parent = true
 sync_attachment = true
+_entity_node_path = NodePath("../..")
 _entity_node_path = NodePath("../..")
 
 [node name="NetworkTransform" type="Node" parent="PlayerNetworkLogic"]
 script = ExtResource("18")
+_entity_node_path = NodePath("../..")
 origin_interpolation_factor = 15.0
 rotation_interpolation_factor = 15.0
 snap_threshold = 5.0
 _entity_node_path = NodePath("../..")
+_entity_node_path = NodePath("../..")
 
 [node name="NetworkIKPoints" type="Node" parent="PlayerNetworkLogic"]
 script = ExtResource("4")
+_entity_node_path = NodePath("../..")
 ik_space_node_path = NodePath("../../TargetSmooth/Render/IKSpace")
+_entity_node_path = NodePath("../..")
 _entity_node_path = NodePath("../..")
 
 [node name="NetworkHands" type="Node" parent="PlayerNetworkLogic"]
@@ -116,9 +145,6 @@ _entity_node_path = NodePath("../..")
 [node name="PlayerInput" type="Node" parent="."]
 script = ExtResource("5")
 _camera_controller_node_path = NodePath("../TargetSmooth/PlayerCameraController")
-
-[node name="PlayerPickupController" type="Node" parent="."]
-script = ExtResource("19")
 
 [node name="PlayerHandController" type="Node" parent="."]
 script = ExtResource("24")
@@ -143,6 +169,7 @@ _entity_node_path = NodePath("..")
 
 [node name="NetworkIdentity" type="Node" parent="."]
 script = ExtResource("8")
+_entity_node_path = NodePath("..")
 _entity_node_path = NodePath("..")
 
 [node name="AvatarLoader" type="Node" parent="."]
