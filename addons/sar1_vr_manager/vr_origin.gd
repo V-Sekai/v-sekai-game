@@ -198,20 +198,25 @@ func _ready() -> void:
 
 	vr_camera = get_node("ARVRCamera")
 	
-	desktop_viewport = SubViewport.new()
-	desktop_viewport.name = "DesktopViewport"
-	add_child(desktop_viewport)
-	desktop_viewport.owner = vr_camera
-	VSKGameFlowManager.set_viewport(desktop_viewport)
-	desktop_viewport.size = DisplayServer.window_get_size(0)
-	
-	desktop_camera = Camera3D.new()
-	desktop_camera.name = "DesktopCamera"
-	desktop_viewport.add_child(desktop_camera)
-	desktop_camera.owner = vr_camera
-	desktop_camera.attributes = CameraAttributesPractical.new()
-	desktop_camera.environment = load("res://vsk_default/environments/default_env.tres")
-	desktop_camera.global_transform = vr_camera.global_transform
+	# Ensure that there is only one DesktopViewport at a time
+	desktop_viewport = VSKGameFlowManager.get_node_or_null("DesktopViewport")
+	if desktop_viewport == null:
+		desktop_viewport = SubViewport.new()
+		desktop_viewport.name = "DesktopViewport"
+		add_child(desktop_viewport)
+		desktop_viewport.owner = vr_camera
+		VSKGameFlowManager.set_viewport(desktop_viewport)
+		desktop_viewport.size = DisplayServer.window_get_size(0)
+		
+		desktop_camera = Camera3D.new()
+		desktop_camera.name = "DesktopCamera"
+		desktop_viewport.add_child(desktop_camera)
+		desktop_camera.owner = vr_camera
+		desktop_camera.attributes = CameraAttributesPractical.new()
+		desktop_camera.environment = load("res://vsk_default/environments/default_env.tres")
+		desktop_camera.global_transform = vr_camera.global_transform
+	else:
+		desktop_camera = VSKGameFlowManager.get_node("DesktopViewport/DesktopCamera")
 
 func _exit_tree() -> void:
 	if VRManager.xr_origin == self:
