@@ -31,4 +31,4 @@ runs:
       with:
         repository: v-sekai/godot
         path: godot
-        ref: groups-4.2.2023-09-12T231311Z
+        ref: groups-4.2.2023-09-20T003106Z
