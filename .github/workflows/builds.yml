@@ -101,5 +101,5 @@ jobs:
           body: "This is a V-Sekai/V-Sekai-game release"
           generate_release_notes: true
           draft: true
-          pre-release: true
+          prerelease: true
           append_body: true
