@@ -1,14 +1,8 @@
-name: V-Sekai Builds
+name: 🐧 Linux Builds
+on: [push, pull_request]
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-
+# Global Settings
 env:
-  GODOT_BASE_BRANCH: master
-  SCONSFLAGS: verbose=yes warnings=extra werror=yes module_text_server_fb_enabled=yes
   DOTNET_NOLOGO: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   EM_VERSION: 3.1.18
@@ -21,240 +15,91 @@ concurrency:
 jobs:
   build-linux:
     runs-on: "ubuntu-20.04"
-    name: ${{ matrix.name }}
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - name: linux_editor_win_deploy
-            cache-name: linux-editor-deploy-windows-editor
-            target: editor
-            tests: false
-            sconsflags: use_llvm=yes linker=gold deprecate=no
-            doc-test: false
-            bin: "./bin/godot.linuxbsd.editor.x86_64.llvm"
-            deploy-bin: "./bin/godot.windows.editor.x86_64.llvm.exe"
-            proj-conv: false
-            artifact: true
-            platform: linuxbsd
-            deploy: true
-            deploy-platform: windows
-            deploy-platform-target: editor
-
-          - name: linux_editor_linux_deploy
-            cache-name: linux-editor-deploy-linux-editor
-            target: editor
-            tests: false
-            sconsflags: use_llvm=yes linker=gold deprecate=no
-            doc-test: false
-            bin: "./bin/godot.linuxbsd.editor.x86_64.llvm"
-            deploy-bin: "./bin/godot.linuxbsd.editor.x86_64.llvm"
-            proj-conv: false
-            artifact: true
-            platform: linuxbsd
-            deploy: true
-            deploy-platform: linux
-            deploy-platform-target: editor
-
     steps:
-      - name: Harden Runner
-        uses: step-security/harden-runner@8ca2b8b2ece13480cda6dacd3511b49857a23c09 # v2.5.1
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - id: godot
+        uses: pozetroninc/github-action-get-latest-release@master
         with:
-          egress-policy: audit
+          repository: V-Sekai/godot
+          excludes: prerelease, draft
 
-      - uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v3.5.2
-
-      - name: Linux dependencies for gold linker
+      - name: Download Linux Editor Mono
         run: |
-          sudo apt-get install -qq binutils
+          wget "https://github.com/V-Sekai/godot/releases/download/${{ steps.godot.outputs.release }}/linux-editor-mono.zip"
 
-      - name: Setup Godot build cache
-        uses: ./.github/actions/godot-cache
-        with:
-          cache-name: ${{ matrix.cache-name }}
-        continue-on-error: true
-
-      - name: Set up Emscripten latest
-        if: ${{ matrix.platform == 'web' }}
-        uses: mymindstorm/setup-emsdk@ab889da2abbcbb280f91ec4c215d3bb4f3a8f775 # v12
-        with:
-          version: ${{env.EM_VERSION}}
-          actions-cache-folder: ${{env.EM_CACHE_FOLDER}}
-
-      - name: Verify Emscripten setup
-        if: ${{ matrix.platform == 'web' }}
+      - name: Download Windows Editor
         run: |
-          emcc -v
+          wget "https://github.com/V-Sekai/godot/releases/download/${{ steps.godot.outputs.release }}/windows-editor.zip"
 
-      - name: Setup python and scons
-        uses: ./.github/actions/godot-deps
+      - name: Unzip Windows Editor
+        run: |
+          unzip windows-editor.zip -d godot-windows-editor
 
-      - name: Set up .NET Sdk
-        uses: actions/setup-dotnet@3447fd6a9f9e57506b15f895c5b76d3b197dc7c2 # v3.2.0
-        if: ${{ matrix.build-mono }}
-        with:
-          dotnet-version: "6.0.x"
-
-      - name: Setup GCC problem matcher
-        uses: ammaraskar/gcc-problem-matcher@d1fed1fac9e94d30e23b5a82dba4e2963e71d2e7 # master
-
-      - name: Compilation
-        uses: ./.github/actions/godot-build
-        with:
-          sconsflags: ${{ env.SCONSFLAGS }} ${{ matrix.sconsflags }}
-          platform: ${{ matrix.platform }}
-          target: ${{ matrix.target }}
-          tests: ${{ matrix.tests }}
-          deploy: ${{ matrix.deploy }}
-          deploy-platform: ${{ matrix.deploy-platform }}
-          deploy-platform-target: ${{ matrix.deploy-platform-target }}
-
-      - name: Generate build constants
-        uses: ./.github/actions/vsk-generate-constants
+      - name: Unzip Linux Editor Mono
+        run: |
+          unzip linux-editor-mono.zip -d godot-linux-editor
 
       - name: Export Game
-        if: ${{ matrix.deploy }}
         run: |
           mkdir -p .godot/editor .godot/imported export_linux
-          chmod +x ${{ matrix.bin }}
-          ${{ matrix.bin }} --headless --xr-mode off --export-pack Linux  `pwd`/vsekai_game_${{ matrix.deploy-platform }}.pck --path . || true
-        timeout-minutes: 10
+          chmod +x godot-linux-editor/linux-editor-mono/godot.linuxbsd.editor.x86_64.mono  
+          godot-linux-editor/linux-editor-mono/godot.linuxbsd.editor.x86_64.mono --headless --xr-mode off --export-pack Linux  `pwd`/v_sekai_game_windows_x64.pck --path .
 
-      - name: Prepare artifacts
-        if: ${{ matrix.deploy && matrix.deploy-platform == 'windows' }}
+      - name: Export Game for Linux
         run: |
-          rm -rf vsekai_game_${{ matrix.deploy-platform }}
-          export TARGET=vsekai_game_${{ matrix.deploy-platform }}
+          mkdir -p .godot/editor .godot/imported export_linux
+          chmod +x godot-linux-editor/linux-editor-mono/godot.linuxbsd.editor.x86_64.mono  
+          godot-linux-editor/linux-editor-mono/godot.linuxbsd.editor.x86_64.mono --headless --xr-mode off --export-pack Linux `pwd`/v_sekai_game_linux_x64.pck --path .
+      
+      - name: Prepare Linux artifacts
+        run: |
+          rm -rf v_sekai_game_linux_x64
+          export TARGET=v_sekai_game_linux_x64
           mkdir -p $TARGET
-          cp -rf ${{ matrix.deploy-bin }} $TARGET/vsekai_game_${{ matrix.deploy-platform }}.exe
-          cp -rf vsekai_game_${{ matrix.deploy-platform }}.pck $TARGET/vsekai_game_${{ matrix.deploy-platform }}.pck
+          cp -rf godot-linux-editor/linux-editor-mono/godot.linuxbsd.editor.x86_64.mono $TARGET/v_sekai_game_linux_x64.mono
+          cp -rf v_sekai_game_linux_x64.pck $TARGET/v_sekai_game_linux_x64.pck
           7z a -r $TARGET.zip $TARGET
         shell: bash
 
-      - name: Prepare artifacts
-        if: ${{ matrix.deploy && matrix.deploy-platform != 'windows' }}
-        run: |
-          rm -rf vsekai_game_${{ matrix.deploy-platform }}
-          export TARGET=vsekai_game_${{ matrix.deploy-platform }}
-          mkdir -p $TARGET
-          cp -rf ${{ matrix.deploy-bin }} $TARGET/vsekai_game_${{ matrix.deploy-platform }}
-          cp -rf vsekai_game_${{ matrix.deploy-platform }}.pck $TARGET/vsekai_game_${{ matrix.deploy-platform }}.pck
-          7z a -r $TARGET.zip $TARGET
-        shell: bash
-
-      - name: Upload Godot Artifact Export
-        if: ${{ matrix.deploy }}
-        uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3.1.3
+      - name: Upload Godot Artifact Export for Linux
+        uses: actions/upload-artifact@v3
         with:
-          name: vsekai_game_${{ matrix.deploy-platform }}_x86_64
+          name: v_sekai_game_linux_x64
           path: |
-            vsekai_game_${{ matrix.deploy-platform }}
+            v_sekai_game_linux_x64/v_sekai_game_linux_x64.mono
+            v_sekai_game_linux_x64/v_sekai_game_linux_x64.pck
 
-      - name: Generate C# glue
-        if: ${{ matrix.build-mono }}
+      - name: Prepare Windows artifacts
         run: |
-          ${{ matrix.bin }} --headless --generate-mono-glue ./modules/mono/glue || true
+          rm -rf v_sekai_game_windows_x64
+          export TARGET=v_sekai_game_windows_x64
+          mkdir -p $TARGET
+          cp -rf  godot-windows-editor/windows-editor/godot.windows.editor.x86_64.exe $TARGET/v_sekai_game_windows_x64.exe
+          cp -rf v_sekai_game_windows_x64.pck $TARGET/v_sekai_game_windows_x64.pck
+          7z a -r $TARGET.zip $TARGET
+        shell: bash
 
-      - name: Build .NET solutions
-        if: ${{ matrix.build-mono }}
-        run: |
-          ./modules/mono/build_scripts/build_assemblies.py --godot-output-dir=./bin --godot-platform=linuxbsd
-
-      - name: Unit tests
-        if: ${{ matrix.tests }}
-        run: |
-          ${{ matrix.bin }} --version
-          ${{ matrix.bin }} --help
-          ${{ matrix.bin }} --test --headless
-
-      - name: Check for class reference updates
-        if: ${{ matrix.doc-test }}
-        run: |
-          echo "Running --doctool to see if this changes the public API without updating the documentation."
-          echo -e "If a diff is shown, it means that your code/doc changes are incomplete and you should update the class reference with --doctool.\n\n"
-          ${{ matrix.bin }} --doctool --headless 2>&1 > /dev/null || true
-          git diff --color --exit-code && ! git ls-files --others --exclude-standard | sed -e 's/^/New doc file missing in PR: /' | grep 'xml$'
-
-      - name: Test project converter
-        if: ${{ matrix.proj-conv }}
-        run: |
-          mkdir -p converter_test
-          cd converter_test
-          touch project.godot
-          ${{ matrix.bin }} --headless --validate-conversion-3to4
-          cd ..
-          rm converter_test -rf
-
-      - name: Open and close editor (Vulkan)
-        if: ${{ matrix.proj-test }}
-        run: |
-          xvfb-run ${{ matrix.bin }} --audio-driver Dummy --editor --quit --path test_project 2>&1 | tee sanitizers_log.txt || true
-          misc/scripts/check_ci_log.py sanitizers_log.txt
-
-      - name: Open and close editor (GLES3)
-        if: ${{ matrix.proj-test }}
-        run: |
-          DRI_PRIME=0 xvfb-run ${{ matrix.bin }} --audio-driver Dummy --rendering-driver opengl3 --editor --quit --path test_project 2>&1 | tee sanitizers_log.txt || true
-          misc/scripts/check_ci_log.py sanitizers_log.txt
-
-      - name: Run project
-        if: ${{ matrix.proj-test }}
-        run: |
-          xvfb-run ${{ matrix.bin }} 40 --audio-driver Dummy --path test_project 2>&1 | tee sanitizers_log.txt || true
-          misc/scripts/check_ci_log.py sanitizers_log.txt
-
-      - name: Prepare artifact
-        if: ${{ matrix.artifact }}
-        run: |
-          chmod +x godot/bin/godot.* || true
-          chmod +x godot/bin/libgodot.* || true
-
-      - name: Upload artifact
-        uses: ./.github/actions/upload-artifact
-        if: ${{ matrix.artifact }}
+      - name: Upload Godot Artifact Export for Windows
+        uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.cache-name }}
+          name: v_sekai_game_windows_x64
+          path: |
+            v_sekai_game_windows_x64/v_sekai_game_windows_x64.exe
+            v_sekai_game_windows_x64/v_sekai_game_windows_x64.pck
 
-  release:
-    needs: build-linux
-    if: startsWith(github.ref, 'refs/tags/')
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download Artifacts
-        uses: actions/download-artifact@v3
-
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
-
-      - name: Upload Release Assets
-        uses: actions/github-script@v6
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            const fs = require('fs');
-            const path = require('path');
-            const artifacts = ['vsekai_game_windows_x86_64.zip', 'vsekai_game_linux_x86_64.zip'];
-            for (const artifact of artifacts) {
-              const filePath = path.join(process.env.GITHUB_WORKSPACE, artifact);
-              if (fs.existsSync(filePath)) {
-                await github.repos.uploadReleaseAsset({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  release_id: context.payload.release.id,
-                  name: path.basename(artifact),
-                  data: fs.readFileSync(filePath),
-                  headers: {
-                    'content-length': fs.statSync(filePath).size,
-                    'content-type': 'application/zip',
-                  },
-                });
-              }
-            }
+          files: |
+            v_sekai_game_linux_x64/v_sekai_game_linux_x64.mono
+            v_sekai_game_linux_x64/v_sekai_game_linux_x64.pck
+            v_sekai_game_windows_x64/v_sekai_game_windows_x64.exe
+            v_sekai_game_windows_x64/v_sekai_game_windows_x64.pck
+          body: "This is a V-Sekai/V-Sekai-game release"
+          generate_release_notes: true
+          draft: true
+          pre-release: true
+          append_body: true
