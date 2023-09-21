@@ -105,3 +105,4 @@ jobs:
           draft: true
           prerelease: true
           append_body: true
+          token: ${{ secrets.VSEKAI_GITHUB_TOKEN }}
