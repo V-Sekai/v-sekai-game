@@ -50,7 +50,7 @@ var invert_look_x: bool = false:
 var invert_look_y: bool = false:
 	set = set_invert_look_y
 
-var mouse_sensitivity: float = 1.0
+var mouse_sensitivity: float = 5.0
 
 # The number of external requests for the blocking ingame action,
 # allows multiple systems to do so without conflict
