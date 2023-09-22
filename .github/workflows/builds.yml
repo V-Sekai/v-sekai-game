@@ -17,7 +17,7 @@ jobs:
     runs-on: "ubuntu-20.04"
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - id: godot
         uses: pozetroninc/github-action-get-latest-release@master
