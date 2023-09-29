@@ -9,7 +9,7 @@ extends Node
 enum { MAP_OK, MAP_FAILED, ROOT_IS_NULL, EXPORTER_NODE_LOADED, INVALID_NODE }
 
 
-static func get_error_str(p_err: int) -> String:
+static func get_error_string(p_err: int) -> String:
 	var error_str: String = "Unknown error!"
 	match p_err:
 		MAP_FAILED:

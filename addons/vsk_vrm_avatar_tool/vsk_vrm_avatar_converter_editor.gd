@@ -53,7 +53,6 @@ func convert_vrm(p_save_path: String) -> void:
 	instance.scene_file_path = node.scene_file_path
 	if not (instance and typeof(instance.get(&"vrm_meta")) != TYPE_NIL):
 		error_callback(vsk_vrm_callback_const.VRM_INVALID_NODE, err)
-	instance.vrm_meta.texture = null
 	var avatar_root: Node3D = vsk_vrm_avatar_functions_const.convert_vrm_instance(instance)
 	if not avatar_root:
 		error_callback(vsk_vrm_callback_const.VRM_FAILED, err)
