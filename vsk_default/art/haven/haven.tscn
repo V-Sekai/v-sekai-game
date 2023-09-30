@@ -1,4 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://mutjc1fjx2ns"]
+[gd_scene load_steps=10 format=3 uid="uid://mutjc1fjx2ns"]
+
+[ext_resource type="Script" path="res://addons/vsk_map/vsk_map_definition.gd" id="1_coprv"]
+[ext_resource type="PackedScene" uid="uid://cmx3ucbbmfhst" path="res://addons/vsk_xr_mirror/mirror.tscn" id="2_axwyc"]
+[ext_resource type="Shader" path="res://addons/vsk_xr_mirror/mirror.gdshader" id="2_bfj4l"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_qqa8l"]
 size = Vector3(74, 0.1, 74)
@@ -12,9 +16,33 @@ albedo_color = Color(0.8, 0.482353, 0.223529, 1)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sqmki"]
 albedo_color = Color(0.282353, 0.482353, 0.92549, 1)
 
+[sub_resource type="ViewportTexture" id="ViewportTexture_qf3md"]
+viewport_path = NodePath("LeftViewport")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_oymu4"]
+viewport_path = NodePath("RightViewport")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hth7s"]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("2_bfj4l")
+shader_parameter/use_screenspace = false
+shader_parameter/albedo_color = Color(1, 1, 1, 1)
+shader_parameter/textureL = SubResource("ViewportTexture_qf3md")
+shader_parameter/textureR = SubResource("ViewportTexture_oymu4")
+
 [node name="haven" type="Node3D"]
+script = ExtResource("1_coprv")
+vskeditor_preview_camera_path = NodePath("Camera3D")
+vskeditor_preview_camera_path = NodePath("Camera3D")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+shadow_enabled = true
 
 [node name="CSGCombiner3D" type="CSGCombiner3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, -2, -7)
+use_collision = true
 
 [node name="CSGMesh3D" type="CSGMesh3D" parent="CSGCombiner3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27, 0, -27)
@@ -52,7 +80,8 @@ sides = 32
 material = SubResource("StandardMaterial3D_pweug")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23, 0, -4)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, -2, -11)
+use_collision = true
 size = Vector3(10, 10, 1.95)
 material = SubResource("StandardMaterial3D_sqmki")
 
@@ -70,7 +99,8 @@ metadata/_edit_group_ = true
 metadata/_edit_lock_ = true
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="."]
-transform = Transform3D(6.12303e-17, 0, 1, 0, 1, 0, -1, 0, 6.12303e-17, -43, 0, 8)
+transform = Transform3D(6.12303e-17, 0, 1, 0, 1, 0, -1, 0, 6.12303e-17, -21, -2, 1)
+use_collision = true
 size = Vector3(10, 10, 1.95)
 material = SubResource("StandardMaterial3D_sqmki")
 
@@ -84,3 +114,10 @@ autowrap_mode = 3
 width = 1000.0
 metadata/_edit_group_ = true
 metadata/_edit_lock_ = true
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.832458, -0.326841, 0.447425, 0, 0.807497, 0.589871, -0.554088, -0.491043, 0.672208, -2.0464, 10.1554, 14.2025)
+
+[node name="Mirror" parent="." instance=ExtResource("2_axwyc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.14907, 0)
+surface_material_override/0 = SubResource("ShaderMaterial_hth7s")
