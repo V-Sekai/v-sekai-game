@@ -198,7 +198,11 @@ var valid_external_path_whitelist = {
 	"res://addons/network_manager/network_model.gd": true,
 	"res://addons/network_manager/network_physics.gd": true,
 	"res://addons/smoothing/smoothing.gd": true,
+	"res://addons/vsk_xr_mirror/mirror.tscn": true,
+	"res://addons/vsk_xr_mirror/mirror.gd": true,
 	"res://vsk_default/environments/default_env.tres": true,
+	"res://addons/vsk_xr_mirror/viewport_mirror_left.tres": true,
+	"res://addons/vsk_xr_mirror/viewport_mirror_right.tres": true,
 }
 
 ################
@@ -293,6 +297,7 @@ func is_script_valid_for_children(p_script: Script, p_node_class: String):
 	var network_model = load("res://addons/network_manager/network_model.gd")
 	var network_physics = load("res://addons/network_manager/network_physics.gd")
 	var smoothing = load("res://addons/smoothing/smoothing.gd")
+	var mirror = load("res://addons/vsk_xr_mirror/mirror.gd")
 
 	var valid_children_script_whitelist = [
 		network_spawn_const,
@@ -310,6 +315,7 @@ func is_script_valid_for_children(p_script: Script, p_node_class: String):
 		network_model,
 		network_physics,
 		smoothing,
+		mirror,
 	]
 	if valid_children_script_whitelist.find(p_script) != -1:
 		return map_validator_const.check_if_script_type_is_valid(p_script, p_node_class)
