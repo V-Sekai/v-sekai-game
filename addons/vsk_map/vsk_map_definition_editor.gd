@@ -37,11 +37,7 @@ func get_export_data() -> Dictionary:
 
 func export_map_upload() -> void:
 	if node and node is Node:
-		var vsk_editor: Node = get_node_or_null("/root/VSKEditor")
-		if vsk_editor:
-			vsk_editor.show_upload_panel(self.get_export_data, vsk_types_const.UserContentType.Map)
-		else:
-			printerr("Could not load VSKEditor!")
+		VSKEditor.show_upload_panel(self.get_export_data, vsk_types_const.UserContentType.Map)
 	else:
 		printerr("Node is not valid!")
 

@@ -73,11 +73,7 @@ func get_export_data() -> Dictionary:
 
 func export_avatar_upload() -> void:
 	if node and node is Node:
-		var vsk_editor = $"/root/VSKEditor"
-		if vsk_editor:
-			vsk_editor.show_upload_panel(self.get_export_data, vsk_types_const.UserContentType.Avatar)
-		else:
-			printerr("Could not load VSKEditor!")
+		VSKEditor.show_upload_panel(self.get_export_data, vsk_types_const.UserContentType.Avatar)
 	else:
 		printerr("Node is not valid!")
 
