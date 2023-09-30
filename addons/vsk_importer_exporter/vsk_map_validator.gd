@@ -64,6 +64,10 @@ var valid_node_whitelist = {
 	"VoxelGI": VoxelGI,
 	"WorldEnvironment": WorldEnvironment,
 	"OccluderInstance3D": OccluderInstance3D,
+	"CSGCombiner3D": CSGCombiner3D,
+	"CSGMesh3D": CSGMesh3D,
+	"CSGBox3D": CSGBox3D,
+	"CSGCylinder3D": CSGCylinder3D,
 	"SubViewport": SubViewport,
 }
 
@@ -194,6 +198,7 @@ var valid_external_path_whitelist = {
 	"res://addons/network_manager/network_model.gd": true,
 	"res://addons/network_manager/network_physics.gd": true,
 	"res://addons/smoothing/smoothing.gd": true,
+	"res://vsk_default/environments/default_env.tres": true,
 }
 
 ################
@@ -204,7 +209,6 @@ var entity_script: Script = load("res://addons/entity_manager/entity.gd")
 const valid_entity_whitelist = ["res://addons/vsk_entities/vsk_interactable_prop.tscn"]
 
 const valid_resource_script_whitelist = [
-	"res://addons/mirror/mirror.gd",
 ]
 
 
@@ -226,6 +230,7 @@ static func check_if_script_type_is_valid(p_script: Script, p_node_class: String
 	var network_model = load("res://addons/network_manager/network_model.gd")
 	var network_physics = load("res://addons/network_manager/network_physics.gd")
 	var smoothing = load("res://addons/smoothing/smoothing.gd")
+	var mirror = load("res://addons/vsk_xr_mirror/mirror.gd")
 
 	var script_type_table = {
 		network_spawn_const: ["Position3D", "Marker3D", "Node3D"],
@@ -242,6 +247,7 @@ static func check_if_script_type_is_valid(p_script: Script, p_node_class: String
 		network_model: ["Node"],
 		network_physics: ["Node"],
 		smoothing: ["Node3D"],
+		mirror: ["MeshInstance3D"],
 	}
 	if script_type_table.get(p_script) != null:
 		var valid_classes: Array = script_type_table.get(p_script)

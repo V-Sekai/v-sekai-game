@@ -122,7 +122,10 @@ func _task_cancelled(p_task: String) -> void:
 
 
 func _task_done(p_task: String, p_err: int, p_resource: Resource) -> void:
-	print_debug("background_loader_task_done: {task}, error: {err} resource_path: {resource_path}".format({"task": str(p_task), "err": str(p_err), "resource_path": str(p_resource.resource_path) if p_resource else ""}))
+	var resource_path: String
+	if p_resource != null:
+		resource_path = p_resource.resource_path
+	print_debug("background_loader_task_done: %s, error: %s resource_path: %s" % [str(p_task), str(p_err), resource_path])
 	task_done.emit(p_task, p_err, p_resource)
 
 
