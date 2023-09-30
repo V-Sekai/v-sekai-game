@@ -3,21 +3,17 @@
 # vr_lasso_action.gd
 # SPDX-License-Identifier: MIT
 
-extends "res://addons/sar1_vr_manager/components/actions/vr_action.gd"  # vr_action.gd
-@export var straight_color: Color = Color(247.0 / 255.0, 247.0 / 255.0, 1.0, 0.05)
+extends "res://addons/sar1_vr_manager/components/actions/vr_action.gd"
 @export var unsnapped_color: Color = Color(247.0 / 255.0, 247.0 / 255.0, 1.0, 0.1)
 @export var snapped_color: Color = Color(254.0 / 255.0, 95.0 / 255.0, 85.0 / 255.0, 1.0)
 @export var snap_circle_color: Color = Color(1.0, 1.0, 1.0, 1.0)
 @export var snap_circle_min_alpha: float = 0.0
-@export var straight_laser: NodePath
 @export var snapped_laser: NodePath
 @export var primary_circle: NodePath
 @export var secondary_circle: NodePath
 @export var min_snap = 0.5
 @export var snap_increase = 2
-
 var current_snap: Node3D = null
-var straight_mesh: MeshInstance3D = null
 var snapped_mesh: MeshInstance3D = null
 var primary_mesh: MeshInstance3D = null
 var secondary_mesh: MeshInstance3D = null
@@ -30,21 +26,101 @@ var print_mod = 0
 @export var rumble_duration: float = 0.0100
 @export var rumble_strength: float = 1.0
 
-var lasso: bool = false
-
+var lasso_enabled: bool = false
 
 func _on_action_pressed(p_action: String) -> void:
 	super._on_action_pressed(p_action)
 	match p_action:
 		"trigger_click":
-			lasso = true
+			set_lasso_enabled(true)
 
 
 func _on_action_released(p_action: String) -> void:
 	super._on_action_released(p_action)
 	match p_action:
 		"trigger_click":
-			lasso = false
+			set_lasso_enabled(false)
+
+func set_lasso_enabled(enabled: bool) -> void:
+	lasso_enabled = enabled
+
+func _process(p_delta: float) -> void:
+	_update_lasso(p_delta)
+
+
+func _physics_process(_delta: float) -> void:
+	if lasso_enabled:  
+		var current_shape_cast: ShapeCast3D = ShapeCast3D.new()
+		var capsule: CapsuleShape3D = CapsuleShape3D.new()
+		capsule.radius = 0.01
+		capsule.height = 8.0
+		current_shape_cast.shape = capsule
+		current_shape_cast.target_position = Vector3(0, -4, 0)
+		current_shape_cast.collision_mask = 2
+		current_shape_cast.collide_with_areas = true
+		current_shape_cast.collide_with_bodies = false
+		add_child(current_shape_cast)
+		current_shape_cast.force_shapecast_update()
+		var results: Array = current_shape_cast.collision_result
+		for element in results:
+			var result: Dictionary = element
+			print(result)
+			result.collider.on_pointer_pressed(result.point, true)
+			current_shape_cast.queue_free() # FIXME
+
+
+func _update_visibility() -> void:
+	if VRManager.xr_active:
+		if snapped_mesh:
+			snapped_mesh.show()
+		set_process(true)
+	else:
+		if snapped_mesh:
+			snapped_mesh.hide()
+		set_process(false)
+
+
+func _xr_mode_changed() -> void:
+	_update_visibility()
+
+
+func _ready() -> void:
+	super._ready()
+
+	snapped_mesh = get_node(snapped_laser) as MeshInstance3D
+
+	snapped_mesh.get_parent().remove_child(snapped_mesh)
+
+	tracker.laser_origin.add_child(snapped_mesh, true)
+
+	primary_mesh = get_node(primary_circle) as MeshInstance3D
+	secondary_mesh = get_node(secondary_circle) as MeshInstance3D
+
+	primary_mesh.get_parent().remove_child(primary_mesh)
+	secondary_mesh.get_parent().remove_child(secondary_mesh)
+
+	tracker.laser_origin.add_child(secondary_mesh, true)
+	
+	if snapped_mesh != null && snapped_mesh.material_override != null:
+		snapped_mesh.material_override = snapped_mesh.material_override.duplicate(true)
+
+	if primary_mesh != null && primary_mesh.material_override != null:
+		primary_mesh.material_override.set_shader_parameter("mix_color", snap_circle_color)
+		primary_mesh.material_override = primary_mesh.material_override.duplicate(true)
+		primary_mesh.visible = false
+	if secondary_mesh != null && secondary_mesh.material_override != null:
+		secondary_mesh.material_override.set_shader_parameter("mix_color", snap_circle_color)
+		secondary_mesh.material_override = secondary_mesh.material_override.duplicate(true)
+		secondary_mesh.visible = false
+	_update_visibility()
+
+
+func _exit_tree() -> void:
+	if not tracker:
+		return
+	if not tracker.laser_origin:
+		return
+	tracker.laser_origin.remove_child(snapped_mesh)
 
 
 func _update_lasso(_delta: float) -> void:
@@ -70,14 +146,14 @@ func _update_lasso(_delta: float) -> void:
 			if !snap_point:
 				snap_point = current_snap
 		else:
-			interact_ready = interact_ready || !lasso
+			interact_ready = interact_ready || !lasso_enabled
 			if current_snap && current_snap.is_inside_tree() && redirection_lock:
 				snap_point = current_snap
 				primary_power = 1
 				secondary_power = 0
 				primary_snap = snap_point.get_global_transform().origin
 			elif tracker.laser_origin:
-				var snap_arr: Array = snapping_singleton.snapping_points.calc_top_two_snapping_power(tracker.laser_origin.global_transform, current_snap, snap_increase, lasso_analog_value.x, lasso)
+				var snap_arr: Array = snapping_singleton.snapping_points.calc_top_two_snapping_power(tracker.laser_origin.global_transform, current_snap, snap_increase, lasso_analog_value.x, lasso_enabled)
 				if snap_arr.size() > 0 && snap_arr[0] && snap_arr[0].get_origin() && snap_arr[0].get_snap_score() > min_snap:
 					snap_point = snap_arr[0].get_origin()
 					primary_power = snap_arr[0].get_snap_score()
@@ -92,7 +168,7 @@ func _update_lasso(_delta: float) -> void:
 					secondary_snap = snap_arr[1].get_origin().get_global_transform().origin
 
 		if current_snap != snap_point:
-			interact_ready = !lasso
+			interact_ready = !lasso_enabled
 			new_snap = true
 			if current_snap != null:
 				current_snap.stop_snap_hover()
@@ -108,15 +184,14 @@ func _update_lasso(_delta: float) -> void:
 		redirection_ready = false
 		interact_ready = false
 	if current_snap != null:
-		if lasso && interact_ready:
+		if lasso_enabled && interact_ready:
 			current_snap.call_snap_interact(self)
 		else:
 			current_snap.stop_snap_interact()
-	if straight_mesh == null or snapped_mesh == null:
-		straight_mesh.visible = false
+	if snapped_mesh == null:
 		snapped_mesh.visible = false
 		return
-	if straight_mesh.material_override == null or snapped_mesh.material_override == null:
+	if snapped_mesh.material_override == null:
 		return
 	var primary_alpha = 1.0
 	var secondary_alpha = 0.0
@@ -144,7 +219,7 @@ func _update_lasso(_delta: float) -> void:
 				secondary_mesh.material_override.set_shader_parameter("mix_color", secondary_color)
 			secondary_mesh.global_transform.origin = secondary_snap
 
-	if lasso:
+	if lasso_enabled:
 		snapped_mesh.material_override.set_shader_parameter("speed", -10.0)
 	else:
 		snapped_mesh.material_override.set_shader_parameter("speed", 0.0)
@@ -152,92 +227,19 @@ func _update_lasso(_delta: float) -> void:
 	if lasso_analog_value.x <= 0:
 		if snapped_mesh.visible:
 			snapped_mesh.material_override.set_shader_parameter("mix_color", unsnapped_color)
-		straight_mesh.visible = false
 		snapped_mesh.visible = false
 	else:
-		straight_mesh.visible = true
 		snapped_mesh.visible = true
 		if current_snap != null:
 			if new_snap:
 				snapped_mesh.material_override.set_shader_parameter("mix_color", snapped_color)
-			var target_local = (current_snap.global_transform.origin) * (straight_mesh.global_transform)
+			var target_local = (current_snap.global_transform.origin) 
 			var straight_length = target_local.length_squared() / (abs(target_local.z) + 0.001)
 			# When there's very little snapping, this will equal .length() when there is a lot it'll be longer.
-			straight_mesh.material_override.set_shader_parameter("target", Vector3(0.0, 0.0, -straight_length))
 			snapped_mesh.material_override.set_shader_parameter("target", target_local)
 		else:
 			if new_snap:
 				snapped_mesh.material_override.set_shader_parameter("mix_color", unsnapped_color)
 			var into_infinity = Vector3(0.0, 0.0, -10)
-			straight_mesh.material_override.set_shader_parameter("target", Vector3(0.0, 0.0, 0.0))
 			snapped_mesh.material_override.set_shader_parameter("target", into_infinity)
 
-
-func _process(p_delta: float) -> void:
-	_update_lasso(p_delta)
-
-
-func _update_visibility() -> void:
-	if VRManager.xr_active:
-		if straight_mesh:
-			straight_mesh.show()
-		if snapped_mesh:
-			snapped_mesh.show()
-		set_process(true)
-	else:
-		if straight_mesh:
-			straight_mesh.hide()
-		if snapped_mesh:
-			snapped_mesh.hide()
-		set_process(false)
-
-
-func _xr_mode_changed() -> void:
-	_update_visibility()
-
-
-func _ready() -> void:
-	super._ready()
-
-	straight_mesh = get_node(straight_laser) as MeshInstance3D
-	snapped_mesh = get_node(snapped_laser) as MeshInstance3D
-
-	straight_mesh.get_parent().remove_child(straight_mesh)
-	snapped_mesh.get_parent().remove_child(snapped_mesh)
-
-	tracker.laser_origin.add_child(straight_mesh, true)
-	tracker.laser_origin.add_child(snapped_mesh, true)
-
-	primary_mesh = get_node(primary_circle) as MeshInstance3D
-	secondary_mesh = get_node(secondary_circle) as MeshInstance3D
-
-	primary_mesh.get_parent().remove_child(primary_mesh)
-	secondary_mesh.get_parent().remove_child(secondary_mesh)
-
-	tracker.laser_origin.add_child(primary_mesh, true)
-	tracker.laser_origin.add_child(secondary_mesh, true)
-
-	if straight_mesh != null && straight_mesh.material_override != null:
-		straight_mesh.material_override.set_shader_parameter("mix_color", straight_color)
-		straight_mesh.material_override = straight_mesh.material_override.duplicate(true)
-	if snapped_mesh != null && snapped_mesh.material_override != null:
-		snapped_mesh.material_override = snapped_mesh.material_override.duplicate(true)
-
-	if primary_mesh != null && primary_mesh.material_override != null:
-		primary_mesh.material_override.set_shader_parameter("mix_color", snap_circle_color)
-		primary_mesh.material_override = primary_mesh.material_override.duplicate(true)
-		primary_mesh.visible = false
-	if secondary_mesh != null && secondary_mesh.material_override != null:
-		secondary_mesh.material_override.set_shader_parameter("mix_color", snap_circle_color)
-		secondary_mesh.material_override = secondary_mesh.material_override.duplicate(true)
-		secondary_mesh.visible = false
-	_update_visibility()
-
-
-func _exit_tree() -> void:
-	if not tracker:
-		return
-	if not tracker.laser_origin:
-		return
-	tracker.laser_origin.remove_child(straight_mesh)
-	tracker.laser_origin.remove_child(snapped_mesh)
