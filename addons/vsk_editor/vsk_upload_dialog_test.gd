@@ -15,10 +15,15 @@ func export_data() -> Dictionary:
 func _on_ShowDialogButton_pressed():
 	var func_ref: Callable = self.export_data
 	VSKEditor.show_upload_panel(func_ref, vsk_types_const.UserContentType.Avatar)
+	else:
+		printerr("Could not load VSKEditor")
 
 
 func _ready():
 	VSKEditor.setup_editor(self, null, null)
+	else:
+		printerr("Could not load VSKEditor")
+
 
 static func generate_test_image() -> Dictionary:
 	var new_image: Image = Image.new()
