@@ -51,6 +51,7 @@ static func convert_vrm_instance(p_vrm_instance: Node3D) -> Node3D:
 	if typeof(p_vrm_instance.get("vrm_meta")) != TYPE_NIL:
 		var vrm_meta = p_vrm_instance.vrm_meta
 		if vrm_meta:
+			var eye_offset: Vector3 = vrm_meta.eye_offset
 			var skeleton: Skeleton3D = p_vrm_instance.find_child("GeneralSkeleton", true, false)
 			if skeleton:
 				vsk_avatar_root = Node3D.new()
@@ -68,8 +69,22 @@ static func convert_vrm_instance(p_vrm_instance: Node3D) -> Node3D:
 
 				vsk_avatar_root.set_skeleton_path(skeleton_path)
 
+				var fp_global_position: Vector3 = Vector3.ZERO
+				var head_global_position: Vector3 = Vector3.ZERO
+
+				var fp_bone_id: int = get_first_person_bone_id(skeleton)
+				if fp_bone_id != -1:
+					head_global_position = bone_lib_const.get_bone_global_rest_transform(fp_bone_id, skeleton).origin
+					fp_global_position = ((bone_lib_const.get_bone_global_rest_transform(fp_bone_id, skeleton) * Transform3D(Basis(), eye_offset)).origin)
+
+				if eye_offset.is_equal_approx(Vector3.ZERO):
+					fp_global_position = get_fallback_eye_offset(skeleton, fp_global_position)
+
+				fp_global_position = (node_util_const.get_relative_global_transform(vsk_avatar_root, skeleton) * fp_global_position)
+				head_global_position = (node_util_const.get_relative_global_transform(vsk_avatar_root, skeleton) * head_global_position)
+
 				# Avatar Physics
-				var secondary: Node = p_vrm_instance.find_child("secondary", true, false)
+				var secondary: Node = p_vrm_instance.get_node_or_null(p_vrm_instance.vrm_secondary)
 
 				if secondary:
 					var avatar_physics: Node3D = Node3D.new()
@@ -82,72 +97,61 @@ static func convert_vrm_instance(p_vrm_instance: Node3D) -> Node3D:
 					var collider_group_map: Dictionary = {}
 					var spring_bone_map: Dictionary = {}
 
-					var has_collider_groups: bool = false
-					var has_spring_bones: bool = false
-					for property in secondary.get_property_list():
-						if property.name == StringName("collider_groups"):
-							has_spring_bones = true
-							continue
-						if property.name == StringName("spring_bones"):
-							has_spring_bones = true
-							continue
-					if has_collider_groups:
-						for collider_group in secondary.collider_groups:
-							var vsk_collider_group: Resource = avatar_collidergroup_const.new()
-							vsk_collider_group.skeleton_or_node = avatar_physics.get_path_to(skeleton)
-							vsk_collider_group.bone = collider_group.bone
-							vsk_collider_group.sphere_colliders = collider_group.sphere_colliders
-							collider_group_map[collider_group] = vsk_collider_group
-					for property in secondary.get_property_list():
-							break
-					if has_spring_bones:
-						for spring_bone in secondary.spring_bones:
-							# TODO: Fix 2023-09-29 Fire
-							break
-							var vsk_spring_bone: Resource = avatar_springbone_const.new()
-							vsk_spring_bone.gravity_power = spring_bone.gravity_power
-							vsk_spring_bone.gravity_dir = spring_bone.gravity_dir
-							vsk_spring_bone.drag_force = spring_bone.drag_force
-							vsk_spring_bone.skeleton = avatar_physics.get_path_to(skeleton)
-							vsk_spring_bone.center_bone = spring_bone.center_bone
-							vsk_spring_bone.center_node = avatar_physics.get_path_to(avatar_physics)
-							vsk_spring_bone.hit_radius = spring_bone.hit_radius
+					for collider_group in secondary.collider_groups:
+						var vsk_collider_group: Resource = avatar_collidergroup_const.new()
+						vsk_collider_group.skeleton_or_node = avatar_physics.get_path_to(skeleton)
+						vsk_collider_group.bone = collider_group.bone
+						vsk_collider_group.sphere_colliders = collider_group.sphere_colliders
+						collider_group_map[collider_group] = vsk_collider_group
 
-							var root_bones: Array = []
-							for root_bone in spring_bone.root_bones:
-								root_bones.push_back(root_bone)
-							vsk_spring_bone.root_bones = root_bones
+					for spring_bone in secondary.spring_bones:
+						var vsk_spring_bone: Resource = avatar_springbone_const.new()
+						vsk_spring_bone.stiffness_force = spring_bone.stiffness_force
+						vsk_spring_bone.gravity_power = spring_bone.gravity_power
+						vsk_spring_bone.gravity_dir = spring_bone.gravity_dir
+						vsk_spring_bone.drag_force = spring_bone.drag_force
+						vsk_spring_bone.skeleton = avatar_physics.get_path_to(skeleton)
+						vsk_spring_bone.center_bone = spring_bone.center_bone
+						vsk_spring_bone.center_node = avatar_physics.get_path_to(avatar_physics)
+						vsk_spring_bone.hit_radius = spring_bone.hit_radius
 
-							var collider_groups: Array = []
-							for collider_group in spring_bone.collider_groups:
-								collider_groups.push_back(collider_group_map[collider_group])
-							vsk_spring_bone.collider_groups = collider_groups
+						var root_bones: Array = []
+						for root_bone in spring_bone.root_bones:
+							root_bones.push_back(root_bone)
+						vsk_spring_bone.root_bones = root_bones
 
-							spring_bone_map[spring_bone] = vsk_spring_bone
+						var collider_groups: Array = []
+						for collider_group in spring_bone.collider_groups:
+							collider_groups.push_back(collider_group_map[collider_group])
+						vsk_spring_bone.collider_groups = collider_groups
+
+						spring_bone_map[spring_bone] = vsk_spring_bone
 
 					avatar_physics.collider_groups = collider_group_map.values()
 					avatar_physics.spring_bones = spring_bone_map.values()
 
 					vsk_avatar_root.avatar_physics_path = vsk_avatar_root.get_path_to(avatar_physics)
 
-				if skeleton:
-					var look_offset: Node3D = skeleton.find_child("LookOffset", true, false)
-					vsk_avatar_root.set_eye_transform_path(vsk_avatar_root.get_path_to(look_offset))
+				# Eye position
+				var eye_node: Marker3D = Marker3D.new()
+				vsk_avatar_root.add_child(eye_node, true)
+				eye_node.set_name("EyePosition")
+				eye_node.set_owner(vsk_avatar_root)
+				eye_node.transform *= Transform3D(Basis.IDENTITY, fp_global_position)
+				vsk_avatar_root.set_eye_transform_path(vsk_avatar_root.get_path_to(eye_node))
 
-					# Approx Mouth position
-					var mouth_node: Marker3D = Marker3D.new()
-					look_offset.get_parent().add_child(mouth_node, true)
-					mouth_node.set_name("MouthPosition")
-					mouth_node.set_owner(vsk_avatar_root)
-					var head_bone_id: int = skeleton.find_bone("Head")
-					var mouth_offset: Vector3 = look_offset.get_transform().origin * Vector3(0.25, 0.25, 0.25)
-					# quarter of the way between head (throat) and eyes? Maybe should be adjustable.
-					mouth_node.transform *= Transform3D(Basis.IDENTITY, mouth_offset)
-					vsk_avatar_root.set_mouth_transform_path(vsk_avatar_root.get_path_to(mouth_node))
+				# Approx Mouth position
+				var mouth_node: Marker3D = Marker3D.new()
+				vsk_avatar_root.add_child(mouth_node, true)
+				mouth_node.set_name("MouthPosition")
+				mouth_node.set_owner(vsk_avatar_root)
+				# quarter of the way between head (throat) and eyes? Maybe should be adjustable.
+				mouth_node.transform *= Transform3D(Basis.IDENTITY, head_global_position.lerp(fp_global_position, 0.25))
+				vsk_avatar_root.set_mouth_transform_path(vsk_avatar_root.get_path_to(mouth_node))
 
 				# Use the VRM preview texture if it exists
-				if vrm_meta.thumbnail_image:
-					vsk_avatar_root.vskeditor_preview_type = 1
-					vsk_avatar_root.vskeditor_preview_texture = vrm_meta.thumbnail_image
+				if vrm_meta.texture:
+					vsk_avatar_root.editor_properties.vskeditor_preview_type = "Texture2D"
+					vsk_avatar_root.editor_properties.vskeditor_preview_texture = vrm_meta.texture
 
 	return vsk_avatar_root
