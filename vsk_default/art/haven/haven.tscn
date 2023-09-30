@@ -71,7 +71,7 @@ material = SubResource("StandardMaterial3D_sqmki")
 
 [node name="Label3D" type="Label3D" parent="CSGBox3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 3, 1)
-text = "Experience adventures, create cozy spaces, and make friends in V-Sekai Central's virtual world. #virtualreality #friendship
+text = "Experience adventures, create cozy spaces, and make friends in V-Sekai Central's virtual world. #virtualreality #godotengine
 
 "
 font_size = 52
