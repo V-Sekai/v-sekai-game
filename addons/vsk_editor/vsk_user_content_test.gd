@@ -11,4 +11,8 @@ func export_data() -> Dictionary:
 
 
 func _ready():
-	VSKEditor.setup_editor(self, null, null)
+	var vsk_editor: Node = get_node_or_null("/root/VSKEditor")
+	if vsk_editor:
+		vsk_editor.setup_editor(self, null, null)
+	else:
+		printerr("Could not load VSKEditor!")

@@ -1,7 +1,9 @@
 shader_type spatial;
+render_mode depth_draw_always;
 render_mode cull_front;
 
 #define IS_OUTLINE
+#define ALPHA_BLEND
 
 render_mode skip_vertex_transform;
 //render_mode specular_disabled,ambient_light_disabled;

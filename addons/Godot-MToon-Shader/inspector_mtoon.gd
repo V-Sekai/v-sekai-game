@@ -26,7 +26,7 @@ var property_name_to_editor: Dictionary = {}.duplicate()
 #	for chld in n.get_children():
 #		_dump_tree(chld, ind + "    ")
 
-const color_properties: Array = ["_Color", "_ShadeColor", "_RimColor", "_EmissionColor", "_OutlineColor"]
+const color_properties: Array = ["_Color", "_ShadeColor", "_RimColor", "_EmissionColor", "_OutlineColor", "_MatcapColor"]
 
 const property_headers: Dictionary = {
 	"_Color": "Color",
@@ -41,7 +41,37 @@ const property_headers: Dictionary = {
 	"_DebugMode": "Debugging Options",
 }
 
-var property_text: Dictionary = {"_AlphaCutoutEnable": ["Rendering Type", "TransparentWithZWrite mode can cause problems with rendering."], "_Color": ["Lit Color, Alpha", "Lit (RGB), Alpha (A)"], "_ShadeColor": ["Shade Color", "Shade (RGB)"], "_Cutoff": ["Alpha Cutoff", "Discard pixels below this value in Cutout mode"], "_SphereAdd": ["MatCap", "Additive Sphere map / MatCap Texture (RGB)", false], "_ShadeToony": ["Shading Toony", "0.0 is Lambert. Higher value get toony shading."], "_BumpScale": ["Normal Map", "Normal Map and Multiplier for normals in tangent space"], "_ShadeShift": ["Shading Shift", "Zero is Default. Negative value increase lit area. Positive value increase shade area."], "_ReceiveShadowRate": ["Shadow Receive", "Texture (R) * Rate. White is Default. Black attenuates shadows."], "_ShadingGradeRate": ["Shading Grade", "Lit & Shade Mixing Multiplier: Texture (R) * Rate. Compatible with UTS2 ShadingGradeMap. White is Default. Black amplifies shade."], "_LightColorAttenuation": ["Light Color Atten", "Light Color Attenuation"], "_IndirectLightIntensity": ["GI Intensity", "Indirect Light Intensity"], "_EmissionColor": ["Emission", "Emission Color (RGB)"], "_RimColor": ["Rim Color", "Rim Color (RGB)"], "_RimLightingMix": ["Lighting Mix", "Rim Lighting Mix"], "_RimFresnelPower": ["Fresnel Power", "If you increase this value, you get sharper rim light."], "_RimLift": ["Rim Lift", "If you increase this value, you can lift rim light."], "_OutlineWidthMode": ["Mode", "None = outline pass disabled; World = outline in world coordinates; Screen = screen pixel thickness"], "_OutlineWidth": ["Width", "Outline Width"], "_OutlineScaledMaxDistance": ["Outline Scaled Dist", "Width Scaled Max Distance"], "_OutlineColorMode": ["Color Mode", "FixedColor = unshaded; MixedLighting = match environment light (recommended)"], "_OutlineColor": ["Outline Color", "Outline Color (RGB)"], "_OutlineLightingMix": ["Outline Mix", "Outline Lighting Mix"], "_MainTex_ST": ["Offset", "UV Scale (X,Y), UV Offset (X,Y)"], "_UvAnimMaskTexture": ["UV Anim Mask", "Auto Animation Mask Texture (R)", false], "_UvAnimScrollX": ["UV Scroll X", "Scroll X (per second)"], "_UvAnimScrollY": ["UV Scroll Y", "Scroll Y (per second)"], "_UvAnimRotation": ["UV Rotation", "Rotation value (per second)"], "_DebugMode": ["Visualize", "Debugging Visualization: Normal or Lighting"]}
+const property_text: Dictionary = {
+	"_AlphaCutoutEnable": ["Rendering Type", "TransparentWithZWrite mode can cause problems with rendering."],
+	"_Color": ["Lit Color, Alpha", "Lit (RGB), Alpha (A)"],
+	"_ShadeColor": ["Shade Color", "Shade (RGB)"],
+	"_Cutoff": ["Alpha Cutoff", "Discard pixels below this value in Cutout mode"],
+	"_MatcapColor": ["MatCap Color", "Color multiplied with Additive Sphere map / MatCap Texture (RGB)"],
+	"_ShadeToony": ["Shading Toony", "0.0 is Lambert. Higher value get toony shading."],
+	"_BumpScale": ["Normal Map", "Normal Map and Multiplier for normals in tangent space"],
+	"_ShadeShift": ["Shading Shift", "Zero is Default. Negative value increase lit area. Positive value increase shade area."],
+	"_ReceiveShadowRate": ["Shadow Receive", "Texture (R) * Rate. White is Default. Black attenuates shadows."],
+	"_ShadingGradeRate": ["Shading Grade", "Lit & Shade Mixing Multiplier: Texture (R) * Rate. Compatible with UTS2 ShadingGradeMap. White is Default. Black amplifies shade."],
+	"_LightColorAttenuation": ["Light Color Atten", "Light Color Attenuation"],
+	"_IndirectLightIntensity": ["GI Intensity", "Indirect Light Intensity"],
+	"_EmissionColor": ["Emission", "Emission Color (RGB)"],
+	"_RimColor": ["Rim Color", "Rim Color (RGB)"],
+	"_RimLightingMix": ["Lighting Mix", "Rim Lighting Mix"],
+	"_RimFresnelPower": ["Fresnel Power", "If you increase this value, you get sharper rim light."],
+	"_RimLift": ["Rim Lift", "If you increase this value, you can lift rim light."],
+	"_OutlineWidthMode": ["Mode", "None = outline pass disabled; World = outline in world coordinates; Screen = screen pixel thickness"],
+	"_OutlineWidth": ["Width", "Outline Width"],
+	"_OutlineScaledMaxDistance": ["Outline Scaled Dist", "Width Scaled Max Distance"],
+	"_OutlineColorMode": ["Color Mode", "FixedColor = unshaded; MixedLighting = match environment light (recommended)"],
+	"_OutlineColor": ["Outline Color", "Outline Color (RGB)"],
+	"_OutlineLightingMix": ["Outline Mix", "Outline Lighting Mix"],
+	"_MainTex_ST": ["Offset", "UV Scale (X,Y), UV Offset (X,Y)"],
+	"_UvAnimMaskTexture": ["UV Anim Mask", "Auto Animation Mask Texture (R)", false],
+	"_UvAnimScrollX": ["UV Scroll X", "Scroll X (per second)"],
+	"_UvAnimScrollY": ["UV Scroll Y", "Scroll Y (per second)"],
+	"_UvAnimRotation": ["UV Rotation", "Rotation value (per second)"],
+	"_DebugMode": ["Visualize", "Debugging Visualization: Normal or Lighting"],
+}
 
 const single_line_properties = {
 	"_MainTex": "_Color",
@@ -52,10 +82,11 @@ const single_line_properties = {
 	"_RimTexture": "_RimColor",
 	"_EmissionMap": "_EmissionColor",
 	"_OutlineWidthTexture": "_OutlineWidth",
+	"_SphereAdd": "_MatcapColor",
 }
 
 const single_line_after_properties = {
-	"_SphereAdd": "_EmissionColor",
+	# "_SphereAdd": "_EmissionColor",
 	"_UvAnimMaskTexture": "_MainTex_ST",
 }
 
@@ -602,7 +633,7 @@ class LinearColorInspector:
 	func _color_changed(new_color: Color) -> void:
 		if updating:
 			return
-		var new_val: Vector4 = Vector4(new_color.r, new_color.g, new_color.b, new_color.a)
+		var new_val: Color = Color(new_color.r, new_color.g, new_color.b, new_color.a)
 		emit_changed(get_edited_property(), new_val)
 		set_outline_prop(get_edited_property(), new_val)
 
@@ -610,10 +641,10 @@ class LinearColorInspector:
 		var linear_color: Variant = get_edited_object_hack()[get_edited_property()]
 		if typeof(linear_color) == TYPE_NIL:
 			const defaults = {
-				"_Color": Vector4(1.0, 1.0, 1.0, 1.0),
-				"_ShadeColor": Vector4(0.97, 0.81, 0.86, 1.0),
+				"_Color": Color(1.0, 1.0, 1.0, 1.0),
+				"_ShadeColor": Color(0.97, 0.81, 0.86, 1.0),
 			}
-			linear_color = defaults.get(str(get_edited_property()).split("/")[-1], Vector4(0, 0, 0, 1))
+			linear_color = defaults.get(str(get_edited_property()).split("/")[-1], Color(0, 0, 0, 1))
 		updating = true
-		color_picker.color = Color(linear_color.x, linear_color.y, linear_color.z, linear_color.w)
+		color_picker.color = linear_color
 		updating = false

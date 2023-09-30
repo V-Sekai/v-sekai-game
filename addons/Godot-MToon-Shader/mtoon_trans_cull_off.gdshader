@@ -1,10 +1,17 @@
 shader_type spatial;
+render_mode cull_disabled;
+#define ALPHA_BLEND
+
 render_mode skip_vertex_transform;
 //render_mode specular_disabled,ambient_light_disabled;
 
 // VARIANTS:
 // DEFAULT_MODE:
+#ifdef IS_OUTLINE
+const float isOutline = 1.0;
+#else
 const float isOutline = 0.0;
+#endif
 
 // OUTLINE:
 // // Comment `const float isOutline = 0.0;`
@@ -23,8 +30,8 @@ const float isOutline = 0.0;
 // render_mode cull_disabled;
 
 // TRANSPARENT_CULL_OFF:
-render_mode cull_disabled;
-// Uncomment `ALPHA = alpha;` and comment `if (alpha < _Cutoff) { discard; }` at end of fragment()
+// render_mode cull_disabled;
+// // Uncomment `ALPHA = alpha;` and comment `if (alpha < _Cutoff) { discard; }` at end of fragment()
 
 // TRANSPARENT_WITH_ZWRITE_CULL_OFF:
 // render_mode cull_disabled,depth_draw_always;
@@ -36,8 +43,8 @@ const bool CALCULATE_LIGHTING_IN_FRAGMENT = true;
 
 uniform float _AlphaCutoutEnable : hint_range(0,1,1) = 0.0;
 uniform float _Cutoff : hint_range(0,1) = 0.5;
-uniform vec4 _Color /*: source_color*/ = vec4(1.0,1.0,1.0,1.0); // "Lit Texture + Alpha"
-uniform vec4 _ShadeColor /*: source_color*/ = vec4(0.97, 0.81, 0.86, 1); // "Shade Color"
+uniform vec4 _Color : source_color = vec4(1.0,1.0,1.0,1.0); // "Lit Texture + Alpha"
+uniform vec4 _ShadeColor : source_color = vec4(0.97, 0.81, 0.86, 1); // "Shade Color"
 uniform sampler2D _MainTex : source_color, hint_default_white;
 uniform vec4 _MainTex_ST = vec4(1.0,1.0,0.0,0.0);
 uniform sampler2D _ShadeTexture : source_color, hint_default_white;
@@ -52,12 +59,14 @@ uniform float _ShadeToony : hint_range(0.0, 1.0) = 0.9;
 uniform float _LightColorAttenuation : hint_range(0.0, 1.0) = 0.0;
 uniform float _IndirectLightIntensity : hint_range(0.0, 1.0) = 0.1;
 uniform sampler2D _RimTexture : source_color, hint_default_white;
-uniform vec4 _RimColor /*: source_color*/ = vec4(0,0,0,1);
+uniform vec4 _RimColor : source_color = vec4(0,0,0,1);
 uniform float _RimLightingMix : hint_range(0.0, 1.0) = 0.0;
 uniform float _RimFresnelPower : hint_range(0.0, 100.0) = 1.0;
 uniform float _RimLift : hint_range(0.0, 1.0) = 0.0;
+uniform vec4 _MatcapColor : source_color = vec4(0,0,0,1);
 uniform sampler2D _SphereAdd : source_color, hint_default_black; // "Sphere Texture(Add)"
-uniform vec4 _EmissionColor /*: source_color*/ = vec4(0,0,0,1); // "Color"
+uniform vec4 _EmissionColor : source_color = vec4(0,0,0,1); // "Color"
+uniform float _EmissionMultiplier = 1.0;
 uniform sampler2D _EmissionMap : source_color, hint_default_white;
 // Not implemented:
 uniform float _OutlineWidthMode : hint_range(0,2,1) = 1;
@@ -65,7 +74,7 @@ uniform sampler2D _OutlineWidthTexture : hint_default_white;
 uniform float _OutlineWidth : hint_range(0.01, 1.0) = 0.5;
 uniform float _OutlineScaledMaxDistance : hint_range(1,10) = 1;
 uniform float _OutlineColorMode : hint_range(0,1,1) = 0;
-uniform vec4 _OutlineColor /*: source_color*/ = vec4(0,0,0,1);
+uniform vec4 _OutlineColor : source_color = vec4(0,0,0,1);
 uniform float _OutlineLightingMix : hint_range(0,1) = 0;
 uniform sampler2D _UvAnimMaskTexture : hint_default_white;
 uniform float _UvAnimScrollX = 0;
@@ -94,18 +103,18 @@ void vertex() {
 			vec3 worldNormalLength = vec3(1.0/length(mat3(transpose(MODEL_MATRIX)) * NORMAL));
 			vec3 outlineOffset = 0.01 * _OutlineWidth * outlineTex * worldNormalLength * NORMAL;
 			VERTEX += outlineOffset;
-			VERTEX = (VIEW_MATRIX * MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+			VERTEX = (MODELVIEW_MATRIX * vec4(VERTEX, 1.0)).xyz;
 		} else { // #elif defined(MTOON_OUTLINE_WIDTH_SCREEN)
 			// 1. Create the clip-space position
 			// 2. Get the normal direction, normalized, in clip space.
 			// 3. Get the aspect ratio of the currently rendering camera.
 			// 4. Scale the normals by the distance to the camera
 			// 5. Add the normals to the clip-space XY position scaled by the width.
-			VERTEX = (VIEW_MATRIX * MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+			VERTEX = (MODELVIEW_MATRIX * vec4(VERTEX, 1.0)).xyz;
 			vec4 clipPos = PROJECTION_MATRIX * vec4(VERTEX, 1.0);
 			vec4 nearUpperRight = (INV_PROJECTION_MATRIX * vec4(1, 1, 0, 1));
 			float aspect = abs(nearUpperRight.y / nearUpperRight.x);
-			vec3 viewNormal = mat3(VIEW_MATRIX) * mat3(MODEL_MATRIX) * NORMAL.xyz;
+			vec3 viewNormal = mat3(MODELVIEW_MATRIX) * NORMAL.xyz;
 			vec3 clipNormal = mat3(PROJECTION_MATRIX) * viewNormal.xyz;
 			vec2 projectedNormal = normalize(clipNormal.xy);
 			projectedNormal *= min(clipPos.w, _OutlineScaledMaxDistance);
@@ -114,7 +123,7 @@ void vertex() {
 			VERTEX = (INV_PROJECTION_MATRIX * clipPos).xyz;
 		}
 	} else {
-		VERTEX = (VIEW_MATRIX * MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
+		VERTEX = (MODELVIEW_MATRIX * vec4(VERTEX, 1.0)).xyz;
 	}
 
 
@@ -158,9 +167,17 @@ vec3 calculateAddLighting(vec2 mainUv, float dotNL, float dotNV, float shadowAtt
 //#ifdef _ALPHABLEND_ON
 //	lighting *= step(0, dotNL); // darken if transparent. Because Unity's transparent material can't receive shadowAttenuation.
 //#endif
+
+	float lightAtten = shadowAttenuation;
+	// Godot specific code to deal with clustering artifacts: We balance out the light attenuation to make it appear toony so we can hard-cut it when ATTENUATION == 0
+	float maxIntensityThreshold = mix(1, _ShadeShift, _ShadeToony);
+	float minIntensityThreshold = _ShadeShift;
+	lightAtten = clamp((shadowAttenuation - minIntensityThreshold) / max(EPS_COL, (maxIntensityThreshold - minIntensityThreshold)),0.0,1.0);
+	// End Godot Specific code
+
 	lighting *= 0.5; // darken if additional light.
 	lighting *= min(0.0, dotNL) + 1.0; // darken dotNL < 0 area by using float lambert
-	lighting *= shadowAttenuation; // darken if receiving shadow
+	lighting *= lightAtten; // darken if receiving shadow
 	col *= lighting;
 
 	// parametric rim lighting
@@ -217,16 +234,16 @@ void fragment() {
 	 // Albedo color
 	shade = texture(_ShadeTexture, mainUv);
 	lit = mainTex;
-	vec3 emission = texture(_EmissionMap, mainUv).rgb * _EmissionColor.rgb;
+	vec3 emission = texture(_EmissionMap, mainUv).rgb * _EmissionColor.rgb * _EmissionMultiplier;
 
 	vec3 tangentNormal = vec3(0.0,0.0,1.0);
 	if (_NORMALMAP) {
 		tangentNormal = UnpackScaleNormal(texture(_BumpMap, mainUv), _BumpScale);
 	}
 
-	shade *= (OUTPUT_IS_SRGB ? _ShadeColor : GammaToLinearSpace(_ShadeColor));
-	lit *= (OUTPUT_IS_SRGB ? _Color : GammaToLinearSpace(_Color));
-
+	shade *= _ShadeColor;
+	lit *= _Color;
+	
 	//shade = min(shade, lit); ///// Mimic look of non-PBR min() clamp we commented out below.
 
 	// normal
@@ -265,12 +282,12 @@ void fragment() {
 	vec3 viewViewUp = normalize(viewCameraUp - viewView * dot(viewView, viewCameraUp));
 	vec3 viewViewRight = normalize(cross(viewView, viewViewUp));
 	vec2 matcapUv = vec2(-dot(viewViewRight, viewNormal), dot(viewViewUp, viewNormal)) * 0.5 + 0.5;
-	vec3 matcapLighting = texture(_SphereAdd, matcapUv).rgb;
+	vec3 matcapLighting = _MatcapColor.rgb * texture(_SphereAdd, matcapUv).rgb;
 	emission += mix(matcapLighting, vec3(0, 0, 0), isOutline);
 
 	// outline
 	if (isOutline == 1.0) {
-		vec3 outlineColor = (OUTPUT_IS_SRGB ? _OutlineColor.rgb : GammaToLinearSpace(_OutlineColor).rgb);
+		vec3 outlineColor = _OutlineColor.rgb;
 		if (MTOON_OUTLINE_COLOR_FIXED) {
 			albedo = vec3(0.0);
 			emission = outlineColor;
@@ -309,8 +326,11 @@ void fragment() {
 
 	ROUGHNESS = 1.0;
 	METALLIC = 0.0;
+#if defined(ALPHA_BLEND)
 	ALPHA = alpha;
-	//if (_AlphaCutoutEnable > 0.5 && alpha < _Cutoff) { discard; }
+#elif defined(ALPHA_CUTOUT)
+	if (_AlphaCutoutEnable > 0.5 && alpha < _Cutoff) { discard; }
+#endif
 
 	//METALLIC = metallic;
 	//ROUGHNESS = roughness;
@@ -339,9 +359,8 @@ void light() {
 	vec3 addLightIntensity = vec3(0.0);
 	vec3 diffuse_output = vec3(0.0);
 
-	if (isDirectional) {
+	if (LIGHT_IS_DIRECTIONAL) {
 		//UNITY_LIGHT_ATTENUATION(shadowAttenuation, i, posWorld.xyz);
-		// FIXME: Removed duplicate SHADOW_ATTENUATION* multiplier.
 		float lightAttenuation = mix(1.0, length(vec3(ATTENUATION))/length(vec3(1.0)), _ReceiveShadowRate * texture(_ReceiveShadowTexture, mainUv).r);
 
 		vec3 col;
@@ -349,7 +368,7 @@ void light() {
 		lighting = calculateLighting(mainUv, addDotNL, lightAttenuation, shade, lit, LIGHT_COLOR, col, lightIntensity);
 
 		// base light does not darken.
-		diffuse_output += col * lighting + indirectLighting * lit.rgb;
+		diffuse_output = col * lighting + indirectLighting * lit.rgb;
 
 		//col = min(col, lit.rgb); // comment out if you want to PBR absolutely.
 
@@ -366,8 +385,9 @@ void light() {
 		vec3 addLighting = calculateLighting(mainUv, addDotNL, 1.0, vec4(0.0), lit, LIGHT_COLOR, addCol, addTmp);
 		vec3 specLight;
 		// addLighting *= step(0, addDotNL); // darken if transparent. Because Unity's transparent material can't receive shadowAttenuation.
-		diffuse_output = calculateAddLighting(mainUv, addDotNL, dot(viewNormal, VIEW), length(vec3(ATTENUATION))/length(vec3(1.0)), addLighting, addCol, specLight);
-		SPECULAR_LIGHT += specLight;
+		float attenuation_multiplier = pow(length(vec3(ATTENUATION))/length(vec3(1.0)), 0.1); // Godot specific code to prevent clustering artifacts.
+		diffuse_output = attenuation_multiplier * calculateAddLighting(mainUv, addDotNL, dot(viewNormal, VIEW), length(vec3(ATTENUATION))/length(vec3(1.0)), addLighting, addCol, specLight);
+		SPECULAR_LIGHT += attenuation_multiplier * specLight;
 	}
 	if (_DebugMode >= 1.0) {
 		if (_DebugMode == 2.0) { //MTOON_DEBUG_LITSHADERATE
