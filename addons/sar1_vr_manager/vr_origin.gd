@@ -242,5 +242,6 @@ func _enter_tree() -> void:
 	create_components()
 	setup_components()
 
-func _process(delta):
+
+func _process(_delta):
 	desktop_camera.global_transform = vr_camera.global_transform
