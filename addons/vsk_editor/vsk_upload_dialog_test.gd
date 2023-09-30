@@ -13,14 +13,19 @@ func export_data() -> Dictionary:
 
 
 func _on_ShowDialogButton_pressed():
-	var func_ref: Callable = self.export_data
-	VSKEditor.show_upload_panel(func_ref, vsk_types_const.UserContentType.Avatar)
+	var vsk_editor: Node = get_node_or_null("/root/VSKEditor")
+	if vsk_editor:
+		var func_ref: Callable = self.export_data
+
+		vsk_editor.show_upload_panel(func_ref, vsk_types_const.UserContentType.Avatar)
 	else:
 		printerr("Could not load VSKEditor")
 
 
 func _ready():
-	VSKEditor.setup_editor(self, null, null)
+	var vsk_editor: Node = get_node_or_null("/root/VSKEditor")
+	if vsk_editor:
+		vsk_editor.setup_editor(self, null, null)
 	else:
 		printerr("Could not load VSKEditor")
 
