@@ -99,7 +99,7 @@ static func convert_vrm_instance(p_vrm_instance: Node3D) -> Node3D:
 							vsk_collider_group.sphere_colliders = collider_group.sphere_colliders
 							collider_group_map[collider_group] = vsk_collider_group
 					for property in secondary.get_property_list():
-							break
+						break
 					if has_spring_bones:
 						for spring_bone in secondary.spring_bones:
 							# TODO: Fix 2023-09-29 Fire

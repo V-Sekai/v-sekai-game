@@ -23,6 +23,7 @@ func tracker_added(p_tracker: XRController3D) -> void:
 		vr_lasso_action.flick_origin_spatial = self
 		p_tracker.add_component_action(vr_lasso_action)
 
+
 func tracker_removed(p_tracker: XRController3D) -> void:
 	super.tracker_removed(p_tracker)
 
@@ -31,7 +32,6 @@ func tracker_removed(p_tracker: XRController3D) -> void:
 			p_tracker.remove_component_action(right_lasso_action)
 			right_lasso_action = null
 
-		
 
 func post_add_setup() -> void:
 	super.post_add_setup()

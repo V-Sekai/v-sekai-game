@@ -57,7 +57,7 @@ func global_to_viewport(p_origin: Vector3) -> Vector2:
 	print(global_transform)
 	print(canvas_width)
 	print(canvas_height)
-	print(canvas_scale)	
+	print(canvas_scale)
 	var transform_scale: Vector2 = Vector2(global_transform.basis.get_scale().x, global_transform.basis.get_scale().y)
 	var inverse_transform: Vector2 = Vector2(1.0, 1.0) / transform_scale
 	var point: Vector2 = Vector2(p_origin.x, p_origin.y) * inverse_transform * inverse_transform
@@ -167,7 +167,7 @@ func on_pointer_moved(from: Vector3, to: Vector3):
 	# Let's mimic a mouse
 	var event = InputEventMouseMotion.new()
 	event.set_global_position(local_to)
-	event.set_relative(local_to - local_from) # should this be scaled/warped?
+	event.set_relative(local_to - local_from)  # should this be scaled/warped?
 	event.set_button_mask(mouse_mask)
 	event.set_pressure(0.5)
 
@@ -208,6 +208,7 @@ func on_pointer_release(at: Vector3, p_doubleclick: bool):
 	if viewport:
 		viewport.push_unhandled_input(event)
 	previous_mouse_position = local_at
+
 
 func _process(_delta: float) -> void:
 	_update()

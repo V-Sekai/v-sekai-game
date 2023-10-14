@@ -191,7 +191,7 @@ func _peer_packet(p_id: int, p_packet: PackedByteArray) -> void:
 
 
 func has_active_peer() -> bool:
-	return get_tree() and get_tree().get_multiplayer() and  get_tree().get_multiplayer().has_multiplayer_peer() and (get_tree().get_multiplayer().multiplayer_peer.get_connection_status() != MultiplayerPeer.CONNECTION_DISCONNECTED)
+	return get_tree() and get_tree().get_multiplayer() and get_tree().get_multiplayer().has_multiplayer_peer() and (get_tree().get_multiplayer().multiplayer_peer.get_connection_status() != MultiplayerPeer.CONNECTION_DISCONNECTED)
 
 
 func is_server() -> bool:

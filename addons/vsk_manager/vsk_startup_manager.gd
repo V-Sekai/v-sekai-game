@@ -43,27 +43,7 @@ func _startup_complete() -> void:
 
 
 func setup_vsk_singletons() -> void:
-	for singleton in [
-		VSKUserPreferencesManager,
-		VSKDebugManager,
-		VSKGameFlowManager,
-		VSKMenuManager,
-		VSKNetworkManager,
-		VSKMapManager,
-		VSKPlayerManager,
-		VSKAssetManager,
-		VSKExporter,
-		VSKImporter,
-		VSKAudioManager,
-		VSKAvatarManager,
-		VSKServiceManager,
-		VSKShardManager,
-		VSKPreloadManager,
-		VSKFadeManager,
-		VSKResourceManager,
-		VSKCreditsManager,
-		VSKAccountManager
-	]:
+	for singleton in [VSKUserPreferencesManager, VSKDebugManager, VSKGameFlowManager, VSKMenuManager, VSKNetworkManager, VSKMapManager, VSKPlayerManager, VSKAssetManager, VSKExporter, VSKImporter, VSKAudioManager, VSKAvatarManager, VSKServiceManager, VSKShardManager, VSKPreloadManager, VSKFadeManager, VSKResourceManager, VSKCreditsManager, VSKAccountManager]:
 		singleton.setup()
 
 	if !display_name_override.is_empty():
