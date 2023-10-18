@@ -28,6 +28,7 @@ var print_mod = 0
 
 var lasso_enabled: bool = false
 
+
 func _on_action_pressed(p_action: String) -> void:
 	super._on_action_pressed(p_action)
 	match p_action:
@@ -41,15 +42,17 @@ func _on_action_released(p_action: String) -> void:
 		"trigger_click":
 			set_lasso_enabled(false)
 
+
 func set_lasso_enabled(enabled: bool) -> void:
 	lasso_enabled = enabled
+
 
 func _process(p_delta: float) -> void:
 	_update_lasso(p_delta)
 
 
 func _physics_process(_delta: float) -> void:
-	if lasso_enabled:  
+	if lasso_enabled:
 		var current_shape_cast: ShapeCast3D = ShapeCast3D.new()
 		var capsule: CapsuleShape3D = CapsuleShape3D.new()
 		capsule.radius = 0.01
@@ -66,7 +69,7 @@ func _physics_process(_delta: float) -> void:
 			var result: Dictionary = element
 			print(result)
 			result.collider.on_pointer_pressed(result.point, true)
-			current_shape_cast.queue_free() # FIXME
+			current_shape_cast.queue_free()  # FIXME
 
 
 func _update_visibility() -> void:
@@ -100,7 +103,7 @@ func _ready() -> void:
 	secondary_mesh.get_parent().remove_child(secondary_mesh)
 
 	tracker.laser_origin.add_child(secondary_mesh, true)
-	
+
 	if snapped_mesh != null && snapped_mesh.material_override != null:
 		snapped_mesh.material_override = snapped_mesh.material_override.duplicate(true)
 
@@ -233,7 +236,7 @@ func _update_lasso(_delta: float) -> void:
 		if current_snap != null:
 			if new_snap:
 				snapped_mesh.material_override.set_shader_parameter("mix_color", snapped_color)
-			var target_local = (current_snap.global_transform.origin) 
+			var target_local = current_snap.global_transform.origin
 			var straight_length = target_local.length_squared() / (abs(target_local.z) + 0.001)
 			# When there's very little snapping, this will equal .length() when there is a lot it'll be longer.
 			snapped_mesh.material_override.set_shader_parameter("target", target_local)
@@ -242,4 +245,3 @@ func _update_lasso(_delta: float) -> void:
 				snapped_mesh.material_override.set_shader_parameter("mix_color", unsnapped_color)
 			var into_infinity = Vector3(0.0, 0.0, -10)
 			snapped_mesh.material_override.set_shader_parameter("target", into_infinity)
-

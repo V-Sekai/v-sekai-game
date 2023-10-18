@@ -711,7 +711,7 @@ func setup() -> void:
 	FlatViewport.texture_rect_ingame.visible = true
 
 	SpatialGameViewportManager.update_viewports()
-	
+
 	_assign_gameroots()
 	_connect_pre_quitting_signals()
 

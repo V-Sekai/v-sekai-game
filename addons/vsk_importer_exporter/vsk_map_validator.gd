@@ -208,8 +208,7 @@ var valid_external_path_whitelist = {
 var entity_script: Script = load("res://addons/entity_manager/entity.gd")
 const valid_entity_whitelist = ["res://addons/vsk_entities/vsk_interactable_prop.tscn"]
 
-const valid_resource_script_whitelist = [
-]
+const valid_resource_script_whitelist = []
 
 
 static func check_if_script_type_is_valid(p_script: Script, p_node_class: String) -> bool:

@@ -14,7 +14,6 @@ const vrm_utils = preload("./vrm_utils.gd")
 
 var vrm_meta: Resource = null
 
-
 enum DebugMode {
 	None = 0,
 	Normal = 1,

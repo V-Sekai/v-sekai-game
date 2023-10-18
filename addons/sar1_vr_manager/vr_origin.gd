@@ -197,7 +197,7 @@ func _ready() -> void:
 		printerr("tracker_removed could not be connected")
 
 	vr_camera = get_node("ARVRCamera")
-	
+
 	# Ensure that there is only one DesktopViewport at a time
 	desktop_viewport = VSKGameFlowManager.get_node_or_null("DesktopViewport")
 	if desktop_viewport == null:
@@ -207,7 +207,7 @@ func _ready() -> void:
 		desktop_viewport.owner = vr_camera
 		VSKGameFlowManager.set_viewport(desktop_viewport)
 		desktop_viewport.size = DisplayServer.window_get_size(0)
-		
+
 		desktop_camera = Camera3D.new()
 		desktop_camera.name = "DesktopCamera"
 		desktop_viewport.add_child(desktop_camera)
@@ -217,6 +217,7 @@ func _ready() -> void:
 		desktop_camera.global_transform = vr_camera.global_transform
 	else:
 		desktop_camera = VSKGameFlowManager.get_node("DesktopViewport/DesktopCamera")
+
 
 func _exit_tree() -> void:
 	if VRManager.xr_origin == self:
