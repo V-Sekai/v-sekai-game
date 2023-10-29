@@ -39,7 +39,7 @@ godot: {
 	core.#GitPull & {
 		keepGitDir: true
 		remote: "https://github.com/V-Sekai/godot.git"
-		ref:    "groups-staging-4.x"
+		ref:    "groups-staging-4.2"
 	}
 }
 
