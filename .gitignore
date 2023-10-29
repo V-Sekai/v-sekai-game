@@ -17,3 +17,7 @@ _sentinel_file.png*
 vsk_default/test/results/
 
 TEST.xml
+
+.github/dagger/cue.mod/
+
+bin/dagger-cue

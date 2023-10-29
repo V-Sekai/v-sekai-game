@@ -69,7 +69,7 @@ fetch_godot: {
 					# Add base dependencies.
 					dnf install -y epel-release
 					dnf config-manager --set-enabled powertools
-					yum install unzip mingw32-binutils rsync fontconfig-devel gcc-toolset-9 gcc-toolset-9-libatomic-devel libatomic glibc-devel.i686 libgcc.i686 libstdc++.i686 -y
+					yum install unzip mingw32-binutils rsync fontconfig-devel gcc-toolset-10 gcc-toolset-10-libatomic-devel libatomic glibc-devel.i686 libgcc.i686 libstdc++.i686 -y
 					"""#
 			},
 			bash.#Run & {
