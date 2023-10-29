@@ -55,7 +55,7 @@ for f in $files; do
         continue
     fi
 
-    python vsk_utility/copyright_headers.py "$f"
+    python .github/copyright_headers.py "$f"
 done
 
 diff=$(git diff --color)
