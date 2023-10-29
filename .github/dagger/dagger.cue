@@ -108,12 +108,6 @@ fetch_godot: {
 					"""#
 			},
 			bash.#Run & {
-				workdir: "/usr/local/bin"
-				script: contents: #"""
-					curl -L -o butler.zip https://broth.itch.ovh/butler/linux-amd64/LATEST/archive/default && unzip butler.zip && rm butler.zip && butler -V && butler -V && cd && butler -V
-					"""#
-			},
-			bash.#Run & {
 				workdir: "/v-sekai-game/godot"
 				script: contents: #"""
 					git config --global --add safe.directory /v-sekai-game/godot
