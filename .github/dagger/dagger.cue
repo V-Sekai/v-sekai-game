@@ -116,6 +116,12 @@ fetch_godot: {
 			bash.#Run & {
 				workdir: "/v-sekai-game/godot"
 				script: contents: #"""
+					git config --global --add safe.directory /v-sekai-game/godot
+					"""#
+			},
+			bash.#Run & {
+				workdir: "/v-sekai-game/godot"
+				script: contents: #"""
 					alternatives --set ld /usr/bin/ld.gold && git lfs install && pip3 install scons
 					"""#
 			},
