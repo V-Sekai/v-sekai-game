@@ -208,7 +208,7 @@ dagger.#Plan & {
 					###############
 					# Export Linux.
 					cd /v-sekai-game/godot
-					SCONS_CACHE=/v-sekai-game/project/build/.cicd_cache PATH=/opt/llvm-mingw/bin:$PATH scons optimize=speed LINKFLAGS=-L/opt/rh/gcc-toolset-9/root/usr/lib/gcc/x86_64-redhat-linux/9/ werror=no platform=linuxbsd target=editor use_fastlto=no deprecated=no use_static_cpp=yes use_llvm=yes builtin_freetype=yes custom_modules=../godot_groups_modules					
+					SCONS_CACHE=/v-sekai-game/project/build/.cicd_cache PATH=/opt/llvm-mingw/bin:$PATH scons scu_build=yes optimize=speed LINKFLAGS=-L/opt/rh/gcc-toolset-9/root/usr/lib/gcc/x86_64-redhat-linux/9/ werror=no platform=linuxbsd target=editor use_fastlto=no deprecated=no use_static_cpp=yes use_llvm=yes builtin_freetype=yes custom_modules=../godot_groups_modules					
 					cp bin/$VSK_GODOT_LINUX_BSD_X86_64 bin/linux_debug.x86_64.llvm
 					cp bin/$VSK_GODOT_LINUX_BSD_X86_64  bin/linux_editor.x86_64
 					cp bin/$VSK_GODOT_LINUX_BSD_X86_64  bin/linux_release.x86_64.llvm && cp bin/$VSK_GODOT_LINUX_BSD_X86_64  bin/linux_release.x86_64 && strip --strip-debug bin/linux_release.x86_64
@@ -237,7 +237,7 @@ dagger.#Plan & {
 					#################
 					# Export Windows.
 					cd /v-sekai-game/godot
-					SCONS_CACHE=/v-sekai-game/project/build/.cicd_cache PATH=/opt/llvm-mingw/bin:$PATH scons optimize=speed werror=no platform=windows target=editor use_fastlto=no deprecated=no use_mingw=yes use_llvm=yes LINKFLAGS=-Wl,-pdb= CCFLAGS='-Wall -Wno-tautological-compare -g -gcodeview' debug_symbols=no custom_modules=../godot_groups_modules
+					SCONS_CACHE=/v-sekai-game/project/build/.cicd_cache PATH=/opt/llvm-mingw/bin:$PATH scons scu_build=yes optimize=speed werror=no platform=windows target=editor use_fastlto=no deprecated=no use_mingw=yes use_llvm=yes LINKFLAGS=-Wl,-pdb= CCFLAGS='-Wall -Wno-tautological-compare -g -gcodeview' debug_symbols=no custom_modules=../godot_groups_modules
 					cp bin/$VSK_GODOT_WINDOWS_X86_64 bin/windows_release_x86_64.exe 
 					mingw-strip --strip-debug bin/windows_release_x86_64.exe
 					cp bin/godot.windows.editor.x86_64.llvm.pdb bin/windows_release_x86_64.pdb
