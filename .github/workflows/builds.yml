@@ -44,23 +44,23 @@ jobs:
           #   export-platform: Macos
           #   deploy-platform-target: editor
 
-          # - name: linux_editor_win_deploy
-          #   cache-name: linux-editor-deploy-windows-editor
-          #   target: editor
-          #   tests: false
-          #   sconsflags: linker=gold scu_build=yes precision=double use_mingw=yes
-          #   doc-test: false
-          #   bin: ./godot/bin/godot.linuxbsd.editor.double.x86_64
-          #   deploy-bin: ./godot/bin/godot.windows.editor.double.x86_64.exe
-          #   editor-bin-name: godot.windows.editor.double.x86_64.exe
-          #   proj-conv: false
-          #   artifact: true
-          #   platform: linuxbsd
-          #   deploy: true
-          #   deploy-pdb: true
-          #   deploy-platform: windows
-          #   export-platform: Windows
-          #   deploy-platform-target: editor
+          - name: linux_editor_win_deploy
+            cache-name: linux-editor-deploy-windows-editor
+            target: editor
+            tests: false
+            sconsflags: linker=gold scu_build=yes precision=double use_mingw=yes
+            doc-test: false
+            bin: ./godot/bin/godot.linuxbsd.editor.double.x86_64
+            deploy-bin: ./godot/bin/godot.windows.editor.double.x86_64.exe
+            editor-bin-name: godot.windows.editor.double.x86_64.exe
+            proj-conv: false
+            artifact: true
+            platform: linuxbsd
+            deploy: true
+            deploy-pdb: true
+            deploy-platform: windows
+            export-platform: Windows
+            deploy-platform-target: editor
 
           - name: linux_editor_linux_deploy
             cache-name: linux-editor-deploy-linux-editor
@@ -204,6 +204,19 @@ jobs:
       - name: Prepare artifacts
         if: ${{ matrix.deploy }}
         run: |
+          tree -L 1
+          # Check if the .pck file exists
+          if [ ! -f ./vsekai_game_${{ matrix.deploy-platform }}.pck ]; then
+              echo "Error: vsekai_game_${{ matrix.deploy-platform }}.pck does not exist."
+              exit 1
+          fi
+
+          # Check if the path to the .pck file is correct
+          if [ ! -f `pwd`/vsekai_game_${{ matrix.deploy-platform }}.pck ]; then
+              echo "Error: The path to vsekai_game_${{ matrix.deploy-platform }}.pck is incorrect."
+              exit 1
+          fi
+
           rm -rf vsekai_game_${{ matrix.deploy-platform }}
           export TARGET=vsekai_game_${{ matrix.deploy-platform }}
           mkdir -p $TARGET
