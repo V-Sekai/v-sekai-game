@@ -301,48 +301,20 @@ jobs:
       - name: Download Artifacts
         uses: actions/download-artifact@v3
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
+      - name: Create and Upload Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            vsekai_game_windows_x86_64.zip
+            vsekai_game_linux_x86_64.zip
+            vsekai_editor_windows_x86_64.zip
+            vsekai_editor_linux_x86_64.zip
+            ./bin/godot.windows.editor.x86_64.llvm.exe
+            ./bin/godot.linuxbsd.editor.x86_64.llvm
+          body: "This is a V-Sekai/V-Sekai-game release"
+          generate_release_notes: true
+          draft: true
+          prerelease: true
+          append_body: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
-
-      - name: Upload Release Assets
-        uses: actions/github-script@v6
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            const fs = require('fs');
-            const path = require('path');
-            const artifacts = [
-              'vsekai_game_windows_x86_64.zip', 
-              'vsekai_game_linux_x86_64.zip',
-              'vsekai_game_mac_x86_64.zip',
-              'vsekai_editor_windows_x86_64.zip',
-              'vsekai_editor_linux_x86_64.zip',
-              'vsekai_editor_mac_x86_64.zip',
-              './bin/godot.windows.editor.x86_64.llvm.exe',
-              './bin/godot.linuxbsd.editor.x86_64.llvm',
-              './bin/godot.osx.editor.x86_64'
-            ];
-            for (const artifact of artifacts) {
-              const filePath = path.join(process.env.GITHUB_WORKSPACE, artifact);
-              if (fs.existsSync(filePath)) {
-                await github.repos.uploadReleaseAsset({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  release_id: context.payload.release.id,
-                  name: path.basename(artifact),
-                  data: fs.readFileSync(filePath),
-                  headers: {
-                    'content-length': fs.statSync(filePath).size,
-                    'content-type': 'application/zip',
-                  },
-                });
-              }
-            }
