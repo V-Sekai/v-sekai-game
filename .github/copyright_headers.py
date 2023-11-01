@@ -25,7 +25,7 @@
 # Derived from:
 # https://github.com/godotengine/godot/blob/4.0/misc/scripts/copyright_headers.py
 
-import sys, os
+import sys, os, re
 
 header = """\
 # Copyright (c) 2018-present. This file is part of V-Sekai https://v-sekai.org/.
@@ -73,7 +73,9 @@ header_done = False
 while line.strip() == "":  # Skip empty lines at the top
     line = fileread.readline()
 
-if line.find("# Copyright (c) 2018-present. This file is part of V-Sekai") == -1:  # Header starts this way
+match = re.search(r"# Copyright \(c\) \d{4}-present\. This file is part of V-Sekai", line)
+
+if match is None:
     # Maybe starting with a non-comment, abort header magic
     header_done = True
 
