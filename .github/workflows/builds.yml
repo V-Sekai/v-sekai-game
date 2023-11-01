@@ -29,23 +29,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # - name: mac_editor_mac_deploy
-          #   os: mac-latest
-          #   cache-name: vsekai_macos_release_x86_64.app
-          #   target: editor
-          #   tests: false
-          #   sconsflags: scu_build=yes precision=double use_volk=yes osxcross_sdk=darwin23
-          #   doc-test: false
-          #   bin: ./godot/bin/godot.macos.editor.double.x86_64
-          #   deploy-bin: ./godot/bin/godot.macos.editor.double.x86_64
-          #   proj-conv: false
-          #   artifact: true
-          #   platform: macos
-          #   deploy: true
-          #   deploy-platform: macos
-          #   export-platform: Macos
-          #   deploy-platform-target: editor
-
           - name: linux_editor_win_deploy
             cache-name: linux-editor-deploy-windows-editor
             target: editor
@@ -90,23 +73,6 @@ jobs:
           sudo apt-get install -qq binutils
         shell: bash
 
-      - name: Download and Extract File
-        if: ${{ matrix.deploy-platform == 'macos' }}
-        run: |
-          curl -L -o target.zip https://github.com/V-Sekai-fire/fuschia-tin-giraffe/releases/download/v0.1.0/osxcross_target.zip
-          FILE_HASH=$(shasum -a 256 target.zip | awk '{ print $1 }')
-          EXPECTED_HASH="8cf4bad33239e5b6aba34b38e425a813d693078e10f2beeeada6693057b94d83"
-          if [ "$FILE_HASH" != "$EXPECTED_HASH" ]; then
-            echo "Hash does not match!"
-            exit 1
-          fi
-          7z l target.zip
-          7z x target.zip -o.
-          7z l osxcross_target.zip
-          7z x osxcross_target.zip -o.
-          sudo mv tmp/osxcross_target /tmp/target
-        shell: bash
-
       - name: Install MinGW
         if: ${{ matrix.deploy-platform == 'windows' }}
         run: |
@@ -115,24 +81,6 @@ jobs:
           sudo apt-get install mingw-w64
           sudo update-alternatives --set x86_64-w64-mingw32-gcc /usr/bin/x86_64-w64-mingw32-gcc-posix
           sudo update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix
-        shell: bash
-
-      - name: Install libtapi
-        if: ${{ matrix.platform == 'macos' }}
-        run: |
-          git clone https://github.com/tpoechtrager/apple-libtapi.git
-          cd apple-libtapi
-          ./build.sh
-          sudo ./install.sh
-
-      - name: Install cctools
-        if: ${{ matrix.platform == 'macos' }}
-        run: |
-          git clone https://github.com/tpoechtrager/cctools-port.git
-          cd cctools-port/cctools
-          ./configure
-          make
-          sudo make install
         shell: bash
 
       - name: Setup Godot build cache
@@ -200,7 +148,7 @@ jobs:
           mkdir -p .godot/editor .godot/imported export_${{ matrix.deploy-platform }}
           chmod +x ${{ matrix.bin }}
           ${{ matrix.bin }} --headless --xr-mode off --export-pack ${{ matrix.export-platform }}  `pwd`/vsekai_game_${{ matrix.deploy-platform }}.pck --path . || true
-        timeout-minutes: 20
+        timeout-minutes: 10
         shell: bash
 
       - name: Prepare artifacts
@@ -222,7 +170,14 @@ jobs:
           rm -rf vsekai_game_${{ matrix.deploy-platform }}
           export TARGET=vsekai_game_${{ matrix.deploy-platform }}
           mkdir -p $TARGET
-          cp -rf ${{ matrix.deploy-bin }} $TARGET/vsekai_game_${{ matrix.deploy-platform }}
+
+          # If deploy platform is windows, append .exe to the binary
+          if [ "${{ matrix.deploy-platform }}" == "windows" ]; then
+              cp -rf ${{ matrix.deploy-bin }} $TARGET/vsekai_game_${{ matrix.deploy-platform }}.exe
+          else
+              cp -rf ${{ matrix.deploy-bin }} $TARGET/vsekai_game_${{ matrix.deploy-platform }}
+          fi
+
           cp -rf `pwd`/vsekai_game_${{ matrix.deploy-platform }}.pck $TARGET/vsekai_game_${{ matrix.deploy-platform }}.pck
           7z a -r $TARGET.zip $TARGET
         shell: bash
