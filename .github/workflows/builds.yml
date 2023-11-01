@@ -286,7 +286,7 @@ jobs:
           name: ${{ matrix.cache-name }}
 
       - name: Upload editor artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         if: ${{ matrix.artifact }}
         with:
           name: vsekai_game_${{ matrix.deploy-platform }}_x86_64
