@@ -303,16 +303,22 @@ jobs:
       - name: Download Artifacts
         uses: actions/download-artifact@v3
 
+      - name: List files
+        run: |
+          ls -R vsekai_game_windows_x86_64
+          ls -R vsekai_game_linux_x86_64
+          ls -R linux-editor-deploy-windows-editor
+          ls -R linux-editor-deploy-linux-editor
+        shell: bash
+          
       - name: Create and Upload Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            vsekai_game_windows_x86_64.zip
-            vsekai_game_linux_x86_64.zip
-            vsekai_editor_windows_x86_64.zip
-            vsekai_editor_linux_x86_64.zip
-            ./bin/godot.windows.editor.x86_64.llvm.exe
-            ./bin/godot.linuxbsd.editor.x86_64.llvm
+            vsekai_game_windows_x86_64
+            vsekai_game_linux_x86_64
+            linux-editor-deploy-windows-editor
+            linux-editor-deploy-linux-editor
           body: "This is a V-Sekai/V-Sekai-game release"
           generate_release_notes: true
           draft: true
