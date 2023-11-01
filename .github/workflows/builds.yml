@@ -310,15 +310,22 @@ jobs:
           ls -R linux-editor-deploy-windows-editor
           ls -R linux-editor-deploy-linux-editor
         shell: bash
-          
+        
+      - name: Archive files
+        run: |
+          zip -r vsekai_game_windows_x86_64.zip vsekai_game_windows_x86_64
+          zip -r vsekai_game_linux_x86_64.zip vsekai_game_linux_x86_64
+          zip -r linux-editor-deploy-windows-editor.zip linux-editor-deploy-windows-editor
+          zip -r linux-editor-deploy-linux-editor.zip linux-editor-deploy-linux-editor
+
       - name: Create and Upload Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            vsekai_game_windows_x86_64
-            vsekai_game_linux_x86_64
-            linux-editor-deploy-windows-editor
-            linux-editor-deploy-linux-editor
+            vsekai_game_windows_x86_64.zip
+            vsekai_game_linux_x86_64.zip
+            linux-editor-deploy-windows-editor.zip
+            linux-editor-deploy-linux-editor.zip
           body: "This is a V-Sekai/V-Sekai-game release"
           generate_release_notes: true
           draft: true
