@@ -75,13 +75,13 @@ jobs:
             tests: false
             sconsflags: linker=gold scu_build=yes precision=double
             doc-test: false
-            bin: ./godot/bin/godot.osx.editor.double.x86_64
-            deploy-bin: ./godot/bin/godot.osx.editor.double.x86_64
-            editor-bin-name: godot.osx.editor.double.x86_64
+            bin: ./godot/bin/godot.macos.editor.double.x86_64
+            deploy-bin: ./godot/bin/godot.macos.editor.double.x86_64
+            editor-bin-name: godot.macos.editor.double.x86_64
             proj-conv: false
             artifact: true
             platform: macos
-            deploy: false
+            deploy: true
             deploy-platform: macos
             export-platform: Mac
             arch: _x86_64
@@ -98,6 +98,8 @@ jobs:
       - name: Install MinGW
         if: ${{ matrix.deploy-platform == 'windows' }}
         run: |
+          sudo add-apt-repository ppa:savoury1/build-tools
+          sudo apt-get update
           sudo apt-get install mingw-w64
           sudo update-alternatives --set x86_64-w64-mingw32-gcc /usr/bin/x86_64-w64-mingw32-gcc-posix
           sudo update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix
@@ -179,7 +181,7 @@ jobs:
       - name: Prepare artifacts
         if: ${{ matrix.deploy }}
         run: |
-          tree -L 1
+          ls
           # Check if the .pck file exists
           if [ ! -f ./${{ env.GAME_NAME }}${{ matrix.deploy-platform }}.pck ]; then
               echo "Error: ${{ env.GAME_NAME }}${{ matrix.deploy-platform }}.pck does not exist."
