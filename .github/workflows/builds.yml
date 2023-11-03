@@ -15,7 +15,6 @@ env:
   DOTNET_CLI_TELEMETRY_OPTOUT: true
   EM_VERSION: 3.1.18
   EM_CACHE_FOLDER: "emsdk-cache"
-  OSXCROSS_ROOT: /tmp/
 
 concurrency:
   group: ci-${{github.actor}}-${{github.head_ref || github.run_number}}-${{github.ref}}-deploy
@@ -23,13 +22,14 @@ concurrency:
 
 jobs:
   build:
-    runs-on: "ubuntu-22.04"
+    runs-on: ${{ matrix.runs-on }}
     name: ${{ matrix.name }}
     strategy:
       fail-fast: false
       matrix:
         include:
           - name: linux_editor_win_deploy
+            runs-on: ubuntu-22.04
             cache-name: linux-editor-deploy-windows-editor
             target: editor
             tests: false
@@ -45,9 +45,11 @@ jobs:
             deploy-pdb: true
             deploy-platform: windows
             export-platform: Windows
+            arch: _x86_64
             deploy-platform-target: editor
 
           - name: linux_editor_linux_deploy
+            runs-on: ubuntu-22.04
             cache-name: linux-editor-deploy-linux-editor
             target: editor
             tests: false
@@ -62,8 +64,27 @@ jobs:
             deploy: true
             deploy-platform: linux
             export-platform: Linux
+            arch: _x86_64
             deploy-platform-target: editor
 
+          - name: macos_editor_macos_deploy
+            runs-on: "macos-latest"
+            cache-name: macos-editor-deploy-macos-editor
+            target: editor
+            tests: false
+            sconsflags: linker=gold scu_build=yes precision=double
+            doc-test: false
+            bin: ./godot/bin/godot.osx.editor.double.x86_64
+            deploy-bin: ./godot/bin/godot.osx.editor.double.x86_64
+            editor-bin-name: godot.osx.editor.double.x86_64
+            proj-conv: false
+            artifact: true
+            platform: macos
+            deploy: false
+            deploy-platform: macos
+            export-platform: Mac
+            arch: _x86_64
+            deploy-platform-target: editor
     steps:
       - uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac # v3.5.2
 
@@ -76,8 +97,6 @@ jobs:
       - name: Install MinGW
         if: ${{ matrix.deploy-platform == 'windows' }}
         run: |
-          sudo add-apt-repository ppa:savoury1/build-tools
-          sudo apt-get update
           sudo apt-get install mingw-w64
           sudo update-alternatives --set x86_64-w64-mingw32-gcc /usr/bin/x86_64-w64-mingw32-gcc-posix
           sudo update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix
@@ -88,6 +107,11 @@ jobs:
         with:
           cache-name: ${{ matrix.cache-name }}
         continue-on-error: true
+
+      - name: Setup Vulkan SDK
+        if: ${{ matrix.platform == 'macos' }}
+        run: |
+          sh ./.github/install_vulkan_sdk_macos.sh
 
       - name: Set up Emscripten latest
         if: ${{ matrix.platform == 'web' }}
@@ -186,7 +210,7 @@ jobs:
         if: ${{ matrix.deploy }}
         uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3.1.3
         with:
-          name: vsekai_game_${{ matrix.deploy-platform }}_x86_64
+          name: vsekai_game_${{ matrix.deploy-platform }}
           path: |
             vsekai_game_${{ matrix.deploy-platform }}
 
@@ -242,14 +266,6 @@ jobs:
         with:
           name: ${{ matrix.cache-name }}
 
-      - name: Upload editor artifacts
-        uses: actions/upload-artifact@v3
-        if: ${{ matrix.artifact }}
-        with:
-          name: vsekai_game_${{ matrix.deploy-platform }}_x86_64
-          path: |
-            ./godot/bin/${{ matrix.editor-bin-name }}
-
   release:
     needs: [build]
     if: startsWith(github.ref, 'refs/tags/')
@@ -260,27 +276,30 @@ jobs:
 
       - name: List files
         run: |
-          ls -R vsekai_game_windows_x86_64
-          ls -R vsekai_game_linux_x86_64
+          ls -R vsekai_game_windows{{ matrix.arch }}
+          ls -R vsekai_game_linux{{ matrix.arch }}
           ls -R linux-editor-deploy-windows-editor
           ls -R linux-editor-deploy-linux-editor
+          ls -R macos-editor-deploy-macos-editor
         shell: bash
         
       - name: Archive files
         run: |
-          zip -r vsekai_game_windows_x86_64.zip vsekai_game_windows_x86_64
-          zip -r vsekai_game_linux_x86_64.zip vsekai_game_linux_x86_64
+          zip -r vsekai_game_windows{{ matrix.arch }}.zip vsekai_game_windows${{ matrix.arch }}
+          zip -r vsekai_game_linux{{ matrix.arch }}.zip vsekai_game_linux{{ matrix.arch }}
           zip -r linux-editor-deploy-windows-editor.zip linux-editor-deploy-windows-editor
           zip -r linux-editor-deploy-linux-editor.zip linux-editor-deploy-linux-editor
+          zip -r macos-editor-deploy-macos-editor.zip macos-editor-deploy-macos-editor
 
       - name: Create and Upload Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            vsekai_game_windows_x86_64.zip
-            vsekai_game_linux_x86_64.zip
+            vsekai_game_windows{{ matrix.arch }}.zip
+            vsekai_game_linux{{ matrix.arch }}.zip
             linux-editor-deploy-windows-editor.zip
             linux-editor-deploy-linux-editor.zip
+            macos-editor-deploy-macos-editor.zip
           body: "This is a V-Sekai/V-Sekai-game release"
           generate_release_notes: true
           draft: true
