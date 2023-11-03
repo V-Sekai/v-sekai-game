@@ -10,7 +10,8 @@ on:
 
 env:
   GAME_NAME: vsekai_game_
-  GODOT_BASE_BRANCH: master
+  GODOT_REF: groups-4.2.2023-11-03T221353Z
+  GODOT_REPOSITORY: v-sekai/godot
   SCONSFLAGS: verbose=yes warnings=extra werror=no module_text_server_fb_enabled=yes use_thinlto=yes
   DOTNET_NOLOGO: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
@@ -34,7 +35,7 @@ jobs:
             cache-name: linux-editor-deploy-windows-editor
             target: editor
             tests: false
-            sconsflags: linker=gold scu_build=yes precision=double use_mingw=yes
+            sconsflags: linker=gold precision=double use_mingw=yes
             doc-test: false
             bin: ./godot/bin/godot.linuxbsd.editor.double.x86_64
             deploy-bin: ./godot/bin/godot.windows.editor.double.x86_64.exe
@@ -54,7 +55,7 @@ jobs:
             cache-name: linux-editor-deploy-linux-editor
             target: editor
             tests: false
-            sconsflags: linker=gold scu_build=yes precision=double use_llvm=yes
+            sconsflags: linker=gold precision=double use_llvm=yes
             doc-test: false
             bin: ./godot/bin/godot.linuxbsd.editor.double.x86_64.llvm
             deploy-bin: ./godot/bin/godot.linuxbsd.editor.double.x86_64.llvm
@@ -68,12 +69,31 @@ jobs:
             arch: _x86_64
             deploy-platform-target: editor
 
+          - name: linux_editor_web_deploy
+            runs-on: ubuntu-22.04
+            cache-name: linux-editor-deploy-linux-editor
+            target: editor
+            tests: false
+            sconsflags: linker=gold precision=double use_llvm=yes
+            doc-test: false
+            bin: ./godot/bin/godot.linuxbsd.editor.double.x86_64.llvm
+            deploy-bin: ./godot/bin/godot.linuxbsd.editor.double.x86_64.llvm
+            editor-bin-name: godot.linuxbsd.editor.double.x86_64.llvm
+            proj-conv: false
+            artifact: true
+            platform: linuxbsd
+            deploy: true
+            deploy-platform: web
+            export-platform: Web
+            arch: _x86_64
+            deploy-platform-target: editor
+
           - name: macos_editor_macos_deploy
             runs-on: "macos-latest"
             cache-name: macos-editor-deploy-macos-editor
             target: editor
             tests: false
-            sconsflags: linker=gold scu_build=yes precision=double
+            sconsflags: linker=gold precision=double
             doc-test: false
             bin: ./godot/bin/godot.macos.editor.double.x86_64
             deploy-bin: ./godot/bin/godot.macos.editor.double.x86_64
@@ -117,14 +137,14 @@ jobs:
           sh ./.github/install_vulkan_sdk_macos.sh
 
       - name: Set up Emscripten latest
-        if: ${{ matrix.platform == 'web' }}
+        if: ${{ matrix.platform == 'web' ||  matrix.deploy-platform == 'web'}}
         uses: mymindstorm/setup-emsdk@ab889da2abbcbb280f91ec4c215d3bb4f3a8f775 # v12
         with:
           version: ${{env.EM_VERSION}}
           actions-cache-folder: ${{env.EM_CACHE_FOLDER}}
 
       - name: Verify Emscripten setup
-        if: ${{ matrix.platform == 'web' }}
+        if: ${{ matrix.platform == 'web' ||  matrix.deploy-platform == 'web'}}
         run: |
           emcc -v
         shell: bash
@@ -132,7 +152,8 @@ jobs:
       - name: Setup python, scons and golang
         uses: ./.github/actions/godot-deps
         with:
-          godot-ref: "groups-4.2"
+          godot-ref: ${{ env.GODOT_REF }}
+          godot-repository: ${{ env.GODOT_REPOSITORY }}
 
       - name: Set up .NET Sdk
         uses: actions/setup-dotnet@3447fd6a9f9e57506b15f895c5b76d3b197dc7c2 # v3.2.0
@@ -155,7 +176,7 @@ jobs:
           deploy-platform-target: ${{ matrix.deploy-platform-target }}
 
       - name: Compilation
-        if: ${{ matrix.deploy-platform == 'windows' }}
+        if: ${{ matrix.deploy-platform == 'windows' || matrix.deploy-platform == 'web' }}
         uses: ./.github/actions/godot-build
         with:
           sconsflags: ${{ env.SCONSFLAGS }} ${{ matrix.sconsflags }}
