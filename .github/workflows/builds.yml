@@ -9,6 +9,7 @@ on:
   pull_request:
 
 env:
+  GAME_NAME: vsekai_game_
   GODOT_BASE_BRANCH: master
   SCONSFLAGS: verbose=yes warnings=extra werror=no module_text_server_fb_enabled=yes use_thinlto=yes
   DOTNET_NOLOGO: true
@@ -171,7 +172,7 @@ jobs:
         run: |
           mkdir -p .godot/editor .godot/imported export_${{ matrix.deploy-platform }}
           chmod +x ${{ matrix.bin }}
-          ${{ matrix.bin }} --headless --xr-mode off --export-pack ${{ matrix.export-platform }}  `pwd`/vsekai_game_${{ matrix.deploy-platform }}.pck --path . || true
+          ${{ matrix.bin }} --headless --xr-mode off --export-pack ${{ matrix.export-platform }}  `pwd`/${{ env.GAME_NAME }}${{ matrix.deploy-platform }}.pck --path . || true
         timeout-minutes: 10
         shell: bash
 
@@ -180,29 +181,29 @@ jobs:
         run: |
           tree -L 1
           # Check if the .pck file exists
-          if [ ! -f ./vsekai_game_${{ matrix.deploy-platform }}.pck ]; then
-              echo "Error: vsekai_game_${{ matrix.deploy-platform }}.pck does not exist."
+          if [ ! -f ./${{ env.GAME_NAME }}${{ matrix.deploy-platform }}.pck ]; then
+              echo "Error: ${{ env.GAME_NAME }}${{ matrix.deploy-platform }}.pck does not exist."
               exit 1
           fi
 
           # Check if the path to the .pck file is correct
-          if [ ! -f `pwd`/vsekai_game_${{ matrix.deploy-platform }}.pck ]; then
-              echo "Error: The path to vsekai_game_${{ matrix.deploy-platform }}.pck is incorrect."
+          if [ ! -f `pwd`/${{ env.GAME_NAME }}${{ matrix.deploy-platform }}.pck ]; then
+              echo "Error: The path to ${{ env.GAME_NAME }}${{ matrix.deploy-platform }}.pck is incorrect."
               exit 1
           fi
 
-          rm -rf vsekai_game_${{ matrix.deploy-platform }}
-          export TARGET=vsekai_game_${{ matrix.deploy-platform }}
+          rm -rf ${{ env.GAME_NAME }}${{ matrix.deploy-platform }}
+          export TARGET=${{ env.GAME_NAME }}${{ matrix.deploy-platform }}
           mkdir -p $TARGET
 
           # If deploy platform is windows, append .exe to the binary
           if [ "${{ matrix.deploy-platform }}" == "windows" ]; then
-              cp -rf ${{ matrix.deploy-bin }} $TARGET/vsekai_game_${{ matrix.deploy-platform }}.exe
+              cp -rf ${{ matrix.deploy-bin }} $TARGET/${{ env.GAME_NAME }}${{ matrix.deploy-platform }}.exe
           else
-              cp -rf ${{ matrix.deploy-bin }} $TARGET/vsekai_game_${{ matrix.deploy-platform }}
+              cp -rf ${{ matrix.deploy-bin }} $TARGET/${{ env.GAME_NAME }}${{ matrix.deploy-platform }}
           fi
 
-          cp -rf `pwd`/vsekai_game_${{ matrix.deploy-platform }}.pck $TARGET/vsekai_game_${{ matrix.deploy-platform }}.pck
+          cp -rf `pwd`/${{ env.GAME_NAME }}${{ matrix.deploy-platform }}.pck $TARGET/${{ env.GAME_NAME }}${{ matrix.deploy-platform }}.pck
           7z a -r $TARGET.zip $TARGET
         shell: bash
 
@@ -210,9 +211,9 @@ jobs:
         if: ${{ matrix.deploy }}
         uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 # v3.1.3
         with:
-          name: vsekai_game_${{ matrix.deploy-platform }}
+          name: ${{ env.GAME_NAME }}${{ matrix.deploy-platform }}
           path: |
-            vsekai_game_${{ matrix.deploy-platform }}
+            ${{ env.GAME_NAME }}${{ matrix.deploy-platform }}
 
       - name: Generate C# glue
         if: ${{ matrix.build-mono }}
@@ -276,8 +277,8 @@ jobs:
 
       - name: List files
         run: |
-          ls -R vsekai_game_windows{{ matrix.arch }}
-          ls -R vsekai_game_linux{{ matrix.arch }}
+          ls -R ${{ env.GAME_NAME }}windows{{ matrix.arch }}
+          ls -R ${{ env.GAME_NAME }}linux{{ matrix.arch }}
           ls -R linux-editor-deploy-windows-editor
           ls -R linux-editor-deploy-linux-editor
           ls -R macos-editor-deploy-macos-editor
@@ -285,8 +286,8 @@ jobs:
         
       - name: Archive files
         run: |
-          zip -r vsekai_game_windows{{ matrix.arch }}.zip vsekai_game_windows${{ matrix.arch }}
-          zip -r vsekai_game_linux{{ matrix.arch }}.zip vsekai_game_linux{{ matrix.arch }}
+          zip -r ${{ env.GAME_NAME }}windows{{ matrix.arch }}.zip ${{ env.GAME_NAME }}windows${{ matrix.arch }}
+          zip -r ${{ env.GAME_NAME }}linux{{ matrix.arch }}.zip ${{ env.GAME_NAME }}linux{{ matrix.arch }}
           zip -r linux-editor-deploy-windows-editor.zip linux-editor-deploy-windows-editor
           zip -r linux-editor-deploy-linux-editor.zip linux-editor-deploy-linux-editor
           zip -r macos-editor-deploy-macos-editor.zip macos-editor-deploy-macos-editor
@@ -295,12 +296,11 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            vsekai_game_windows{{ matrix.arch }}.zip
-            vsekai_game_linux{{ matrix.arch }}.zip
+            ${{ env.GAME_NAME }}windows{{ matrix.arch }}.zip
+            ${{ env.GAME_NAME }}linux{{ matrix.arch }}.zip
             linux-editor-deploy-windows-editor.zip
             linux-editor-deploy-linux-editor.zip
             macos-editor-deploy-macos-editor.zip
-          body: "This is a V-Sekai/V-Sekai-game release"
           generate_release_notes: true
           draft: true
           prerelease: true
