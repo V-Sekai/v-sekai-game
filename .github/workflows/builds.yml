@@ -34,7 +34,7 @@ jobs:
             cache-name: linux-editor-deploy-windows-editor
             target: editor
             tests: false
-            sconsflags: linker=gold scu_build=yes precision=double use_mingw=yes
+            sconsflags: linker=gold precision=double use_mingw=yes
             doc-test: false
             bin: ./godot/bin/godot.linuxbsd.editor.double.x86_64
             deploy-bin: ./godot/bin/godot.windows.editor.double.x86_64.exe
@@ -54,7 +54,7 @@ jobs:
             cache-name: linux-editor-deploy-linux-editor
             target: editor
             tests: false
-            sconsflags: linker=gold scu_build=yes precision=double use_llvm=yes
+            sconsflags: linker=gold precision=double use_llvm=yes
             doc-test: false
             bin: ./godot/bin/godot.linuxbsd.editor.double.x86_64.llvm
             deploy-bin: ./godot/bin/godot.linuxbsd.editor.double.x86_64.llvm
@@ -73,7 +73,7 @@ jobs:
             cache-name: macos-editor-deploy-macos-editor
             target: editor
             tests: false
-            sconsflags: linker=gold scu_build=yes precision=double
+            sconsflags: linker=gold precision=double
             doc-test: false
             bin: ./godot/bin/godot.macos.editor.double.x86_64
             deploy-bin: ./godot/bin/godot.macos.editor.double.x86_64
