@@ -29,19 +29,19 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: linux_editor_win_deploy
-            runs-on: ubuntu-22.04
-            cache-name: linux-editor-deploy-windows-editor
+          - name: windows_editor_win_deploy
+            runs-on: windows-latest
+            cache-name: windows-editor-deploy-windows-editor
             target: editor
             tests: false
-            sconsflags: linker=gold scu_build=yes precision=double use_mingw=yes
+            sconsflags: linker=gold scu_build=yes precision=double use_mingw=no use_llvm=no
             doc-test: false
-            bin: ./godot/bin/godot.linuxbsd.editor.double.x86_64
+            bin: ./godot/bin/godot.windows.editor.double.x86_64
             deploy-bin: ./godot/bin/godot.windows.editor.double.x86_64.exe
             editor-bin-name: godot.windows.editor.double.x86_64.exe
             proj-conv: false
             artifact: true
-            platform: linuxbsd
+            platform: windows
             deploy: true
             deploy-pdb: true
             deploy-platform: windows
@@ -93,14 +93,6 @@ jobs:
         if: ${{ matrix.platform == 'linux' }}
         run: |
           sudo apt-get install -qq binutils
-        shell: bash
-
-      - name: Install MinGW
-        if: ${{ matrix.deploy-platform == 'windows' }}
-        run: |
-          sudo apt-get install mingw-w64
-          sudo update-alternatives --set x86_64-w64-mingw32-gcc /usr/bin/x86_64-w64-mingw32-gcc-posix
-          sudo update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix
         shell: bash
 
       - name: Setup Godot build cache
@@ -279,7 +271,7 @@ jobs:
         run: |
           ls -R ${{ env.GAME_NAME }}windows{{ matrix.arch }}
           ls -R ${{ env.GAME_NAME }}linux{{ matrix.arch }}
-          ls -R linux-editor-deploy-windows-editor
+          ls -R windows-editor-deploy-windows-editor
           ls -R linux-editor-deploy-linux-editor
           ls -R macos-editor-deploy-macos-editor
         shell: bash
@@ -288,7 +280,7 @@ jobs:
         run: |
           zip -r ${{ env.GAME_NAME }}windows{{ matrix.arch }}.zip ${{ env.GAME_NAME }}windows${{ matrix.arch }}
           zip -r ${{ env.GAME_NAME }}linux{{ matrix.arch }}.zip ${{ env.GAME_NAME }}linux{{ matrix.arch }}
-          zip -r linux-editor-deploy-windows-editor.zip linux-editor-deploy-windows-editor
+          zip -r windows-editor-deploy-windows-editor.zip linux-editor-deploy-windows-editor
           zip -r linux-editor-deploy-linux-editor.zip linux-editor-deploy-linux-editor
           zip -r macos-editor-deploy-macos-editor.zip macos-editor-deploy-macos-editor
 
@@ -298,7 +290,7 @@ jobs:
           files: |
             ${{ env.GAME_NAME }}windows{{ matrix.arch }}.zip
             ${{ env.GAME_NAME }}linux{{ matrix.arch }}.zip
-            linux-editor-deploy-windows-editor.zip
+            windows-editor-deploy-windows-editor.zip
             linux-editor-deploy-linux-editor.zip
             macos-editor-deploy-macos-editor.zip
           generate_release_notes: true
