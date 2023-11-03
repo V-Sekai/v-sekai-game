@@ -9,7 +9,10 @@ inputs:
     default: "x64"
   godot-ref:
     description: The reference for the Godot engine repository.
-    default: "groups-4.2"
+    default: master
+  godot-repository:
+    description: The Godot engine repository.
+    default: godotengine/godot
   go-version:
     description: The Go version to use.
     default: "1.21"
@@ -35,7 +38,7 @@ runs:
     - name: Checkout godot engine repo
       uses: actions/checkout@v3
       with:
-        repository: v-sekai/godot
+        repository: ${{ inputs.godot-repository }}
         path: godot
         ref: ${{ inputs.godot-ref }}
 
