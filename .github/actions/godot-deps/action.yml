@@ -1,5 +1,5 @@
-name: Setup python and scons
-description: Setup python, install the pip version of scons.
+name: Setup python, scons and golang
+description: Setup python, install the pip version of scons and setup golang.
 inputs:
   python-version:
     description: The python version to use.
@@ -10,6 +10,9 @@ inputs:
   godot-ref:
     description: The reference for the Godot engine repository.
     default: "groups-4.2"
+  go-version:
+    description: The Go version to use.
+    default: "1.21"
 runs:
   using: "composite"
   steps:
@@ -35,3 +38,12 @@ runs:
         repository: v-sekai/godot
         path: godot
         ref: ${{ inputs.godot-ref }}
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: ${{ inputs.go-version }}
+
+    - name: Check Go version
+      shell: bash
+      run: go version

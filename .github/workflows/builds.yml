@@ -127,7 +127,7 @@ jobs:
           emcc -v
         shell: bash
 
-      - name: Setup python and scons
+      - name: Setup python, scons and golang
         uses: ./.github/actions/godot-deps
         with:
           godot-ref: "groups-4.2"
