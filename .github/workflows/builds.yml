@@ -69,6 +69,25 @@ jobs:
             arch: _x86_64
             deploy-platform-target: editor
 
+          - name: linux_editor_web_deploy
+            runs-on: ubuntu-22.04
+            cache-name: linux-editor-deploy-linux-editor
+            target: editor
+            tests: false
+            sconsflags: linker=gold precision=double use_llvm=yes
+            doc-test: false
+            bin: ./godot/bin/godot.linuxbsd.editor.double.x86_64.llvm
+            deploy-bin: ./godot/bin/godot.linuxbsd.editor.double.x86_64.llvm
+            editor-bin-name: godot.linuxbsd.editor.double.x86_64.llvm
+            proj-conv: false
+            artifact: true
+            platform: linuxbsd
+            deploy: true
+            deploy-platform: web
+            export-platform: Web
+            arch: _x86_64
+            deploy-platform-target: editor
+
           - name: macos_editor_macos_deploy
             runs-on: "macos-latest"
             cache-name: macos-editor-deploy-macos-editor
@@ -118,14 +137,14 @@ jobs:
           sh ./.github/install_vulkan_sdk_macos.sh
 
       - name: Set up Emscripten latest
-        if: ${{ matrix.platform == 'web' }}
+        if: ${{ matrix.platform == 'web' ||  matrix.deploy-platform == 'web'}}
         uses: mymindstorm/setup-emsdk@ab889da2abbcbb280f91ec4c215d3bb4f3a8f775 # v12
         with:
           version: ${{env.EM_VERSION}}
           actions-cache-folder: ${{env.EM_CACHE_FOLDER}}
 
       - name: Verify Emscripten setup
-        if: ${{ matrix.platform == 'web' }}
+        if: ${{ matrix.platform == 'web' ||  matrix.deploy-platform == 'web'}}
         run: |
           emcc -v
         shell: bash
@@ -157,7 +176,7 @@ jobs:
           deploy-platform-target: ${{ matrix.deploy-platform-target }}
 
       - name: Compilation
-        if: ${{ matrix.deploy-platform == 'windows' }}
+        if: ${{ matrix.deploy-platform == 'windows' || matrix.deploy-platform == 'web' }}
         uses: ./.github/actions/godot-build
         with:
           sconsflags: ${{ env.SCONSFLAGS }} ${{ matrix.sconsflags }}
