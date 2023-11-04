@@ -66,7 +66,7 @@ class ParseState:
 
 	var all_name_map: Dictionary = {}.duplicate()
 
-	var scale_correction_factor: float = 1.0
+	var root_rotation_delta: Transform3D = Transform3D.IDENTITY
 	var is_obj: bool = false
 	var is_dae: bool = false
 	var default_obj_mesh_name: String = "default"
@@ -77,8 +77,6 @@ class ParseState:
 	var legacy_material_name_setting: int = 1
 	var default_material: Material = null
 	var asset_database: Resource = null
-
-	var HACK_outer_scope_generate_object_hash: Callable = Callable()
 
 	# Uh... they... forgot a function?????
 	func pop_back(arr: PackedStringArray):
@@ -94,7 +92,7 @@ class ParseState:
 	#	return objtype_to_name_to_id.get(type, {}).has(name)
 
 	func generate_object_hash(dupe_map: Dictionary, type: String, obj_path: String) -> int:
-		var ret: int = self.HACK_outer_scope_generate_object_hash.call(dupe_map, type, obj_path)
+		var ret: int = HashGenerator.generate_object_hash(dupe_map, type, obj_path)
 		var t: String = "Type:" + type + "->" + obj_path
 		t += str(dupe_map[t])
 		metaobj.log_debug(ret, "Hash " + t + " => " + str(ret))
@@ -202,17 +200,11 @@ class ParseState:
 			if len(child_node.get_parentless_bones()) > 1:
 				return false
 			var root_bone_idx: int = child_node.get_parentless_bones()[0]
-			root_node.transform = root_node.transform * child_node.transform * child_node.get_bone_pose(root_bone_idx)
-			child_node.set_bone_rest(root_bone_idx, Transform3D.IDENTITY)
-			child_node.set_bone_pose_position(root_bone_idx, Vector3.ZERO)
-			child_node.set_bone_pose_rotation(root_bone_idx, Quaternion.IDENTITY)
-			child_node.set_bone_pose_scale(root_bone_idx, Vector3.ONE)
-			humanoid_original_transforms[child_node.get_bone_name(root_bone_idx)] = Transform3D.IDENTITY
+			root_rotation_delta = root_rotation_delta * child_node.transform * child_node.get_bone_pose(root_bone_idx)
 			toplevel_node = child_node
 			return true
 		if child_node is Node3D:
-			root_node.transform = root_node.transform * child_node.transform
-			child_node.transform = Transform3D.IDENTITY
+			root_rotation_delta = root_rotation_delta * child_node.transform
 			toplevel_node = child_node
 			return true
 		return false
@@ -275,9 +267,14 @@ class ParseState:
 		# SCRIPT ERROR: Invalid type in function 'register_resource' in base 'RefCounted (ParseState)'.
 		# The Object-derived class of argument 5 (null instance) is not a subclass of the expected argument class. (Resource)
 		var gltf_type = "meshes"
+		if p_type == "Mesh":
+			metaobj.imported_mesh_paths[p_name] = str(p_resource.resource_path)
+			metaobj.imported_mesh_paths["Root Scene_" + p_name] = str(p_resource.resource_path)
 		if p_type == "Material":
+			metaobj.imported_material_paths[p_name] = str(p_resource.resource_path)
 			gltf_type = "materials"
 		if p_type == "AnimationClip":
+			metaobj.imported_animation_paths[p_name] = str(p_resource.resource_path)
 			gltf_type = "animations"
 		metaobj.insert_resource(fileId_object, p_resource)
 		metaobj.log_debug(0, "Register " + str(metaobj.guid) + ":" + str(fileId_object) + ": " + str(p_type) + " '" + str(p_name) + "' " + str(p_resource))
@@ -288,11 +285,6 @@ class ParseState:
 
 	func iterate_skeleton(node: Skeleton3D, p_path: PackedStringArray, p_skel_bone: int, p_attachments_by_bone_name: Dictionary, p_parent_transform_id: int, p_global_rest:= Transform3D(), p_pre_retarget_global_rest:= Transform3D()):
 		#metaobj.log_debug(0, "Skeleton iterate_skeleton " + str(node.get_class()) + ", " + str(p_path) + ", " + str(node.name))
-
-		if scale_correction_factor != 1.0:
-			var rest: Transform3D = node.get_bone_rest(p_skel_bone)
-			node.set_bone_rest(p_skel_bone, Transform3D(rest.basis, scale_correction_factor * rest.origin))
-			node.set_bone_pose_position(p_skel_bone, scale_correction_factor * rest.origin)
 
 		assert(p_skel_bone != -1)
 
@@ -314,6 +306,7 @@ class ParseState:
 			p_pre_retarget_global_rest *= node.get_bone_rest(p_skel_bone)
 
 		if not p_global_rest.is_equal_approx(p_pre_retarget_global_rest):
+			metaobj.log_debug(0, "bone " + bone_name + " rest " + str(p_global_rest) + " pre ret " + str(p_pre_retarget_global_rest))
 			transform_fileid_to_rotation_delta[fileId_transform] = p_global_rest.affine_inverse() * p_pre_retarget_global_rest
 			if not node.has_meta("humanoid_rotation_delta"):
 				node.set_meta("humanoid_rotation_delta", {})
@@ -385,13 +378,6 @@ class ParseState:
 
 	func iterate_node(node: Node, p_path: PackedStringArray, from_skinned_parent: bool, p_parent_transform_id: int, p_global_rest := Transform3D(), p_pre_retarget_global_rest := Transform3D()):
 		metaobj.log_debug(0, "Conventional iterate_node " + str(node.get_class()) + ", " + str(p_path) + ", " + str(node.name))
-		if node is MeshInstance3D:
-			if is_obj and node.mesh != null:
-				#node_name = "default"
-				node.name = default_obj_mesh_name  # Does this make sense?? For compatibility?
-		if node is Node3D:
-			node.position *= scale_correction_factor
-
 		#for child in node.get_children():
 		#	iterate_node(child, p_path, false)
 		var fileId_go: int = 0
@@ -436,7 +422,11 @@ class ParseState:
 				p_pre_retarget_global_rest *= node.transform
 
 		if not p_global_rest.is_equal_approx(p_pre_retarget_global_rest):
+			metaobj.log_debug(0, "node " + node.name + " rest " + str(p_global_rest) + " pre ret " + str(p_pre_retarget_global_rest))
 			transform_fileid_to_rotation_delta[fileId_transform] = p_global_rest.affine_inverse() * p_pre_retarget_global_rest
+
+		if len(p_path) == 1:
+			p_pre_retarget_global_rest *= root_rotation_delta
 
 		if node.get_child_count() >= 1 and node.get_child(0).name == "RootNode":
 			node = node.get_child(0)
@@ -466,7 +456,12 @@ class ParseState:
 						self.all_name_map[fileId_go][orig_child_name] = new_id
 			else:
 				if not (child is AnimationPlayer):
-					var orig_child_name: String = get_orig_name("nodes", child.name)
+					var child_name: String = child.name
+					if child is MeshInstance3D:
+						if is_obj and child.mesh != null:
+							#node_name = "default"
+							child_name = default_obj_mesh_name  # Does this make sense?? For compatibility?
+					var orig_child_name: String = get_orig_name("nodes", child_name)
 					if len(p_path) == 1 and node.get_parent() == null:
 						preserve_hierarchy_orig_root_node_name = orig_child_name
 						p_path.push_back("root")
@@ -524,7 +519,6 @@ class ParseState:
 					anim = metaobj.get_godot_resource(external_objects_by_id.get(fileId))
 				else:
 					if anim != null:
-						adjust_animation(anim)
 						var respath: String = get_resource_path(godot_anim_name, ".tres")
 						if FileAccess.file_exists(respath):
 							anim.take_over_path(respath)
@@ -660,7 +654,6 @@ class ParseState:
 						skin = metaobj.get_godot_resource(external_objects_by_id.get(-fileId))
 				else:
 					if mesh != null:
-						adjust_mesh_scale(mesh)
 						var respath: String = get_resource_path(godot_mesh_name, ".mesh")
 						if FileAccess.file_exists(respath):
 							mesh.take_over_path(respath)
@@ -668,7 +661,6 @@ class ParseState:
 						mesh = load(respath)
 					if skin != null:
 						skin = skin.duplicate()
-						adjust_skin_scale(skin)
 						var skel: Skeleton3D = node.get_parent() as Skeleton3D
 						if skel != null and skel.has_meta("humanoid_rotation_delta"):
 							skin.set_meta("humanoid_rotation_delta", skel.get_meta("humanoid_rotation_delta").duplicate())
@@ -686,132 +678,6 @@ class ParseState:
 						saved_skins_by_name[mesh_name] = skin
 		is_obj = false
 
-	func adjust_skin_scale(skin: Skin):
-		if scale_correction_factor == 1.0:
-			return
-		# MESH and SKIN data divide, to compensate for object position multiplying.
-		for i in range(skin.get_bind_count()):
-			var transform = skin.get_bind_pose(i)
-			skin.set_bind_pose(i, Transform3D(transform.basis, transform.origin * scale_correction_factor))
-
-	func adjust_mesh_scale(mesh: ArrayMesh, is_shadow: bool = false):
-		if scale_correction_factor == 1.0:
-			return
-		# MESH and SKIN data divide, to compensate for object position multiplying.
-		var surf_count: int = mesh.get_surface_count()
-		var surf_data_by_mesh = [].duplicate()
-		for surf_idx in range(surf_count):
-			var prim: int = mesh.surface_get_primitive_type(surf_idx)
-			var fmt_compress_flags: int = mesh.surface_get_format(surf_idx)
-			var arr: Array = mesh.surface_get_arrays(surf_idx)
-			var name: String = mesh.surface_get_name(surf_idx)
-			var bsarr: Array = mesh.surface_get_blend_shape_arrays(surf_idx)
-			var lods: Dictionary = {}  # mesh.surface_get_lods(surf_idx) # get_lods(mesh, surf_idx)
-			var mat: Material = mesh.surface_get_material(surf_idx)
-			#metaobj.log_debug(0, "About to multiply mesh vertices by " + str(scale_correction_factor) + ": " + str(arr[ArrayMesh.ARRAY_VERTEX][0]))
-			var vert_arr_len: int = len(arr[ArrayMesh.ARRAY_VERTEX])
-			var i: int = 0
-			while i < vert_arr_len:
-				arr[ArrayMesh.ARRAY_VERTEX][i] = arr[ArrayMesh.ARRAY_VERTEX][i] * scale_correction_factor
-				i += 1
-			#metaobj.log_debug(0, "Done multiplying mesh vertices by " + str(scale_correction_factor) + ": " + str(arr[ArrayMesh.ARRAY_VERTEX][0]))
-			for bsidx in range(len(bsarr)):
-				i = 0
-				var ilen: int = len(bsarr[bsidx][ArrayMesh.ARRAY_VERTEX])
-				while i < ilen:
-					bsarr[bsidx][ArrayMesh.ARRAY_VERTEX][i] = (bsarr[bsidx][ArrayMesh.ARRAY_VERTEX][i] * scale_correction_factor)
-					i += 1
-				bsarr[bsidx].resize(3)
-				#metaobj.log_debug(0, "format flags: " + str(fmt_compress_flags & 7) + "|" + str(typeof(bsarr[bsidx][0]))+"|"+str(typeof(bsarr[bsidx][0]))+"|"+str(typeof(bsarr[bsidx][0])))
-				#metaobj.log_debug(0, "Len arr " + str(len(arr)) + " bsidx " + str(bsidx) + " len bsarr[bsidx] " + str(len(bsarr[bsidx])))
-				#for i in range(len(arr)):
-				#	if i >= ArrayMesh.ARRAY_INDEX or typeof(arr[i]) == TYPE_NIL:
-				#		bsarr[bsidx][i] = null
-				#	elif typeof(bsarr[bsidx][i]) == TYPE_NIL or len(bsarr[bsidx][i]) == 0:
-				#		bsarr[bsidx][i] = arr[i].duplicate()
-				#		bsarr[bsidx][i].resize(0)
-				#		bsarr[bsidx][i].resize(len(arr[i]))
-
-			surf_data_by_mesh.push_back({"prim": prim, "arr": arr, "bsarr": bsarr, "lods": lods, "fmt_compress_flags": fmt_compress_flags, "name": name, "mat": mat})
-		mesh.clear_surfaces()
-		for surf_idx in range(surf_count):
-			var prim: int = surf_data_by_mesh[surf_idx].get("prim")
-			var arr: Array = surf_data_by_mesh[surf_idx].get("arr")
-			var bsarr: Array = surf_data_by_mesh[surf_idx].get("bsarr")
-			var lods: Dictionary = surf_data_by_mesh[surf_idx].get("lods")
-			var fmt_compress_flags: int = surf_data_by_mesh[surf_idx].get("fmt_compress_flags")
-			var name: String = surf_data_by_mesh[surf_idx].get("name")
-			var mat: Material = surf_data_by_mesh[surf_idx].get("mat")
-			#metaobj.log_debug(0, "Adding mesh vertices by " + str(scale_correction_factor) + ": " + str(arr[ArrayMesh.ARRAY_VERTEX][0]))
-			mesh.add_surface_from_arrays(prim, arr, bsarr, lods, fmt_compress_flags)
-			mesh.surface_set_name(surf_idx, name)
-			mesh.surface_set_material(surf_idx, mat)
-			#metaobj.log_debug(0, "Get mesh vertices by " + str(scale_correction_factor) + ": " + str(mesh.surface_get_arrays(surf_idx)[ArrayMesh.ARRAY_VERTEX][0]))
-		if not is_shadow and mesh.shadow_mesh != mesh and mesh.shadow_mesh != null:
-			adjust_mesh_scale(mesh.shadow_mesh, true)
-
-	func adjust_animation_scale(anim: Animation):
-		if scale_correction_factor == 1.0:
-			return
-		# ANIMATION and NODES multiply by scale
-		for trackidx in range(anim.get_track_count()):
-			var path: String = anim.get("tracks/" + str(trackidx) + "/path")
-			if path.ends_with(":x") or path.ends_with(":y") or path.ends_with(":z"):
-				path = path.substr(0, len(path) - 2)  # To make matching easier.
-			metaobj.log_debug(0, "ANIM Type is " + str(anim.get("tracks/" + str(trackidx) + "/type")))
-			match anim.get("tracks/" + str(trackidx) + "/type"):
-				"position":
-					var xform_keys: PackedFloat32Array = anim.get("tracks/" + str(trackidx) + "/keys")
-					var i: int = 0
-					var ilen: int = len(xform_keys)
-					while i < ilen:
-						xform_keys[i + 2] *= scale_correction_factor
-						xform_keys[i + 3] *= scale_correction_factor
-						xform_keys[i + 4] *= scale_correction_factor
-						i += 5
-					anim.set("tracks/" + str(trackidx) + "/keys", xform_keys)
-				"value":
-					if path.ends_with(":position") or path.ends_with(":transform"):
-						var track_dict: Dictionary = anim.get("tracks/" + str(trackidx) + "/keys")
-						var track_values: Array = track_dict.get("values")
-						var i: int = 0
-						var ilen: int = len(track_values)
-						if path.ends_with(":transform"):
-							while i < ilen:
-								track_values[i] = Transform3D(track_values[i].basis, track_values[i].origin * scale_correction_factor)
-								i += 1
-						else:
-							while i < ilen:
-								track_values[i] *= scale_correction_factor
-								i += 1
-						track_dict["values"] = track_values
-						anim.set("tracks/" + str(trackidx) + "/keys", track_dict)
-				"bezier":
-					if path.ends_with(":position") or path.ends_with(":transform"):
-						var track_dict: Dictionary = anim.get("tracks/" + str(trackidx) + "/keys")
-						var track_values: Variant = track_dict.get("points")  # Some sort of packed array?
-						var i: int = 0
-						var ilen: int = len(track_values)
-						# VALUE, inX, inY, outX, outY
-						if path.ends_with(":transform"):
-							while i < ilen:
-								if ((i % 5) % 2) != 1:
-									track_values[i] = Transform3D(track_values[i].basis, track_values[i].origin * scale_correction_factor)
-								i += 1
-						else:
-							while i < ilen:
-								if ((i % 5) % 2) != 1:
-									track_values[i] *= scale_correction_factor
-								i += 1
-						track_dict["points"] = track_values
-						anim.set("tracks/" + str(trackidx) + "/keys", track_dict)
-
-	func adjust_animation(anim: Animation):
-		adjust_animation_scale(anim)
-		# Root motion?
-		# Splitting up animation?
-
-
 func _post_import(p_scene: Node) -> Object:
 	var source_file_path: String = get_source_file()
 	var godot_import_config: ConfigFile = ConfigFile.new()
@@ -823,17 +689,6 @@ func _post_import(p_scene: Node) -> Object:
 	var asset_database: asset_database_class = asset_database_class.new().get_singleton()
 	default_material = asset_database.default_material_reference
 	var metaobj: asset_meta_class = asset_database.get_meta_at_path(rel_path)
-
-	var apply_root_scale: bool = godot_import_config.get_value("params", "nodes/apply_root_scale", false)
-	var godot_root_scale: float = godot_import_config.get_value("params", "nodes/root_scale", 1.0)
-	if not (godot_root_scale > 0):
-		if metaobj != null:
-			metaobj.log_warn(0, "Invalid root_scale: " + str(godot_root_scale))
-		godot_root_scale = 1.0
-	if p_scene is Node3D:
-		if not apply_root_scale:
-			p_scene.scale /= godot_root_scale
-	#print ("todo post import replace " + str(source_file_path))
 
 	var f: FileAccess
 	if metaobj == null:
@@ -857,7 +712,6 @@ func _post_import(p_scene: Node) -> Object:
 	ps.source_file_path = source_file_path
 	ps.metaobj = metaobj
 	ps.asset_database = asset_database
-	ps.HACK_outer_scope_generate_object_hash = generate_object_hash
 	ps.material_to_texture_name = metaobj.internal_data.get("material_to_texture_name", {})
 	ps.godot_sanitized_to_orig_remap = metaobj.internal_data.get("godot_sanitized_to_orig_remap", {})
 	ps.humanoid_original_transforms = metaobj.internal_data.get("humanoid_original_transforms", {})
@@ -869,13 +723,6 @@ func _post_import(p_scene: Node) -> Object:
 				var prof_name: String = prop["name"].trim_prefix("bone_map/")
 				bone_map_dict[prof_name] = bone_map.get_skeleton_bone_name(prof_name)
 		ps.bone_map_dict = bone_map_dict
-	if metaobj.internal_data.has("scale_correction_factor"):
-		var scf: float = metaobj.internal_data.get("scale_correction_factor")
-		if godot_root_scale != scf:
-			metaobj.log_warn(0, "Mismatched godot_root_scale=" + str(godot_root_scale) + " and scale_correction_factor=" + str(scf))
-	ps.scale_correction_factor = godot_root_scale  # metaobj.internal_data.get("scale_correction_factor", 1.0)
-	if apply_root_scale:
-		ps.scale_correction_factor = 1.0
 	ps.extractLegacyMaterials = metaobj.importer.keys.get("materials", {}).get("materialLocation", 0) == 0
 	ps.importMaterials = (metaobj.importer.keys.get("materials", {}).get("materialImportMode", metaobj.importer.keys.get("materials", {}).get("importMaterials", 1)) == 1)
 	ps.materialSearch = metaobj.importer.keys.get("materials", {}).get("materialSearch", 1)
@@ -886,8 +733,7 @@ func _post_import(p_scene: Node) -> Object:
 	ps.default_material = default_material
 	ps.is_obj = source_file_path.ends_with(".obj")
 	ps.is_dae = source_file_path.ends_with(".dae")
-	metaobj.log_debug(0, "Path " + str(source_file_path) + " correcting scale by " + str(ps.scale_correction_factor))
-	#### Setting root_scale through the .import ConfigFile doesn't seem to be working foro me. ## p_scene.scale /= ps.scale_correction_factor
+	metaobj.log_debug(0, "Path " + str(source_file_path))
 	var external_objects: Dictionary = metaobj.importer.get_external_objects()
 	ps.external_objects_by_type_name = external_objects
 
@@ -1006,10 +852,11 @@ func _post_import(p_scene: Node) -> Object:
 		# We are trying to mimick Unity, so we rewrote the up_axis in the .dae in BaseModelHandler, and here we re-apply
 		# the up-axis to the root node. This workflow will break if user wishes to change this in Blender after import.
 		var up_axis: String = metaobj.internal_data.get("up_axis", "Y_UP")
+		# * ps.toplevel_node.transform)
 		if up_axis.to_upper() == "X_UP":
-			ps.toplevel_node.transform = (Transform3D(Basis.from_euler(Vector3(0, 0, PI / -2.0)), Vector3.ZERO) * ps.toplevel_node.transform)
+			ps.root_rotation_delta = Transform3D(Basis.from_euler(Vector3(0, 0, PI / -2.0)), Vector3.ZERO)
 		if up_axis.to_upper() == "Z_UP":
-			ps.toplevel_node.transform = (Transform3D(Basis.from_euler(Vector3(PI / -2.0, 0, 0)), Vector3.ZERO) * ps.toplevel_node.transform)
+			ps.root_rotation_delta = Transform3D(Basis.from_euler(Vector3(PI / -2.0, 0, 0)), Vector3.ZERO)
 
 	var toplevel_path: PackedStringArray = PackedStringArray().duplicate()
 	toplevel_path.push_back("//RootNode")
@@ -1030,6 +877,8 @@ func _post_import(p_scene: Node) -> Object:
 	# GameObject references always point to the toplevel node:
 	metaobj.prefab_main_gameobject_id = root_go_id
 	metaobj.prefab_main_transform_id = ps.all_name_map[root_go_id][4]
+	if !ps.root_rotation_delta.is_equal_approx(Transform3D.IDENTITY):
+		metaobj.transform_fileid_to_rotation_delta[metaobj.prefab_main_transform_id] = ps.root_rotation_delta
 	ps.fileid_to_nodepath[metaobj.prefab_main_gameobject_id] = NodePath(".")  # Prefab name always toplevel.
 	ps.fileid_to_nodepath[metaobj.prefab_main_transform_id] = NodePath(".")
 	ps.fileid_to_skeleton_bone.erase(metaobj.prefab_main_gameobject_id)
@@ -1056,115 +905,114 @@ func _post_import(p_scene: Node) -> Object:
 	return p_scene
 
 
-static func unsrs(n: int, shift: int) -> int:
-	return ((n >> 1) & 0x7fffffffffffffff) >> (shift - 1)
+class HashGenerator:
 
+	static func generate_object_hash(dupe_map: Dictionary, type: String, obj_path: String) -> int:
+		var t: String = "Type:" + type + "->" + obj_path
+		dupe_map[t] = dupe_map.get(t, -1) + 1
+		t += str(dupe_map[t])
+		var ret: int = xxHash64(t.to_utf8_buffer())
+		return ret
 
-static func generate_object_hash(dupe_map: Dictionary, type: String, obj_path: String) -> int:
-	var t: String = "Type:" + type + "->" + obj_path
-	dupe_map[t] = dupe_map.get(t, -1) + 1
-	t += str(dupe_map[t])
-	var ret: int = xxHash64(t.to_utf8_buffer())
-	return ret
+	static func unsrs(n: int, shift: int) -> int:
+		return ((n >> 1) & 0x7fffffffffffffff) >> (shift - 1)
 
+	static func xxHash64(buffer: PackedByteArray, seed = 0) -> int:
+		# https://github.com/Jason3S/xxhash
+		# MIT License
+		#
+		# Copyright (c) 2019 Jason Dent
+		#
+		# Permission is hereby granted, free of charge, to any person obtaining a copy
+		# of this software and associated documentation files (the "Software"), to deal
+		# in the Software without restriction, including without limitation the rights
+		# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+		# copies of the Software, and to permit persons to whom the Software is
+		# furnished to do so, subject to the following conditions:
+		#
+		# The above copyright notice and this permission notice shall be included in all
+		# copies or substantial portions of the Software.
+		#
+		# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+		# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+		# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+		# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+		# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+		# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+		# SOFTWARE.
+		#
+		# Parts based on https://github.com/Cyan4973/xxHash
+		# xxHash Library - Copyright (c) 2012-2021 Yann Collet (BSD 2-clause)
 
-static func xxHash64(buffer: PackedByteArray, seed = 0) -> int:
-	# https://github.com/Jason3S/xxhash
-	# MIT License
-	#
-	# Copyright (c) 2019 Jason Dent
-	#
-	# Permission is hereby granted, free of charge, to any person obtaining a copy
-	# of this software and associated documentation files (the "Software"), to deal
-	# in the Software without restriction, including without limitation the rights
-	# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	# copies of the Software, and to permit persons to whom the Software is
-	# furnished to do so, subject to the following conditions:
-	#
-	# The above copyright notice and this permission notice shall be included in all
-	# copies or substantial portions of the Software.
-	#
-	# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-	# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-	# SOFTWARE.
-	#
-	# Parts based on https://github.com/Cyan4973/xxHash
-	# xxHash Library - Copyright (c) 2012-2021 Yann Collet (BSD 2-clause)
+		var b: PackedByteArray = buffer.slice(0)
+		var len_buffer: int = len(buffer)
+		b.resize((len_buffer + 7) & (~7))
+		var b32: PackedInt32Array = b.to_int32_array()
+		var b64: PackedInt64Array = b.to_int64_array()
 
-	var b: PackedByteArray = buffer.slice(0)
-	var len_buffer: int = len(buffer)
-	b.resize((len_buffer + 7) & (~7))
-	var b32: PackedInt32Array = b.to_int32_array()
-	var b64: PackedInt64Array = b.to_int64_array()
+		const PRIME64_1 = -7046029288634856825
+		const PRIME64_2 = -4417276706812531889
+		const PRIME64_3 = 1609587929392839161
+		const PRIME64_4 = -8796714831421723037
+		const PRIME64_5 = 2870177450012600261
+		var acc: int = seed + PRIME64_5
+		var offset: int = 0
 
-	const PRIME64_1 = -7046029288634856825
-	const PRIME64_2 = -4417276706812531889
-	const PRIME64_3 = 1609587929392839161
-	const PRIME64_4 = -8796714831421723037
-	const PRIME64_5 = 2870177450012600261
-	var acc: int = seed + PRIME64_5
-	var offset: int = 0
-
-	if len_buffer >= 32:
-		var accN: PackedInt64Array = (
-			PackedInt64Array(
-				[
-					seed + PRIME64_1 + PRIME64_2,
-					seed + PRIME64_2,
-					seed + 0,
-					seed - PRIME64_1,
-				]
+		if len_buffer >= 32:
+			var accN: PackedInt64Array = (
+				PackedInt64Array(
+					[
+						seed + PRIME64_1 + PRIME64_2,
+						seed + PRIME64_2,
+						seed + 0,
+						seed - PRIME64_1,
+					]
+				)
+				. duplicate()
 			)
-			. duplicate()
-		)
-		var limit: int = len_buffer - 32
-		var lane: int = 0
-		offset = 0
-		while (offset & 0xffffffe0) <= limit:
-			accN[lane] += b64[offset / 8] * PRIME64_2
-			accN[lane] = ((accN[lane] << 31) | unsrs(accN[lane], 33)) * PRIME64_1
+			var limit: int = len_buffer - 32
+			var lane: int = 0
+			offset = 0
+			while (offset & 0xffffffe0) <= limit:
+				accN[lane] += b64[offset / 8] * PRIME64_2
+				accN[lane] = ((accN[lane] << 31) | unsrs(accN[lane], 33)) * PRIME64_1
+				offset += 8
+				lane = (lane + 1) & 3
+			acc = (((accN[0] << 1) | unsrs(accN[0], 63)) + ((accN[1] << 7) | unsrs(accN[1], 57)) + ((accN[2] << 12) | unsrs(accN[2], 52)) + ((accN[3] << 18) | unsrs(accN[3], 46)))
+			for i in range(4):
+				accN[i] = accN[i] * PRIME64_2
+				accN[i] = ((accN[i] << 31) | unsrs(accN[i], 33)) * PRIME64_1
+				acc = acc ^ accN[i]
+				acc = acc * PRIME64_1 + PRIME64_4
+
+		acc = acc + len_buffer
+		var limit = len_buffer - 8
+		while offset <= limit:
+			var k1: int = b64[offset / 8] * PRIME64_2
+			acc ^= ((k1 << 31) | unsrs(k1, 33)) * PRIME64_1
+			acc = ((acc << 27) | unsrs(acc, 37)) * PRIME64_1 + PRIME64_4
 			offset += 8
-			lane = (lane + 1) & 3
-		acc = (((accN[0] << 1) | unsrs(accN[0], 63)) + ((accN[1] << 7) | unsrs(accN[1], 57)) + ((accN[2] << 12) | unsrs(accN[2], 52)) + ((accN[3] << 18) | unsrs(accN[3], 46)))
-		for i in range(4):
-			accN[i] = accN[i] * PRIME64_2
-			accN[i] = ((accN[i] << 31) | unsrs(accN[i], 33)) * PRIME64_1
-			acc = acc ^ accN[i]
-			acc = acc * PRIME64_1 + PRIME64_4
 
-	acc = acc + len_buffer
-	var limit = len_buffer - 8
-	while offset <= limit:
-		var k1: int = b64[offset / 8] * PRIME64_2
-		acc ^= ((k1 << 31) | unsrs(k1, 33)) * PRIME64_1
-		acc = ((acc << 27) | unsrs(acc, 37)) * PRIME64_1 + PRIME64_4
-		offset += 8
+		limit = len_buffer - 4
+		if offset <= limit:
+			acc = acc ^ (b32[offset / 4] * PRIME64_1)
+			acc = ((acc << 23) | unsrs(acc, 41)) * PRIME64_2 + PRIME64_3
+			offset += 4
 
-	limit = len_buffer - 4
-	if offset <= limit:
-		acc = acc ^ (b32[offset / 4] * PRIME64_1)
-		acc = ((acc << 23) | unsrs(acc, 41)) * PRIME64_2 + PRIME64_3
-		offset += 4
+		while offset < len_buffer:
+			var lane: int = b[offset]
+			acc = acc ^ (lane * PRIME64_5)
+			acc = ((acc << 11) | unsrs(acc, 53)) * PRIME64_1
+			offset += 1
 
-	while offset < len_buffer:
-		var lane: int = b[offset]
-		acc = acc ^ (lane * PRIME64_5)
-		acc = ((acc << 11) | unsrs(acc, 53)) * PRIME64_1
-		offset += 1
+		acc = acc ^ unsrs(acc, 33)
+		acc = acc * PRIME64_2
+		acc = acc ^ unsrs(acc, 29)
+		acc = acc * PRIME64_3
+		acc = acc ^ unsrs(acc, 32)
+		return acc
 
-	acc = acc ^ unsrs(acc, 33)
-	acc = acc * PRIME64_2
-	acc = acc ^ unsrs(acc, 29)
-	acc = acc * PRIME64_3
-	acc = acc ^ unsrs(acc, 32)
-	return acc
-
-
-func test_xxHash64():
-	assert(xxHash64("a".to_ascii_buffer()) == 3104179880475896308)
-	assert(xxHash64("asdfghasdfghasdfghasdfghasdfghasdfghasdfghasdfghasdfghasdfghasdfghasdfgh".to_ascii_buffer()) == -3292477735350538661)
-	assert(xxHash64(PackedByteArray().duplicate()) == -1205034819632174695)
+	static func test_xxHash64():
+		assert(xxHash64("a".to_ascii_buffer()) == 3104179880475896308)
+		assert(xxHash64("asdfghasdfghasdfghasdfghasdfghasdfghasdfghasdfghasdfghasdfghasdfghasdfgh".to_ascii_buffer()) == -3292477735350538661)
+		assert(xxHash64(PackedByteArray().duplicate()) == -1205034819632174695)
