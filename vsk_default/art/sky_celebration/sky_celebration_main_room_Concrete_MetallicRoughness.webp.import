@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://qencymx816rg"
 path.s3tc="res://.godot/imported/sky_celebration_main_room_Concrete_MetallicRoughness.webp-b6f1965bbd890095fbf68e6dcd671d8d.s3tc.ctex"
+path.etc2="res://.godot/imported/sky_celebration_main_room_Concrete_MetallicRoughness.webp-b6f1965bbd890095fbf68e6dcd671d8d.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://vsk_default/art/sky_celebration/sky_celebration_main_room_Concrete_MetallicRoughness.webp"
-dest_files=["res://.godot/imported/sky_celebration_main_room_Concrete_MetallicRoughness.webp-b6f1965bbd890095fbf68e6dcd671d8d.s3tc.ctex"]
+dest_files=["res://.godot/imported/sky_celebration_main_room_Concrete_MetallicRoughness.webp-b6f1965bbd890095fbf68e6dcd671d8d.s3tc.ctex", "res://.godot/imported/sky_celebration_main_room_Concrete_MetallicRoughness.webp-b6f1965bbd890095fbf68e6dcd671d8d.etc2.ctex"]
 
 [params]
 
