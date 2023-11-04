@@ -5,7 +5,7 @@ on:
     branches:
       - main
     tags:
-      - '*'
+      - "*"
   pull_request:
 
 env:
@@ -291,17 +291,17 @@ jobs:
 
       - name: List files
         run: |
-          ls -R ${{ env.GAME_NAME }}windows{{ matrix.arch }}
-          ls -R ${{ env.GAME_NAME }}linux{{ matrix.arch }}
+          ls -R ${{ env.GAME_NAME }}windows${{ matrix.arch }}
+          ls -R ${{ env.GAME_NAME }}linux${{ matrix.arch }}
           ls -R linux-editor-deploy-windows-editor
           ls -R linux-editor-deploy-linux-editor
           ls -R macos-editor-deploy-macos-editor
         shell: bash
-        
+
       - name: Archive files
         run: |
-          zip -r ${{ env.GAME_NAME }}windows{{ matrix.arch }}.zip ${{ env.GAME_NAME }}windows${{ matrix.arch }}
-          zip -r ${{ env.GAME_NAME }}linux{{ matrix.arch }}.zip ${{ env.GAME_NAME }}linux{{ matrix.arch }}
+          zip -r ${{ env.GAME_NAME }}windows${{ matrix.arch }}.zip ${{ env.GAME_NAME }}windows${{ matrix.arch }}
+          zip -r ${{ env.GAME_NAME }}linux${{ matrix.arch }}.zip ${{ env.GAME_NAME }}linux${{ matrix.arch }}
           zip -r linux-editor-deploy-windows-editor.zip linux-editor-deploy-windows-editor
           zip -r linux-editor-deploy-linux-editor.zip linux-editor-deploy-linux-editor
           zip -r macos-editor-deploy-macos-editor.zip macos-editor-deploy-macos-editor
@@ -310,8 +310,8 @@ jobs:
         uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844 # v1
         with:
           files: |
-            ${{ env.GAME_NAME }}windows{{ matrix.arch }}.zip
-            ${{ env.GAME_NAME }}linux{{ matrix.arch }}.zip
+            ${{ env.GAME_NAME }}windows${{ matrix.arch }}.zip
+            ${{ env.GAME_NAME }}linux${{ matrix.arch }}.zip
             linux-editor-deploy-windows-editor.zip
             linux-editor-deploy-linux-editor.zip
             macos-editor-deploy-macos-editor.zip
