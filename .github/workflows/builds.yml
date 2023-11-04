@@ -69,25 +69,6 @@ jobs:
             arch: _x86_64
             deploy-platform-target: editor
 
-          - name: linux_editor_web_deploy
-            runs-on: ubuntu-22.04
-            cache-name: linux-editor-deploy-linux-editor
-            target: editor
-            tests: false
-            sconsflags: linker=gold precision=double use_llvm=yes
-            doc-test: false
-            bin: ./godot/bin/godot.linuxbsd.editor.double.x86_64.llvm
-            deploy-bin: ./godot/bin/godot.linuxbsd.editor.double.x86_64.llvm
-            editor-bin-name: godot.linuxbsd.editor.double.x86_64.llvm
-            proj-conv: false
-            artifact: true
-            platform: linuxbsd
-            deploy: true
-            deploy-platform: web
-            export-platform: Web
-            arch: _x86_64
-            deploy-platform-target: editor
-
           - name: macos_editor_macos_deploy
             runs-on: "macos-latest"
             cache-name: macos-editor-deploy-macos-editor
