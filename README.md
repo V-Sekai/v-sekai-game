@@ -1,7 +1,12 @@
 # V-Sekai
+
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+
 [![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors-)
+
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
+
+> :warning: **Caution**: We're using our own custom version of the Godot Engine for this project. Make sure you grab the right Godot Engine binary from our [Releases Section](https://github.com/V-Sekai/v-sekai-game/releases).
 
 ## How do I get involved?
 
