@@ -10,7 +10,7 @@ on:
 
 env:
   GAME_NAME: vsekai_game_
-  GODOT_REF: groups-4.2.2023-11-07T133450Z
+  GODOT_REF: groups-4.2.2023-11-21T032311Z 
   GODOT_REPOSITORY: v-sekai/godot
   SCONSFLAGS: verbose=yes warnings=extra werror=no module_text_server_fb_enabled=yes use_thinlto=yes
   DOTNET_NOLOGO: true
