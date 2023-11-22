@@ -535,6 +535,7 @@ config/use_threaded_received_server_state_func=true
 [rendering]
 
 textures/canvas_textures/default_texture_filter=2
+renderer/rendering_method="mobile"
 textures/vram_compression/import_etc2_astc=true
 lights_and_shadows/use_physical_light_units=true
 reflections/reflection_atlas/reflection_size=1024
