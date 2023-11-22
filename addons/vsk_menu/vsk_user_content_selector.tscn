@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://d0o3glckp482r"]
 
-[ext_resource type="Theme" uid="uid://bsqrhr15k2kar" path="res://addons/emote_theme/emote_theme.tres" id="1_l38pv"]
+[ext_resource type="Theme" uid="uid://b04ev0cbgpas" path="res://addons/emote_theme/emote_theme.tres" id="1_l38pv"]
 [ext_resource type="Script" path="res://addons/vsk_menu/vsk_user_content_selector.gd" id="2"]
 [ext_resource type="PackedScene" uid="uid://bwn0ka3su58we" path="res://addons/vsk_menu/vsk_user_content_sub_selector.tscn" id="2_ip71e"]
 

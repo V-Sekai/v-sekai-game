@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://addons/vsk_importer_exporter/vsk_uro_pipeline.gd" id="2_0sbw2"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_qqa8l"]
-size = Vector3(74, 0.1, 74)
+size = Vector3(40, 0.1, 40)
 subdivide_width = 1
 subdivide_height = 1
 subdivide_depth = 1
@@ -28,25 +28,8 @@ shadow_enabled = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, -2, -7)
 use_collision = true
 
-[node name="CSGMesh3D" type="CSGMesh3D" parent="CSGCombiner3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27, 0, -27)
-mesh = SubResource("BoxMesh_qqa8l")
-metadata/_edit_group_ = true
-
-[node name="CSGMesh3D2" type="CSGMesh3D" parent="CSGCombiner3D/CSGMesh3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 54)
-mesh = SubResource("BoxMesh_qqa8l")
-metadata/_edit_group_ = true
-metadata/_edit_lock_ = true
-
-[node name="CSGMesh3D3" type="CSGMesh3D" parent="CSGCombiner3D/CSGMesh3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -64, 0, 54)
-mesh = SubResource("BoxMesh_qqa8l")
-metadata/_edit_group_ = true
-metadata/_edit_lock_ = true
-
-[node name="CSGMesh3D4" type="CSGMesh3D" parent="CSGCombiner3D/CSGMesh3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -64, 0, 0)
+[node name="CSGMesh3D3" type="CSGMesh3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 0, 0)
 mesh = SubResource("BoxMesh_qqa8l")
 metadata/_edit_group_ = true
 metadata/_edit_lock_ = true

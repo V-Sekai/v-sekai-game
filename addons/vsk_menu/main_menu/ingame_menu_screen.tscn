@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://tt3cnvs3qqlq" path="res://addons/vsk_menu/vsk_large_button.tscn" id="1"]
 [ext_resource type="Theme" uid="uid://b04ev0cbgpas" path="res://addons/emote_theme/emote_theme.tres" id="1_isym3"]
 [ext_resource type="Script" path="res://addons/vsk_menu/title_screen.gd" id="2"]
-[ext_resource type="Texture2D" uid="uid://mwvsa6uo0xhh" path="res://vsk_default/icon/v_sekai_logo.png" id="3"]
+[ext_resource type="Texture2D" uid="uid://bfemdvayr8jju" path="res://vsk_default/icon/v_sekai_logo.png" id="3"]
 
 [node name="IngameMenuScreen" type="Control"]
 layout_mode = 3
