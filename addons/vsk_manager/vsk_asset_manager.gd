@@ -464,35 +464,36 @@ func get_project_settings() -> void:
 
 
 func apply_project_settings() -> void:
-	if !ProjectSettings.has_setting("assets/config/avatar_forbidden_path"):
-		ProjectSettings.set_setting("assets/config/avatar_forbidden_path", avatar_forbidden_path)
+	if Engine.is_editor_hint():
+		if !ProjectSettings.has_setting("assets/config/avatar_forbidden_path"):
+			ProjectSettings.set_setting("assets/config/avatar_forbidden_path", avatar_forbidden_path)
 
-	if !ProjectSettings.has_setting("assets/config/avatar_not_found_path"):
-		ProjectSettings.set_setting("assets/config/avatar_not_found_path", avatar_not_found_path)
+		if !ProjectSettings.has_setting("assets/config/avatar_not_found_path"):
+			ProjectSettings.set_setting("assets/config/avatar_not_found_path", avatar_not_found_path)
 
-	if !ProjectSettings.has_setting("assets/config/avatar_error_path"):
-		ProjectSettings.set_setting("assets/config/avatar_error_path", avatar_error_path)
+		if !ProjectSettings.has_setting("assets/config/avatar_error_path"):
+			ProjectSettings.set_setting("assets/config/avatar_error_path", avatar_error_path)
 
-	if !ProjectSettings.has_setting("assets/config/teapot_path"):
-		ProjectSettings.set_setting("assets/config/teapot_path", teapot_path)
+		if !ProjectSettings.has_setting("assets/config/teapot_path"):
+			ProjectSettings.set_setting("assets/config/teapot_path", teapot_path)
 
-	if !ProjectSettings.has_setting("assets/config/loading_avatar_path"):
-		ProjectSettings.set_setting("assets/config/loading_avatar_path", loading_avatar_path)
+		if !ProjectSettings.has_setting("assets/config/loading_avatar_path"):
+			ProjectSettings.set_setting("assets/config/loading_avatar_path", loading_avatar_path)
 
-	if !ProjectSettings.has_setting("assets/config/avatar_whitelist"):
-		ProjectSettings.set_setting("assets/config/avatar_whitelist", avatar_whitelist)
+		if !ProjectSettings.has_setting("assets/config/avatar_whitelist"):
+			ProjectSettings.set_setting("assets/config/avatar_whitelist", avatar_whitelist)
 
-	if !ProjectSettings.has_setting("assets/config/prop_whitelist"):
-		ProjectSettings.set_setting("assets/config/prop_whitelist", prop_whitelist)
+		if !ProjectSettings.has_setting("assets/config/prop_whitelist"):
+			ProjectSettings.set_setting("assets/config/prop_whitelist", prop_whitelist)
 
-	if !ProjectSettings.has_setting("assets/config/map_whitelist"):
-		ProjectSettings.set_setting("assets/config/map_whitelist", map_whitelist)
+		if !ProjectSettings.has_setting("assets/config/map_whitelist"):
+			ProjectSettings.set_setting("assets/config/map_whitelist", map_whitelist)
 
-	if !ProjectSettings.has_setting("assets/config/game_mode_whitelist"):
-		ProjectSettings.set_setting("assets/config/game_mode_whitelist", game_mode_whitelist)
+		if !ProjectSettings.has_setting("assets/config/game_mode_whitelist"):
+			ProjectSettings.set_setting("assets/config/game_mode_whitelist", game_mode_whitelist)
 
-	if ProjectSettings.save() != OK:
-		printerr("VSKAssetManager: could not save project settings!")
+		if ProjectSettings.save() != OK:
+			printerr("VSKAssetManager: could not save project settings!")
 
 
 func setup() -> void:

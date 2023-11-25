@@ -874,6 +874,7 @@ func _received_server_state(p_server_state: Dictionary) -> void:
 	if use_threaded_received_server_state_func and state_initialization_thread:
 		var callable: Callable = Callable(self, "_threaded_received_server_state_initialization_func")
 		callable = callable.bind({"server_state": p_server_state})
+		state_initialization_thread.set_thread_safety_checks_enabled(false)
 		if state_initialization_thread.start(callable) != OK:
 			_host_state_task_decrement()
 			printerr("Could not start 'state_initialization_thread'!")

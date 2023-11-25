@@ -50,11 +50,6 @@ func _ready() -> void:
 			print("Failed to connect size_changed signal")
 			return
 
-		var graphics_result = GraphicsManager.graphics_changed.connect(self.update_viewports)
-		if graphics_result != OK:
-			print("Failed to connect graphics_changed signal")
-			return
-
 		var xr_result = VRManager.xr_mode_changed.connect(self.update_viewports)
 		if xr_result != OK:
 			print("Failed to connect xr_mode_changed signal")
