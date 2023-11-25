@@ -661,29 +661,24 @@ func unregister_peer(p_id) -> void:
 
 
 func setup_project_settings() -> void:
-	var should_save: bool = false
+	if Engine.is_editor_hint():
+		if ProjectSettings.has_setting("network/config/network_fps"):
+			network_fps = ProjectSettings.get_setting("network/config/network_fps")
+		else:
+			ProjectSettings.set_setting("network/config/network_fps", network_fps)
 
-	if ProjectSettings.has_setting("network/config/network_fps"):
-		network_fps = ProjectSettings.get_setting("network/config/network_fps")
-	else:
-		ProjectSettings.set_setting("network/config/network_fps", network_fps)
-		should_save = true
+		if ProjectSettings.has_setting("network/config/entity_root_node"):
+			entity_root_node_path = NodePath(ProjectSettings.get_setting("network/config/entity_root_node"))
+		else:
+			ProjectSettings.set_setting("network/config/entity_root_node", entity_root_node_path)
 
-	if ProjectSettings.has_setting("network/config/entity_root_node"):
-		entity_root_node_path = NodePath(ProjectSettings.get_setting("network/config/entity_root_node"))
-	else:
-		ProjectSettings.set_setting("network/config/entity_root_node", entity_root_node_path)
-		should_save = true
+		if !ProjectSettings.has_setting("network/config/default_port"):
+			ProjectSettings.set_setting("network/config/default_port", default_port)
+		else:
+			default_port = ProjectSettings.get_setting("network/config/default_port")
 
-	if !ProjectSettings.has_setting("network/config/default_port"):
-		ProjectSettings.set_setting("network/config/default_port", default_port)
-	else:
-		default_port = ProjectSettings.get_setting("network/config/default_port")
-		should_save = true
-
-	if Engine.is_editor_hint() and should_save:
-		if ProjectSettings.save() != OK:
-			printerr("NetworkManager: Could not save project settings!")
+			if ProjectSettings.save() != OK:
+				printerr("NetworkManager: Could not save project settings!")
 
 
 func confirm_server_state_ready() -> void:

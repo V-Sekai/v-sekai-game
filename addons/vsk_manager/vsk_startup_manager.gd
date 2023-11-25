@@ -116,13 +116,11 @@ func parse_commandline_args() -> void:
 
 func apply_project_settings() -> void:
 	if Engine.is_editor_hint():
-		return
+		if !ProjectSettings.has_setting("network/config/default_autohost"):
+			ProjectSettings.set_setting("network/config/default_autohost", default_autohost)
 
-	if !ProjectSettings.has_setting("network/config/default_autohost"):
-		ProjectSettings.set_setting("network/config/default_autohost", default_autohost)
-
-	if ProjectSettings.save() != OK:
-		printerr("Could not save project settings!")
+		if ProjectSettings.save() != OK:
+			printerr("Could not save project settings!")
 
 
 func get_project_settings() -> void:
