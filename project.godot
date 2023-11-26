@@ -582,6 +582,7 @@ config/process_priority=255
 
 [xr]
 
+openxr/enabled=true
 openxr/default_action_map="res://vsk_default/core/openxr_action_map.tres"
 openxr/startup_alert=false
 shaders/enabled=true
