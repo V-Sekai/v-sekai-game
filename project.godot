@@ -129,6 +129,7 @@ window/vsync/vsync_mode.macos=1
 
 movie_writer/mjpeg_quality=1.0
 movie_writer/movie_file="../export.avi"
+run/main_run_args="--xr-mode off"
 import/use_multiple_threads=false
 run/main_run_args.macos="--xr-mode off"
 
@@ -534,7 +535,6 @@ config/use_threaded_received_server_state_func=true
 [rendering]
 
 textures/canvas_textures/default_texture_filter=2
-renderer/rendering_method="mobile"
 textures/vram_compression/import_etc2_astc=true
 lights_and_shadows/use_physical_light_units=true
 reflections/reflection_atlas/reflection_size=1024
@@ -583,6 +583,7 @@ config/process_priority=255
 
 [xr]
 
+openxr/enabled=true
 openxr/default_action_map="res://vsk_default/core/openxr_action_map.tres"
 openxr/startup_alert=false
 shaders/enabled=true
