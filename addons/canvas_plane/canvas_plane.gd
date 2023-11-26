@@ -182,7 +182,7 @@ func on_pointer_pressed(at: Vector3, p_doubleclick: bool):
 	# Let's mimic a mouse
 	mouse_mask = 1
 	var event = InputEventMouseButton.new()
-	event.set_button_index(1)
+	event.set_button_index(MOUSE_BUTTON_LEFT)
 	event.set_pressed(true)
 	event.set_global_position(local_at)
 	event.set_button_mask(mouse_mask)
@@ -199,7 +199,7 @@ func on_pointer_release(at: Vector3, p_doubleclick: bool):
 	# Let's mimic a mouse
 	mouse_mask = 0
 	var event = InputEventMouseButton.new()
-	event.set_button_index(1)
+	event.set_button_index(MOUSE_BUTTON_LEFT)
 	event.set_pressed(false)
 	event.set_global_position(local_at)
 	event.set_button_mask(mouse_mask)
