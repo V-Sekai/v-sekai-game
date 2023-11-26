@@ -1,12 +1,51 @@
-[gd_scene load_steps=3 format=3 uid="uid://dhpvk1qajtjsy"]
+[gd_scene load_steps=9 format=3 uid="uid://dhpvk1qajtjsy"]
 
 [ext_resource type="Script" path="res://addons/sar1_vr_manager/vr_origin.gd" id="1"]
-[ext_resource type="Environment" uid="uid://cp0t8jp2ellve" path="res://vsk_default/environments/default_env.tres" id="2_goiwr"]
+[ext_resource type="Script" path="res://addons/sar1_vr_manager/camera_mesh_plane.gd" id="2"]
+[ext_resource type="Script" path="res://addons/xr_vignette/vignette_controller.gd" id="7_imwy0"]
+
+[sub_resource type="PhysicalSkyMaterial" id="PhysicalSkyMaterial_snjxd"]
+
+[sub_resource type="Sky" id="Sky_5y4ol"]
+sky_material = SubResource("PhysicalSkyMaterial_snjxd")
+
+[sub_resource type="Environment" id="Environment_6yvef"]
+resource_local_to_scene = true
+background_mode = 2
+sky = SubResource("Sky_5y4ol")
+tonemap_mode = 3
+
+[sub_resource type="CameraAttributesPhysical" id="CameraAttributesPhysical_tuicf"]
+auto_exposure_enabled = true
+auto_exposure_speed = 0.6
+auto_exposure_min_exposure_value = 4.0
+auto_exposure_max_exposure_value = 12.0
+
+[sub_resource type="PlaneMesh" id="3"]
+size = Vector2(1, 1)
 
 [node name="ARVROrigin" type="XROrigin3D"]
+current = true
 script = ExtResource("1")
 
 [node name="ARVRCamera" type="XRCamera3D" parent="."]
-environment = ExtResource("2_goiwr")
-current = true
-fov = 70.4352
+transform = Transform3D(0.571315, 0, 0.820731, 0, 1, 0, -0.820731, 0, 0.571315, 0, 0, 0)
+environment = SubResource("Environment_6yvef")
+attributes = SubResource("CameraAttributesPhysical_tuicf")
+
+[node name="DebugPanel" type="MeshInstance3D" parent="ARVRCamera"]
+transform = Transform3D(240.027, 0, 0, 0, 1.46974e-14, -240.027, 0, 1, 6.12323e-17, 0, 0, -400.045)
+visible = false
+mesh = SubResource("3")
+script = ExtResource("2")
+distance = 0.1
+
+[node name="VignetteController" type="Node3D" parent="ARVRCamera"]
+process_priority = 1000000
+script = ExtResource("7_imwy0")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
