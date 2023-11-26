@@ -9,6 +9,8 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1")
 name_input_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/NameContainer/NameLineEdit")
 avatar_input_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/AvatarContainer/AvatarContainer/AvatarLineEdit")
@@ -78,7 +80,6 @@ size_flags_horizontal = 3
 [node name="AvatarLineEdit" type="LineEdit" parent="Panel/CenterContainer/Control/ButtonsContainer/AvatarContainer/AvatarContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-placeholder_text = "res://vsk_default/scenes/avatars/exported/xbot/xbot.scn"
 max_length = 512
 
 [node name="AvatarBrowseButton" type="Button" parent="Panel/CenterContainer/Control/ButtonsContainer/AvatarContainer/AvatarContainer"]

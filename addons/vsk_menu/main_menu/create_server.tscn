@@ -91,6 +91,7 @@ size_flags_horizontal = 3
 [node name="MapBrowseLineEdit" type="LineEdit" parent="Panel/CenterContainer/Control/MarginedButtonsContainer/ButtonsContainer/MapContainer/MapContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
+placeholder_text = "uro://4d7bbd4b-aba1-41cd-ab32-4be8211a8738"
 max_length = 1024
 
 [node name="MapBrowseButton" parent="Panel/CenterContainer/Control/MarginedButtonsContainer/ButtonsContainer/MapContainer/MapContainer2" instance=ExtResource("2")]
