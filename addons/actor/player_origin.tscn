@@ -1,9 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://dlshluheia2u4"]
+[gd_scene load_steps=5 format=3 uid="uid://dlshluheia2u4"]
 
 [ext_resource type="Script" path="res://addons/sar1_vr_manager/vr_origin.gd" id="1"]
 [ext_resource type="Script" path="res://addons/sar1_vr_manager/camera_mesh_plane.gd" id="2"]
-[ext_resource type="Environment" uid="uid://cp0t8jp2ellve" path="res://vsk_default/environments/default_env.tres" id="2_4cjpt"]
-[ext_resource type="CameraAttributesPhysical" uid="uid://4lj277x5ouf4" path="res://addons/actor/physical_camera_attributes.tres" id="3_kd4o2"]
 [ext_resource type="Script" path="res://addons/xr_vignette/vignette_controller.gd" id="7_imwy0"]
 
 [sub_resource type="PlaneMesh" id="3"]
@@ -15,11 +13,9 @@ script = ExtResource("1")
 
 [node name="ARVRCamera" type="XRCamera3D" parent="."]
 transform = Transform3D(0.571315, 0, 0.820731, 0, 1, 0, -0.820731, 0, 0.571315, 0, 0, 0)
-environment = ExtResource("2_4cjpt")
-attributes = ExtResource("3_kd4o2")
 
 [node name="DebugPanel" type="MeshInstance3D" parent="ARVRCamera"]
-transform = Transform3D(1202.16, 0, 0, 0, 7.36111e-14, -1202.16, 0, 1, 6.12323e-17, 0, 0, -50.09)
+transform = Transform3D(1202.16, 0, 0, 0, 7.36086e-14, -1202.16, 0, 1, 6.12303e-17, 0, 0, -50.09)
 visible = false
 mesh = SubResource("3")
 script = ExtResource("2")
