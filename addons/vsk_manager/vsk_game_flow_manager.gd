@@ -22,7 +22,28 @@ var connection_util_const = preload("res://addons/gd_util/connection_util.gd")
 ## to this singleton.
 ##
 
-var signal_table: Array = [{"singleton": "VSKGameFlowManager", "signal": "gameflow_state_changed", "method": "_gameflow_state_changed"}, {"singleton": "VSKNetworkManager", "signal": "session_ready", "method": "_session_ready"}, {"singleton": "VSKNetworkManager", "signal": "server_disconnected", "method": "_server_disconnected"}, {"singleton": "VSKNetworkManager", "signal": "connection_killed", "method": "_connection_killed"}, {"singleton": "VSKMapManager", "signal": "map_load_callback", "method": "_map_load_callback"}, {"singleton": "VSKNetworkManager", "signal": "network_callback", "method": "_network_callback"}, {"singleton": "BackgroundLoader", "signal": "thread_started", "method": "quit_callback_increment"}, {"singleton": "BackgroundLoader", "signal": "thread_ended", "method": "quit_callback_decrement"}, {"singleton": "ScreenshotManager", "signal": "screenshot_requested", "method": "_screenshot_requested"}, {"singleton": "SpatialGameViewportManager", "signal": "viewport_updated", "method": "_spatial_game_viewport_updated"}]
+var signal_table: Array = [
+	{"singleton": "VSKGameFlowManager", "signal": "gameflow_state_changed", "method": "_gameflow_state_changed"},
+	
+	{"singleton": "VSKNetworkManager", "signal": "session_ready", "method": "_session_ready"},
+	{"singleton": "VSKNetworkManager", "signal": "server_disconnected", "method": "_server_disconnected"},
+	{"singleton": "VSKNetworkManager", "signal": "connection_killed", "method": "_connection_killed"},
+	{"singleton": "VSKNetworkManager", "signal": "network_callback", "method": "_network_callback"},
+	
+	{"singleton": "VSKMultiplayerManager", "signal": "session_ready", "method": "_session_ready"},
+	{"singleton": "VSKMultiplayerManager", "signal": "server_disconnected", "method": "_server_disconnected"},
+	{"singleton": "VSKMultiplayerManager", "signal": "connection_killed", "method": "_connection_killed"},
+	{"singleton": "VSKMultiplayerManager", "signal": "multiplayer_callback", "method": "_multiplayer_callback"},
+	
+	{"singleton": "VSKMapManager", "signal": "map_load_callback", "method": "_map_load_callback"},
+	
+	{"singleton": "BackgroundLoader", "signal": "thread_started", "method": "quit_callback_increment"},
+	{"singleton": "BackgroundLoader", "signal": "thread_ended", "method": "quit_callback_decrement"},
+	
+	{"singleton": "ScreenshotManager", "signal": "screenshot_requested", "method": "_screenshot_requested"},
+	
+	{"singleton": "SpatialGameViewportManager", "signal": "viewport_updated", "method": "_spatial_game_viewport_updated"}
+]
 
 ##
 ## Is responsible for recording IK as motion capture data
@@ -225,7 +246,10 @@ func go_to_preloading() -> void:
 		return
 
 	set_gameflow_state(GAMEFLOW_STATE_PRELOADING)
-	VSKNetworkManager.force_disconnect()
+	if VSKMultiplayerManager.use_multiplayer_manager:
+		VSKMultiplayerManager.force_disconnect()
+	else:
+		VSKNetworkManager.force_disconnect()
 
 
 ##
@@ -252,7 +276,10 @@ func go_to_title(p_fade_skipped: bool) -> void:
 
 	set_gameflow_state(GAMEFLOW_STATE_TITLE)
 
-	VSKNetworkManager.force_disconnect()
+	if VSKMultiplayerManager.use_multiplayer_manager:
+		VSKMultiplayerManager.force_disconnect()
+	else:
+		VSKNetworkManager.force_disconnect()
 
 	if autoquit:
 		request_quit()
@@ -275,7 +302,10 @@ func go_to_interstitial_screen() -> void:
 
 	set_gameflow_state(GAMEFLOW_STATE_INTERSTITIAL)
 
-	VSKNetworkManager.force_disconnect()
+	if VSKMultiplayerManager.use_multiplayer_manager:
+		VSKMultiplayerManager.force_disconnect()
+	else:
+		VSKNetworkManager.force_disconnect()
 
 	if !skipped:
 		skipped = await VSKFadeManager.execute_fade(true).fade_complete
@@ -359,6 +389,44 @@ func _network_callback(p_callback: int, p_callback_dictionary: Dictionary) -> vo
 
 	if return_to_title:
 		await go_to_title(false)
+		
+##
+## Callback function to the VSKMultiplayerManager to when a multiplayer request
+## has completed. p_callback indicates the result.
+##
+func _multiplayer_callback(
+	p_callback: VSKMultiplayerManager.MultiplayerCallbackID,
+	p_callback_dictionary: Dictionary) -> void:
+		
+	if quit_flag:
+		return
+
+	var return_to_title: bool = false
+
+	match p_callback:
+		VSKMultiplayerManager.MultiplayerCallbackID.HOST_GAME_OKAY:
+			server_hosted.emit()
+		VSKMultiplayerManager.MultiplayerCallbackID.HOST_GAME_FAILED:
+			set_callback_state(CALLBACK_STATE_HOST_GAME_FAILED, p_callback_dictionary)
+			return_to_title = true
+		VSKMultiplayerManager.MultiplayerCallbackID.SHARD_REGISTRATION_FAILED:
+			set_callback_state(CALLBACK_STATE_SHARD_REGISTRATION_FAILED, p_callback_dictionary)
+			return_to_title = true
+		VSKMultiplayerManager.MultiplayerCallbackID.INVALID_MAP:
+			set_callback_state(CALLBACK_STATE_INVALID_MAP, p_callback_dictionary)
+			return_to_title = true
+		VSKMultiplayerManager.MultiplayerCallbackID.NO_SERVER_INFO:
+			set_callback_state(CALLBACK_STATE_NO_SERVER_INFO, p_callback_dictionary)
+			return_to_title = true
+		VSKMultiplayerManager.MultiplayerCallbackID.NO_SERVER_INFO_VERSION:
+			set_callback_state(CALLBACK_STATE_NO_SERVER_INFO_VERSION, p_callback_dictionary)
+			return_to_title = true
+		VSKMultiplayerManager.MultiplayerCallbackID.SERVER_INFO_VERSION_MISMATCH:
+			set_callback_state(CALLBACK_STATE_SERVER_INFO_VERSION_MISMATCH, p_callback_dictionary)
+			return_to_title = true
+
+	if return_to_title:
+		await go_to_title(false)
 
 
 ##
@@ -404,9 +472,15 @@ func _process_multiplayer_request() -> void:
 	if gameflow_state == GAMEFLOW_STATE_INTERSTITIAL:
 		if multiplayer_request:
 			if multiplayer_request is MultiplayerRequestHost:
-				await (VSKNetworkManager.host_game(multiplayer_request.server_name, multiplayer_request.map_path, multiplayer_request.game_mode_path, multiplayer_request.port, multiplayer_request.max_players, multiplayer_request.dedicated_server, multiplayer_request.advertise_server, multiplayer_request.max_retries))
+				if VSKMultiplayerManager.use_multiplayer_manager:
+					await (VSKMultiplayerManager.host_game(multiplayer_request.server_name, multiplayer_request.map_path, multiplayer_request.game_mode_path, multiplayer_request.port, multiplayer_request.max_players, multiplayer_request.dedicated_server, multiplayer_request.advertise_server, multiplayer_request.max_retries))
+				else:
+					await (VSKNetworkManager.host_game(multiplayer_request.server_name, multiplayer_request.map_path, multiplayer_request.game_mode_path, multiplayer_request.port, multiplayer_request.max_players, multiplayer_request.dedicated_server, multiplayer_request.advertise_server, multiplayer_request.max_retries))
 			elif multiplayer_request is MultiplayerRequestJoin:
-				VSKNetworkManager.join_game(multiplayer_request.ip, multiplayer_request.port)
+				if VSKMultiplayerManager.use_multiplayer_manager:
+					VSKMultiplayerManager.join_game(multiplayer_request.ip, multiplayer_request.port)
+				else:
+					VSKNetworkManager.join_game(multiplayer_request.ip, multiplayer_request.port)
 
 
 ##
@@ -604,6 +678,7 @@ func _setup_entity_manager() -> void:
 func _assign_gameroots() -> void:
 	VSKMapManager.gameroot = gameroot
 	VSKNetworkManager.gameroot = gameroot
+	VSKMultiplayerManager.setup_multiplayer(gameroot)
 	NetworkManager.gameroot = gameroot
 
 

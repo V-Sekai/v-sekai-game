@@ -39,7 +39,7 @@ func _ready():
 	port_input.value = float(ProjectSettings.get_setting("network/config/default_port"))
 
 	if server_name_line_edit:
-		server_name_line_edit.text = VSKNetworkManager.DEFAULT_SERVER_NAME
+		server_name_line_edit.text = VSKMultiplayerManager.DEFAULT_SERVER_NAME
 
 	if $MapSelectorPopup.path_selected.connect(self._map_path_selected) != OK:
 		push_error("Failed to connect path_selected signal.")
@@ -90,7 +90,7 @@ func _on_HostButton_pressed() -> void:
 	else:
 		next_map_path = map_browse_line_edit.text
 
-	host_server_callable.call_deferred(server_name_line_edit.text, next_map_path, next_game_mode_path, int(port_input.value), int(max_players_input.value), dedicated_server_toggle.button_pressed, public_server_toggle.button_pressed, VSKNetworkManager.DEFAULT_MAX_RETRIES)
+	host_server_callable.call_deferred(server_name_line_edit.text, next_map_path, next_game_mode_path, int(port_input.value), int(max_players_input.value), dedicated_server_toggle.button_pressed, public_server_toggle.button_pressed, VSKMultiplayerManager.DEFAULT_MAX_RETRIES)
 
 
 func _on_BackButton_pressed():

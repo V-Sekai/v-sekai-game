@@ -210,7 +210,13 @@ func get_ticks_since_recording_started() -> int:
 
 
 func _ingame_started():
-	if godot_speech and !VSKNetworkManager.is_dedicated_server():
+	var is_dedicated_server: bool = false
+	if VSKMultiplayerManager.use_multiplayer_manager:
+		is_dedicated_server = VSKMultiplayerManager.is_dedicated_server()
+	else:
+		is_dedicated_server = VSKNetworkManager.is_dedicated_server()
+	
+	if godot_speech and !is_dedicated_server:
 		godot_speech.start_recording()
 
 		voice_recording_started = true

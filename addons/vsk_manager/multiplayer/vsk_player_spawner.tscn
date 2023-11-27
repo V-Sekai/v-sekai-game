@@ -1,0 +1,4 @@
+[gd_scene format=3 uid="uid://dtkrqvgn3nw1j"]
+
+[node name="PlayerSpawner" type="MultiplayerSpawner"]
+_spawnable_scenes = PackedStringArray("res://addons/vsk_entities/vsk_player_v2.tscn")

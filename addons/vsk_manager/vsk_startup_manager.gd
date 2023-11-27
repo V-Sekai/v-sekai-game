@@ -10,18 +10,17 @@ const vsk_version_const = preload("res://addons/vsk_version/vsk_version.gd")
 const commandline_arguments_const = preload("commandline_arguments.gd")
 
 var default_autohost = false
-var managers_requiring_preloading = []
 
 var is_dedicated = false
 var is_public = false
 var map = ""
 var game_mode = ""
 
-var server_name = VSKNetworkManager.DEFAULT_SERVER_NAME
+var server_name = VSKMultiplayerManager.DEFAULT_SERVER_NAME
 var ip = ""
 var port = -1
-var max_players = VSKNetworkManager.DEFAULT_MAX_PLAYERS
-var max_retries = VSKNetworkManager.DEFAULT_MAX_RETRIES
+var max_players = VSKMultiplayerManager.DEFAULT_MAX_PLAYERS
+var max_retries = VSKMultiplayerManager.DEFAULT_MAX_RETRIES
 var test_audio = ""
 var display_name_override = ""
 
@@ -43,7 +42,7 @@ func _startup_complete() -> void:
 
 
 func setup_vsk_singletons() -> void:
-	for singleton in [VSKUserPreferencesManager, VSKDebugManager, VSKGameFlowManager, VSKMenuManager, VSKNetworkManager, VSKMapManager, VSKPlayerManager, VSKAssetManager, VSKExporter, VSKImporter, VSKAudioManager, VSKAvatarManager, VSKServiceManager, VSKShardManager, VSKPreloadManager, VSKFadeManager, VSKResourceManager, VSKCreditsManager, VSKAccountManager]:
+	for singleton in [VSKUserPreferencesManager, VSKDebugManager, VSKGameFlowManager, VSKMenuManager, VSKNetworkManager, VSKMapManager, VSKMultiplayerManager, VSKPlayerManager, VSKAssetManager, VSKExporter, VSKImporter, VSKAudioManager, VSKAvatarManager, VSKServiceManager, VSKShardManager, VSKPreloadManager, VSKFadeManager, VSKResourceManager, VSKCreditsManager, VSKAccountManager]:
 		singleton.setup()
 
 	if !display_name_override.is_empty():
@@ -137,5 +136,3 @@ func _init():
 		return
 
 	parse_commandline_args()
-
-	managers_requiring_preloading = [VSKMenuManager, VSKNetworkManager]

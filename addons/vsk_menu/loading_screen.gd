@@ -96,23 +96,26 @@ func will_appear() -> void:
 	if VSKMapManager.map_download_started.connect(self._map_download_started) != OK:
 		printerr("Could not connect map_download_started!")
 
-	if VSKNetworkManager.registering_shard.connect(self._registering_shard) != OK:
-		printerr("Could not connect registering_shard!")
+	if VSKMultiplayerManager.use_multiplayer_manager:
+		if VSKMultiplayerManager.registering_shard.connect(self._registering_shard) != OK:
+			printerr("Could not connect registering_shard!")
+	else:
+		if VSKNetworkManager.registering_shard.connect(self._registering_shard) != OK:
+			printerr("Could not connect registering_shard!")
+		if VSKNetworkManager.requesting_server_info.connect(self._requesting_server_info) != OK:
+			printerr("Could not connect requesting_server_info")
 
-	if VSKNetworkManager.requesting_server_info.connect(self._requesting_server_info) != OK:
-		printerr("Could not connect requesting_server_info")
+		if VSKNetworkManager.requesting_server_state.connect(self._requesting_server_state) != OK:
+			printerr("Could not connect requesting_server_state")
 
-	if VSKNetworkManager.requesting_server_state.connect(self._requesting_server_state) != OK:
-		printerr("Could not connect requesting_server_state")
+		if VSKNetworkManager.host_creating_server_info.connect(self._host_creating_server_info) != OK:
+			printerr("Could not connect host_creating_server_info")
 
-	if VSKNetworkManager.host_creating_server_info.connect(self._host_creating_server_info) != OK:
-		printerr("Could not connect host_creating_server_info")
+		if VSKNetworkManager.host_creating_server_state.connect(self._host_creating_server_state) != OK:
+			printerr("Could not connect host_creating_server_state")
 
-	if VSKNetworkManager.host_creating_server_state.connect(self._host_creating_server_state) != OK:
-		printerr("Could not connect host_creating_server_state")
-
-	if VSKNetworkManager.server_state_ready.connect(self._server_state_ready) != OK:
-		printerr("Could not connect server_state_ready")
+		if VSKNetworkManager.server_state_ready.connect(self._server_state_ready) != OK:
+			printerr("Could not connect server_state_ready")
 
 
 func will_disappear() -> void:

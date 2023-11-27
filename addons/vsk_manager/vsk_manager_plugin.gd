@@ -23,6 +23,7 @@ var singleton_table = [
 	{"singleton_name": "VSKGameModeManager", "singleton_path": "res://addons/vsk_manager/vsk_game_mode_manager.gd"},
 	{"singleton_name": "VSKMenuManager", "singleton_path": "res://addons/vsk_manager/vsk_menu_manager.gd"},
 	{"singleton_name": "VSKNetworkManager", "singleton_path": "res://addons/vsk_manager/vsk_network_manager.gd"},
+	{"singleton_name": "VSKMultiplayerManager", "singleton_path": "res://addons/vsk_manager/vsk_multiplayer_manager.gd"},
 	{"singleton_name": "VSKGameFlowManager", "singleton_path": "res://addons/vsk_manager/vsk_game_flow_manager.gd"},
 	{"singleton_name": "VSKFadeManager", "singleton_path": "res://addons/vsk_manager/vsk_fade_manager.gd"},
 	{"singleton_name": "VSKAudioManager", "singleton_path": "res://addons/vsk_manager/vsk_audio_manager.gd"},
