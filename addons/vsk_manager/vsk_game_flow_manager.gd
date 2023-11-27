@@ -645,8 +645,6 @@ func _input(p_event: InputEvent) -> void:
 
 	if p_event.is_action_released("ui_cancel") and gameflow_state == GAMEFLOW_STATE_INGAME:
 		await go_to_title(false)
-	elif p_event.is_action_released("ui_cancel") and gameflow_state == GAMEFLOW_STATE_TITLE:
-		await go_to_title(false)
 
 	# Send input events to game viewport
 	if game_viewport:
