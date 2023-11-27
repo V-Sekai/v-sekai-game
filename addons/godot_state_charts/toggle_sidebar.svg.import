@@ -2,18 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://chb8tq62aj2b2"
-path="res://.godot/imported/transition.svg-20a1a52a85a71c731b2386952d47b2f7.ctex"
+uid="uid://vga3avpb4gyh"
+path="res://.godot/imported/toggle_sidebar.svg-99e4fe22fa516ab6214c0533adb07ec0.ctex"
 metadata={
-"editor_scale": 2.0,
-"has_editor_variant": true,
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/godot_state_charts/transition.svg"
-dest_files=["res://.godot/imported/transition.svg-20a1a52a85a71c731b2386952d47b2f7.ctex"]
+source_file="res://addons/godot_state_charts/toggle_sidebar.svg"
+dest_files=["res://.godot/imported/toggle_sidebar.svg-99e4fe22fa516ab6214c0533adb07ec0.ctex"]
 
 [params]
 
@@ -34,6 +32,6 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=0.5
-editor/scale_with_editor_scale=true
+svg/scale=1.0
+editor/scale_with_editor_scale=false
 editor/convert_colors_with_editor_theme=false

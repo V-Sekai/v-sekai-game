@@ -5,6 +5,12 @@
 class_name CompoundState
 extends State
 
+## Called when a child state is entered.
+signal child_state_entered
+
+## Called when a child state is exited.
+signal child_state_exited
+
 ## The initial state which should be activated when this state is activated.
 @export_node_path("State") var initial_state: NodePath:
 	get:
@@ -41,6 +47,8 @@ func _state_init():
 		if child is State:
 			var child_as_state: State = child as State
 			child_as_state._state_init()
+			child_as_state.state_entered.connect(func(): child_state_entered.emit())
+			child_as_state.state_exited.connect(func(): child_state_exited.emit())
 
 
 func _state_enter(expect_transition: bool = false):
@@ -52,6 +60,12 @@ func _state_enter(expect_transition: bool = false):
 			_active_state._state_enter()
 		else:
 			push_error("No initial state set for state '" + name + "'.")
+
+
+func _state_step():
+	super._state_step()
+	if _active_state != null:
+		_active_state._state_step()
 
 
 func _state_save(saved_state: SavedState, child_levels: int = -1):
