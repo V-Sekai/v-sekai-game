@@ -78,24 +78,12 @@ var shard_heartbeat_frequency: float = 10.0  # In seconds
 ##
 func _heartbeat_timer_timout() -> void:
 	if is_session_alive():
-		VSKShardManager.call_deferred("shard_heartbeat", shard_id)
-		# FIXME: Bug because signal returns wrong type
-		var shard_callback = await VSKShardManager.shard_heartbeat_callback
-		if shard_callback["result"] == OK:
+		var shard_response: Dictionary = await VSKShardManager.shard_heartbeat(shard_id)
+		if shard_response["result"] == OK:
 			if is_session_alive() and advertised_server:
 				shard_heartbeat_timer.start(shard_heartbeat_frequency)
 		else:
 			printerr("Shard heartbeat failed!")
-
-
-var shard_create_callback: RefCounted = RefCounted.new()
-var shard_delete_callback: RefCounted = RefCounted.new()
-
-
-func refresh_shard_callbacks():
-	shard_create_callback = RefCounted.new()
-	shard_delete_callback = RefCounted.new()
-
 
 # ID assigned from central shard master server
 var shard_id: String = ""
@@ -106,7 +94,6 @@ var host_state_tasks: int = 0
 
 # Flag to tell threads that the network session should be killed
 var kill_flag: bool = false
-
 
 func _host_state_task_increment() -> void:
 	host_state_tasks += 1
@@ -206,8 +193,11 @@ func attempt_to_kill_shard() -> void:
 
 		shard_id = ""
 
-		refresh_shard_callbacks()
-		await VSKShardManager.delete_shard(shard_delete_callback, shard_id_pending_deletion)
+		var shard_response: Dictionary = await VSKShardManager.delete_shard(Callable(), shard_id_pending_deletion)
+		if shard_response["result"] == OK:
+			print("Shard %s deleted sucessfully!" % shard_id_pending_deletion)
+		else:
+			print("Shard %s failed to delete!" % shard_id_pending_deletion)
 
 
 ##
@@ -519,19 +509,15 @@ func host_game(p_server_name: String, p_map_path: String, p_game_mode_path: Stri
 	print("VSKNetworkManager: TODO: add support for game mode path %s" % p_game_mode_path)
 
 	if NetworkManager.host_game(p_port, p_max_players, p_dedicated_server, false, p_retry_count):
-		var shard_callback: Dictionary = {"result": OK, "data": {}}
+		var shard_response: Dictionary = {"result": OK, "data": {}}
 		if advertised_server:
 			registering_shard.emit()
-			refresh_shard_callbacks()
-			VSKShardManager.call_deferred("create_shard", shard_create_callback, p_port, p_map_path, p_server_name, 0 if p_dedicated_server else 1, p_max_players)
-			# FIXME: Godot bug with signal return type.
-			var tmp = await VSKShardManager.shard_create_callback
-			shard_callback = tmp
+			shard_response = await VSKShardManager.create_shard(Callable(), p_port, p_map_path, p_server_name, 0 if p_dedicated_server else 1, p_max_players)
 
 		shard_id = ""
-		if shard_callback["result"] == OK:
-			if shard_callback["data"].has("id"):
-				shard_id = shard_callback["data"]["id"]
+		if shard_response["result"] == OK:
+			if shard_response["data"].has("id"):
+				shard_id = shard_response["data"]["id"]
 			shard_port = p_port
 			if is_session_alive():
 				NetworkManager.session_master = NetworkManager.network_constants_const.SERVER_MASTER_PEER_ID
@@ -901,10 +887,8 @@ func _connection_failed() -> void:
 ##
 func _peer_list_changed() -> void:
 	if NetworkManager.is_server() and advertised_server:
-		VSKShardManager.call_deferred("shard_update_player_count", shard_id, NetworkManager.get_peer_count(true))
-
-		var shard_callback = await VSKShardManager.shard_update_player_count_callback
-		if shard_callback["result"] == OK:
+		var shard_response = await VSKShardManager.shard_update_player_count(Callable(), shard_id, NetworkManager.get_peer_count(true))
+		if shard_response["result"] == OK:
 			if is_session_alive() and advertised_server:
 				shard_heartbeat_timer.start(shard_heartbeat_frequency)
 		else:
