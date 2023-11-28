@@ -150,11 +150,12 @@ var signal_table: Array = [
 	{"singleton": "NetworkManager", "signal": "session_data_reset", "method": "_session_data_reset"},
 	{"singleton": "NetworkManager", "signal": "connection_killed", "method": "_connection_killed"},
 	{"singleton": "NetworkManager", "signal": "peer_became_active", "method": "_peer_became_active"},
+	{"singleton": "NetworkManager", "signal": "requesting_server_info", "method": "_requesting_server_info"},
+	{"singleton": "NetworkManager", "signal": "requesting_server_state", "method": "_requesting_server_state"},
+	
 	{"singleton": "VSKGameFlowManager", "signal": "is_quitting", "method": "_is_quitting"},
 	{"singleton": "VSKGameFlowManager", "signal": "map_loaded", "method": "_map_loaded"},
 	{"singleton": "VSKGameFlowManager", "signal": "server_hosted", "method": "_server_hosted"},
-	{"singleton": "NetworkManager", "signal": "requesting_server_info", "method": "_requesting_server_info"},
-	{"singleton": "NetworkManager", "signal": "requesting_server_state", "method": "_requesting_server_state"},
 ]
 
 signal network_callback(p_result, p_args)
@@ -455,6 +456,9 @@ func clear_all_player_avatar_paths() -> void:
 ## Callback function for when a map has been loaded.
 ##
 func _map_loaded() -> void:
+	if VSKMultiplayerManager.use_multiplayer_manager:
+		return
+	
 	print("_map_loaded")
 
 	if NetworkManager.get_current_peer_id() == NetworkManager.network_constants_const.SERVER_MASTER_PEER_ID:
@@ -484,6 +488,9 @@ func _requesting_server_state() -> void:
 ## Callback from the gameflow manager that the server has been successfully hosted
 ##
 func _server_hosted() -> void:
+	if VSKMultiplayerManager.use_multiplayer_manager:
+		return
+	
 	if advertised_server:
 		shard_heartbeat_timer.start(shard_heartbeat_frequency)
 	NetworkManager.send_create_server_info()
@@ -559,7 +566,7 @@ func _host_setup_map(p_instances: Dictionary, p_fade_skipped: bool) -> void:
 		network_callback.emit(INVALID_MAP, {})
 		return
 
-	VSKMapManager._set_current_map_unsafe(p_instances["map"])
+	VSKMapManager.set_current_map(p_instances["map"])
 	var players: Array = p_instances["players"]
 	var spawn_nodes = node_util_const.find_nodes_in_group(NETWORK_SPAWNER_GROUP_NAME, p_instances["map"])
 	for player_instance in players:
@@ -595,7 +602,7 @@ func _host_state_complete(p_instances: Dictionary) -> void:
 ##
 func _host_state_instance() -> Dictionary:
 	var instanced_nodes: Dictionary = {}
-	var map_instance: Node = VSKMapManager.instance_map(false)
+	var map_instance: Node = await VSKMapManager.instance_map(false)
 
 	var new_player_instances: Array = []
 	if map_instance and map_instance is vsk_map_definition_runtime_const:
@@ -635,7 +642,7 @@ func _threaded_host_state_initialization_complete() -> void:
 func _threaded_host_state_initialization_func() -> Dictionary:
 	print("_threaded_host_state_initialization_func")
 
-	var instanced_nodes: Dictionary = _host_state_instance()
+	var instanced_nodes: Dictionary = await _host_state_instance()
 
 	call_deferred("_threaded_host_state_initialization_complete")
 	return instanced_nodes
@@ -644,7 +651,7 @@ func _threaded_host_state_initialization_func() -> Dictionary:
 func _unthreaded_host_state_initialization_func() -> void:
 	print("_unthreaded_host_state_initialization_func")
 
-	var instanced_nodes: Dictionary = _host_state_instance()
+	var instanced_nodes: Dictionary = await _host_state_instance()
 	await get_tree().process_frame
 	_host_state_complete(instanced_nodes)
 
@@ -819,7 +826,7 @@ func _threaded_client_state_initialization_complete() -> void:
 
 
 func _client_instance_map_func() -> Node:
-	var instantiate: Node = VSKMapManager.instance_map(true)
+	var instantiate: Node = await VSKMapManager.instance_map(true)
 	if instantiate:
 		VSKMapManager.set_current_map(instantiate)
 
@@ -828,7 +835,7 @@ func _client_instance_map_func() -> Node:
 
 func _threaded_received_server_state_initialization_func(p_userdata) -> Node:
 	var server_state: Dictionary = p_userdata.server_state
-	var instantiate: Node = _client_instance_map_func()
+	var instantiate: Node = await _client_instance_map_func()
 
 	print("Decoding server state init buffer...")
 	NetworkManager.decode_buffer(NetworkManager.network_constants_const.SERVER_MASTER_PEER_ID, server_state["entity_state"])
@@ -841,7 +848,7 @@ func _threaded_received_server_state_initialization_func(p_userdata) -> Node:
 
 func _unthreaded_received_server_state_initialization_func(p_server_state: Dictionary) -> void:
 	var server_state: Dictionary = p_server_state
-	var instantiate: Node = _client_instance_map_func()
+	var instantiate: Node = await _client_instance_map_func()
 
 	print("Decoding server state init buffer...")
 	NetworkManager.decode_buffer(NetworkManager.network_constants_const.SERVER_MASTER_PEER_ID, server_state["entity_state"])
@@ -1006,6 +1013,9 @@ func _server_disconnected() -> void:
 ## Callback function for when the application is about to close.
 ##
 func _is_quitting() -> void:
+	if VSKMultiplayerManager.use_multiplayer_manager:
+		return
+	
 	force_disconnect()
 
 

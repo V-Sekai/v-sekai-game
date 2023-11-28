@@ -336,7 +336,7 @@ func _spawn_player(p_id: int) -> void:
 ## _current_map_instance variable.
 ##
 func _instantiate_and_cache_map_task() -> void:
-	var map_instance: Node = VSKMapManager.instance_map(false)
+	var map_instance: Node = await VSKMapManager.instance_map(false)
 	_current_map_instance = map_instance
 
 ##
@@ -344,13 +344,14 @@ func _instantiate_and_cache_map_task() -> void:
 ##
 func _spawn_map() -> void:
 	# TODO - revise VSKMapManager to have better interface.
-	var _instantiate_and_cache_map_task_id : int = WorkerThreadPool.add_task(
+	var _instantiate_and_cache_map_task_id: int = await WorkerThreadPool.add_task(
 		_instantiate_and_cache_map_task,
 		true,
 		"_instantiate_and_cache_map_task")
-		
-	await WorkerThreadPool.wait_for_task_completion(_instantiate_and_cache_map_task_id)
-	VSKMapManager._set_current_map_unsafe(_current_map_instance)
+	
+	var task_result: Error = await WorkerThreadPool.wait_for_task_completion(_instantiate_and_cache_map_task_id)
+	if task_result == OK:
+		VSKMapManager.set_current_map(_current_map_instance)
 
 ############################
 ### VSKGameflow Callbacks ##

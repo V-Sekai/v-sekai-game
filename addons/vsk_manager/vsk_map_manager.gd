@@ -98,11 +98,11 @@ func _unload_current_map_unsafe() -> void:
 
 
 func unload_current_map() -> void:
-	call_deferred("_unload_current_map_unsafe")
+	call_thread_safe("_unload_current_map_unsafe")
 
 
 func set_current_map(p_map_instance: Node) -> void:
-	call_deferred("_set_current_map_unsafe", p_map_instance)
+	call_thread_safe("_set_current_map_unsafe", p_map_instance)
 
 
 func _set_instanced_map(p_map: Node) -> void:
@@ -117,8 +117,10 @@ func _set_instanced_map(p_map: Node) -> void:
 
 func instance_map(_p_strip_all_entities: bool) -> Node:
 	print("Instance map...")
+	
 	# Destroy old current scene
-	unload_current_map()
+	if _instanced_map:
+		_instanced_map.queue_free()
 
 	if _current_map_packed:
 		# Add new current scene
