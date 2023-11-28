@@ -194,16 +194,6 @@ var _player_spawner: MultiplayerSpawner = null
 var _current_map_instance: Node = null
 
 ##
-## This is mutex lock for _instantiated_player_scene_queue 
-##
-var _instantiated_player_scene_queue_mutex: Mutex = Mutex.new()
-
-##
-## A list of instantiated player scenes waiting to be added to gameroot.
-##
-var _instantiated_player_scene_queue: Array[Node3D] = []
-
-##
 ## Returns true if we have an active network session in the NetworkManager
 ##
 func _is_session_alive() -> bool:
@@ -285,40 +275,10 @@ func _get_random_spawn_point() -> Transform3D:
 	return spawn_point_transform
 
 ##
-## Instantiates the player scene and places it in a queue.
-##
-func _instantiate_and_queue_player_scene_task() -> void:
-	var player_instance: Node3D = PLAYER_SCENE.instantiate()
-	
-	# Place the scene in the queue.
-	_instantiated_player_scene_queue_mutex.lock()
-	_instantiated_player_scene_queue.push_back(player_instance)
-	_instantiated_player_scene_queue_mutex.unlock()
-	
-##
-## Gets a player scene from the queue.
-##
-func _fetch_player_player_scene_from_queue() -> Node:
-	var player_scene_instance: Node3D = null
-	
-	_instantiated_player_scene_queue_mutex.lock()
-	if !_instantiated_player_scene_queue.is_empty():
-		player_scene_instance = _instantiated_player_scene_queue.pop_back()
-	_instantiated_player_scene_queue_mutex.unlock()
-	
-	return player_scene_instance
-
-##
 ## Spawns a player scene for the associated 'p_id'
 ##
 func _spawn_player(p_id: int) -> void:
-	var instantiate_and_queue_player_scene_task_id : int = WorkerThreadPool.add_task(
-		_instantiate_and_queue_player_scene_task,
-		true,
-		"_instantiate_and_queue_player_scene_task")
-		
-	await WorkerThreadPool.wait_for_task_completion(instantiate_and_queue_player_scene_task_id)
-	var player_instance: Node3D = _fetch_player_player_scene_from_queue()
+	var player_instance: Node3D = PLAYER_SCENE.instantiate()
 	
 	assert(player_instance)
 	
