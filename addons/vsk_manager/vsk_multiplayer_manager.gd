@@ -174,11 +174,6 @@ var _shard_id: String = ""
 var _gameroot: Node = null
 
 ##
-## Flag indicating if the current server is a relay server.
-##
-var _is_relay_server: bool = false
-
-##
 ## Flag indicating if the current server is a dedicated server.
 ##
 var _is_dedicated_server: bool = false
@@ -192,6 +187,11 @@ var _player_spawner: MultiplayerSpawner = null
 ## The current map instance being used by this session.
 ##
 var _current_map_instance: Node = null
+
+##
+## A list of currently connected peers.
+##
+var peers: Array = []
 
 ##
 ## Returns true if we have an active network session in the NetworkManager
@@ -258,8 +258,8 @@ func _is_server() -> bool:
 ###
 func _reset_session_data() -> void:
 	_is_dedicated_server = false
-	_is_relay_server = false
-		
+	
+	peers = []
 ##
 ## Returns a Transform3D representing the global_transform of a randomly
 ## selected node in the NETWORK_SPAWNER_GROUP_NAME group or Transform3D
@@ -290,6 +290,20 @@ func _spawn_player(p_id: int) -> void:
 	
 	node_to_spawn_on.add_child(player_instance)
 	player_instance.set_multiplayer_authority(p_id)
+	
+##
+## Despawn a player scene for the associated 'p_id'
+##
+func _despawn_player(p_id: int) -> void:
+	var node_to_despawn_on: Node = _player_spawner.get_node_or_null(_player_spawner.spawn_path)
+	assert(node_to_despawn_on)
+	
+	var player_instance: Node3D = node_to_despawn_on.get_node_or_null("Player_" + str(p_id))
+	
+	if player_instance:
+		player_instance.queue_free()
+		if player_instance.is_inside_tree():
+			player_instance.get_parent().remove_child(player_instance)
 
 ##
 ## Instantiates the current map and caches it in the
@@ -394,10 +408,9 @@ func _on_connection_failed() -> void:
 ## p_id is the session id of the peer who just connected.
 ##
 func _on_peer_connected(p_id: int) -> void:
+	peers.append(p_id)
+	
 	if _is_server():
-		var spawn_points: Array = get_tree().get_nodes_in_group("spawners")
-		assert(spawn_points.size() > 0)
-		
 		_spawn_player(p_id)
 	
 ##
@@ -405,9 +418,11 @@ func _on_peer_connected(p_id: int) -> void:
 ## session.
 ## p_id is the session id of the peer who just disconnected.
 ##
-func _on_peer_disconnected(_p_id: int) -> void:
+func _on_peer_disconnected(p_id: int) -> void:
 	if _is_server():
-		pass
+		_despawn_player(p_id)
+		
+	peers.erase(p_id)
 		
 ##
 ## Callback from the multiplayer API that the server has disconnected.
@@ -430,6 +445,13 @@ func force_disconnect():
 		if get_tree().get_multiplayer().has_multiplayer_peer():
 			get_tree().get_multiplayer().get_multiplayer_peer().close()
 			get_tree().get_multiplayer().set_multiplayer_peer(null)
+			
+		# Clear all the player instances for this session.
+		var node_to_clear: Node = _player_spawner.get_node_or_null(_player_spawner.spawn_path)
+		if node_to_clear:
+			for instance in node_to_clear.get_children():
+				instance.queue_free()
+				node_to_clear.remove_child(instance)
 
 	_reset_session_data()
 	
@@ -478,7 +500,11 @@ func host_game(p_server_name: String, p_map_path: String, _p_game_mode_path: Str
 	if result == OK:
 		multiplayer.multiplayer_peer = peer
 		_is_dedicated_server = p_dedicated_server
-		#multiplayer.server_relay = p_relay
+		
+		if multiplayer.multiplayer_peer.is_server_relay_supported():
+			multiplayer.server_relay = true
+		else:
+			multiplayer.server_relay = false
 		
 		advertised_server = p_advertise
 		
@@ -506,7 +532,7 @@ func host_game(p_server_name: String, p_map_path: String, _p_game_mode_path: Str
 ## p_port is the UDP port number.
 ## Returns enum Error
 ##
-func join_server(p_address: String, p_port: int) -> Error:
+func join_game(p_address: String, p_port: int) -> Error:
 	var peer = ENetMultiplayerPeer.new()
 	var result: Error = peer.create_client(p_address, p_port)
 	if result == OK:
@@ -549,30 +575,34 @@ func setup_multiplayer(p_gameroot: Node) -> void:
 	assert(p_gameroot)
 	_gameroot = p_gameroot
 	
+	var _player_root = Node3D.new()
+	_player_root.set_name("PlayerRoot")
+	_gameroot.add_child(_player_root)
+	
 	# Assigns the Multiplayer API to the scene tree.
 	var multiplayer_api: MultiplayerAPI = SceneMultiplayer.new()
 	get_tree().set_multiplayer(multiplayer_api)
 	
 	# Setup authentication callback and timeout.
-	multiplayer_api.auth_timeout = 10.0
-	multiplayer_api.set_auth_callback(_auth_callback)
+	#multiplayer_api.auth_timeout = 10.0
+	#multiplayer_api.set_auth_callback(_auth_callback)
 	
 	# Sets up the player scene spawner.
 	_player_spawner = PLAYER_SPAWNER_SCENE.instantiate()
-	_player_spawner.name = "MultiplayerSpawner"
-	add_child(_player_spawner)
+	_player_spawner.name = "PlayerSpawner"
+	_gameroot.add_child(_player_spawner)
 	
 	# Sets the player spawner root to the gameroot node.
-	_player_spawner.spawn_path = _player_spawner.get_path_to(_gameroot)
+	_player_spawner.spawn_path = _player_spawner.get_path_to(_player_root)
 	
-	assert(multiplayer_api.peer_authenticating.connect(_peer_authenticating) == OK)
-	assert(multiplayer_api.peer_authentication_failed.connect(_peer_authentication_failed) == OK)
+	assert(multiplayer_api.peer_authenticating.connect(self._peer_authenticating) == OK)
+	assert(multiplayer_api.peer_authentication_failed.connect(self._peer_authentication_failed) == OK)
 	
-	assert(multiplayer.connected_to_server.connect(_on_connected_to_server) == OK)
-	assert(multiplayer.connection_failed.connect(_on_connection_failed) == OK)
-	assert(multiplayer.peer_connected.connect(_on_peer_connected) == OK)
-	assert(multiplayer.peer_disconnected.connect(_on_peer_disconnected) == OK)
-	assert(multiplayer.server_disconnected.connect(_on_server_disconnected) == OK)
+	assert(multiplayer.connected_to_server.connect(self._on_connected_to_server) == OK)
+	assert(multiplayer.connection_failed.connect(self._on_connection_failed) == OK)
+	assert(multiplayer.peer_connected.connect(self._on_peer_connected) == OK)
+	assert(multiplayer.peer_disconnected.connect(self._on_peer_disconnected) == OK)
+	assert(multiplayer.server_disconnected.connect(self._on_server_disconnected) == OK)
 	
 	assert(VSKGameFlowManager.is_quitting.connect(self._is_quitting) == OK)
 	assert(VSKGameFlowManager.map_loaded.connect(self._map_loaded) == OK)
