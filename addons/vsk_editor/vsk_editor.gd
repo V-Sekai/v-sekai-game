@@ -502,45 +502,64 @@ func _session_deletion_complete(p_code: GodotUro.godot_uro_helper_const.Requeste
 ## Linking
 ##
 
-
-func _link_vsk_account_manager(p_node: Node) -> void:
-	print("_link_vsk_account_manager")
+func _link_vsk_account_manager(p_node: Node) -> void:	
+	if p_node == vsk_account_manager:
+		return
+	
+	if vsk_account_manager:
+		_unlink_vsk_account_manager()
+	
 	vsk_account_manager = p_node
 
 	if vsk_account_manager:
-		if vsk_account_manager.session_renew_started.connect(self._session_renew_started) != OK:
-			printerr("Could not connect signal 'session_renew_started'")
-		if vsk_account_manager.session_request_complete.connect(self._session_request_complete) != OK:
-			printerr("Could not connect signal 'session_request_complete'")
-		if vsk_account_manager.session_deletion_complete.connect(self._session_deletion_complete) != OK:
-			printerr("Could not connect signal 'session_deletion_complete'")
+		print("Linking VSKAccountManager to VSKEditor...")
+		
+		var result: Error = OK
+		
+		result = vsk_account_manager.session_renew_started.connect(self._session_renew_started)
+		if result != OK:
+			printerr("Could not connect signal 'session_renew_started'. Result %s" % str(result))
+		result = vsk_account_manager.session_request_complete.connect(self._session_request_complete)
+		if result != OK:
+			printerr("Could not connect signal 'session_request_complete'. Result %s" % str(result))
+		result = vsk_account_manager.session_deletion_complete.connect(self._session_deletion_complete)
+		if result != OK:
+			printerr("Could not connect signal 'session_deletion_complete'. Result %s" % str(result))
 
 		vsk_account_manager.call_deferred("start_session")
 
 
 func _unlink_vsk_account_manager() -> void:
-	print("_unlink_vsk_account_manager")
+	if vsk_account_manager:
+		print("Unlinking VSKAccountManager from VSKEditor...")
 
-	vsk_account_manager.session_renew_started.disconnect(self._session_renew_started)
-	vsk_account_manager.session_request_complete.disconnect(self._session_request_complete)
-	vsk_account_manager.session_deletion_complete.disconnect(self._session_deletion_complete)
+		vsk_account_manager.session_renew_started.disconnect(self._session_renew_started)
+		vsk_account_manager.session_request_complete.disconnect(self._session_request_complete)
+		vsk_account_manager.session_deletion_complete.disconnect(self._session_deletion_complete)
 
-	vsk_account_manager = null
+		vsk_account_manager = null
 
-	if uro_button:
-		uro_button.set_disabled(false)  # true)
+		if uro_button:
+			uro_button.set_disabled(false)  # true)
 
 
 func _link_vsk_exporter(p_node: Node) -> void:
-	print("_link_vsk_exporter")
+	if p_node == vsk_exporter:
+		return
+	
+	if vsk_exporter:
+		_unlink_vsk_exporter()
+	
 	vsk_exporter = p_node
+	
+	if vsk_exporter:
+		print("Linking VSKExporter to VSKEditor...")
 
 
 func _unlink_vsk_exporter() -> void:
-	print("_unlink_vsk_exporter")
-
-	vsk_exporter = null
-
+	if vsk_exporter:
+		print("Unlinking VSKExporter from VSKEditor...")
+		vsk_exporter = null
 
 func _node_added(p_node: Node) -> void:
 	var parent_node: Node = p_node.get_parent()
