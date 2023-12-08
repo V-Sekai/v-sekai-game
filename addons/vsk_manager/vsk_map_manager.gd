@@ -16,17 +16,34 @@ var default_map_path: String = ""
 
 var _loading_stage_count: int = 0
 
+##
+## Path to the map we are currently attempting to load.
+##
+var _pending_map_path: String = ""
+##
+## Path to the map we have loaded.
+##
+var _loaded_map_path: String = ""
+##
+## Path to the map we have instanced.
+##
+var _instanced_map_path: String = ""
+##
+## Path to the map we consider to be the 'current' map.
+##
 var _current_map_path: String = ""
+
 var _current_map_packed: PackedScene = null
 
+var _load_map_mutex: Mutex = Mutex.new()
 var _instance_map_mutex: Mutex = Mutex.new()
 
 const RESPAWN_HEIGHT = -100
 const mutex_lock_const = preload("res://addons/gd_util/mutex_lock.gd")
 
 var _instanced_map: Node = null
-var current_map: Node = null
-var gameroot: Node = null
+var _current_map: Node = null
+var _gameroot: Node = null
 
 signal map_download_started
 signal map_load_callback(p_callback_id)
@@ -37,7 +54,9 @@ var validator_map = validator_map_const.new()
 
 
 func _user_content_load_done(p_url: String, p_err: int, p_packed_scene: PackedScene, p_skip_validation: bool) -> void:
-	if p_url == _current_map_path:
+	if p_url == _pending_map_path:
+		var _mutex_lock: mutex_lock_const = mutex_lock_const.new(_instance_map_mutex)
+		
 		var validated_packed_scene: PackedScene = null
 
 		if p_packed_scene:
@@ -52,6 +71,7 @@ func _user_content_load_done(p_url: String, p_err: int, p_packed_scene: PackedSc
 
 		match p_err:
 			VSKAssetManager.ASSET_OK:
+				_loaded_map_path = _pending_map_path
 				_current_map_packed = validated_packed_scene
 				if _current_map_packed:
 					map_load_callback.emit(VSKAssetManager.ASSET_OK, {})
@@ -62,28 +82,31 @@ func _user_content_load_done(p_url: String, p_err: int, p_packed_scene: PackedSc
 
 
 func _user_content_asset_request_started(p_url: String) -> void:
-	if p_url == _current_map_path:
+	if p_url == _pending_map_path:
 		map_download_started.emit()
 
 
 func _set_loading_stage_count(p_url: String, p_stage_count: int):
-	if p_url == _current_map_path:
+	if p_url == _pending_map_path:
 		_loading_stage_count = p_stage_count
 
 		map_load_update.emit(0, _loading_stage_count)
 
 
 func _set_loading_stage(p_url: String, p_stage: int):
-	if p_url == _current_map_path:
+	if p_url == _pending_map_path:
 		print("Loading map {stage}/{stage_count}".format({"stage": str(p_stage), "stage_count": str(_loading_stage_count)}))
 
 		map_load_update.emit(p_stage, _loading_stage_count)
 
 
-func _set_current_map_unsafe(p_map_instance: Node) -> void:
+func _set_current_map_unsafe(p_path: String, p_map_instance: Node) -> void:
 	print("Setting current map...")
-	gameroot.add_child(p_map_instance, true)
-	current_map = p_map_instance
+
+	_gameroot.add_child(p_map_instance, true)
+	_current_map_path = p_path
+	_current_map = p_map_instance
+
 	print("Current map set!")
 
 
@@ -92,21 +115,22 @@ func _unload_current_map_unsafe() -> void:
 
 	_set_instanced_map(null)
 
-	if current_map:
-		current_map.queue_free()
-		current_map = null
+	if _current_map:
+		_current_map.queue_free()
+		_current_map = null
+		_current_map_path = ""
 
 
 func unload_current_map() -> void:
 	call_thread_safe("_unload_current_map_unsafe")
 
 
-func set_current_map(p_map_instance: Node) -> void:
-	call_thread_safe("_set_current_map_unsafe", p_map_instance)
+func set_current_map(p_path: String, p_map_instance: Node) -> void:
+	call_thread_safe("_set_current_map_unsafe", p_path, p_map_instance)
 
 
 func _set_instanced_map(p_map: Node) -> void:
-	var _mutex_lock = mutex_lock_const.new(_instance_map_mutex)
+	var _mutex_lock: mutex_lock_const = mutex_lock_const.new(_instance_map_mutex)
 	print("Assigning instanced map...")
 	_instanced_map = p_map
 	if p_map:
@@ -115,8 +139,12 @@ func _set_instanced_map(p_map: Node) -> void:
 		print("Map cleared!")
 
 
-func instance_map(_p_strip_all_entities: bool) -> Node:
+func instance_map(_p_strip_all_entities: bool) -> Dictionary:
 	print("Instance map...")
+	
+	var _mutex_lock: mutex_lock_const = mutex_lock_const.new(_instance_map_mutex)
+	
+	var final_map_path: String = _loaded_map_path
 	
 	# Destroy old current scene
 	if _instanced_map:
@@ -125,18 +153,27 @@ func instance_map(_p_strip_all_entities: bool) -> Node:
 	if _current_map_packed:
 		# Add new current scene
 		print("Instancing map...")
+		
+		# It should be okay to disable safety checks for this
+		# thread since all operations on the instantiated node
+		# occur outside the scene tree.
+		Thread.set_thread_safety_checks_enabled(false)
 		var map_instance: Node = _current_map_packed.instantiate()
-
+		Thread.set_thread_safety_checks_enabled(true)
+		
 		if map_instance.get_script() != vsk_map_definition_const and map_instance.get_script() != vsk_map_definition_runtime_const:
 			assert(false, "Map does not have a map definition script at root!")
 			map_instance.queue_free()
 
-			return null
+			return {}
 		_set_instanced_map(map_instance)
 		print("Map instanced!")
-		return map_instance
+		
+		_instanced_map_path = _loaded_map_path
+		
+		return {"node":map_instance, "path":_instanced_map_path}
 
-	return null
+	return {}
 
 
 static func instance_embedded_map_entities(p_map_instance: Node, p_invalid_scene_paths: PackedStringArray) -> Node:
@@ -186,30 +223,38 @@ func destroy_map() -> void:
 
 
 func request_map_load(p_map_path: String, p_bypass_whitelist: bool, p_skip_validation: bool) -> void:
-	_current_map_path = p_map_path
+	_pending_map_path = p_map_path
 
 	await (super.request_user_content_load(p_map_path, VSKAssetManager.user_content_type.USER_CONTENT_MAP, p_bypass_whitelist, p_skip_validation, validator_map.valid_external_path_whitelist, validator_map.valid_resource_whitelist))
 
 
 func cancel_map_load() -> void:
-	super.request_user_content_cancel(get_current_map_path())
-	_current_map_path = ""
+	super.request_user_content_cancel(get_pending_map_path())
+	_pending_map_path = ""
 
 
+func get_pending_map_path() -> String:
+	return _pending_map_path
+
+func get_loaded_map_path() -> String:
+	return _loaded_map_path
+	
+func get_instanced_map_path() -> String:
+	return _instanced_map_path
+	
 func get_current_map_path() -> String:
 	return _current_map_path
 
-
 func get_request_data_progress() -> Dictionary:
-	if _current_map_path:
-		var request_data_progress: Dictionary = VSKAssetManager.get_request_data_progress(_current_map_path)
+	if _pending_map_path:
+		var request_data_progress: Dictionary = VSKAssetManager.get_request_data_progress(_pending_map_path)
 		return request_data_progress
 
 	return {}
 
 
 func get_map_id_for_resource(p_resource: Resource) -> int:
-	var _mutex_lock = mutex_lock_const.new(_instance_map_mutex)
+	var _mutex_lock: mutex_lock_const = mutex_lock_const.new(_instance_map_mutex)
 
 	if _instanced_map:
 		return _instanced_map.map_resources.find(p_resource)
@@ -254,6 +299,8 @@ func apply_project_settings() -> void:
 func get_project_settings() -> void:
 	default_map_path = ProjectSettings.get_setting("network/config/default_map_path")
 
+func setup_manager(p_gameroot: Node) -> void:
+	_gameroot = p_gameroot
 
 func _ready() -> void:
 	apply_project_settings()

@@ -676,9 +676,9 @@ func _setup_entity_manager() -> void:
 ## Assigns the gameroot reference to the other subsystems
 ##
 func _assign_gameroots() -> void:
-	VSKMapManager.gameroot = gameroot
+	VSKMapManager.setup_manager(gameroot)
 	VSKNetworkManager.gameroot = gameroot
-	VSKMultiplayerManager.setup_multiplayer(gameroot)
+	VSKMultiplayerManager.setup_manager(gameroot)
 	NetworkManager.gameroot = gameroot
 
 

@@ -117,7 +117,6 @@ const PLAYER_SPAWNER_SCENE: PackedScene = preload("multiplayer/vsk_player_spawne
 enum AuthenticationStage {
 	AUTHENTICATING,
 	MAP_LOADED,
-	COMPLETE
 }
 
 ##
@@ -149,20 +148,26 @@ var advertised_server = false
 ## This dictionary tracks the current authentication state of peers who
 ## have not fully authenticated.
 ##
-var authentication_peers_state_table: Dictionary = {}
+var _authentication_peers_state_table: Dictionary = {}
 
 ##############
 ### Shards ###
 ##############
 
+##
 ## Timer to send a heartbeat command to backend shard in order to keep it alive.
+##
 var _shard_heartbeat_timer: Timer = null
 
+##
 ## The amount of time (in seconds) required to elapse before sending a shard
 ## heartbeat request to keep it alive.
+##
 var _shard_heartbeat_frequency: float = 10.0  # In seconds
 
+##
 ## ID assigned from central shard master server
+##
 var _shard_id: String = ""
 
 ###
@@ -184,17 +189,33 @@ var _is_dedicated_server: bool = false
 var _player_spawner: MultiplayerSpawner = null
 
 ##
+## The current map path being used by this session.
+##
+var _current_map_path: String = ""
+
+##
 ## The current map instance being used by this session.
 ##
 var _current_map_instance: Node = null
 
 ##
-## A list of currently connected peers.
+## Timer to send a heartbeat command via the authentication channel.
 ##
-var peers: Array = []
+var _auth_heartbeat_timer: Timer = null
 
 ##
-## Returns true if we have an active network session in the NetworkManager
+## The amount of time (in seconds) required to elapse before sending a shard
+## heartbeat request to keep it alive.
+##
+var _auth_heartbeat_frequency: float = 5.0  # In seconds
+
+##
+## A list of currently connected peers.
+##
+var _peers: Array = []
+
+##
+## Returns true if we have an active network session.
 ##
 func _is_session_alive() -> bool:
 	if _has_active_peer():
@@ -208,7 +229,7 @@ func _is_session_alive() -> bool:
 ## the shard alive and then reset the timer to value set in
 ## 'shard_heartbeat_frequency'
 ##
-func _heartbeat_timer_timout() -> void:
+func _shard_heartbeat_timer_timeout() -> void:
 	if _is_session_alive():
 		var shard_callback: Dictionary = await VSKShardManager.shard_heartbeat(_shard_id)
 		if shard_callback["result"] == OK:
@@ -235,12 +256,122 @@ func _attempt_to_kill_shard() -> void:
 			print("Shard %s failed to delete!" % shard_id_pending_deletion)
 
 ##
+## This method is called by the auth heartbeat timer when it times out. It will
+## attempt to send an empty auth command to the host just to so they know
+## the peer is still connected.
+##
+func _auth_heartbeat_timer_timeout() -> void:
+	assert(!_is_server())
+	
+	if _is_session_alive():
+		assert(get_tree().get_multiplayer().send_auth(HOST_PEER_ID, _encode_auth_message_buffer({})) == OK)
+		_auth_heartbeat_timer.start(_auth_heartbeat_frequency)
+
+##
+## Returns a PackedByteArray representing an authentication message used
+## to establish a handshake between the peer and the server.
+## p_auth_dictionary is a dictionary containing the key/value pairs to
+## used to encode the PackedByteArray.
+##
+static func _encode_auth_message_buffer(p_auth_dictionary: Dictionary) -> PackedByteArray:
+	var stream_peer_buffer := StreamPeerBuffer.new()
+	stream_peer_buffer.put_var(p_auth_dictionary)
+	
+	return stream_peer_buffer.data_array
+	
+##
+## Returns a dictionary representing an authentication message used
+## to establish a handshake between the peer and the server.
+## p_auth_pba is a PackedByteArray representing the dictionary of
+## key/value pairs which it will decoded into.
+##
+static func _decode_auth_message_buffer(p_auth_pba: PackedByteArray) -> Variant:
+	var stream_peer_buffer: StreamPeerBuffer = StreamPeerBuffer.new()
+	stream_peer_buffer.data_array = p_auth_pba
+	
+	return stream_peer_buffer.get_var()
+
+##
 ## The function is the callback for when the Multiplayer object exchanges
 ## buffers containing authentication handshake information.
 ##
 func _auth_callback(p_sender_id: int, p_buffer: PackedByteArray) -> void:
-	print("_auth_callback: %s" % p_sender_id)
+	var buffer_var: Variant = _decode_auth_message_buffer(p_buffer)
+	var auth_dict: Dictionary = {}
 	
+	# Check to see if we received a valid dictionary
+	if buffer_var is Dictionary:
+		auth_dict = buffer_var
+	else:
+		if _is_server():
+			force_disconnect()
+			printerr("Received invalid authentication message from host! Disconnecting!")
+		else:
+			multiplayer.disconnect_peer(p_sender_id)
+			printerr("Received invalid authentication message from peer %s! Disconnecting!"
+			% str(p_sender_id))
+	
+	if p_sender_id == HOST_PEER_ID:
+		# The authentication message is coming from the host.
+		
+		if !_is_server():
+			var new_map_path: String = ""
+			
+			# Simple heartbeat pong from host. Do nothing.
+			if auth_dict.is_empty():
+				return
+			
+			# Check if the dictionary has a map_path.
+			if auth_dict.has("map_path"):
+				new_map_path = auth_dict["map_path"]
+				
+				# If we do not currently have the map loaded,
+				# attempt to load it.
+				if new_map_path != VSKMapManager.get_current_map_path():
+					if new_map_path != VSKMapManager.get_pending_map_path():
+						VSKMapManager.cancel_map_load()
+						if new_map_path:
+							VSKMapManager.request_map_load(new_map_path, false, false)
+						else:
+							force_disconnect()
+				else:
+					_auth_heartbeat_timer.stop()
+					
+					# I don't think we need to send anymore auth messages now...
+					
+					var result: Error = multiplayer.complete_auth(p_sender_id)
+					if result != OK:
+						printerr("multiplayer.complete_auth error code %s!" % str(result))
+	else:
+		if _is_server():
+			var peer_map_path: String = ""
+			
+			# Simple heartbeat ping from peer. Send an empty dictionary in
+			# response.
+			if auth_dict.is_empty():
+				assert(get_tree().get_multiplayer().send_auth(p_sender_id, _encode_auth_message_buffer({})) == OK)
+				return
+			
+			if auth_dict.has("map_path"):
+				peer_map_path = auth_dict["map_path"]
+				if peer_map_path == VSKMapManager.get_pending_map_path():
+					print("Peer had loaded the correct map %s." % peer_map_path)
+					
+					_authentication_peers_state_table[p_sender_id] = AuthenticationStage.MAP_LOADED
+					assert(get_tree().get_multiplayer().send_auth(p_sender_id, _encode_auth_message_buffer(auth_dict)) == OK)
+					
+					var result: Error = multiplayer.complete_auth(p_sender_id)
+					if result != OK:
+						printerr("multiplayer.complete_auth error code %s!" % str(result))
+				else:
+					printerr("Peer's map path does not match peer: %s / host: %s!"
+					% [peer_map_path, VSKMapManager.get_current_map_path()])
+					
+					# TODO: instead of disconnecting the peer, send another message
+					# with the correct map path.
+					
+					multiplayer.disconnect_peer(p_sender_id)
+			
 ###
 ### Returns a boolean indicating if a multiplayer sessions is active.
 ###
@@ -259,7 +390,8 @@ func _is_server() -> bool:
 func _reset_session_data() -> void:
 	_is_dedicated_server = false
 	
-	peers = []
+	_peers = []
+	_authentication_peers_state_table = {}
 ##
 ## Returns a Transform3D representing the global_transform of a randomly
 ## selected node in the NETWORK_SPAWNER_GROUP_NAME group or Transform3D
@@ -310,8 +442,10 @@ func _despawn_player(p_id: int) -> void:
 ## _current_map_instance variable.
 ##
 func _instantiate_and_cache_map_task() -> void:
-	var map_instance: Node = await VSKMapManager.instance_map(false)
-	_current_map_instance = map_instance
+	var instance_map_result: Dictionary = await VSKMapManager.instance_map(false)
+	
+	_current_map_instance = instance_map_result["node"]
+	_current_map_path = instance_map_result["path"]
 
 ##
 ## Spawns the currently loaded map.
@@ -325,7 +459,7 @@ func _spawn_map() -> void:
 	
 	var task_result: Error = await WorkerThreadPool.wait_for_task_completion(_instantiate_and_cache_map_task_id)
 	if task_result == OK:
-		VSKMapManager.set_current_map(_current_map_instance)
+		VSKMapManager.set_current_map(_current_map_path, _current_map_instance)
 
 ############################
 ### VSKGameflow Callbacks ##
@@ -350,13 +484,20 @@ func _map_loaded() -> void:
 	#server_state_initialising.emit()
 	
 	var skipped: bool = await VSKFadeManager.execute_fade(false).fade_complete
-	
+
 	await _spawn_map()
-	if !_is_dedicated_server:
-		await _spawn_player(HOST_PEER_ID)
-		print("_map_loaded done!")
+	
+	if _is_server():
+		if !_is_dedicated_server:
+			await _spawn_player(HOST_PEER_ID)
+	
+		session_ready.emit(skipped)
+	else:
+		var auth_dict: Dictionary = {
+			"map_path":VSKMapManager.get_pending_map_path()
+		}
 		
-	session_ready.emit(skipped)
+		assert(get_tree().get_multiplayer().send_auth(HOST_PEER_ID, _encode_auth_message_buffer(auth_dict)) == OK)
 		
 ##
 ## Callback function from the gameflow manager indicating that the application
@@ -372,17 +513,25 @@ func _is_quitting() -> void:
 func _peer_authenticating(p_peer_id: int) -> void:
 	print("_peer_authenticating: %s" % p_peer_id)
 	
-	if multiplayer.get_unique_id() == HOST_PEER_ID:
-		authentication_peers_state_table[p_peer_id] = AuthenticationStage.AUTHENTICATING
-		get_tree().get_multiplayer().send_auth(
+	if _is_server():
+		_authentication_peers_state_table[p_peer_id] = AuthenticationStage.AUTHENTICATING
+		
+		var auth_dict: Dictionary = {
+			"map_path":VSKMapManager.get_pending_map_path()
+		}
+		
+		assert(get_tree().get_multiplayer().send_auth(
 			p_peer_id,
-			PackedByteArray([AuthenticationStage.AUTHENTICATING
-			]))
+			_encode_auth_message_buffer(auth_dict)) == OK)
+	else:
+		_auth_heartbeat_timer.start()
 			
 func _peer_authentication_failed(p_peer_id: int) -> void:
 	print("_peer_authentication_failed: %s" % p_peer_id)
-	if multiplayer.get_unique_id() == HOST_PEER_ID:
-		authentication_peers_state_table.erase(p_peer_id)
+	if _is_server():
+		_authentication_peers_state_table.erase(p_peer_id)
+	else:
+		_auth_heartbeat_timer.stop()
 	
 ################################
 ### Multiplayer API callbacks ##
@@ -394,6 +543,7 @@ func _peer_authentication_failed(p_peer_id: int) -> void:
 ##
 func _on_connected_to_server() -> void:
 	connection_succeeded.emit()
+	session_ready.emit(false)
 
 ##
 ## Callback function from the multiplayer API indicating that a connection
@@ -408,9 +558,12 @@ func _on_connection_failed() -> void:
 ## p_id is the session id of the peer who just connected.
 ##
 func _on_peer_connected(p_id: int) -> void:
-	peers.append(p_id)
-	
+	_peers.append(p_id)
+		
 	if _is_server():
+		if _authentication_peers_state_table.has(p_id):
+			_authentication_peers_state_table.erase(p_id)
+			
 		_spawn_player(p_id)
 	
 ##
@@ -422,7 +575,7 @@ func _on_peer_disconnected(p_id: int) -> void:
 	if _is_server():
 		_despawn_player(p_id)
 		
-	peers.erase(p_id)
+	_peers.erase(p_id)
 		
 ##
 ## Callback from the multiplayer API that the server has disconnected.
@@ -456,6 +609,8 @@ func force_disconnect():
 	_reset_session_data()
 	
 	_attempt_to_kill_shard()
+	
+	_auth_heartbeat_timer.stop()
 
 	connection_killed.emit()
 		
@@ -501,10 +656,7 @@ func host_game(p_server_name: String, p_map_path: String, _p_game_mode_path: Str
 		multiplayer.multiplayer_peer = peer
 		_is_dedicated_server = p_dedicated_server
 		
-		if multiplayer.multiplayer_peer.is_server_relay_supported():
-			multiplayer.server_relay = true
-		else:
-			multiplayer.server_relay = false
+		multiplayer.server_relay = multiplayer.multiplayer_peer.is_server_relay_supported()
 		
 		advertised_server = p_advertise
 		
@@ -567,7 +719,7 @@ func get_project_settings() -> void:
 ## p_gameroot is the node representing the toplevel node where the
 ## multiplayer session will be instantiated and which the spawned player
 ## scenes will parented to.
-func setup_multiplayer(p_gameroot: Node) -> void:
+func setup_manager(p_gameroot: Node) -> void:
 	if !use_multiplayer_manager:
 		return
 	
@@ -583,7 +735,7 @@ func setup_multiplayer(p_gameroot: Node) -> void:
 	get_tree().set_multiplayer(multiplayer_api)
 	
 	# Setup authentication callback and timeout.
-	multiplayer_api.auth_timeout = 10.0
+	multiplayer_api.auth_timeout = 0.0
 	multiplayer_api.set_auth_callback(_auth_callback)
 	
 	# Sets up the player scene spawner.
@@ -615,7 +767,15 @@ func setup() -> void:
 		_shard_heartbeat_timer = Timer.new()
 		_shard_heartbeat_timer.set_name("ShardHeartbeatTimer")
 		add_child(_shard_heartbeat_timer, true)
+		
+		_auth_heartbeat_timer = Timer.new()
+		_auth_heartbeat_timer.set_name("AuthHeartbeatTimer")
+		add_child(_auth_heartbeat_timer, true)
 
-		if _shard_heartbeat_timer.timeout.connect(self._heartbeat_timer_timout) != OK:
+		if _shard_heartbeat_timer.timeout.connect(self._shard_heartbeat_timer_timeout) != OK:
 			printerr("Failed to connect ShardHeartbeatTimer timeout signal")
+			return
+			
+		if _auth_heartbeat_timer.timeout.connect(self._auth_heartbeat_timer_timeout) != OK:
+			printerr("Failed to connect AuthHeartbeatTimer timeout signal")
 			return

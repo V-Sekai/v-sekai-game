@@ -566,7 +566,7 @@ func _host_setup_map(p_instances: Dictionary, p_fade_skipped: bool) -> void:
 		network_callback.emit(INVALID_MAP, {})
 		return
 
-	VSKMapManager.set_current_map(p_instances["map"])
+	VSKMapManager.set_current_map("", p_instances["map"])
 	var players: Array = p_instances["players"]
 	var spawn_nodes = node_util_const.find_nodes_in_group(NETWORK_SPAWNER_GROUP_NAME, p_instances["map"])
 	for player_instance in players:
@@ -602,18 +602,22 @@ func _host_state_complete(p_instances: Dictionary) -> void:
 ##
 func _host_state_instance() -> Dictionary:
 	var instanced_nodes: Dictionary = {}
-	var map_instance: Node = await VSKMapManager.instance_map(false)
+	var instance_map_result: Dictionary = await VSKMapManager.instance_map(false)
+	
+	var map_instance: Node = null
 
 	var new_player_instances: Array = []
-	if map_instance and map_instance is vsk_map_definition_runtime_const:
-		VSKMapManager.instance_embedded_map_entities(map_instance, [player_scene_path])
+	if !instance_map_result.is_empty():
+		map_instance = instance_map_result["node"]
+		if map_instance and map_instance is vsk_map_definition_runtime_const:
+			VSKMapManager.instance_embedded_map_entities(map_instance, [player_scene_path])
 
-		if !NetworkManager.server_dedicated:
-			# Create player instance for server if server is not a
-			# dedicated server
-			var player_instance: Node = add_player_scene(NetworkManager.network_constants_const.SERVER_MASTER_PEER_ID)
+			if !NetworkManager.server_dedicated:
+				# Create player instance for server if server is not a
+				# dedicated server
+				var player_instance: Node = add_player_scene(NetworkManager.network_constants_const.SERVER_MASTER_PEER_ID)
 
-			new_player_instances.push_back(player_instance)
+				new_player_instances.push_back(player_instance)
 
 	instanced_nodes["map"] = map_instance
 	instanced_nodes["players"] = new_player_instances
@@ -684,7 +688,7 @@ func _requested_server_info(p_network_id: int) -> void:
 	var server_info: Dictionary = NetworkManager.get_default_server_info()
 
 	server_info["version"] = (vsk_network_manager_const.get_vsk_network_version_string() + "_" + NetworkManager.get_network_version_string())
-	server_info["map_path"] = VSKMapManager.get_current_map_path()
+	server_info["map_path"] = VSKMapManager.get_pending_map_path()
 	server_info["game_mode_path"] = VSKGameModeManager.get_current_game_mode_path()
 
 	NetworkManager.server_send_server_info(p_network_id, server_info)
@@ -826,9 +830,13 @@ func _threaded_client_state_initialization_complete() -> void:
 
 
 func _client_instance_map_func() -> Node:
-	var instantiate: Node = await VSKMapManager.instance_map(true)
-	if instantiate:
-		VSKMapManager.set_current_map(instantiate)
+	var instance_map_result: Dictionary = await VSKMapManager.instance_map(false)
+	var instantiate: Node = null
+	
+	if !instance_map_result.is_empty():
+		instantiate = instance_map_result["node"]
+		
+	VSKMapManager.set_current_map("", instantiate)
 
 	return instantiate
 
