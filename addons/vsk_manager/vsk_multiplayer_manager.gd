@@ -239,7 +239,7 @@ func _attempt_to_kill_shard() -> void:
 ## buffers containing authentication handshake information.
 ##
 func _auth_callback(p_sender_id: int, p_buffer: PackedByteArray) -> void:
-	pass
+	print("_auth_callback: %s" % p_sender_id)
 	
 ###
 ### Returns a boolean indicating if a multiplayer sessions is active.
@@ -370,17 +370,17 @@ func _is_quitting() -> void:
 #################################
 	
 func _peer_authenticating(p_peer_id: int) -> void:
-	print("peer_authenticating: %s" % p_peer_id)
+	print("_peer_authenticating: %s" % p_peer_id)
 	
 	if multiplayer.get_unique_id() == HOST_PEER_ID:
 		authentication_peers_state_table[p_peer_id] = AuthenticationStage.AUTHENTICATING
-		get_tree().get_multiplayer().base_multiplayer.send_auth(
+		get_tree().get_multiplayer().send_auth(
 			p_peer_id,
 			PackedByteArray([AuthenticationStage.AUTHENTICATING
 			]))
 			
 func _peer_authentication_failed(p_peer_id: int) -> void:
-	print("peer_authentication_failed: %s" % p_peer_id)
+	print("_peer_authentication_failed: %s" % p_peer_id)
 	if multiplayer.get_unique_id() == HOST_PEER_ID:
 		authentication_peers_state_table.erase(p_peer_id)
 	
@@ -518,7 +518,6 @@ func host_game(p_server_name: String, p_map_path: String, _p_game_mode_path: Str
 			if shard_response["data"].has("id"):
 				_shard_id = shard_response["data"]["id"]
 			if _is_session_alive():
-				NetworkManager.session_master = NetworkManager.network_constants_const.SERVER_MASTER_PEER_ID
 				multiplayer_callback.emit(MultiplayerCallbackID.HOST_GAME_OKAY, {})
 				return
 		else:
@@ -584,8 +583,8 @@ func setup_multiplayer(p_gameroot: Node) -> void:
 	get_tree().set_multiplayer(multiplayer_api)
 	
 	# Setup authentication callback and timeout.
-	#multiplayer_api.auth_timeout = 10.0
-	#multiplayer_api.set_auth_callback(_auth_callback)
+	multiplayer_api.auth_timeout = 10.0
+	multiplayer_api.set_auth_callback(_auth_callback)
 	
 	# Sets up the player scene spawner.
 	_player_spawner = PLAYER_SPAWNER_SCENE.instantiate()
