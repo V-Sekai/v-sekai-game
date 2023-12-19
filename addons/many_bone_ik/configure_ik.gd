@@ -108,7 +108,7 @@ func _run():
 		elif bone_name == "Spine":
 			twist_from = deg_to_rad(4.0)
 			twist_range = deg_to_rad(360)
-			swing_limit_cones.append(LimitCone.new(Vector3.MODEL_REAR, deg_to_rad(3.0)))
+			swing_limit_cones.append(LimitCone.new(Vector3.MODEL_FRONT, deg_to_rad(3.0)))
 			resistance = 0.5
 		elif bone_name == "Chest":
 			twist_from = deg_to_rad(5.0)
