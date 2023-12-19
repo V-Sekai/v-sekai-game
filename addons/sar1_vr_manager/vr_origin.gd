@@ -205,7 +205,6 @@ func _ready() -> void:
 		desktop_viewport.name = "DesktopViewport"
 		add_child(desktop_viewport)
 		desktop_viewport.owner = vr_camera
-		VSKGameFlowManager.set_viewport(desktop_viewport)
 		desktop_viewport.size = DisplayServer.window_get_size(0)
 
 		desktop_camera = Camera3D.new()
