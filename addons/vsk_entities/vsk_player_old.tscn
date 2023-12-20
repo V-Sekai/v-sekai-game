@@ -1,0 +1,219 @@
+[gd_scene load_steps=26 format=3 uid="uid://cdfhmtsks1t0c"]
+
+[ext_resource type="Script" path="res://addons/entity_manager/entity.gd" id="1_hu2ek"]
+[ext_resource type="Script" path="res://addons/entity_manager/transform_notification.gd" id="2_uxfvh"]
+[ext_resource type="Script" path="res://addons/entity_manager/hierarchy_component.gd" id="3_baecq"]
+[ext_resource type="Script" path="res://addons/actor/player_controller.gd" id="4_gib5i"]
+[ext_resource type="PackedScene" uid="uid://dtj4xwyh8jcdm" path="res://addons/actor/actor_state_machine.tscn" id="5_k2huw"]
+[ext_resource type="Script" path="res://addons/network_manager/network_logic.gd" id="6_dkb6q"]
+[ext_resource type="Script" path="res://addons/network_manager/network_hierarchy.gd" id="7_plfid"]
+[ext_resource type="Script" path="res://addons/network_manager/network_transform.gd" id="8_3nrgs"]
+[ext_resource type="Script" path="res://addons/vsk_entities/network/network_ik_points.gd" id="9_qkn23"]
+[ext_resource type="Script" path="res://addons/vsk_entities/network/network_hands.gd" id="10_j0y1m"]
+[ext_resource type="Script" path="res://addons/vsk_entities/extensions/player_input.gd" id="11_iftk1"]
+[ext_resource type="Script" path="res://addons/vsk_entities/extensions/player_hand_controller.gd" id="12_kkyv3"]
+[ext_resource type="Script" path="res://addons/vsk_entities/extensions/player_interaction_controller.gd" id="13_3fr1d"]
+[ext_resource type="Script" path="res://addons/vsk_entities/extensions/player_teleport_controller.gd" id="14_6n08j"]
+[ext_resource type="Script" path="res://addons/vsk_entities/extensions/player_info_tag_controller.gd" id="15_1khmk"]
+[ext_resource type="Script" path="res://addons/vsk_entities/extensions/player_rpc_table.gd" id="16_gtim3"]
+[ext_resource type="Script" path="res://addons/network_manager/network_identity.gd" id="17_expxa"]
+[ext_resource type="Script" path="res://addons/vsk_avatar/avatar_loader.gd" id="18_7ujn3"]
+[ext_resource type="Script" path="res://addons/smoothing/smoothing.gd" id="19_xl28f"]
+[ext_resource type="Script" path="res://addons/actor/player_camera_controller.gd" id="20_o0wjk"]
+[ext_resource type="Script" path="res://addons/vsk_avatar/avatar_display.gd" id="21_mt8dc"]
+[ext_resource type="Script" path="res://addons/vsk_avatar/ik_space.gd" id="22_y4vc6"]
+[ext_resource type="PackedScene" uid="uid://bpxjakh1f68nw" path="res://addons/vsk_entities/extensions/infotag.tscn" id="23_3vnkv"]
+[ext_resource type="Script" path="res://addons/vsk_entities/extensions/player_character_body_3d.gd" id="24_e6g03"]
+
+[sub_resource type="CapsuleShape3D" id="1"]
+radius = 0.4
+
+[node name="Player" type="Node3D"]
+script = ExtResource("1_hu2ek")
+simulation_logic_node/local_player_collision = 4
+simulation_logic_node/other_player_collision = 8
+simulation_logic_node/ik_space_path = NodePath("../TargetSmooth/Render/IKSpace")
+simulation_logic_node/avatar_loader_path = NodePath("../AvatarLoader")
+simulation_logic_node/avatar_display_path = NodePath("../TargetSmooth/Render/AvatarDisplay")
+simulation_logic_node/sprint_speed = 10.0
+simulation_logic_node/walk_speed = 5.0
+simulation_logic_node/fly_speed = 10.0
+transform_notification_node_path = NodePath("TransformNotification")
+hierarchy_component_node_path = NodePath("HierarchyComponent")
+simulation_logic_node_path = NodePath("PlayerController")
+network_identity_node_path = NodePath("NetworkIdentity")
+network_logic_node_path = NodePath("PlayerNetworkLogic")
+rpc_table_node_path = NodePath("PlayerRPCTable")
+transform_notification_node_path = NodePath("TransformNotification")
+hierarchy_component_node_path = NodePath("HierarchyComponent")
+simulation_logic_node_path = NodePath("PlayerController")
+network_identity_node_path = NodePath("NetworkIdentity")
+network_logic_node_path = NodePath("PlayerNetworkLogic")
+rpc_table_node_path = NodePath("PlayerRPCTable")
+
+[node name="TransformNotification" type="Node3D" parent="."]
+script = ExtResource("2_uxfvh")
+
+[node name="HierarchyComponent" type="Node" parent="."]
+script = ExtResource("3_baecq")
+_entity_node_path = NodePath("..")
+
+[node name="PlayerController" type="Node" parent="."]
+script = ExtResource("4_gib5i")
+_target_node_path = NodePath("../Target")
+_target_smooth_node_path = NodePath("../TargetSmooth")
+_camera_controller_node_path = NodePath("../TargetSmooth/PlayerCameraController")
+_player_input_path = NodePath("../PlayerInput")
+_player_interaction_controller_path = NodePath("../PlayerInteractionController")
+_player_teleport_controller_path = NodePath("../PlayerTeleportController")
+_player_info_tag_controller_path = NodePath("../PlayerInfoTagController")
+_player_hand_controller_path = NodePath("../PlayerHandController")
+_collider_path = NodePath("../PlayerCharacterBody/CollisionShape")
+local_player_collision = 4
+other_player_collision = 8
+ik_space_path = NodePath("../TargetSmooth/Render/IKSpace")
+avatar_loader_path = NodePath("../AvatarLoader")
+avatar_display_path = NodePath("../TargetSmooth/Render/AvatarDisplay")
+_state_machine_path = NodePath("StateMachine")
+_third_person_render_node_path = NodePath("../TargetSmooth/Render/AvatarDisplay")
+_render_node_path = NodePath("../TargetSmooth/Render")
+_character_body_path = NodePath("../PlayerCharacterBody")
+_entity_type = "Player"
+_entity_node_path = NodePath("..")
+
+[node name="StateMachine" parent="PlayerController" instance=ExtResource("5_k2huw")]
+actor_controller_path = NodePath("..")
+
+[node name="PlayerNetworkLogic" type="Node" parent="."]
+script = ExtResource("6_dkb6q")
+cached_writer_size = 256
+_entity_node_path = NodePath("..")
+
+[node name="NetworkHierarchy" type="Node" parent="PlayerNetworkLogic"]
+script = ExtResource("7_plfid")
+sync_parent = true
+sync_attachment = true
+_entity_node_path = NodePath("../..")
+
+[node name="NetworkTransform" type="Node" parent="PlayerNetworkLogic"]
+script = ExtResource("8_3nrgs")
+origin_interpolation_factor = 15.0
+rotation_interpolation_factor = 15.0
+snap_threshold = 5.0
+_entity_node_path = NodePath("../..")
+
+[node name="NetworkIKPoints" type="Node" parent="PlayerNetworkLogic"]
+script = ExtResource("9_qkn23")
+ik_space_node_path = NodePath("../../TargetSmooth/Render/IKSpace")
+_entity_node_path = NodePath("../..")
+
+[node name="NetworkHands" type="Node" parent="PlayerNetworkLogic"]
+script = ExtResource("10_j0y1m")
+hand_controller_node_path = NodePath("../../PlayerHandController")
+_entity_node_path = NodePath("../..")
+
+[node name="PlayerInput" type="Node" parent="."]
+script = ExtResource("11_iftk1")
+_camera_controller_node_path = NodePath("../TargetSmooth/PlayerCameraController")
+
+[node name="PlayerHandController" type="Node" parent="."]
+script = ExtResource("12_kkyv3")
+avatar_display_path = NodePath("../TargetSmooth/Render/AvatarDisplay")
+
+[node name="PlayerInteractionController" type="Node" parent="."]
+script = ExtResource("13_3fr1d")
+interaction_collision = 48
+_camera_controller_node_path = NodePath("../TargetSmooth/PlayerCameraController")
+
+[node name="PlayerTeleportController" type="Node" parent="."]
+script = ExtResource("14_6n08j")
+
+[node name="PlayerInfoTagController" type="Node" parent="."]
+script = ExtResource("15_1khmk")
+_player_info_tag_path = NodePath("../TargetSmooth/InfoTag")
+_camera_controller_path = NodePath("../TargetSmooth/PlayerCameraController")
+
+[node name="PlayerRPCTable" type="Node" parent="."]
+script = ExtResource("16_gtim3")
+_entity_node_path = NodePath("..")
+
+[node name="NetworkIdentity" type="Node" parent="."]
+script = ExtResource("17_expxa")
+_entity_node_path = NodePath("..")
+
+[node name="AvatarLoader" type="Node" parent="."]
+script = ExtResource("18_7ujn3")
+
+[node name="TargetSmooth" type="Node3D" parent="."]
+editor_description = "This node provides framerate indepedent interpolation of the visual representation of the character. Would ideally like to replace this with an engine implementation, but need more info into how far along that is."
+script = ExtResource("19_xl28f")
+target = NodePath("../Target")
+flags = 3
+
+[node name="PlayerCameraController" type="Node3D" parent="TargetSmooth"]
+script = ExtResource("20_o0wjk")
+
+[node name="Render" type="Node3D" parent="TargetSmooth"]
+
+[node name="AvatarDisplay" type="Node3D" parent="TargetSmooth/Render"]
+editor_description = "This is the container node for our actual avatar."
+script = ExtResource("21_mt8dc")
+_ren_ik_path = NodePath("../RenIK")
+_ik_space_path = NodePath("../IKSpace")
+player_camera_controller_path = NodePath("../../PlayerCameraController")
+player_input_path = NodePath("../../../PlayerInput")
+voice_player_path = NodePath("VoicePlayer")
+
+[node name="VoicePlayer" type="AudioStreamPlayer3D" parent="TargetSmooth/Render/AvatarDisplay"]
+emission_angle_enabled = true
+doppler_tracking = 1
+
+[node name="IKSpace" type="Node3D" parent="TargetSmooth/Render"]
+script = ExtResource("22_y4vc6")
+_player_input_path = NodePath("../../../PlayerInput")
+origin_interpolation_factor = 15.0
+rotation_interpolation_factor = 15.0
+_camera_controller_node_path = NodePath("../../PlayerCameraController")
+_ren_ik_path = NodePath("../RenIK")
+_avatar_display_path = NodePath("../AvatarDisplay")
+
+[node name="RenIK" type="RenIK" parent="TargetSmooth/Render"]
+process_priority = 1
+arm_elbow_direction_offset = 90.0
+arm_upper_arm_twist_offset = 90.0
+arm_pole_offset = Vector3(15, 90, 60)
+
+[node name="InfoTag" parent="TargetSmooth" instance=ExtResource("23_3vnkv")]
+visible = false
+
+[node name="Target" type="Node3D" parent="."]
+
+[node name="PlayerCharacterBody" type="CharacterBody3D" parent="."]
+editor_description = "Mostly a vanilla configuration of the new Godot CharacterBody3D, but with a fairly high tolerance for maximum slopes, higher than I would like, but seems to be fairly reliable for stairs. Would like to lower this, but I think in order for it to work, new functionality would have to be added to the API to support stuff like snapping raycasts and callbacks for the size of individual face collisions in order to avoid snagging on tiny outcrops. For now though, should be 'good enough'."
+collision_layer = 0
+floor_constant_speed = true
+floor_max_angle = 1.15192
+floor_snap_length = 0.2
+script = ExtResource("24_e6g03")
+
+[node name="CollisionShape" type="CollisionShape3D" parent="PlayerCharacterBody"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("1")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[connection signal="entity_message" from="." to="PlayerInteractionController" method="_on_entity_message"]
+[connection signal="transform_changed" from="TransformNotification" to="PlayerController" method="_on_transform_changed"]
+[connection signal="transform_updated" from="PlayerNetworkLogic/NetworkTransform" to="PlayerController" method="_network_transform_update"]
+[connection signal="avatar_path_updated" from="PlayerRPCTable" to="PlayerController" method="_on_rpc_avatar_path_updated"]
+[connection signal="avatar_changed" from="AvatarLoader" to="TargetSmooth/Render/IKSpace" method="_on_avatar_changed"]
+[connection signal="avatar_cleared" from="AvatarLoader" to="TargetSmooth/Render/AvatarDisplay" method="_on_avatar_cleared"]
+[connection signal="avatar_download_started" from="AvatarLoader" to="PlayerInfoTagController" method="_on_avatar_download_started"]
+[connection signal="avatar_load_stage" from="AvatarLoader" to="PlayerInfoTagController" method="_on_avatar_load_stage"]
+[connection signal="avatar_ready" from="AvatarLoader" to="TargetSmooth/Render/AvatarDisplay" method="_on_avatar_ready"]
+[connection signal="transform_complete" from="TargetSmooth" to="PlayerController" method="_on_target_smooth_transform_complete"]
+[connection signal="avatar_setup_complete" from="TargetSmooth/Render/AvatarDisplay" to="AvatarLoader" method="_on_avatar_setup_complete"]
+[connection signal="avatar_setup_failed" from="TargetSmooth/Render/AvatarDisplay" to="AvatarLoader" method="_on_avatar_setup_failed"]
+[connection signal="touched_by_body" from="PlayerCharacterBody" to="PlayerController" method="_on_touched_by_body"]
+
+[editable path="PlayerController/StateMachine"]

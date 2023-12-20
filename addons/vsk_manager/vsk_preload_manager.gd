@@ -166,7 +166,7 @@ func request_preloading_tasks() -> bool:
 func _process(_delta: float) -> void:
 	if preloading_failed_flag:
 		push_error("preloading failure flag triggered!")
-		return
+		get_tree().quit(1)
 
 
 func setup() -> void:

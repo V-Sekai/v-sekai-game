@@ -1,7 +1,0 @@
-[gd_scene format=3 uid="uid://dh1f2a20fn4dq"]
-
-[node name="Player" type="Node3D"]
-
-[node name="Camera3D" type="Camera3D" parent="."]
-current = true
-fov = 90.0

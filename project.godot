@@ -521,8 +521,8 @@ config/use_multiplayer_manager=false
 
 [network]
 
-config/player_scene="res://addons/vsk_entities/vsk_player.tscn"
-config/networked_scenes=PackedStringArray("res://addons/vsk_entities/vsk_player.tscn")
+config/player_scene="res://addons/vsk_entities/vsk_player_old.tscn"
+config/networked_scenes=PackedStringArray("res://addons/vsk_entities/vsk_player_old.tscn")
 config/max_networked_entities=4096
 config/simulate_network_conditions=false
 config/entity_root_node=NodePath("")
