@@ -1,0 +1,20 @@
+[gd_scene load_steps=5 format=3 uid="uid://cfngp8rd4ii47"]
+
+[ext_resource type="Script" path="res://addons/vsk_entities/extensions/player_movement_controller.gd" id="1_24qaq"]
+[ext_resource type="Script" path="res://addons/vsk_entities/extensions/player_movement/player_movement_head_offset.gd" id="2_2sqgw"]
+[ext_resource type="Script" path="res://addons/vsk_entities/extensions/player_movement/player_movement_turn.gd" id="3_lmyyb"]
+[ext_resource type="Script" path="res://addons/vsk_entities/extensions/player_movement/player_movement_direct.gd" id="4_ngprk"]
+
+[node name="PlayerMovementController" type="Node"]
+script = ExtResource("1_24qaq")
+
+[node name="PlayerMovementHeadOffset" type="Node" parent="."]
+script = ExtResource("2_2sqgw")
+
+[node name="PlayerMovementTurn" type="Node" parent="."]
+script = ExtResource("3_lmyyb")
+mouse_sensitivity = 0.1
+
+[node name="PlayerMovementDirect" type="Node" parent="."]
+script = ExtResource("4_ngprk")
+speed = 0.1
