@@ -30,7 +30,7 @@ func _enter_tree() -> void:
 
 func _ready() -> void:
 	if is_multiplayer_authority():
-		print(transform.origin)s
+		print(transform.origin)
 		
 		if player_movement_controller:
 			player_movement_controller.create_instance(true)
