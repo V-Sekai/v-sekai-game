@@ -15,8 +15,8 @@ func _physics_process(p_delta: float) -> void:
 			child.execute(self, p_delta)
 			
 		# Apply gravity
-		#if !character_body.is_on_floor():
-		#	character_body.velocity += Vector3.DOWN * _gravity * p_delta
+		if !character_body.is_on_floor():
+			character_body.velocity += Vector3.DOWN * _gravity * p_delta
 			
 		character_body.move_and_slide()
 		position_interpolation.origin_offset = -character_body.get_position_delta()
