@@ -1,20 +1,32 @@
-[gd_scene load_steps=5 format=3 uid="uid://cfngp8rd4ii47"]
+[gd_scene load_steps=6 format=3 uid="uid://cfngp8rd4ii47"]
 
 [ext_resource type="Script" path="res://addons/vsk_entities/extensions/player_movement_controller.gd" id="1_24qaq"]
 [ext_resource type="Script" path="res://addons/vsk_entities/extensions/player_movement/player_movement_head_offset.gd" id="2_2sqgw"]
 [ext_resource type="Script" path="res://addons/vsk_entities/extensions/player_movement/player_movement_turn.gd" id="3_lmyyb"]
 [ext_resource type="Script" path="res://addons/vsk_entities/extensions/player_movement/player_movement_direct.gd" id="4_ngprk"]
+[ext_resource type="Script" path="res://addons/vsk_entities/extensions/player_movement/player_movement_pitch.gd" id="5_i6pea"]
 
 [node name="PlayerMovementController" type="Node"]
+editor_description = "The PlayerMovementController is responsible for calculate basic kinematic movement which is then fed into the CharacterBody3D. It will run its child nodes which derive from the player_movement_provider class in order to calculate what movement will be required for next physics frame.
+
+It is also responsible for calculating the effect of gravity and provide an offset to the position interpolation node in order to give a smoother perception of movement."
 script = ExtResource("1_24qaq")
 
 [node name="PlayerMovementHeadOffset" type="Node" parent="."]
+editor_description = "Accumlates the XRCamera3D's position relative to the center of the XROrigin3D parent node. This offset then becomes kinematic movement fed directly into the CharacterBody3D. This means that the player will not be pushed away from walls or tables when leaning into them. It also means that complete world-scale locomotion is technically possible. The position of the XROrigin node is shifted to compensate for the offset so the effect is imperceptible to the player, but in a subtly higher quality VR experience compared to many apps."
 script = ExtResource("2_2sqgw")
 
 [node name="PlayerMovementTurn" type="Node" parent="."]
+editor_description = "Controls yaw rotation of the character. Accepts input from either mouse, Godot Input actions, or XRControllers."
 script = ExtResource("3_lmyyb")
 mouse_sensitivity = 0.1
 
 [node name="PlayerMovementDirect" type="Node" parent="."]
+editor_description = "Controls direct player locomotion. Accepts input from both XRControllers and Godot Input actions. When using Input actions, the relative direction is derived from the camera rotation, but XRController input must calculate their own relative direction."
 script = ExtResource("4_ngprk")
 speed = 0.1
+
+[node name="PlayerMovementPitch" type="Node" parent="."]
+editor_description = "Controls the pitch of the player camera from the input of the mouse. Is only valid when running the game in flat mode."
+script = ExtResource("5_i6pea")
+mouse_sensitivity = 0.1
