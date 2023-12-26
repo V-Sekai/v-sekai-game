@@ -10,7 +10,7 @@ func request_jump() -> void:
 func execute(p_movement_controller: Node, p_delta: float) -> void:
 	super.execute(p_movement_controller, p_delta)
 	
-	if _jump_requested:
+	if Input.is_action_pressed("jump") or _jump_requested:
 		if p_movement_controller.character_body.is_on_floor():
 			get_character_body(p_movement_controller).velocity += Vector3.UP * jump_velocity
 

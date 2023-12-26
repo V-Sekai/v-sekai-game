@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://cfngp8rd4ii47"]
+[gd_scene load_steps=7 format=3 uid="uid://cfngp8rd4ii47"]
 
 [ext_resource type="Script" path="res://addons/vsk_entities/extensions/player_movement_controller.gd" id="1_24qaq"]
 [ext_resource type="Script" path="res://addons/vsk_entities/extensions/player_movement/player_movement_head_offset.gd" id="2_2sqgw"]
 [ext_resource type="Script" path="res://addons/vsk_entities/extensions/player_movement/player_movement_turn.gd" id="3_lmyyb"]
 [ext_resource type="Script" path="res://addons/vsk_entities/extensions/player_movement/player_movement_direct.gd" id="4_ngprk"]
 [ext_resource type="Script" path="res://addons/vsk_entities/extensions/player_movement/player_movement_pitch.gd" id="5_i6pea"]
+[ext_resource type="Script" path="res://addons/vsk_entities/extensions/player_movement/player_movement_jump.gd" id="6_kax7c"]
 
 [node name="PlayerMovementController" type="Node"]
 editor_description = "The PlayerMovementController is responsible for calculate basic kinematic movement which is then fed into the CharacterBody3D. It will run its child nodes which derive from the player_movement_provider class in order to calculate what movement will be required for next physics frame.
@@ -30,3 +31,6 @@ speed = 0.1
 editor_description = "Controls the pitch of the player camera from the input of the mouse. Is only valid when running the game in flat mode."
 script = ExtResource("5_i6pea")
 mouse_sensitivity = 0.1
+
+[node name="PlayerMovementJump" type="Node" parent="."]
+script = ExtResource("6_kax7c")
