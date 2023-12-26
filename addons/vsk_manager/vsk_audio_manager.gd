@@ -514,9 +514,14 @@ func setup() -> void:
 
 		add_child(audio_input_stream_player, true)
 
-		godot_speech.set_audio_input_stream_player(audio_input_stream_player)
-		godot_speech.set_streaming_bus(MIC_BUS_NAME)
-		godot_speech.set_error_cancellation_bus(AEC_BUS_NAME)
+		if godot_speech.has_method("set_audio_input_stream_player"):
+			godot_speech.set_audio_input_stream_player(audio_input_stream_player)
+		
+		if godot_speech.has_method("set_streaming_bus"):
+			godot_speech.set_streaming_bus(MIC_BUS_NAME)
+		
+		if godot_speech.has_method("set_error_cancellation_bus"):
+			godot_speech.set_error_cancellation_bus(AEC_BUS_NAME)
 
 		spatial_node = Node3D.new()
 		spatial_node.set_name("SpatialNode")
