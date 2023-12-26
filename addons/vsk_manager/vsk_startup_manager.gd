@@ -27,7 +27,6 @@ var display_name_override = ""
 
 func _startup_complete() -> void:
 	await VSKPreloadManager.all_preloading_done
-	var _skipped = await VSKFadeManager.execute_fade(false).fade_complete
 
 	if !ip.is_empty():
 		await VSKGameFlowManager.join_server(ip, port)
@@ -38,7 +37,8 @@ func _startup_complete() -> void:
 		if !map.is_empty():
 			await VSKGameFlowManager.host_server(server_name, map, game_mode, port, max_players, is_dedicated, is_public, max_retries)
 		else:
-			VSKGameFlowManager.go_to_title(_skipped)
+			var skipped_fade: bool = await VSKFadeManager.execute_fade(VSKFadeManager.FadeState.FADE_OUT).fade_complete
+			VSKGameFlowManager.go_to_title(skipped_fade)
 
 
 func setup_vsk_singletons() -> void:
@@ -64,7 +64,7 @@ func flow_preload() -> void:
 
 
 func execute_fade() -> void:
-	await VSKFadeManager.execute_fade(true).fade_complete
+	await VSKFadeManager.execute_fade(VSKFadeManager.FadeState.FADE_IN).fade_complete
 
 
 func parse_commandline_args() -> void:
@@ -95,10 +95,10 @@ func parse_commandline_args() -> void:
 	is_public = commandline_argument_dictionary.has("public")
 
 	if commandline_argument_dictionary.has("map"):
-		map = commandline_argument_dictionary["map"][0]
+		map = commandline_argument_dictionary["map"]
 
 	if commandline_argument_dictionary.has("game_mode"):
-		game_mode = commandline_argument_dictionary["game_mode"][0]
+		game_mode = commandline_argument_dictionary["game_mode"]
 
 	if commandline_argument_dictionary.has("max_players"):
 		max_players = commandline_argument_dictionary["max_players"][0].to_int()

@@ -591,7 +591,7 @@ func _host_state_complete(p_instances: Dictionary) -> void:
 	if is_session_alive():
 		if p_instances["map"]:
 			server_state_ready.emit()
-			var skipped: bool = await VSKFadeManager.execute_fade(false).fade_complete
+			var skipped: bool = await VSKFadeManager.execute_fade(VSKFadeManager.FadeState.FADE_OUT).fade_complete
 			_host_setup_map(p_instances, skipped)
 		else:
 			network_callback.emit(INVALID_MAP, {})
@@ -819,7 +819,7 @@ func _client_state_initialization_complete(p_instance: Node) -> void:
 		return
 
 	# is a bool
-	var skipped = await VSKFadeManager.execute_fade(false).fade_complete
+	var skipped = await VSKFadeManager.execute_fade(VSKFadeManager.FadeState.FADE_OUT).fade_complete
 	if is_session_alive():
 		_client_state_initialization_fade_complete(p_instance, skipped)
 

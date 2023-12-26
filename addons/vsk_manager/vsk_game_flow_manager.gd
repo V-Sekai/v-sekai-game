@@ -263,7 +263,7 @@ func go_to_ingame(p_fade_skipped: bool) -> void:
 	set_gameflow_state(GAMEFLOW_STATE_INGAME)
 
 	if !p_fade_skipped:
-		var _skipped: bool = await VSKFadeManager.execute_fade(true).fade_complete
+		var _skipped: bool = await VSKFadeManager.execute_fade(VSKFadeManager.FadeState.FADE_IN).fade_complete
 
 
 ##
@@ -285,7 +285,7 @@ func go_to_title(p_fade_skipped: bool) -> void:
 		request_quit()
 
 	if !p_fade_skipped:
-		var _skipped: bool = await VSKFadeManager.execute_fade(true).fade_complete
+		var _skipped: bool = await VSKFadeManager.execute_fade(VSKFadeManager.FadeState.FADE_IN).fade_complete
 
 
 ##
@@ -296,7 +296,7 @@ func go_to_interstitial_screen() -> void:
 	if quit_flag:
 		return
 
-	var skipped: bool = await VSKFadeManager.execute_fade(false).fade_complete
+	var skipped: bool = await VSKFadeManager.execute_fade(VSKFadeManager.FadeState.FADE_OUT).fade_complete
 	if quit_flag:
 		return
 
@@ -308,7 +308,7 @@ func go_to_interstitial_screen() -> void:
 		VSKNetworkManager.force_disconnect()
 
 	if !skipped:
-		skipped = await VSKFadeManager.execute_fade(true).fade_complete
+		skipped = await VSKFadeManager.execute_fade(VSKFadeManager.FadeState.FADE_IN).fade_complete
 
 
 ##

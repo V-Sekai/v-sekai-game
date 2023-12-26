@@ -483,7 +483,7 @@ func _map_loaded() -> void:
 	
 	#server_state_initialising.emit()
 	
-	var skipped: bool = await VSKFadeManager.execute_fade(false).fade_complete
+	var skipped: bool = await VSKFadeManager.execute_fade(VSKFadeManager.FadeState.FADE_OUT).fade_complete
 
 	await _spawn_map()
 	

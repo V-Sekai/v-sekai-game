@@ -30,6 +30,10 @@ var is_fading = false
 ##  Emitted when a fade is complete
 signal fade_complete(p_fade_skipped)
 
+enum FadeState {
+	FADE_OUT,
+	FADE_IN,
+}
 
 ##
 ## Callback function which emitted when a crossfade is completed.
@@ -52,12 +56,12 @@ func _fade_complete(p_fade_skipped: bool) -> void:
 ## p_fade_in denotes that the fade should a fade-in if true and
 ## a fade out if false.
 ##
-func execute_fade(p_fade_in: bool) -> Node:
+func execute_fade(p_fade_state: FadeState) -> Node:
 	is_fading = true
 
 	VSKMenuManager.get_menu_root().set_input_blocking(true)
 
-	if p_fade_in:
+	if p_fade_state == FadeState.FADE_IN:
 		FadeManager.call_deferred("execute_fade", FADE_COLOR, UNFADE_COLOR, FADE_TIME)
 	else:
 		FadeManager.call_deferred("execute_fade", UNFADE_COLOR, FADE_COLOR, FADE_TIME)
