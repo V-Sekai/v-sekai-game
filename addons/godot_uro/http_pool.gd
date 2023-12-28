@@ -225,7 +225,7 @@ class HTTPState:
 
 
 func _process(_ts: float):
-    call_deferred("emit_signal", "http_tick")
+	call_deferred("emit_signal", "http_tick")
 
 
 func _init(p_http_client_limit: int = 5):
