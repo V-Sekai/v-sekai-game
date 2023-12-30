@@ -158,17 +158,21 @@ func _threaded_loading_method() -> void:
 		var tasks: Dictionary = _get_loading_task_paths()
 		if tasks.size() == 0:
 			continue
-
+				
 		for task_path in tasks.keys():
 			var loading_task: LoadingTask = _loading_tasks[task_path]
+			
+			if !ResourceLoader.has_method("load_threaded_request_whitelisted"):
+				print("Warning: load_threaded_request_whitelisted is not available in this build. All loading will bypass the whitelist.")
+				loading_task.bypass_whitelist = true
 
 			if loading_task.load_path == "":
 				if loading_task.bypass_whitelist:
 					print("Load " + str(task_path) + " of type " + str(loading_task.type_hint) + " **skip whitelist**")
-					ResourceLoader.load_threaded_request(task_path, loading_task.type_hint)
+					ResourceLoader.call("load_threaded_request", task_path, loading_task.type_hint)
 				else:
 					print("Load " + str(task_path) + " of type " + str(loading_task.type_hint) + " with " + str(loading_task.external_path_whitelist) + " and " + str(loading_task.type_whitelist))
-					ResourceLoader.load_threaded_request_whitelisted(task_path, loading_task.external_path_whitelist, loading_task.type_whitelist, loading_task.type_hint)
+					ResourceLoader.call("load_threaded_request_whitelisted", task_path, loading_task.external_path_whitelist, loading_task.type_whitelist, loading_task.type_hint)
 
 				loading_task.load_path = task_path if task_path else ""
 				if loading_task.load_path != "":
