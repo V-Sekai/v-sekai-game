@@ -215,6 +215,15 @@ var _auth_heartbeat_frequency: float = 5.0  # In seconds
 var _peers: Array = []
 
 ##
+## Whether to use a worker pool task to instantiate the 'map'
+## scene. If false, will use the main thread.
+## (Currently set to false since the engine appears to indefinetly hang.
+## hang if instantiation is attempted from a background thread. Requires
+## further investigation.)
+##
+const INSTANTIATE_MAPS_VIA_WORKER_POOL = false
+
+##
 ## Returns true if we have an active network session.
 ##
 func _is_session_alive() -> bool:
@@ -451,14 +460,18 @@ func _instantiate_and_cache_map_task() -> void:
 ## Spawns the currently loaded map.
 ##
 func _spawn_map() -> void:
-	# TODO - revise VSKMapManager to have better interface.
-	var _instantiate_and_cache_map_task_id: int = await WorkerThreadPool.add_task(
-		_instantiate_and_cache_map_task,
-		true,
-		"_instantiate_and_cache_map_task")
-	
-	var task_result: Error = await WorkerThreadPool.wait_for_task_completion(_instantiate_and_cache_map_task_id)
-	if task_result == OK:
+	if INSTANTIATE_MAPS_VIA_WORKER_POOL:
+		# TODO - revise VSKMapManager to have better interface.
+		var _instantiate_and_cache_map_task_id: int = await WorkerThreadPool.add_task(
+			_instantiate_and_cache_map_task,
+			true,
+			"_instantiate_and_cache_map_task")
+		
+		var task_result: Error = await WorkerThreadPool.wait_for_task_completion(_instantiate_and_cache_map_task_id)
+		if task_result == OK:
+			VSKMapManager.set_current_map(_current_map_path, _current_map_instance)
+	else:
+		await _instantiate_and_cache_map_task()
 		VSKMapManager.set_current_map(_current_map_path, _current_map_instance)
 
 ############################
