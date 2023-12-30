@@ -181,7 +181,7 @@ func peer_list_changed() -> void:
 
 func _on_Disconnect_pressed() -> void:
 	VSKGameFlowManager.cancel_map_load()
-	var skipped: bool = await VSKFadeManager.execute_fade(false).fade_complete
+	var skipped: bool = await VSKFadeManager.execute_fade(VSKFadeManager.FadeState.FADE_OUT).fade_complete
 	await VSKGameFlowManager.go_to_title(skipped)
 
 
