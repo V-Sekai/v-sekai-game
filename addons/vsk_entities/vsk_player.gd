@@ -13,7 +13,6 @@ extends CharacterBody3D
 ##
 func _setup_authority() -> void:
 	var id_string: String = name.lstrip("Player_")
-	var id_int: int = id_string.to_int()
 	set_multiplayer_authority(id_string.to_int())
 	
 	# The MultiplayerSynchronizerSpawn node show always have its authority
