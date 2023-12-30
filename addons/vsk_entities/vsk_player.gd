@@ -20,9 +20,6 @@ func _setup_authority() -> void:
 	# owned by the host
 	if spawn_sync_node:
 		spawn_sync_node.set_multiplayer_authority(1)
-		
-	if is_multiplayer_authority():
-		print(transform.origin)
 
 func _enter_tree() -> void:
 	# This derives the correct authority for this node based on the node's name.
