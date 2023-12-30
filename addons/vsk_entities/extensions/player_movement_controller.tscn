@@ -25,7 +25,6 @@ mouse_sensitivity = 0.1
 [node name="PlayerMovementDirect" type="Node" parent="."]
 editor_description = "Controls direct player locomotion. Accepts input from both XRControllers and Godot Input actions. When using Input actions, the relative direction is derived from the camera rotation, but XRController input must calculate their own relative direction."
 script = ExtResource("4_ngprk")
-speed = 0.1
 
 [node name="PlayerMovementPitch" type="Node" parent="."]
 editor_description = "Controls the pitch of the player camera from the input of the mouse. Is only valid when running the game in flat mode."

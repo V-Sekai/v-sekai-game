@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://dwym0tadklcmg"]
+
+[ext_resource type="Script" path="res://addons/vsk_entities/extensions/player_movement/xr_controller/xr_controller_movement_direct.gd" id="1_7sqig"]
+
+[node name="XRControllerMovementDirect" type="Node3D"]
+process_physics_priority = -1
+script = ExtResource("1_7sqig")
+input_action = "move"

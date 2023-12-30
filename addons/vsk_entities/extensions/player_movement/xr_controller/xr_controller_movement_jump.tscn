@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://7f42cd5n28nu"]
+
+[ext_resource type="Script" path="res://addons/vsk_entities/extensions/player_movement/xr_controller/xr_controller_movement_jump.gd" id="1_yv81c"]
+
+[node name="XRControllerMovementJump" type="Node3D"]
+script = ExtResource("1_yv81c")

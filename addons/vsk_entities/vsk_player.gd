@@ -30,13 +30,6 @@ func _enter_tree() -> void:
 
 func _ready() -> void:
 	if is_multiplayer_authority():
-		print(transform.origin)
-		
-		if player_movement_controller:
-			player_movement_controller.create_instance(true)
-		else:
-			printerr("Player movement controller not found!")
-			
 		if collision_shape:
 			collision_shape.disabled = false
 		else:
@@ -44,5 +37,13 @@ func _ready() -> void:
 			
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	else:
-		camera.queue_free()
-		camera.get_parent().remove_child(camera)
+		if player_movement_controller:
+			player_movement_controller.queue_free()
+		else:
+			printerr("Player movement controller not found!")
+		
+		if camera:
+			camera.queue_free()
+			camera.get_parent().remove_child(camera)
+		else:
+			printerr("Player camera controller not found!")

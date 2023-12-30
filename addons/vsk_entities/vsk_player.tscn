@@ -1,8 +1,17 @@
-[gd_scene load_steps=9 format=3 uid="uid://dh1f2a20fn4dq"]
+[gd_scene load_steps=18 format=3 uid="uid://dh1f2a20fn4dq"]
 
 [ext_resource type="Script" path="res://addons/vsk_entities/vsk_player.gd" id="1_ily3q"]
 [ext_resource type="Script" path="res://addons/vsk_entities/extensions/interpolate_origin_to_zero_node_3d.gd" id="2_jhmsa"]
+[ext_resource type="PackedScene" uid="uid://cfngp8rd4ii47" path="res://addons/vsk_entities/extensions/player_movement_controller.tscn" id="2_lxa8t"]
 [ext_resource type="Script" path="res://addons/vsk_entities/extensions/interpolate_angle_to_zero_anchored_node_3d.gd" id="3_km368"]
+[ext_resource type="Script" path="res://addons/vsk_entities/extensions/player_xr_origin.gd" id="4_pk7ri"]
+[ext_resource type="PackedScene" uid="uid://bslhttmjse5ys" path="res://addons/vsk_entities/extensions/player_xr_camera_3d.tscn" id="5_poivo"]
+[ext_resource type="PackedScene" uid="uid://ftfgiu7f6lwh" path="res://addons/vsk_entities/extensions/models/godot_head.gltf" id="6_bh1rj"]
+[ext_resource type="PackedScene" uid="uid://dongdv6lw5txv" path="res://addons/vsk_entities/extensions/models/left_hand.tscn" id="7_6wp6e"]
+[ext_resource type="PackedScene" uid="uid://dwym0tadklcmg" path="res://addons/vsk_entities/extensions/player_movement/xr_controller/xr_controller_movement_direct.tscn" id="8_q2ago"]
+[ext_resource type="PackedScene" uid="uid://7f42cd5n28nu" path="res://addons/vsk_entities/extensions/player_movement/xr_controller/xr_controller_movement_jump.tscn" id="9_k7yja"]
+[ext_resource type="PackedScene" uid="uid://cgtymgaebafux" path="res://addons/vsk_entities/extensions/models/right_hand.tscn" id="10_6s44a"]
+[ext_resource type="PackedScene" uid="uid://qecslyswsnjn" path="res://addons/vsk_entities/extensions/player_movement/xr_controller/xr_controller_movement_turn.tscn" id="11_prhln"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ks12f"]
 radius = 0.1
@@ -30,14 +39,14 @@ axis_lock_angular_z = true
 script = ExtResource("1_ily3q")
 player_movement_controller = NodePath("PlayerMovementController")
 collision_shape = NodePath("CollisionShape3D")
-camera = NodePath("PositionInterpolation/RotationInterpolation/XROrigin3D/XRCamera3D")
+camera = NodePath("PositionInterpolation/RotationInterpolation/PlayerXROrigin3D/PlayerXRCamera3D")
 spawn_sync_node = NodePath("MultiplayerSynchronizerSpawn")
 update_sync_node = NodePath("MultiplayerSynchronizerUpdate")
 
-[node name="PlayerMovementController" parent="." node_paths=PackedStringArray("character_body", "xr_origin", "xr_camera", "position_interpolation", "rotation_interpolation") instance_placeholder="res://addons/vsk_entities/extensions/player_movement_controller.tscn"]
+[node name="PlayerMovementController" parent="." node_paths=PackedStringArray("character_body", "xr_origin", "xr_camera", "position_interpolation", "rotation_interpolation") instance=ExtResource("2_lxa8t")]
 character_body = NodePath("..")
-xr_origin = NodePath("../PositionInterpolation/RotationInterpolation/XROrigin3D")
-xr_camera = NodePath("../PositionInterpolation/RotationInterpolation/XROrigin3D/XRCamera3D")
+xr_origin = NodePath("../PositionInterpolation/RotationInterpolation/PlayerXROrigin3D")
+xr_camera = NodePath("../PositionInterpolation/RotationInterpolation/PlayerXROrigin3D/PlayerXRCamera3D")
 position_interpolation = NodePath("../PositionInterpolation")
 rotation_interpolation = NodePath("../PositionInterpolation/RotationInterpolation")
 
@@ -51,12 +60,18 @@ script = ExtResource("2_jhmsa")
 
 [node name="RotationInterpolation" type="Node3D" parent="PositionInterpolation" node_paths=PackedStringArray("anchor_node")]
 script = ExtResource("3_km368")
-anchor_node = NodePath("XROrigin3D/XRCamera3D")
+anchor_node = NodePath("PlayerXROrigin3D/PlayerXRCamera3D")
 
-[node name="XROrigin3D" type="XROrigin3D" parent="PositionInterpolation/RotationInterpolation"]
+[node name="PlayerXROrigin3D" type="XROrigin3D" parent="PositionInterpolation/RotationInterpolation" node_paths=PackedStringArray("xr_camera", "player_movement_controller")]
+script = ExtResource("4_pk7ri")
+xr_camera = NodePath("PlayerXRCamera3D")
+player_movement_controller = NodePath("../../../PlayerMovementController")
+xr_camera_scene = ExtResource("5_poivo")
+head_child_scenes = Array[PackedScene]([ExtResource("6_bh1rj")])
+left_hand_child_scenes = Array[PackedScene]([ExtResource("7_6wp6e"), ExtResource("8_q2ago"), ExtResource("9_k7yja")])
+right_hand_child_scenes = Array[PackedScene]([ExtResource("10_6s44a"), ExtResource("11_prhln"), ExtResource("9_k7yja")])
 
-[node name="XRCamera3D" type="XRCamera3D" parent="PositionInterpolation/RotationInterpolation/XROrigin3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+[node name="PlayerXRCamera3D" parent="PositionInterpolation/RotationInterpolation/PlayerXROrigin3D" instance=ExtResource("5_poivo")]
 
 [node name="MultiplayerSynchronizerSpawn" type="MultiplayerSynchronizer" parent="."]
 unique_name_in_owner = true

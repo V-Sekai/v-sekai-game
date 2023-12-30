@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://qecslyswsnjn"]
+
+[ext_resource type="Script" path="res://addons/vsk_entities/extensions/player_movement/xr_controller/xr_controller_movement_turn.gd" id="1_6keg4"]
+
+[node name="XRControllerMovementTurn" type="Node3D"]
+script = ExtResource("1_6keg4")
+input_action = "turn"
