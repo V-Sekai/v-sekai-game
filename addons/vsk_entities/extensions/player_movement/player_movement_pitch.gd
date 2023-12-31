@@ -5,9 +5,10 @@ extends "player_movement_provider.gd"
 var _camera_tilt: float = 0.0
 var _vertical_input: float = 0.0
 
-func execute(p_movement_controller: Node, p_delta: float) -> void:
-	super.execute(p_movement_controller, p_delta)
-	
+func execute(p_movement_controller: Node, p_delta: float) -> bool:
+	if !super.execute(p_movement_controller, p_delta):
+		return false
+		
 	if not get_viewport().is_using_xr():
 		var v_rot_offset: float = _vertical_input * p_delta
 	
@@ -18,6 +19,8 @@ func execute(p_movement_controller: Node, p_delta: float) -> void:
 
 	# Reset the input
 	_vertical_input = 0.0
+	
+	return true
 	
 func _input(p_event: InputEvent) -> void:
 	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:

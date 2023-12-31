@@ -1,19 +1,41 @@
-@tool
-class_name XRToolsVignette
+#@tool
 extends Node3D
 
-@export var radius : float = 1.0: set = set_radius
-@export var fade : float = 0.05: set = set_fade
-@export var steps : int = 32: set = set_steps
+@export var radius = 1.0:
+	set(new_value):
+		radius = new_value
+		if is_inside_tree():
+			_update_radius()
 
-@export var auto_adjust : bool = true: set = set_auto_adjust
-@export var auto_inner_radius : float = 0.35
-@export var auto_fade_out_factor : float = 1.5
-@export var auto_fade_delay : float = 1.0
-@export var auto_rotation_limit : float = 20.0: set = set_auto_rotation_limit
-@export var auto_velocity_limit : float = 10.0
+@export var fade = 0.05:
+	set(new_value):
+		fade = new_value
+		if is_inside_tree():
+			_update_fade()
 
-var material : ShaderMaterial = preload("res://addons/godot-xr-tools/effects/vignette.tres")
+@export var steps = 32:
+	set(new_value):
+		steps = new_value
+		if is_inside_tree():
+			_update_mesh()
+
+@export var auto_adjust = true:
+	set(new_value):
+		auto_adjust = new_value
+		if is_inside_tree() and !Engine.is_editor_hint():
+			_update_auto_adjust()
+
+@export var auto_inner_radius = 0.35
+@export var auto_fade_out_factor = 1.5
+@export var auto_fade_delay = 1.0
+@export var auto_rotation_limit = 20.0:
+	set(new_value):
+		auto_rotation_limit = new_value
+		auto_rotation_limit_rad = deg_to_rad(auto_rotation_limit)
+
+@export var auto_velocity_limit = 10.0
+
+var material : ShaderMaterial = preload("res://addons/godot-xr-tools/effects/vignette.material")
 
 var auto_first = true
 var fade_delay = 0.0
@@ -22,12 +44,7 @@ var last_origin_basis : Basis
 var last_location : Vector3
 @onready var auto_rotation_limit_rad = deg_to_rad(auto_rotation_limit)
 
-func set_radius(new_radius : float) -> void:
-	radius = new_radius
-	if is_inside_tree():
-		_update_radius()
-
-func _update_radius() -> void:
+func _update_radius():
 	if radius < 1.0:
 		if material:
 			material.set_shader_parameter("radius", radius * sqrt(2))
@@ -35,22 +52,11 @@ func _update_radius() -> void:
 	else:
 		$Mesh.visible = false
 
-func set_fade(new_fade : float) -> void:
-	fade = new_fade
-	if is_inside_tree():
-		_update_fade()
-
-func _update_fade() -> void:
+func _update_fade():
 	if material:
 		material.set_shader_parameter("fade", fade)
 
-
-func set_steps(new_steps : int) -> void:
-	steps = new_steps
-	if is_inside_tree():
-		_update_mesh()
-
-func _update_mesh() -> void:
+func _update_mesh():
 	var vertices : PackedVector3Array
 	var indices : PackedInt32Array
 
@@ -82,31 +88,25 @@ func _update_mesh() -> void:
 	$Mesh.mesh = arr_mesh
 	$Mesh.set_surface_override_material(0, material)
 
-func set_auto_adjust(new_auto_adjust : bool) -> void:
-	auto_adjust = new_auto_adjust
-	if is_inside_tree() and !Engine.is_editor_hint():
-		_update_auto_adjust()
-
-func _update_auto_adjust() -> void:
+func _update_auto_adjust():
 	# Turn process on if auto adjust is true.
 	# Note we don't turn it off here, we want to finish fading out the vignette if needed
 	if auto_adjust:
 		set_process(true)
 
-func set_auto_rotation_limit(new_auto_rotation_limit : float) -> void:
-	auto_rotation_limit = new_auto_rotation_limit
-	auto_rotation_limit_rad = deg_to_rad(auto_rotation_limit)
+func _get_origin_node() -> XROrigin3D:
+	var parent = get_parent()
+	while parent:
+		if parent and parent is XROrigin3D:
+			return parent
+		parent = parent.get_parent()
 
-
-# Add support for is_xr_class on XRTools classes
-func is_xr_class(name : String) -> bool:
-	return name == "XRToolsVignette"
-
+	return null
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	if !Engine.is_editor_hint():
-		origin_node = XRHelpers.get_xr_origin(self)
+		origin_node = _get_origin_node()
 		_update_mesh()
 		_update_radius()
 		_update_fade()
@@ -144,34 +144,31 @@ func _process(delta):
 
 	# Adjust radius based on rotation speed of our origin point (not of head movement).
 	# We convert our delta rotation to a quaterion.
-	# A quaternion represents a rotation around an angle.
+	# A quaternion represents a rotation around an angle. 
 	var q = delta_b.get_rotation_quaternion()
 
-	# We get our angle from our w component and then adjust to get a
+	# We get our angle from our w component and then adjust to get a 
 	# rotation speed per second by dividing by delta
 	var angle = (2 * acos(q.w)) / delta
 
 	# Calculate what our radius should be for our rotation speed
 	var target_radius = 1.0
 	if auto_rotation_limit > 0:
-		target_radius = 1.0 - (
-			clamp(angle / auto_rotation_limit_rad, 0.0, 1.0) * (1.0 - auto_inner_radius))
+		target_radius = 1.0 - (clamp(angle / auto_rotation_limit_rad, 0.0, 1.0) * (1.0 - auto_inner_radius))
 
-	# Now do the same for speed, this includes players physical speed but there
-	# isn't much we can do there.
+	# Now do the same for speed, this includes players physical speed but there isn't much we can do there.
 	if auto_velocity_limit > 0:
 		var velocity = delta_v.length() / delta
-		target_radius = min(target_radius, 1.0 - (
-				clamp(velocity / auto_velocity_limit, 0.0, 1.0) * (1.0 - auto_inner_radius)))
+		target_radius = min(target_radius, 1.0 - (clamp(velocity / auto_velocity_limit, 0.0, 1.0) * (1.0 - auto_inner_radius)))
 
 	# if our radius is small then our current we apply it
 	if target_radius < radius:
-		set_radius(target_radius)
+		radius = target_radius
 		fade_delay = auto_fade_delay
 	elif fade_delay > 0.0:
 		fade_delay -= delta
-	else:
-		set_radius(clamp(radius + delta / auto_fade_out_factor, 0.0, 1.0))
+	else: 
+		radius = clamp(radius + delta / auto_fade_out_factor, 0.0, 1.0)
 
 	last_origin_basis = origin_node.global_transform.basis
 	last_location = global_transform.origin
@@ -180,16 +177,15 @@ func _process(delta):
 # Specifically it checks the following:
 # - XROrigin3D is a parent
 # - XRCamera3D is our parent
-func _get_configuration_warnings() -> PackedStringArray:
-	var warnings := PackedStringArray()
-
+func _get_configuration_warning():
 	# Check the origin node
-	if !XRHelpers.get_xr_origin(self):
-		warnings.append("Parent node must be in a branch from XROrigin3D")
-
+	var node = _get_origin_node()
+	if !node: 
+		return "Parent node must be in a branch from XROrigin3D"
+	
 	# check camera node
 	var parent = get_parent()
 	if !parent or !parent is XRCamera3D:
-		warnings.append("Parent node must be an XRCamera3D")
+		return "Parent node must be an XRCamera3D"
 
-	return warnings
+	return ""

@@ -12,8 +12,11 @@ extends CharacterBody3D
 ## node.
 ##
 func _setup_authority() -> void:
-	var id_string: String = name.lstrip("Player_")
-	set_multiplayer_authority(id_string.to_int())
+	# Modifiy the player's authority based on its name.
+	if name.begins_with("Player_"):
+		var id_string: String = name.lstrip("Player_")
+		if id_string.is_valid_int():
+			set_multiplayer_authority(id_string.to_int())
 	
 	# The MultiplayerSynchronizerSpawn node show always have its authority
 	# owned by the host
@@ -31,7 +34,7 @@ func _ready() -> void:
 		else:
 			printerr("Collision shape not found!")
 			
-		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+		#Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	else:
 		if player_movement_controller:
 			player_movement_controller.queue_free()

@@ -50,10 +50,10 @@ var _controller_right_velocity : SlidingAverage = SlidingAverage.new(5)
 
 
 # Node references
-@onready var _origin_node := XRHelpers.get_xr_origin(self)
-@onready var _camera_node := XRHelpers.get_xr_camera(self)
-@onready var _controller_left_node := XRHelpers.get_left_controller(self)
-@onready var _controller_right_node := XRHelpers.get_right_controller(self)
+@onready var _origin_node : XROrigin3D = XRHelpers.get_xr_origin(self)
+@onready var _camera_node : XRCamera3D = XRHelpers.get_xr_camera(self)
+@onready var _controller_left_node : XRController3D = XRHelpers.get_left_controller(self)
+@onready var _controller_right_node : XRController3D = XRHelpers.get_right_controller(self)
 
 
 # Sliding Average class
@@ -91,9 +91,9 @@ class SlidingAverage:
 		return _sum / _size
 
 
-# Add support for is_xr_class on XRTools classes
-func is_xr_class(name : String) -> bool:
-	return name == "XRToolsMovementPhysicalJump" or super(name)
+func _ready():
+	# In Godot 4 we must now manually call our super class ready function
+	super._ready()
 
 
 # Perform jump detection
@@ -107,30 +107,6 @@ func physics_movement(delta: float, player_body: XRToolsPlayerBody, _disabled: b
 		_detect_arms_jump(delta, player_body)
 
 
-# This method verifies the movement provider has a valid configuration.
-func _get_configuration_warnings() -> PackedStringArray:
-	var warnings := super()
-
-	# Verify the camera
-	if !XRHelpers.get_xr_origin(self):
-		warnings.append("This node must be within a branch of an XROrigin3D node")
-
-	# Verify the camera
-	if !XRHelpers.get_xr_camera(self):
-		warnings.append("Unable to find XRCamera3D")
-
-	# Verify the left controller
-	if !XRHelpers.get_left_controller(self):
-		warnings.append("Unable to find left XRController3D node")
-
-	# Verify the right controller
-	if !XRHelpers.get_right_controller(self):
-		warnings.append("Unable to find left XRController3D node")
-
-	# Return warnings
-	return warnings
-
-
 # Detect the player jumping with their body (using the headset camera)
 func _detect_body_jump(delta: float, player_body: XRToolsPlayerBody) -> void:
 	# Get the camera instantaneous velocity
@@ -142,7 +118,7 @@ func _detect_body_jump(delta: float, player_body: XRToolsPlayerBody) -> void:
 	if abs(camera_vel) < 0.001:
 		return;
 
-	# Correct for world-scale (convert to player units)
+	# Correct for XR world-scale (convert to player units)
 	camera_vel /= XRServer.world_scale
 
 	# Clamp the camera instantaneous velocity to +/- 2x the jump threshold
@@ -174,19 +150,13 @@ func _detect_arms_jump(delta: float, player_body: XRToolsPlayerBody) -> void:
 	if abs(controller_left_vel) <= 0.001 and abs(controller_right_vel) <= 0.001:
 		return
 
-	# Correct for world-scale (convert to player units)
+	# Correct for XR world-scale (convert to player units)
 	controller_left_vel /= XRServer.world_scale
 	controller_right_vel /= XRServer.world_scale
 
 	# Clamp the controller instantaneous velocity to +/- 2x the jump threshold
-	controller_left_vel = clamp(
-			controller_left_vel,
-			-2.0 * arms_jump_threshold,
-			2.0 * arms_jump_threshold)
-	controller_right_vel = clamp(
-			controller_right_vel,
-			-2.0 * arms_jump_threshold,
-			2.0 * arms_jump_threshold)
+	controller_left_vel = clamp(controller_left_vel, -2.0 * arms_jump_threshold, 2.0 * arms_jump_threshold)
+	controller_right_vel = clamp(controller_right_vel, -2.0 * arms_jump_threshold, 2.0 * arms_jump_threshold)
 
 	# Get the averaged velocity
 	controller_left_vel = _controller_left_velocity.update(controller_left_vel)
@@ -195,3 +165,8 @@ func _detect_arms_jump(delta: float, player_body: XRToolsPlayerBody) -> void:
 	# Detect a jump
 	if controller_left_vel >= arms_jump_threshold and controller_right_vel >= arms_jump_threshold:
 		player_body.request_jump()
+
+# This method verifies the MovementProvider has a valid configuration.
+func _get_configuration_warning():
+	# Call base class
+	return super._get_configuration_warning()

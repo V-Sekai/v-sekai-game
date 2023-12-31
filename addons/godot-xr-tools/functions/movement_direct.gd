@@ -16,9 +16,9 @@ extends XRToolsMovementProvider
 @export var order : int = 10
 
 ## Movement speed
-@export var max_speed : float = 3.0
+@export var max_speed : float = 10.0
 
-## If true, the player can strafe
+## If true, the player can strafe 
 @export var strafe : bool = false
 
 ## Input action for movement direction
@@ -26,12 +26,12 @@ extends XRToolsMovementProvider
 
 
 # Controller node
-@onready var _controller := XRHelpers.get_xr_controller(self)
+@onready var _controller : XRController3D = get_parent()
 
 
-# Add support for is_xr_class on XRTools classes
-func is_xr_class(name : String) -> bool:
-	return name == "XRToolsMovementDirect" or super(name)
+func _ready():
+	# In Godot 4 we must now manually call our super class ready function
+	super._ready()
 
 
 # Perform jump movement
@@ -40,12 +40,12 @@ func physics_movement(_delta: float, player_body: XRToolsPlayerBody, _disabled: 
 	if !_controller.get_is_active():
 		return
 
-	## get input action with deadzone correction applied
-	var dz_input_action = XRToolsUserSettings.get_adjusted_vector2(_controller, input_action)
+	# Apply forwards/backwards ground control
+	player_body.ground_control_velocity.y += _controller.get_axis(input_action).y * max_speed
 
-	player_body.ground_control_velocity.y += dz_input_action.y * max_speed
+	# Apply left/right ground control
 	if strafe:
-		player_body.ground_control_velocity.x += dz_input_action.x * max_speed
+		player_body.ground_control_velocity.x += _controller.get_axis(input_action).x * max_speed
 
 	# Clamp ground control
 	var length := player_body.ground_control_velocity.length()
@@ -54,34 +54,11 @@ func physics_movement(_delta: float, player_body: XRToolsPlayerBody, _disabled: 
 
 
 # This method verifies the movement provider has a valid configuration.
-func _get_configuration_warnings() -> PackedStringArray:
-	var warnings := super()
-
+func _get_configuration_warning():
 	# Check the controller node
-	if !XRHelpers.get_xr_controller(self):
-		warnings.append("This node must be within a branch of an XRController3D node")
+	var test_controller = get_parent()
+	if !test_controller or !test_controller is XRController3D:
+		return "Unable to find XR Controller node"
 
-	# Return warnings
-	return warnings
-
-
-## Find the left [XRToolsMovementDirect] node.
-##
-## This function searches from the specified node for the left controller
-## [XRToolsMovementDirect] assuming the node is a sibling of the [XROrigin3D].
-static func find_left(node : Node) -> XRToolsMovementDirect:
-	return XRTools.find_xr_child(
-		XRHelpers.get_left_controller(node),
-		"*",
-		"XRToolsMovementDirect") as XRToolsMovementDirect
-
-
-## Find the right [XRToolsMovementDirect] node.
-##
-## This function searches from the specified node for the right controller
-## [XRToolsMovementDirect] assuming the node is a sibling of the [XROrigin3D].
-static func find_right(node : Node) -> XRToolsMovementDirect:
-	return XRTools.find_xr_child(
-		XRHelpers.get_right_controller(node),
-		"*",
-		"XRToolsMovementDirect") as XRToolsMovementDirect
+	# Call base class
+	return super._get_configuration_warning()

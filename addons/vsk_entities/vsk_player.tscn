@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://dh1f2a20fn4dq"]
+[gd_scene load_steps=19 format=3 uid="uid://doafhtfvstuff"]
 
 [ext_resource type="Script" path="res://addons/vsk_entities/vsk_player.gd" id="1_ily3q"]
 [ext_resource type="Script" path="res://addons/vsk_entities/extensions/interpolate_origin_to_zero_node_3d.gd" id="2_jhmsa"]
@@ -6,16 +6,34 @@
 [ext_resource type="Script" path="res://addons/vsk_entities/extensions/interpolate_angle_to_zero_anchored_node_3d.gd" id="3_km368"]
 [ext_resource type="Script" path="res://addons/vsk_entities/extensions/player_xr_origin.gd" id="4_pk7ri"]
 [ext_resource type="PackedScene" uid="uid://bslhttmjse5ys" path="res://addons/vsk_entities/extensions/player_xr_camera_3d.tscn" id="5_poivo"]
-[ext_resource type="PackedScene" uid="uid://ftfgiu7f6lwh" path="res://addons/vsk_entities/extensions/models/godot_head.gltf" id="6_bh1rj"]
+[ext_resource type="PackedScene" uid="uid://ftfgiu7f6lwh" path="res://addons/vsk_entities/extensions/models/godot_head.gltf" id="6_majn5"]
 [ext_resource type="PackedScene" uid="uid://dongdv6lw5txv" path="res://addons/vsk_entities/extensions/models/left_hand.tscn" id="7_6wp6e"]
-[ext_resource type="PackedScene" uid="uid://dwym0tadklcmg" path="res://addons/vsk_entities/extensions/player_movement/xr_controller/xr_controller_movement_direct.tscn" id="8_q2ago"]
-[ext_resource type="PackedScene" uid="uid://7f42cd5n28nu" path="res://addons/vsk_entities/extensions/player_movement/xr_controller/xr_controller_movement_jump.tscn" id="9_k7yja"]
+[ext_resource type="PackedScene" uid="uid://dwym0tadklcmg" path="res://addons/vsk_entities/extensions/player_movement/xr_controller/xr_controller_movement_direct.tscn" id="8_qv00o"]
+[ext_resource type="PackedScene" uid="uid://7f42cd5n28nu" path="res://addons/vsk_entities/extensions/player_movement/xr_controller/xr_controller_movement_jump.tscn" id="9_nap77"]
 [ext_resource type="PackedScene" uid="uid://cgtymgaebafux" path="res://addons/vsk_entities/extensions/models/right_hand.tscn" id="10_6s44a"]
-[ext_resource type="PackedScene" uid="uid://qecslyswsnjn" path="res://addons/vsk_entities/extensions/player_movement/xr_controller/xr_controller_movement_turn.tscn" id="11_prhln"]
+[ext_resource type="PackedScene" uid="uid://qecslyswsnjn" path="res://addons/vsk_entities/extensions/player_movement/xr_controller/xr_controller_movement_turn.tscn" id="11_edqlr"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ks12f"]
 radius = 0.1
 height = 1.5
+
+[sub_resource type="PackedScene" id="PackedScene_81y8k"]
+_bundled = {
+"conn_count": 0,
+"conns": PackedInt32Array(),
+"editable_instances": [],
+"names": PackedStringArray("PlayerXRCamera3D", "XRCamera3D", "transform"),
+"node_count": 1,
+"node_paths": [],
+"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 1, 2, 0, 0),
+"variants": [Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)],
+"version": 3
+}
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_13hgm"]
+albedo_color = Color(1, 0, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_5qth3"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_klfjt"]
 properties/0/path = NodePath(".:position")
@@ -27,15 +45,7 @@ properties/0/path = NodePath(".:position")
 properties/0/spawn = false
 properties/0/replication_mode = 1
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_13hgm"]
-albedo_color = Color(1, 0, 0, 1)
-
-[sub_resource type="SphereMesh" id="SphereMesh_5qth3"]
-
 [node name="Player" type="CharacterBody3D" node_paths=PackedStringArray("player_movement_controller", "collision_shape", "camera", "spawn_sync_node", "update_sync_node")]
-axis_lock_angular_x = true
-axis_lock_angular_y = true
-axis_lock_angular_z = true
 script = ExtResource("1_ily3q")
 player_movement_controller = NodePath("PlayerMovementController")
 collision_shape = NodePath("CollisionShape3D")
@@ -63,15 +73,21 @@ script = ExtResource("3_km368")
 anchor_node = NodePath("PlayerXROrigin3D/PlayerXRCamera3D")
 
 [node name="PlayerXROrigin3D" type="XROrigin3D" parent="PositionInterpolation/RotationInterpolation" node_paths=PackedStringArray("xr_camera", "player_movement_controller")]
+current = true
 script = ExtResource("4_pk7ri")
 xr_camera = NodePath("PlayerXRCamera3D")
 player_movement_controller = NodePath("../../../PlayerMovementController")
-xr_camera_scene = ExtResource("5_poivo")
-head_child_scenes = Array[PackedScene]([ExtResource("6_bh1rj")])
-left_hand_child_scenes = Array[PackedScene]([ExtResource("7_6wp6e"), ExtResource("8_q2ago"), ExtResource("9_k7yja")])
-right_hand_child_scenes = Array[PackedScene]([ExtResource("10_6s44a"), ExtResource("11_prhln"), ExtResource("9_k7yja")])
+xr_camera_scene = SubResource("PackedScene_81y8k")
+head_child_scenes = Array[PackedScene]([ExtResource("6_majn5")])
+left_hand_child_scenes = Array[PackedScene]([ExtResource("7_6wp6e"), ExtResource("8_qv00o"), ExtResource("9_nap77")])
+right_hand_child_scenes = Array[PackedScene]([ExtResource("10_6s44a"), ExtResource("11_edqlr"), ExtResource("9_nap77")])
 
 [node name="PlayerXRCamera3D" parent="PositionInterpolation/RotationInterpolation/PlayerXROrigin3D" instance=ExtResource("5_poivo")]
+
+[node name="DebugMesh" type="MeshInstance3D" parent="PositionInterpolation/RotationInterpolation/PlayerXROrigin3D"]
+material_override = SubResource("StandardMaterial3D_13hgm")
+mesh = SubResource("SphereMesh_5qth3")
+skeleton = NodePath("../../../..")
 
 [node name="MultiplayerSynchronizerSpawn" type="MultiplayerSynchronizer" parent="."]
 unique_name_in_owner = true
@@ -81,7 +97,3 @@ replication_config = SubResource("SceneReplicationConfig_klfjt")
 [node name="MultiplayerSynchronizerUpdate" type="MultiplayerSynchronizer" parent="."]
 unique_name_in_owner = true
 replication_config = SubResource("SceneReplicationConfig_ga4ik")
-
-[node name="DebugMesh" type="MeshInstance3D" parent="."]
-material_override = SubResource("StandardMaterial3D_13hgm")
-mesh = SubResource("SphereMesh_5qth3")

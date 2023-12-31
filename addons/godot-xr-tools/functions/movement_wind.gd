@@ -16,10 +16,6 @@ extends XRToolsMovementProvider
 signal wind_area_changed(active_wind_area)
 
 
-# Default wind area collision mask of 20:player-body
-const DEFAULT_MASK := 0b0000_0000_0000_1000_0000_0000_0000_0000
-
-
 ## Movement provider order
 @export var order : int = 25
 
@@ -27,28 +23,23 @@ const DEFAULT_MASK := 0b0000_0000_0000_1000_0000_0000_0000_0000
 @export var drag_multiplier : float = 1.0
 
 # Set our collision mask
-@export_flags_3d_physics var collision_mask : int = DEFAULT_MASK: set = set_collision_mask
+@export_flags_3d_physics var collision_mask : int = 524288: set = set_collision_mask
 
 
-# Wind detection area
+## Wind detection area
 var _sense_area : Area3D
 
-# Array of wind areas the player is in
+## Array of wind areas the player is in
 var _in_wind_areas := Array()
 
-# Currently active wind area
+## Currently active wind area
 var _active_wind_area : XRToolsWindArea
-
-
-# Add support for is_xr_class on XRTools classes
-func is_xr_class(name : String) -> bool:
-	return name == "XRToolsMovementWind" or super(name)
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	# In Godot 4 we must now manually call our super class ready function
-	super()
+	super._ready()
 
 	# Skip if running in the editor
 	if Engine.is_editor_hint():
@@ -120,7 +111,7 @@ func _on_area_exited(area: Area3D):
 	emit_signal("wind_area_changed", _active_wind_area)
 
 
-# Perform wind movement
+# Perform jump movement
 func physics_movement(delta: float, player_body: XRToolsPlayerBody, _disabled: bool):
 	# Skip if no active wind area
 	if !_active_wind_area:
@@ -133,3 +124,9 @@ func physics_movement(delta: float, player_body: XRToolsPlayerBody, _disabled: b
 	var drag_factor := _active_wind_area.drag * drag_multiplier * delta
 	drag_factor = clamp(drag_factor, 0.0, 1.0)
 	player_body.velocity = player_body.velocity.lerp(wind_velocity, drag_factor)
+
+
+# This method verifies the movement provider has a valid configuration.
+func _get_configuration_warning():
+	# Call base class
+	return super._get_configuration_warning()

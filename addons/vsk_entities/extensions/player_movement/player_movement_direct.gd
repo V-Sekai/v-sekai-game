@@ -19,8 +19,9 @@ func _get_action_rotation(p_movement_controller: Node) -> Vector2:
 	
 	return rotated_input
 
-func execute(p_movement_controller: Node, p_delta: float) -> void:
-	super.execute(p_movement_controller, p_delta)
+func execute(p_movement_controller: Node, p_delta: float) -> bool:
+	if !super.execute(p_movement_controller, p_delta):
+		return false
 	
 	var rotated_input = _get_action_rotation(p_movement_controller)
 	
@@ -31,3 +32,5 @@ func execute(p_movement_controller: Node, p_delta: float) -> void:
 
 	# Reset the input
 	input = Vector2()
+	
+	return true

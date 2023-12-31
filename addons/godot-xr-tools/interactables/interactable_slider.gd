@@ -1,4 +1,3 @@
-@tool
 class_name XRToolsInteractableSlider
 extends XRToolsInteractableHandleDriven
 
@@ -9,7 +8,7 @@ extends XRToolsInteractableHandleDriven
 ## player through [XRToolsInteractableHandle] instances.
 ##
 ## The slider translates itelf along its local X axis, and so should be
-## placed as a child of a node to translate and rotate as appropriate.
+## placed as a child of a Node3D to translate and rotate as appropriate.
 ##
 ## The interactable slider is not a [RigidBody3D], and as such will not react
 ## to any collisions.
@@ -38,15 +37,10 @@ signal slider_moved(position)
 @export var default_on_release : bool = false
 
 
-# Add support for is_xr_class on XRTools classes
-func is_xr_class(name : String) -> bool:
-	return name == "XRToolsInteractableSlider" or super(name)
-
-
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	# In Godot 4 we must now manually call our super class ready function
-	super()
+	super._ready()
 
 	# Set the initial position to match the initial slider position value
 	transform = Transform3D(

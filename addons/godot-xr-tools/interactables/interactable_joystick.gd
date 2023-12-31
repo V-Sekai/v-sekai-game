@@ -1,4 +1,3 @@
-@tool
 class_name XRToolsInteractableJoystick
 extends XRToolsInteractableHandleDriven
 
@@ -9,7 +8,7 @@ extends XRToolsInteractableHandleDriven
 ## player through [XRToolsInteractableHandle] instances.
 ##
 ## The joystick rotates itelf around its local X/Y axes, and so should be
-## placed as a child of a node to translate and rotate as appropriate.
+## placed as a child of a Node3D to translate and rotate as appropriate.
 ##
 ## The interactable joystick is not a [RigidBody3D], and as such will not react
 ## to any collisions.
@@ -73,15 +72,10 @@ const VECTOR_YZ := Vector3(0.0, 1.0, 1.0)
 @onready var _default_y_position_rad : float = deg_to_rad(default_y_position)
 
 
-# Add support for is_xr_class on XRTools classes
-func is_xr_class(name : String) -> bool:
-	return name == "XRToolsInteractableJoystick" or super(name)
-
-
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	# In Godot 4 we must now manually call our super class ready function
-	super()
+	super._ready()
 
 	# Set the initial position to match the initial joystick position value
 	transform = Transform3D(

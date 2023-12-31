@@ -5,7 +5,7 @@ extends XRToolsMovementProvider
 
 ## XR Tools Movement Provider for Crouching
 ##
-## This script works with the [XRToolsPlayerBody] attached to the players
+## This script works with the [XRToolsPlayerBody] attached to the players 
 ## [XROrigin3D].
 ##
 ## While the player presses the crounch button, the height is overridden to
@@ -38,14 +38,13 @@ var _crouching : bool = false
 ## Crouch button down state
 var _crouch_button_down : bool = false
 
-
 # Controller node
-@onready var _controller := XRHelpers.get_xr_controller(self)
+@onready var _controller : XRController3D = get_parent()
 
 
-# Add support for is_xr_class on XRTools classes
-func is_xr_class(name : String) -> bool:
-	return name == "XRToolsMovementCrouch" or super(name)
+func _ready():
+	# In Godot 4 we must now manually call our super class ready function
+	super._ready()
 
 
 # Perform jump movement
@@ -81,12 +80,11 @@ func physics_movement(_delta: float, player_body: XRToolsPlayerBody, _disabled: 
 
 
 # This method verifies the movement provider has a valid configuration.
-func _get_configuration_warnings() -> PackedStringArray:
-	var warnings := super()
-
+func _get_configuration_warning():
 	# Check the controller node
-	if !XRHelpers.get_xr_controller(self):
-		warnings.append("This node must be within a branch of an XRController3D node")
+	var test_controller = get_parent()
+	if !test_controller or !test_controller is XRController3D:
+		return "Unable to find XR Controller node"
 
-	# Return warnings
-	return warnings
+	# Call base class
+	return super._get_configuration_warning()

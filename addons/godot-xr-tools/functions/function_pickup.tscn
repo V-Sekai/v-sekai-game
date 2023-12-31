@@ -4,4 +4,3 @@
 
 [node name="FunctionPickup" type="Node3D"]
 script = ExtResource("1")
-grab_collision_mask = 327684

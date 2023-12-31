@@ -1,15 +1,14 @@
-@tool
-@icon("res://addons/godot-xr-tools/editor/icons/function.svg")
 class_name XRToolsFunctionPickup
 extends Node3D
+@icon("res://addons/godot-xr-tools/editor/icons/function.svg")
 
 
 ## XR Tools Function Pickup Script
 ##
-## This script implements picking up of objects. Most pickable
+## This script implements picking up of objects. Most pickable 
 ## objects are instances of the [XRToolsPickable] class.
 ##
-## Additionally this script can work in conjunction with the
+## Additionally this script can work in conjunction with the 
 ## [XRToolsMovementProvider] class support climbing. Most climbable objects are
 ## instances of the [XRToolsClimbable] class.
 
@@ -20,12 +19,6 @@ signal has_picked_up(what)
 ## Signal emitted when the pickup drops something
 signal has_dropped
 
-
-# Default pickup collision mask of 3:pickable and 19:handle
-const DEFAULT_GRAB_MASK := 0b0000_0000_0000_0100_0000_0000_0000_0100
-
-# Default pickup collision mask of 3:pickable
-const DEFAULT_RANGE_MASK := 0b0000_0000_0000_0000_0000_0000_0000_0100
 
 # Constant for worst-case grab distance
 const MAX_GRAB_DISTANCE2: float = 1000000.0
@@ -44,8 +37,7 @@ const MAX_GRAB_DISTANCE2: float = 1000000.0
 @export var grab_distance : float = 0.3: set = _set_grab_distance
 
 ## Grab collision mask
-@export_flags_3d_physics \
-		var grab_collision_mask : int = DEFAULT_GRAB_MASK: set = _set_grab_collision_mask
+@export_flags_3d_physics var grab_collision_mask : int = 1: set = _set_grab_collision_mask
 
 ## If true, ranged-grabbing is enabled
 @export var ranged_enable : bool = true
@@ -57,8 +49,7 @@ const MAX_GRAB_DISTANCE2: float = 1000000.0
 @export_range(0.0, 45.0) var ranged_angle : float = 5.0: set = _set_ranged_angle
 
 ## Ranged-grab collision mask
-@export_flags_3d_physics \
-		var ranged_collision_mask : int = DEFAULT_RANGE_MASK: set = _set_ranged_collision_mask
+@export_flags_3d_physics var ranged_collision_mask : int = 1: set = _set_ranged_collision_mask
 
 ## Throw impulse factor
 @export var impulse_factor : float = 1.0
@@ -81,25 +72,16 @@ var _grab_area : Area3D
 var _grab_collision : CollisionShape3D
 var _ranged_area : Area3D
 var _ranged_collision : CollisionShape3D
+var _controller : XRController3D
 
-
-## Controller
-@onready var _controller := XRHelpers.get_xr_controller(self)
 
 ## Grip threshold (from configuration)
-@onready var _grip_threshold : float = XRTools.get_grip_threshold()
-
-
-# Add support for is_xr_class on XRTools classes
-func is_xr_class(name : String) -> bool:
-	return name == "XRToolsFunctionPickup"
+@onready var grip_threshold : float = XRTools.get_grip_threshold()
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	# Skip creating grab-helpers if in the editor
-	if Engine.is_editor_hint():
-		return
+	_controller = get_parent()
 
 	# Create the grab collision shape
 	_grab_collision = CollisionShape3D.new()
@@ -139,10 +121,10 @@ func _ready():
 
 	# Update the colliders
 	_update_colliders()
-
+	
 	# Monitor Grab Button
-	_controller.connect("button_pressed", _on_button_pressed)
-	_controller.connect("button_released", _on_button_released)
+	get_parent().connect("button_pressed", _on_button_pressed)
+	get_parent().connect("button_released", _on_button_released)
 
 
 # Called on each frame to update the pickup
@@ -156,11 +138,11 @@ func _process(delta):
 		return
 
 	# Handle our grip
-	var grip_value = _controller.get_float(pickup_axis_action)
-	if (grip_pressed and grip_value < (_grip_threshold - 0.1)):
+	var grip_value = _controller.get_value(pickup_axis_action)
+	if (grip_pressed and grip_value < (grip_threshold - 0.1)):
 		grip_pressed = false
 		_on_grip_release()
-	elif (!grip_pressed and grip_value > (_grip_threshold + 0.1)):
+	elif (!grip_pressed and grip_value > (grip_threshold + 0.1)):
 		grip_pressed = true
 		_on_grip_pressed()
 
@@ -173,44 +155,6 @@ func _process(delta):
 		_velocity_averager.add_transform(delta, global_transform)
 
 	_update_closest_object()
-
-
-## Find an [XRToolsFunctionPickup] node.
-##
-## This function searches from the specified node for an [XRToolsFunctionPickup]
-## assuming the node is a sibling of the pickup under an [XRController3D].
-static func find_instance(node : Node) -> XRToolsFunctionPickup:
-	return XRTools.find_xr_child(
-		XRHelpers.get_xr_controller(node),
-		"*",
-		"XRToolsFunctionPickup") as XRToolsFunctionPickup
-
-
-## Find the left [XRToolsFunctionPickup] node.
-##
-## This function searches from the specified node for the left controller
-## [XRToolsFunctionPickup] assuming the node is a sibling of the [XOrigin3D].
-static func find_left(node : Node) -> XRToolsFunctionPickup:
-	return XRTools.find_xr_child(
-		XRHelpers.get_left_controller(node),
-		"*",
-		"XRToolsFunctionPickup") as XRToolsFunctionPickup
-
-
-## Find the right [XRToolsFunctionPickup] node.
-##
-## This function searches from the specified node for the right controller
-## [XRToolsFunctionPickup] assuming the node is a sibling of the [XROrigin3D].
-static func find_right(node : Node) -> XRToolsFunctionPickup:
-	return XRTools.find_xr_child(
-		XRHelpers.get_right_controller(node),
-		"*",
-		"XRToolsFunctionPickup") as XRToolsFunctionPickup
-
-
-## Get the [XRController3D] driving this pickup.
-func get_controller() -> XRController3D:
-	return _controller
 
 
 # Called when the grab distance has been modified
@@ -316,12 +260,12 @@ func _update_closest_object() -> void:
 
 	# remove highlight on old object
 	if is_instance_valid(closest_object):
-		closest_object.request_highlight(self, false)
+		closest_object.decrease_is_closest()
 
 	# add highlight to new object
 	closest_object = new_closest_obj
 	if is_instance_valid(closest_object):
-		closest_object.request_highlight(self, true)
+		closest_object.increase_is_closest()
 
 
 # Find the pickable object closest to our hand's grab location
@@ -334,8 +278,7 @@ func _get_closest_grab() -> Node3D:
 			continue
 
 		# Save if this object is closer than the current best
-		var distance_squared := global_transform.origin.distance_squared_to(
-				o.global_transform.origin)
+		var distance_squared := global_transform.origin.distance_squared_to(o.global_transform.origin)
 		if distance_squared < new_closest_distance:
 			new_closest_obj = o
 			new_closest_distance = distance_squared
@@ -373,7 +316,6 @@ func drop_object() -> void:
 
 	# let go of this object
 	picked_up_object.let_go(
-		self,
 		_velocity_averager.linear_velocity() * impulse_factor,
 		_velocity_averager.angular_velocity())
 	picked_up_object = null
@@ -402,11 +344,10 @@ func _pick_up_object(target: Node3D) -> void:
 	# Pick up our target. Note, target may do instant drop_and_free
 	picked_up_ranged = not _object_in_grab_area.has(target)
 	picked_up_object = target
-	target.pick_up(self)
+	target.pick_up(self, _controller)
 
 	# If object picked up then emit signal
 	if is_instance_valid(picked_up_object):
-		picked_up_object.request_highlight(self, false)
 		emit_signal("has_picked_up", picked_up_object)
 
 
@@ -416,7 +357,7 @@ func _on_button_pressed(p_button) -> void:
 			picked_up_object.action()
 
 
-func _on_button_released(_p_button) -> void:
+func _on_button_released(p_button) -> void:
 	pass
 
 

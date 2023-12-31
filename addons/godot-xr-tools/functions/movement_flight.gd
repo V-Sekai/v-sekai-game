@@ -56,6 +56,13 @@ enum FlightBearing {
 }
 
 
+## Constant for extracting the vertical component of a Vector3
+const VERTICAL := Vector3(0.0, 1.0, 0.0)
+
+## Constant for extracting the horzontal components of a Vector3
+const HORIZONTAL := Vector3(1.0, 0.0, 1.0)
+
+
 ## Movement provider order
 @export var order : int = 30
 
@@ -98,19 +105,14 @@ var _controller : XRController3D
 
 
 # Node references
-@onready var _camera := XRHelpers.get_xr_camera(self)
-@onready var _left_controller := XRHelpers.get_left_controller(self)
-@onready var _right_controller := XRHelpers.get_right_controller(self)
-
-
-# Add support for is_xr_class on XRTools classes
-func is_xr_class(name : String) -> bool:
-	return name == "XRToolsMovementFlight" or super(name)
+@onready var _camera : XRCamera3D = XRHelpers.get_xr_camera(self)
+@onready var _left_controller : XRController3D = XRHelpers.get_left_controller(self)
+@onready var _right_controller : XRController3D = XRHelpers.get_right_controller(self)
 
 
 func _ready():
 	# In Godot 4 we must now manually call our super class ready function
-	super()
+	super._ready()
 
 	# Get the flight controller
 	if controller == FlightController.LEFT:
@@ -119,7 +121,7 @@ func _ready():
 		_controller = _right_controller
 
 
-# Process physics movement for flight
+# Process physics movement for
 func physics_movement(delta: float, player_body: XRToolsPlayerBody, disabled: bool):
 	# Disable flying if requested, or if no controller
 	if disabled or !enabled or !_controller.get_is_active():
@@ -140,37 +142,33 @@ func physics_movement(delta: float, player_body: XRToolsPlayerBody, disabled: bo
 	var pitch_vector: Vector3
 	if pitch == FlightPitch.HEAD:
 		# Use the vertical part of the 'head' forwards vector
-		pitch_vector = -_camera.transform.basis.z.y * player_body.up_player
+		pitch_vector = -_camera.global_transform.basis.z.y * VERTICAL
 	else:
 		# Use the vertical part of the 'controller' forwards vector
-		pitch_vector = -_controller.transform.basis.z.y * player_body.up_player
+		pitch_vector = -_controller.global_transform.basis.z.y * VERTICAL
 
 	# Select the bearing vector
 	var bearing_vector: Vector3
 	if bearing == FlightBearing.HEAD:
 		# Use the horizontal part of the 'head' forwards vector
-		bearing_vector = -_camera.global_transform.basis.z \
-				.slide(player_body.up_player)
+		bearing_vector = -_camera.global_transform.basis.z * HORIZONTAL
 	elif bearing == FlightBearing.CONTROLLER:
 		# Use the horizontal part of the 'controller' forwards vector
-		bearing_vector = -_controller.global_transform.basis.z \
-				.slide(player_body.up_player)
+		bearing_vector = -_controller.global_transform.basis.z * HORIZONTAL
 	else:
 		# Use the horizontal part of the 'body' forwards vector
 		var left := _left_controller.global_transform.origin
 		var right := _right_controller.global_transform.origin
-		var left_to_right := right - left
-		bearing_vector = left_to_right \
-				.rotated(player_body.up_player, PI/2) \
-				.slide(player_body.up_player)
+		var left_to_right := (right - left) * HORIZONTAL
+		bearing_vector = left_to_right.rotated(Vector3.UP, PI/2)
 
 	# Construct the flight bearing
 	var forwards := (bearing_vector.normalized() + pitch_vector).normalized()
-	var side := forwards.cross(player_body.up_player)
+	var side := forwards.cross(Vector3.UP)
 
 	# Construct the target velocity
-	var joy_forwards := _controller.get_vector2("primary").y
-	var joy_side := _controller.get_vector2("primary").x
+	var joy_forwards := _controller.get_axis("primary").y
+	var joy_side := _controller.get_axis("primary").x
 	var heading := forwards * joy_forwards + side * joy_side
 
 	# Calculate the flight velocity
@@ -210,20 +208,6 @@ func set_flying(active: bool) -> void:
 
 
 # This method verifies the movement provider has a valid configuration.
-func _get_configuration_warnings() -> PackedStringArray:
-	var warnings := super()
-
-	# Verify the camera
-	if !XRHelpers.get_xr_camera(self):
-		warnings.append("Unable to find XRCamera3D")
-
-	# Verify the left controller
-	if !XRHelpers.get_left_controller(self):
-		warnings.append("Unable to find left XRController3D node")
-
-	# Verify the right controller
-	if !XRHelpers.get_right_controller(self):
-		warnings.append("Unable to find left XRController3D node")
-
-	# Return warnings
-	return warnings
+func _get_configuration_warning():
+	# Call base class
+	return super._get_configuration_warning()

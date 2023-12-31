@@ -11,9 +11,9 @@ extends XRToolsMovementProvider
 
 ## Movement mode
 enum TurnMode {
-	DEFAULT,	## Use turn mode from project/user settings
-	SNAP,		## Use snap-turning
-	SMOOTH		## Use smooth-turning
+	DEFAULT,	## 
+	SNAP,
+	SMOOTH
 }
 
 
@@ -40,12 +40,12 @@ var _turn_step : float = 0.0
 
 
 # Controller node
-@onready var _controller := XRHelpers.get_xr_controller(self)
+@onready var _controller : XRController3D = get_parent()
 
 
-# Add support for is_xr_class on XRTools classes
-func is_xr_class(name : String) -> bool:
-	return name == "XRToolsMovementTurn" or super(name)
+func _ready():
+	# In Godot 4 we must now manually call our super class ready function
+	super._ready()
 
 
 # Perform jump movement
@@ -59,7 +59,7 @@ func physics_movement(delta: float, player_body: XRToolsPlayerBody, _disabled: b
 		deadzone = XRTools.get_snap_turning_deadzone()
 
 	# Read the left/right joystick axis
-	var left_right := _controller.get_vector2(input_action).x
+	var left_right := _controller.get_axis(input_action).x
 	if abs(left_right) <= deadzone:
 		# Not turning
 		_turn_step = 0.0
@@ -67,12 +67,7 @@ func physics_movement(delta: float, player_body: XRToolsPlayerBody, _disabled: b
 
 	# Handle smooth rotation
 	if !_snap_turning():
-		left_right -= deadzone * sign(left_right)
-		player_body.rotate_player(smooth_turn_speed * delta * left_right)
-		return
-
-	# Disable repeat snap turning if delay is zero
-	if step_turn_delay == 0.0 and _turn_step < 0.0:
+		_rotate_player(player_body, smooth_turn_speed * delta * left_right)
 		return
 
 	# Update the next turn-step delay
@@ -81,31 +76,38 @@ func physics_movement(delta: float, player_body: XRToolsPlayerBody, _disabled: b
 		return
 
 	# Turn one step in the requested direction
-	if step_turn_delay != 0.0:
-		_turn_step = step_turn_delay
-	player_body.rotate_player(deg_to_rad(step_turn_angle) * sign(left_right))
+	_turn_step = step_turn_delay
+	_rotate_player(player_body, deg_to_rad(step_turn_angle) * sign(left_right))
 
 
-# This method verifies the movement provider has a valid configuration.
-func _get_configuration_warnings() -> PackedStringArray:
-	var warnings := super()
+# Rotate the origin node around the camera
+func _rotate_player(player_body: XRToolsPlayerBody, angle: float):
+	var t1 := Transform3D()
+	var t2 := Transform3D()
+	var rot := Transform3D()
 
-	# Check the controller node
-	if !XRHelpers.get_xr_controller(self):
-		warnings.append("Unable to find XRController3D node")
-
-	# Return warnings
-	return warnings
+	t1.origin = -player_body.camera_node.transform.origin
+	t2.origin = player_body.camera_node.transform.origin
+	rot = rot.rotated(Vector3(0.0, -1.0, 0.0), angle)
+	player_body.origin_node.transform = (player_body.origin_node.transform * t2 * rot * t1).orthonormalized()
 
 
 # Test if snap turning should be used
 func _snap_turning():
-	match turn_mode:
-		TurnMode.SNAP:
-			return true
+	if turn_mode == TurnMode.SNAP:
+		return true
+	elif turn_mode == TurnMode.SMOOTH:
+		return false
+	else:
+		return XRToolsUserSettings.snap_turning
 
-		TurnMode.SMOOTH:
-			return false
 
-		_:
-			return XRToolsUserSettings.snap_turning
+# This method verifies the movement provider has a valid configuration.
+func _get_configuration_warning():
+	# Check the controller node
+	var test_controller = get_parent()
+	if !test_controller or !test_controller is XRController3D:
+		return "Unable to find ARVR Controller node"
+
+	# Call base class
+	return super._get_configuration_warning()

@@ -1,4 +1,3 @@
-@tool
 class_name XRToolsInteractableHandleDriven
 extends Node3D
 
@@ -22,11 +21,6 @@ signal released(interactable)
 
 # Array of handles currently grabbed
 var grabbed_handles := Array()
-
-
-# Add support for is_xr_class on XRTools classes
-func is_xr_class(name : String) -> bool:
-	return name == "XRToolsInteractableHandleDriven"
 
 
 # Called when the node enters the scene tree for the first time.

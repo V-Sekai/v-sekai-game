@@ -1,4 +1,3 @@
-@tool
 class_name XRToolsVirtualKeyboard2D
 extends CanvasLayer
 
@@ -24,11 +23,6 @@ var _alt_down := false
 var _mode: int = KeyboardMode.LOWER_CASE
 
 
-# Add support for is_xr_class on XRTools classes
-func is_xr_class(name : String) -> bool:
-	return name == "XRToolsVirtualKeyboard2D"
-
-
 # Handle key pressed from VirtualKey
 func on_key_pressed(scan_code_text: String, unicode: int, shift: bool):
 	# Find the scan code
@@ -47,41 +41,40 @@ func on_key_pressed(scan_code_text: String, unicode: int, shift: bool):
 
 	# Pop any temporary shift key
 	if _shift_down:
+		$Background/Standard/ToggleShift.set_pressed_no_signal(false)
 		_shift_down = false
 		_update_visible()
 
-
-func _on_toggle_shift_pressed() -> void:
+func on_shift_toggle(button_pressed):
 	# Update toggle keys
-	_shift_down = not _shift_down
+	$Background/Standard/ToggleCaps.set_pressed_no_signal(false)
+	$Background/Standard/ToggleAlt.set_pressed_no_signal(false)
+	_shift_down = button_pressed
 	_caps_down = false
 	_alt_down = false
 	_update_visible()
 
-
-func _on_toggle_caps_pressed() -> void:
+# Handle caps-lock toggle
+func on_caps_toggle(button_pressed):
 	# Update toggle keys
-	_caps_down = not _caps_down
+	$Background/Standard/ToggleShift.set_pressed_no_signal(false)
+	$Background/Standard/ToggleAlt.set_pressed_no_signal(false)
 	_shift_down = false
+	_caps_down = button_pressed
 	_alt_down = false
 	_update_visible()
 
-
-func _on_toggle_alt_pressed() -> void:
+func on_alt_toggle(button_pressed):
 	# Update toggle keys
-	_alt_down = not _alt_down
+	$Background/Standard/ToggleShift.set_pressed_no_signal(false)
+	$Background/Standard/ToggleCaps.set_pressed_no_signal(false)
 	_shift_down = false
 	_caps_down = false
+	_alt_down = button_pressed
 	_update_visible()
-
 
 # Update switching the visible case keys
-func _update_visible() -> void:
-	# Ensure the control buttons are set correctly
-	$Background/Standard/ToggleShift.highlighted = _shift_down
-	$Background/Standard/ToggleCaps.highlighted = _caps_down
-	$Background/Standard/ToggleAlt.highlighted = _alt_down
-
+func _update_visible():
 	# Evaluate the new mode
 	var new_mode: int
 	if _alt_down:

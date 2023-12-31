@@ -20,17 +20,10 @@ signal grapple_finished()
 
 ## Grapple state
 enum GrappleState {
-	IDLE,			## Grapple is idle
+	IDLE,			## Idle
 	FIRED,			## Grapple is fired
 	WINCHING,		## Grapple is winching
 }
-
-
-# Default grapple collision mask of 1-5 (world)
-const DEFAULT_COLLISION_MASK := 0b0000_0000_0000_0000_0000_0000_0001_1111
-
-# Default grapple enable mask of 5:grapple-target
-const DEFAULT_ENABLE_MASK := 0b0000_0000_0000_0000_0000_0000_0001_0000
 
 
 ## Movement provider order
@@ -40,11 +33,7 @@ const DEFAULT_ENABLE_MASK := 0b0000_0000_0000_0000_0000_0000_0001_0000
 @export var grapple_length : float = 15.0
 
 ## Grapple collision mask
-@export_flags_3d_physics var grapple_collision_mask : int = DEFAULT_COLLISION_MASK:
-	set = _set_grapple_collision_mask
-
-## Grapple enable mask
-@export_flags_3d_physics var grapple_enable_mask : int = DEFAULT_ENABLE_MASK
+@export_flags_3d_physics var grapple_collision_mask : int = 1: set = _set_grapple_collision_mask
 
 ## Impulse speed applied to the player on first grapple
 @export var impulse_speed : float = 10.0
@@ -52,17 +41,14 @@ const DEFAULT_ENABLE_MASK := 0b0000_0000_0000_0000_0000_0000_0001_0000
 ## Winch speed applied to the player while the grapple is held
 @export var winch_speed : float = 2.0
 
-## Probably need to add export variables for line size, maybe line material at
-## some point so dev does not need to make children editable to do this.
-## For now, right click on grapple node and make children editable to edit these
-## facets.
+## Probably need to add export variables for line size, maybe line material at some point so dev does not need to make children editable to do this
+## For now, right click on grapple node and make children editable to edit these facets.
 @export var rope_width : float = 0.02
 
 ## Air friction while grappling
 @export var friction : float = 0.1
 
-## Grapple button (triggers grappling movement).  Be sure this button does not
-## conflict with other functions.
+## Grapple button (triggers grappling movement).  Be sure this button does not conflict with other functions.
 @export var grapple_button_action : String = "trigger_click"
 
 # Hook related variables
@@ -77,10 +63,9 @@ var _grapple_button := false
 @onready var _line_helper : Node3D = $LineHelper
 @onready var _line : CSGCylinder3D = $LineHelper/Line
 
-# Get Controller node - consider way to universalize this if user wanted to
-# attach this to a gun instead of player's hand.  Could consider variable to
-# select controller instead.
-@onready var _controller := XRHelpers.get_xr_controller(self)
+# Get Controller node - consider way to universalize this if user wanted to attach this
+# to a gun instead of player's hand.  Could consider variable to select controller instead.
+@onready var _controller : XRController3D = get_parent()
 
 # Get Raycast node
 @onready var _grapple_raycast : RayCast3D = $Grapple_RayCast
@@ -89,15 +74,10 @@ var _grapple_button := false
 @onready var _grapple_target : Node3D = $Grapple_Target
 
 
-# Add support for is_xr_class on XRTools classes
-func is_xr_class(name : String) -> bool:
-	return name == "XRToolsMovementGrapple" or super(name)
-
-
 # Function run when node is added to scene
 func _ready():
 	# In Godot 4 we must now manually call our super class ready function
-	super()
+	super._ready()
 
 	# Skip if running in the editor
 	if Engine.is_editor_hint():
@@ -109,7 +89,7 @@ func _ready():
 		grapple_length = min_hook_length
 
 	# Set ray-cast
-	_grapple_raycast.target_position = Vector3(0, 0, -grapple_length) * XRServer.world_scale
+	_grapple_raycast.target_position = Vector3(0, 0, -grapple_length) * XRServer.world_scale #Is WS necessary here?
 	_grapple_raycast.collision_mask = grapple_collision_mask
 
 	# Deal with line
@@ -117,21 +97,13 @@ func _ready():
 	_line.hide()
 
 
-# Update the grappling line and target
-func _physics_process(_delta : float):
+# Update grapple display objects
+func _process(_delta: float):
 	# Skip if running in the editor
 	if Engine.is_editor_hint():
 		return
 
-	# If pointing grappler at target then show the target
-	if enabled and not is_active and _is_raycast_valid():
-		_grapple_target.global_transform.origin = _grapple_raycast.get_collision_point()
-		_grapple_target.global_transform = _grapple_target.global_transform.orthonormalized()
-		_grapple_target.visible = true
-	else:
-		_grapple_target.visible = false
-
-	# If actively grappling then update and show the grappling line
+	# Update grapple line
 	if is_active:
 		var line_length := (hook_point - _controller.global_transform.origin).length()
 		_line_helper.look_at(hook_point, Vector3.UP)
@@ -140,6 +112,14 @@ func _physics_process(_delta : float):
 		_line.visible = true
 	else:
 		_line.visible = false
+
+	# Update grapple target
+	if enabled and !is_active and _grapple_raycast.is_colliding():
+		_grapple_target.global_transform.origin  = _grapple_raycast.get_collision_point()
+		_grapple_target.global_transform = _grapple_target.global_transform.orthonormalized()
+		_grapple_target.visible = true
+	else:
+		_grapple_target.visible = false
 
 
 # Perform grapple movement
@@ -157,7 +137,7 @@ func physics_movement(delta: float, player_body: XRToolsPlayerBody, disabled: bo
 	var do_impulse := false
 	if is_active and !_grapple_button:
 		_set_grappling(false)
-	elif _grapple_button and !old_grapple_button and _is_raycast_valid():
+	elif _grapple_button and !old_grapple_button and _grapple_raycast.is_colliding():
 		hook_object = _grapple_raycast.get_collider()
 		hook_point = _grapple_raycast.get_collision_point()
 		hook_local = hook_point * hook_object.global_transform
@@ -175,7 +155,7 @@ func physics_movement(delta: float, player_body: XRToolsPlayerBody, disabled: bo
 	var hook_direction := hook_vector / hook_length
 
 	# Apply gravity
-	player_body.velocity += player_body.gravity * delta
+	player_body.velocity += Vector3.UP * player_body.gravity * delta
 
 	# Select the grapple speed
 	var speed := impulse_speed if do_impulse else winch_speed
@@ -218,24 +198,12 @@ func _set_grappling(active: bool) -> void:
 		emit_signal("grapple_finished")
 
 
-# Test if the raycast is striking a valid target
-func _is_raycast_valid() -> bool:
-	# Test if the raycast hit a collider
-	var target = _grapple_raycast.get_collider()
-	if not is_instance_valid(target):
-		return false
-
-	# Check collider layer
-	return true if target.collision_layer & grapple_enable_mask else false
-
-
 # This method verifies the movement provider has a valid configuration.
-func _get_configuration_warnings() -> PackedStringArray:
-	var warnings := super()
-
+func _get_configuration_warning():
 	# Check the controller node
-	if !XRHelpers.get_xr_controller(self):
-		warnings.append("This node must be within a branch of an XRController3D node")
+	var test_controller = get_parent()
+	if !test_controller or !test_controller is XRController3D:
+		return "Unable to find ARVR Controller node"
 
-	# Return warnings
-	return warnings
+	# Call base class
+	return super._get_configuration_warning()

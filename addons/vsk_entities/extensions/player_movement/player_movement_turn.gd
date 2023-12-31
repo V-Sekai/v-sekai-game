@@ -4,8 +4,9 @@ extends "player_movement_provider.gd"
 
 var input: float = 0.0
 
-func execute(p_movement_controller: Node, p_delta: float) -> void:
-	super.execute(p_movement_controller, p_delta)
+func execute(p_movement_controller: Node, p_delta: float) -> bool:
+	if !super.execute(p_movement_controller, p_delta):
+		return false
 	
 	input += (Input.get_action_strength("turn_left") - Input.get_action_strength("turn_right"))
 	
@@ -21,6 +22,8 @@ func execute(p_movement_controller: Node, p_delta: float) -> void:
 	
 	# Reset the input
 	input = 0.0
+	
+	return true
 	
 func _input(p_event: InputEvent) -> void:
 	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:

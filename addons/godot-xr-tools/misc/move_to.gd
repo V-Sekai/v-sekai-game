@@ -4,7 +4,7 @@ extends Node
 
 ## XR Tools Move To Node
 ##
-## This node moves a control node to the specified target node at a
+## This node moves a control Node3D to the specified target Node3D at a 
 ## requested speed.
 
 
@@ -29,11 +29,6 @@ var _duration: float
 
 # Move time
 var _time: float = 0.0
-
-
-# Add support for is_xr_class on XRTools classes
-func is_xr_class(name : String) -> bool:
-	return name == "XRToolsMoveTo"
 
 
 ## Initialize the XRToolsMoveTo

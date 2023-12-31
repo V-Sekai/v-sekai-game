@@ -1,10 +1,11 @@
 shader_type spatial;
-render_mode depth_test_disabled, skip_vertex_transform, unshaded, cull_disabled;
+render_mode depth_test_disabled, skip_vertex_transform, unshaded;
 
 uniform float alpha = 0.0;
 
 void vertex() {
-	POSITION = vec4(VERTEX.x, -VERTEX.y, 0.0, 1.0);
+	vec3 v = VERTEX;
+	POSITION = vec4(v, 1.0);
 }
 
 void fragment() {

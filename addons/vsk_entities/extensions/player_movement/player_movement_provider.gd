@@ -1,7 +1,9 @@
 extends Node
 
-func execute(_movement_controller: Node, _delta: float) -> void:
-	pass
+@export var enabled := true
+
+func execute(_movement_controller: Node, _delta: float) -> bool:
+	return enabled
 
 func get_xr_origin(p_movement_controller: Node) -> XROrigin3D:
 	return p_movement_controller.xr_origin

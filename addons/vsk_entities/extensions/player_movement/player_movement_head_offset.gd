@@ -16,11 +16,12 @@ func get_camera_position_2d(p_movement_controller: Node) -> Vector2:
 
 	return camera_position_2d
 
-func execute(p_movement_controller: Node, p_delta: float) -> void:
-	super.execute(p_movement_controller, p_delta)
+func execute(p_movement_controller: Node, p_delta: float) -> bool:
+	if !super.execute(p_movement_controller, p_delta):
+		return false
 	
 	if !get_character_body(p_movement_controller) or !get_xr_origin(p_movement_controller) or !get_xr_camera(p_movement_controller):
-		return
+		return false
 		
 	# Store the character body velocity
 	var previous_velocity: Vector3 = get_character_body(p_movement_controller).velocity
@@ -52,3 +53,5 @@ func execute(p_movement_controller: Node, p_delta: float) -> void:
 
 	# Reset the previous velocity
 	get_character_body(p_movement_controller).velocity = previous_velocity
+	
+	return true

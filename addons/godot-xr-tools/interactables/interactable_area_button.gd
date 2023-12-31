@@ -45,11 +45,6 @@ var _tween: Tween
 @onready var _button_down := _button_up + displacement
 
 
-# Add support for is_xr_class on XRTools classes
-func is_xr_class(name : String) -> bool:
-	return name == "XRToolsInteractableAreaButton"
-
-
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	# Connect area signals
@@ -84,7 +79,7 @@ func _on_button_entered(item: Node3D) -> void:
 		_tween.tween_property(_button, "position", _button_down, duration)
 
 		# Emit the pressed signal
-		button_pressed.emit(self)
+		emit_signal("button_pressed")
 
 
 # Called when an area or body exits the button area
@@ -108,19 +103,17 @@ func _on_button_exited(item: Node3D) -> void:
 		_tween.tween_property(_button, "position", _button_up, duration)
 
 		# Emit the released signal
-		button_released.emit(self)
+		emit_signal("button_released")
 
 
 # Check button configuration
-func _get_configuration_warnings() -> PackedStringArray:
-	var warnings := PackedStringArray()
-
+func _get_configuration_warning() -> String:
 	# Ensure a button has been specified
 	if not get_node_or_null(button):
-		warnings.append("Button node to animate must be specified")
+		return "Button node to animate must be specified"
 
 	# Ensure a valid duration
 	if duration <= 0.0:
-		warnings.append("Duration must be a positive number")
+		return "Duration must be a positive number"
 
-	return warnings
+	return ""

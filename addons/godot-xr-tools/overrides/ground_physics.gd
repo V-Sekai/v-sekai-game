@@ -17,25 +17,19 @@ extends Node
 @export var physics : XRToolsGroundPhysicsSettings
 
 
-# Add support for is_xr_class on XRTools classes
-func is_xr_class(name : String) -> bool:
-	return name == "XRToolsGroundPhysics"
-
-
 # This method verifies the ground physics has a valid configuration.
-func _get_configuration_warnings() -> PackedStringArray:
-	var warnings := PackedStringArray()
-
+func _get_configuration_warning():
 	# Verify physics specified
 	if !physics:
-		warnings.append("Physics must be specified")
-	elif !physics is XRToolsGroundPhysicsSettings:
-		warnings.append("Physics must be an XRToolsGroundPhysicsSettings")
+		return "Physics must be specified"
 
-	return warnings
+	# Verify physics is of the correct type
+	if !physics is XRToolsGroundPhysicsSettings:
+		return "Physics must be an XRToolsGroundPhysicsSettings"
+
+	# Report valid
+	return ""
 
 # Get the physics from a ground physics node
-static func get_physics(
-		node: XRToolsGroundPhysics,
-		default: XRToolsGroundPhysicsSettings) -> XRToolsGroundPhysicsSettings:
+static func get_physics(node: XRToolsGroundPhysics, default: XRToolsGroundPhysicsSettings) -> XRToolsGroundPhysicsSettings:
 	return node.physics as XRToolsGroundPhysicsSettings if node else default

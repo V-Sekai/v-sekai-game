@@ -1,4 +1,3 @@
-@tool
 class_name XRToolsInteractableHinge
 extends XRToolsInteractableHandleDriven
 
@@ -9,7 +8,7 @@ extends XRToolsInteractableHandleDriven
 ## player through one or more [XRToolsInteractableHandle] instances.
 ##
 ## The hinge rotates itelf around its local X axis, and so should be
-## placed as a child of a node to translate and rotate as appropriate.
+## placed as a child of a Node3D to translate and rotate as appropriate.
 ##
 ## The interactable hinge is not a [RigidBody3D], and as such will not react
 ## to any collisions.
@@ -46,15 +45,10 @@ signal hinge_moved(angle)
 @onready var _default_position_rad : float = deg_to_rad(default_position)
 
 
-# Add support for is_xr_class on XRTools classes
-func is_xr_class(name : String) -> bool:
-	return name == "XRToolsInteractableHinge" or super(name)
-
-
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	# In Godot 4 we must now manually call our super class ready function
-	super()
+	super._ready()
 
 	# Set the initial position to match the initial hinge position value
 	transform = Transform3D(
