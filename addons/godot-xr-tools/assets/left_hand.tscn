@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://080d3mces54o" path="res://addons/godot-xr-tools/assets/left_hand.glb" id="1"]
 [ext_resource type="Script" path="res://addons/godot-xr-tools/assets/hand.gd" id="2"]
-[ext_resource type="AnimationNodeBlendTree" uid="uid://dp7hy45jo7f4x" path="res://addons/godot-xr-tools/assets/hand_blend_tree.tres" id="3"]
+[ext_resource type="AnimationNodeBlendTree" uid="uid://ba6x50pjgp0wm" path="res://addons/godot-xr-tools/assets/hand_blend_tree.tres" id="3"]
 
 [node name="LeftHand" type="Node3D"]
 script = ExtResource("2")

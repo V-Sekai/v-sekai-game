@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://b3dk633aepkn0" path="res://addons/godot-xr-tools/hands/model/Hand_Nails_R.gltf" id="2_8y6so"]
 [ext_resource type="Material" path="res://addons/godot-xr-tools/hands/materials/caucasian_hand.material" id="3_3cjku"]
 [ext_resource type="AnimationLibrary" uid="uid://df5dhaf5tmtho" path="res://addons/godot-xr-tools/hands/animations/right/Handpose_Library.res" id="3_p17nd"]
-[ext_resource type="AnimationNodeBlendTree" uid="uid://bj7ovnbip75k0" path="res://addons/godot-xr-tools/hands/animations/right/hand_blend_tree.tres" id="6_glxrq"]
+[ext_resource type="AnimationNodeBlendTree" uid="uid://m85b1gogdums" path="res://addons/godot-xr-tools/hands/animations/right/hand_blend_tree.tres" id="6_glxrq"]
 
 [node name="RightHand" type="Node3D"]
 script = ExtResource("1_fmh4f")

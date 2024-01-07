@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://i8w2m1pbdolp"]
+[gd_scene load_steps=8 format=3 uid="uid://i8w2m1pbdolp"]
 
 [ext_resource type="Script" path="res://addons/smoothing/smoothing.gd" id="1"]
 [ext_resource type="Script" path="res://addons/network_manager/network_model.gd" id="2"]
@@ -7,7 +7,6 @@
 [ext_resource type="Script" path="res://addons/entity_manager/transform_notification.gd" id="7"]
 [ext_resource type="Script" path="res://addons/network_manager/network_transform.gd" id="8"]
 [ext_resource type="Script" path="res://addons/entity_manager/entity.gd" id="9"]
-[ext_resource type="Script" path="res://addons/vsk_entities/extensions/moving_platform_logic.gd" id="10"]
 
 [node name="MovingPlatform" type="Node3D"]
 script = ExtResource("9")
@@ -16,7 +15,7 @@ script = ExtResource("9")
 script = ExtResource("7")
 
 [node name="MovingPlatformSimulationLogic" type="Node" parent="."]
-script = ExtResource("10")
+script = null
 _entity_type = "MovingPlatform"
 _entity_node_path = NodePath("..")
 

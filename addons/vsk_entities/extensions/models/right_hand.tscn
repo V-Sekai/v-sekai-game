@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://cgtymgaebafux"]
 
-[ext_resource type="PackedScene" uid="uid://d1tl07geqm5xq" path="res://addons/godot-xr-tools/hands/scenes/highpoly/right_fullglove_hand.tscn" id="1_tt5dx"]
-[ext_resource type="Material" uid="uid://bhiiya7ow6h8v" path="res://addons/godot-xr-tools/hands/materials/labglove.material" id="2_1o6hi"]
+[ext_resource type="PackedScene" uid="uid://c2cea5dniuvik" path="res://addons/godot-xr-tools/hands/scenes/highpoly/right_fullglove_hand.tscn" id="1_tt5dx"]
+[ext_resource type="Material" uid="uid://c1bt71pgxtpc6" path="res://addons/godot-xr-tools/hands/materials/labglove.material" id="2_1o6hi"]
 
 [node name="RightHand" instance=ExtResource("1_tt5dx")]
 hand_material_override = ExtResource("2_1o6hi")
