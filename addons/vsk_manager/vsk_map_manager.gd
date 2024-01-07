@@ -35,7 +35,6 @@ var _current_map_path: String = ""
 
 var _current_map_packed: PackedScene = null
 
-var _load_map_mutex: Mutex = Mutex.new()
 var _instance_map_mutex: Mutex = Mutex.new()
 
 const RESPAWN_HEIGHT = -100
@@ -143,8 +142,6 @@ func instance_map(_p_strip_all_entities: bool) -> Dictionary:
 	print("Instance map...")
 	
 	var _mutex_lock: mutex_lock_const = mutex_lock_const.new(_instance_map_mutex)
-	
-	var final_map_path: String = _loaded_map_path
 	
 	# Destroy old current scene
 	if _instanced_map:

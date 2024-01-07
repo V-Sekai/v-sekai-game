@@ -229,7 +229,6 @@ static func check_if_script_type_is_valid(p_script: Script, p_node_class: String
 	var network_model = load("res://addons/network_manager/network_model.gd")
 	var network_physics = load("res://addons/network_manager/network_physics.gd")
 	var smoothing = load("res://addons/smoothing/smoothing.gd")
-	var mirror = load("res://addons/vsk_xr_mirror/mirror.gd")
 
 	var script_type_table = {
 		network_spawn_const: ["Position3D", "Marker3D", "Node3D"],
@@ -246,7 +245,6 @@ static func check_if_script_type_is_valid(p_script: Script, p_node_class: String
 		network_model: ["Node"],
 		network_physics: ["Node"],
 		smoothing: ["Node3D"],
-		mirror: ["MeshInstance3D"],
 	}
 	if script_type_table.get(p_script) != null:
 		var valid_classes: Array = script_type_table.get(p_script)
@@ -279,14 +277,11 @@ func is_script_valid_for_children(p_script: Script, p_node_class: String):
 	var vsk_uro_pipeline = load("res://addons/vsk_importer_exporter/vsk_uro_pipeline.gd")
 
 	var entity_identity = load("res://addons/network_manager/network_identity.gd")
-	var entity_rpc_table = load("res://addons/vsk_entities/extensions/test_entity_rpc_table.gd")
 	var entity_network_logic = load("res://addons/network_manager/network_logic.gd")
-	var entity_test_simulation = load("res://addons/vsk_entities/extensions/test_entity_simulation_logic.gd")
 	var entity_transform_notification = load("res://addons/entity_manager/transform_notification.gd")
 	var entity_entity = load("res://addons/entity_manager/entity.gd")
 
 	var hierarchy_component = load("res://addons/entity_manager/hierarchy_component.gd")
-	var prop_simulation_logic = load("res://addons/vsk_entities/extensions/prop_simulation_logic.gd")
 	var network_hierarchy = load("res://addons/network_manager/network_hierarchy.gd")
 	var network_transform = load("res://addons/network_manager/network_transform.gd")
 	var network_model = load("res://addons/network_manager/network_model.gd")
@@ -297,13 +292,10 @@ func is_script_valid_for_children(p_script: Script, p_node_class: String):
 		network_spawn_const,
 		vsk_uro_pipeline,
 		entity_identity,
-		entity_rpc_table,
 		entity_network_logic,
-		entity_test_simulation,
 		entity_transform_notification,
 		entity_entity,
 		hierarchy_component,
-		prop_simulation_logic,
 		network_hierarchy,
 		network_transform,
 		network_model,

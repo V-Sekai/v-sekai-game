@@ -204,13 +204,15 @@ func _ready() -> void:
 		desktop_viewport = SubViewport.new()
 		desktop_viewport.name = "DesktopViewport"
 		add_child(desktop_viewport)
-		desktop_viewport.owner = vr_camera
+		if vr_camera.is_ancestor_of(desktop_viewport):
+			desktop_viewport.owner = vr_camera
 		desktop_viewport.size = DisplayServer.window_get_size(0)
 
 		desktop_camera = Camera3D.new()
 		desktop_camera.name = "DesktopCamera"
 		desktop_viewport.add_child(desktop_camera)
-		desktop_camera.owner = vr_camera
+		if vr_camera.is_ancestor_of(desktop_camera):
+			desktop_camera.owner = vr_camera
 		desktop_camera.attributes = CameraAttributesPractical.new()
 		desktop_camera.environment = load("res://vsk_default/environments/default_env.tres")
 		desktop_camera.global_transform = vr_camera.global_transform

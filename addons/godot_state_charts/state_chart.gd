@@ -133,8 +133,8 @@ func _warn_not_active(transition: Transition, source: State):
 ## Sets a property that can be used in expression guards. The property will be available as a global variable
 ## with the same name. E.g. if you set the property "foo" to 42, you can use the expression "foo == 42" in
 ## an expression guard.
-func set_expression_property(name: StringName, value) -> void:
-	_expression_properties[name] = value
+func set_expression_property(p_name: StringName, p_value) -> void:
+	_expression_properties[p_name] = p_value
 
 
 ## Calls the `step` function in all active states. Used for situations where `state_processing` and
