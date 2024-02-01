@@ -4,11 +4,14 @@
 @tool
 extends Resource
 
-const object_adapter_class: GDScript = preload("./unity_object_adapter.gd")
-const post_import_material_remap_script: GDScript = preload("./post_import_unity_model.gd")
+const object_adapter_class: GDScript = preload("./object_adapter.gd")
+const post_import_material_remap_script: GDScript = preload("./post_import_model.gd")
 const convert_scene: GDScript = preload("./convert_scene.gd")
 const raw_parsed_asset: GDScript = preload("./raw_parsed_asset.gd")
 const bone_map_editor_plugin: GDScript = preload("./bone_map_editor_plugin.gd")
+const unidot_utils_class = preload("./unidot_utils.gd")
+
+var unidot_utils = unidot_utils_class.new()
 
 const ASSET_TYPE_YAML = 1
 const ASSET_TYPE_MODEL = 2
@@ -22,7 +25,7 @@ const ASSET_TYPE_UNKNOWN = 8
 const SHOULD_CONVERT_TO_GLB: bool = false
 const USE_BUILTIN_FBX: bool = false # true
 
-const SILHOUETTE_FIX_THRESHOLD: float = 28.0
+const SILHOUETTE_FIX_THRESHOLD: float = 3.0 # 28.0
 
 var STUB_PNG_FILE: PackedByteArray = Marshalls.base64_to_raw("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACklEQVR4nGMAAQAABQABDQot" + "tAAAAABJRU5ErkJggg==")
 
@@ -33,10 +36,12 @@ func write_sentinel_png(sentinel_filename: String):
 	var f: FileAccess = FileAccess.open(sentinel_filename, FileAccess.WRITE)
 	f.store_buffer(STUB_PNG_FILE)
 	f.flush()
+	f.close()
 	f = null
 
 
 class AssetHandler:
+	var unidot_utils = unidot_utils_class.new()
 	var editor_interface: EditorInterface = null
 
 	func _init():
@@ -82,6 +87,7 @@ class AssetHandler:
 			return PackedByteArray()
 		var flen: int = fres.get_length()
 		var buf = fres.get_buffer(flen)
+		fres.close()
 		fres = null
 		if len(buf) != flen:
 			return PackedByteArray()
@@ -95,6 +101,8 @@ class AssetHandler:
 
 	func write_and_preprocess_asset(pkgasset: Object, tmpdir: String, thread_subdir: String) -> String:
 		var path: String = pkgasset.pathname
+		if len(path) == 0:
+			pkgasset.log_fail("pkgasset.pathname is empty")
 		var data_buf: PackedByteArray = pkgasset.asset_tar_header.get_data()
 		var output_path: String = self.preprocess_asset(pkgasset, tmpdir, thread_subdir, path, data_buf)
 		if len(output_path) == 0:
@@ -104,8 +112,11 @@ class AssetHandler:
 				var outfile: FileAccess = FileAccess.open(tmpdir + "/" + path, FileAccess.WRITE_READ)
 				outfile.store_buffer(data_buf)
 				outfile.flush()
+				outfile.close()
 				outfile = null
 			output_path = pkgasset.pathname
+		if len(output_path) == 0:
+			pkgasset.log_fail("output_path became empty " + str(pkgasset.pathname))
 		pkgasset.log_debug("Updating file at " + output_path)
 		return output_path
 
@@ -122,6 +133,9 @@ class AssetHandler:
 
 	func get_asset_type(pkgasset: Object) -> int:
 		return ASSET_TYPE_UNKNOWN
+
+	func uses_godot_importer(pkgasset: Object) -> bool:
+		return true
 
 	func preprocess_asset(pkgasset: Object, tmpdir: String, thread_subdir: String, path: String, data_buf: PackedByteArray, unique_texture_map: Dictionary = {}) -> String:
 		return ""
@@ -144,7 +158,11 @@ class ImageHandler:
 	extends AssetHandler
 
 	func preprocess_asset(pkgasset: Object, tmpdir: String, thread_subdir: String, path: String, data_buf: PackedByteArray, unique_texture_map: Dictionary = {}) -> String:
+		if len(data_buf) < 4:
+			pkgasset.log_fail("Empty data buf")
+			return ""
 		var user_path_base = OS.get_user_data_dir()
+		var is_psd: bool = (data_buf[0] == 0x38 and data_buf[1] == 0x42 and data_buf[2] == 0x50 and data_buf[3] == 0x53)
 		var is_tiff: bool = (data_buf[0] == 0x49 and data_buf[1] == 0x49 and data_buf[2] == 0x2A and data_buf[3] == 0x00) or (data_buf[0] == 0x4D and data_buf[1] == 0x4D and data_buf[2] == 0x00 and data_buf[3] == 0x2A)
 		var is_png: bool = (data_buf[0] == 0x89 and data_buf[1] == 0x50 and data_buf[2] == 0x4E and data_buf[3] == 0x47) or is_tiff
 		var full_output_path: String = pkgasset.pathname
@@ -154,25 +172,31 @@ class ImageHandler:
 		elif is_png and path.get_extension().to_lower() != "png":
 			pkgasset.log_debug("I am a PNG pretending to be a " + str(path.get_extension()) + " " + str(path))
 			full_output_path = full_output_path.get_basename() + ".png"
-		pkgasset.log_debug("PREPROCESS_IMAGE " + str(is_tiff) + "/" + str(is_png) + " path " + str(path) + " to " + str(full_output_path))
+		pkgasset.log_debug("PREPROCESS_IMAGE " + str(is_tiff or is_psd) + "/" + str(is_png) + " path " + str(path) + " to " + str(full_output_path))
 		var temp_output_path: String = tmpdir + "/" + full_output_path
-		if is_tiff:
-			var outfile: FileAccess = FileAccess.open(temp_output_path.get_basename() + ".tif", FileAccess.WRITE_READ)
+		if is_tiff or is_psd:
+			var ext: String = '.tif' if is_tiff else '.psd'
+			var outfile: FileAccess = FileAccess.open(temp_output_path.get_basename() + ext, FileAccess.WRITE_READ)
 			outfile.store_buffer(data_buf)
 			outfile.flush()
+			outfile.close()
 			outfile = null
 			var stdout: Array = [].duplicate()
 			var d = DirAccess.open("res://")
-			var addon_path: String = post_import_material_remap_script.resource_path.get_base_dir().path_join("convert.exe")
-			if addon_path.begins_with("res://"):
-				if not d.file_exists(addon_path):
-					pkgasset.log_warn("Not converting tiff to png because convert.exe is not present.")
-					return ""
-				addon_path = addon_path.substr(6)
-			var ret = OS.execute(addon_path, [temp_output_path.get_basename() + ".tif", temp_output_path], stdout)
-			d.remove(temp_output_path.get_basename() + ".tif")
+			var addon_path: String = "convert" # ImageMagick installed system-wide.
+			if OS.get_name() == "Windows":
+				addon_path = post_import_material_remap_script.resource_path.get_base_dir().path_join("convert.exe")
+				if addon_path.begins_with("res://"):
+					if not d.file_exists(addon_path):
+						pkgasset.log_warn("Not converting tiff to png because convert.exe is not present.")
+						return ""
+					if OS.get_name() == "Windows":
+						addon_path = "convert.exe"
+			var ret = OS.execute(addon_path, [temp_output_path.get_basename() + ext, temp_output_path], stdout)
+			d.remove(temp_output_path.get_basename() + ext)
 			var res_file: FileAccess = FileAccess.open(temp_output_path, FileAccess.READ)
 			pkgasset.data_md5 = calc_md5(res_file.get_buffer(res_file.get_length()))
+			res_file.close()
 			res_file = null
 			pkgasset.existing_data_md5 = calc_existing_md5(full_output_path)
 			if pkgasset.existing_data_md5 == pkgasset.data_md5:
@@ -184,6 +208,7 @@ class ImageHandler:
 				var outfile: FileAccess = FileAccess.open(temp_output_path, FileAccess.WRITE_READ)
 				outfile.store_buffer(data_buf)
 				outfile.flush()
+				outfile.close()
 				outfile = null
 		return full_output_path
 
@@ -196,16 +221,87 @@ class ImageHandler:
 		if cfile.load("res://" + pkgasset.pathname + ".import") != OK:
 			pkgasset.log_debug("Failed to load .import config file for " + pkgasset.pathname)
 			cfile.set_value("remap", "path", "unidot_default_remap_path")  # must be non-empty. hopefully ignored.
-			cfile.set_value("remap", "type", "CompressedTexture2D")
+			match importer.keys.get("textureShape", 0):
+				2:
+					cfile.set_value("remap", "type", "CompressedCubemap")
+				4:
+					cfile.set_value("remap", "type", "CompressedTexture2DArray")
+				8:
+					cfile.set_value("remap", "type", "CompressedTexture3D")
+				_: # 1 = standard 2D texture
+					cfile.set_value("remap", "type", "CompressedTexture2D")
 		if force_keep:
 			cfile.set_value("remap", "importer", "keep")
 			if cfile.has_section_key("remap", "type"):
 				cfile.erase_section_key("remap", "type")
+			if pkgasset.pathname.validate_filename().is_empty():
+				pkgasset.log_fail("pathname became empty: " + str(pkgasset.pathname))
+				return false
 			cfile.save("res://" + pkgasset.pathname + ".import")
 			return true
 
-		cfile.set_value_compare("remap", "type", "CompressedTexture2D")
-		cfile.set_value_compare("remap", "importer", "texture")
+		match importer.keys.get("textureShape", 0):
+			2:
+				var image_file := Image.load_from_file(pkgasset.pathname)
+				var wid: int = 0
+				var hei: int = 0
+				if image_file != null:
+					pkgasset.log_debug("Detecting Cubemap from image size " + str(image_file.get_size()))
+					wid = image_file.get_width()
+					hei = image_file.get_height()
+				cfile.set_value_compare("remap", "type", "CompressedCubemap")
+				cfile.set_value_compare("remap", "importer", "cubemap_texture")
+				# Godot "slices/arrangement", PROPERTY_HINT_ENUM, "1x6,2x3,3x2,6x1"
+				var gen_cube: int = importer.keys.get("generateCubemap", 0)
+				if image_file == null:
+					pkgasset.log_fail("Was unable to load the image file " + str(pkgasset.pathname) + " to determine cubemap format")
+				elif hei == wid or (gen_cube != 1 or gen_cube == 3 or gen_cube == 4):
+					pkgasset.log_fail("Spherical cubemap layout is not supported. Godot expects a 2x3 or 1x6 grid")
+				elif gen_cube == 2:
+					pkgasset.log_fail("Cylindrical cubemap layout is not supported. Godot expects a 2x3 or 1x6 grid")
+				elif float(wid) / hei > 5.5:
+					# Very wide, 1 tall
+					cfile.set_value_compare("params", "slices/arrangement", 3)
+				elif float(hei) / wid > 5.5:
+					# Very tall, 1 wide
+					cfile.set_value_compare("params", "slices/arrangement", 0)
+				elif float(hei) / wid > 1.3 and float(hei) / wid < 1.4:
+					pkgasset.log_fail("Cross cubemap layout is not supported. Godot expects 2x3 grid")
+					# More tall than wide
+					cfile.set_value_compare("params", "slices/arrangement", 1)
+				elif float(wid) / hei > 1.3 and float(wid) / hei < 1.4:
+					pkgasset.log_fail("Cross cubemap layout is not supported. Godot expects 3x2 grid")
+					# More wide than tall
+					cfile.set_value_compare("params", "slices/arrangement", 2)
+				elif float(hei) / wid > 1.4 and float(hei) / wid < 1.6:
+					# More tall than wide: godot compatible 2x3
+					cfile.set_value_compare("params", "slices/arrangement", 1)
+				elif float(wid) / hei > 1.4 and float(wid) / hei < 1.6:
+					# More wide than tall: godot compatible 3x2
+					cfile.set_value_compare("params", "slices/arrangement", 2)
+				elif float(wid) / hei > 1.9 and float(wid) / hei < 2.1:
+					pkgasset.log_fail("Cylinder cubemap layout is not supported. Godot expects a 2x3 or 1x6 grid")
+					# More wide than tall: godot compatible 3x2
+					cfile.set_value_compare("params", "slices/arrangement", 2)
+				else:
+					pkgasset.log_fail("Unknown cubemap layout! Godot expects a 2x3 or 1x6 grid")
+			4:
+				cfile.set_value_compare("remap", "type", "CompressedTexture2DArray")
+				cfile.set_value_compare("remap", "importer", "2d_array_texture")
+				if importer.keys.get("flipbookColumns", 0) > 0:
+					cfile.set_value_compare("params", "slices/horizontal", importer.keys.get("flipbookColumns", 0))
+				if importer.keys.get("flipbookRows", 0) > 0:
+					cfile.set_value_compare("params", "slices/vertical", importer.keys.get("flipbookRows", 0))
+			8:
+				cfile.set_value_compare("remap", "type", "CompressedTexture3D")
+				cfile.set_value_compare("remap", "importer", "3d_texture")
+				if importer.keys.get("flipbookColumns", 0) > 0:
+					cfile.set_value_compare("params", "slices/horizontal", importer.keys.get("flipbookColumns", 0))
+				if importer.keys.get("flipbookRows", 0) > 0:
+					cfile.set_value_compare("params", "slices/vertical", importer.keys.get("flipbookRows", 0))
+			_: # 1 = standard 2D texture
+				cfile.set_value_compare("remap", "type", "CompressedTexture2D")
+				cfile.set_value_compare("remap", "importer", "texture")
 		var chosen_platform = {}
 		for platform in importer.keys.get("platformSettings", []):
 			if platform.get("buildTarget", "") == "DefaultTexturePlatform":
@@ -228,15 +324,22 @@ class ImageHandler:
 			# Detect/Enabled/Disabled
 			# Detect may crash Godot later on.
 			is_normal = 2
+		if importer.keys.get("textureType", 0) == 1:
+			is_normal = 1
 		cfile.set_value_compare("params", "compress/normal_map", is_normal)
 		cfile.set_value_compare("params", "detect_3d/compress_to", 0)  # 0 = Disable (avoid crash)
 		# Roughness mode: Detect/Disable/Red/Green/etc.
 		# 1 = avoids crash later on.
 		# TODO: We may want an import setting to invert a channel for roughness use.
 		cfile.set_value_compare("params", "roughness/mode", 1)
-		cfile.set_value_compare("params", "process/premult_alpha", importer.keys.get("alphaIsTransparency", 0) != 0)
+		# FIXME: No way yet to use premultiplied alpha in Godot 3D shaders
+		# importer.keys.get("alphaIsTransparency", 0) != 0)
+		cfile.set_value_compare("params", "process/premult_alpha", 0)
 		cfile.set_value_compare("params", "process/size_limit", max_texture_size)
 		cfile.set_value_compare("params", "mipmaps/generate", importer.keys.get("mipmaps", {}).get("enableMipMap", 0) != 0)
+		if pkgasset.pathname.validate_filename().is_empty():
+			pkgasset.log_fail("pathname became empty for image: " + str(pkgasset.pathname))
+			return false
 		cfile.save("res://" + pkgasset.pathname + ".import")
 		return cfile.was_modified()
 
@@ -265,6 +368,9 @@ class AudioHandler:
 			cfile.set_value("remap", "importer", "keep")
 			if cfile.has_section_key("remap", "type"):
 				cfile.erase_section_key("remap", "type")
+			if pkgasset.pathname.validate_filename().is_empty():
+				pkgasset.log_fail("pathname became empty audio: " + str(pkgasset.pathname))
+				return false
 			cfile.save("res://" + pkgasset.pathname + ".import")
 			return true
 
@@ -275,6 +381,9 @@ class AudioHandler:
 		# (WAV): edit/loop_mode=0, edit/loop_begin=0, edit/loop_end=-1
 		# (WAV): compress/mode=0
 		# (WAV): force/8_bit, force/mono, force/max_rate, force/max_rate_hz
+		if pkgasset.pathname.validate_filename().is_empty():
+			pkgasset.log_fail("pathname became empty for audio: " + str(pkgasset.pathname))
+			return false
 		cfile.save("res://" + pkgasset.pathname + ".import")
 		return cfile.was_modified()
 
@@ -286,14 +395,17 @@ class YamlHandler:
 	extends AssetHandler
 	const tarfile: GDScript = preload("./tarfile.gd")
 
-	func write_and_preprocess_asset(pkgasset: Object, tmpdir: String, thread_subdir: String) -> String:
-		var temp_path: String = tmpdir + "/" + pkgasset.pathname
+	func parse_yaml_or_binary(pkgasset: Object, temp_path: String) -> void:
 		var outfile: FileAccess = FileAccess.open(temp_path, FileAccess.WRITE_READ)
+		if outfile == null:
+			pkgasset.log_fail("Failed to open temporary path " + temp_path)
+			return
 		var buf: PackedByteArray = pkgasset.asset_tar_header.get_data()
 		outfile.store_buffer(buf)
 		outfile.flush()
+		outfile.close()
 		outfile = null
-		if buf[8] == 0 and buf[9] == 0:
+		if len(buf) > 10 and buf[8] == 0 and buf[9] == 0:
 			pkgasset.parsed_asset = pkgasset.parsed_meta.parse_binary_asset(buf)
 		else:
 			var sf: Object = tarfile.StringFile.new()
@@ -301,10 +413,21 @@ class YamlHandler:
 			pkgasset.parsed_asset = pkgasset.parsed_meta.parse_asset(sf)
 		if pkgasset.parsed_asset == null:
 			pkgasset.log_fail("Parse asset failed " + pkgasset.pathname + "/" + pkgasset.guid)
+
+	func write_and_preprocess_asset(pkgasset: Object, tmpdir: String, thread_subdir: String) -> String:
+		# .anim assets contain nested structs for each keyframe
+		# If importing dozens of animations at once, godot may run out of memory.
+		var temp_path: String = tmpdir + "/" + pkgasset.pathname
+		if get_file_extension_without_early_parse(pkgasset) == "":
+			parse_yaml_or_binary(pkgasset, temp_path)
 		pkgasset.log_debug("Done with " + temp_path + "/" + pkgasset.guid)
-		return preprocess_asset(pkgasset, tmpdir, thread_subdir, pkgasset.pathname, buf)
+		return preprocess_asset(pkgasset, tmpdir, thread_subdir, pkgasset.pathname, PackedByteArray())
 
 	func preprocess_asset(pkgasset: Object, tmpdir: String, thread_subdir: String, path: String, data_buf: PackedByteArray, unique_texture_map: Dictionary = {}) -> String:
+		var early_file_ext: String = get_file_extension_without_early_parse(pkgasset)
+		if early_file_ext != "":
+			var new_pathname = pkgasset.pathname.get_basename() + early_file_ext
+			return new_pathname
 		if pkgasset.parsed_asset == null:
 			pkgasset.log_fail("Asset " + pkgasset.pathname + " guid " + pkgasset.parsed_meta.guid + " has was not parsed as YAML")
 			return ""
@@ -312,17 +435,20 @@ class YamlHandler:
 		var godot_resource: Resource = null
 
 		if pkgasset.parsed_meta.main_object_id != -1 and pkgasset.parsed_meta.main_object_id != 0:
-			main_asset = pkgasset.parsed_asset.assets[pkgasset.parsed_meta.main_object_id]
+			if pkgasset.parsed_asset.assets.has(pkgasset.parsed_meta.main_object_id):
+				main_asset = pkgasset.parsed_asset.assets[pkgasset.parsed_meta.main_object_id]
+			else:
+				pkgasset.log_fail("Asset " + pkgasset.pathname + " guid " + pkgasset.parsed_meta.guid + " missing main object id " + str(pkgasset.parsed_meta.main_object_id) + "!")
 		else:
 			pkgasset.log_fail("Asset " + pkgasset.pathname + " guid " + pkgasset.parsed_meta.guid + " has no main object id!")
 		var new_pathname: String = pkgasset.pathname
 		if main_asset != null:
-			new_pathname = pkgasset.pathname.get_basename() + main_asset.get_godot_extension()  # ".mat.tres"
+			new_pathname = pkgasset.pathname.get_basename() + pkgasset.parsed_meta.fixup_godot_extension(main_asset.get_godot_extension())  # ".mat.tres"
 		return new_pathname
 
 	func get_asset_type(pkgasset: Object) -> int:
 		var extn: String = pkgasset.orig_pathname.get_extension().to_lower()
-		if extn == "unity":
+		if extn == "scene":
 			return ASSET_TYPE_SCENE
 		if extn == "prefab":
 			return ASSET_TYPE_PREFAB
@@ -336,58 +462,72 @@ class YamlHandler:
 			return ASSET_TYPE_PREFAB
 		return ASSET_TYPE_YAML
 
+	func uses_godot_importer(pkgasset: Object) -> bool:
+		return false
+
+	func get_file_extension_without_early_parse(pkgasset: Object) -> String:
+		if get_asset_type(pkgasset) == ASSET_TYPE_ANIM:
+			# If we parse too many .anim files which are too big, we can use too much RAM
+			if pkgasset.asset_tar_header.get_size() > 50000:
+				# Returning a file extension here short-circuits the early parse.
+				# So we will parse the big animation files in the main thread one-by-one.
+				return pkgasset.parsed_meta.fixup_godot_extension(".anim.tres")
+		return ""
+
 	func write_godot_asset(pkgasset: Object, temp_path: String) -> bool:
+		if get_file_extension_without_early_parse(pkgasset) != "":
+			parse_yaml_or_binary(pkgasset, temp_path)
 		if pkgasset.parsed_asset == null:
 			pkgasset.log_fail("Asset " + pkgasset.pathname + " guid " + pkgasset.parsed_meta.guid + " has was not parsed as YAML")
 			return false
 		var main_asset: RefCounted = null
 		var godot_resource: Resource = null
 
-		if pkgasset.parsed_meta.main_object_id != -1 and pkgasset.parsed_meta.main_object_id != 0:
+		if pkgasset.parsed_meta.main_object_id != 0 and pkgasset.parsed_asset.assets.has(pkgasset.parsed_meta.main_object_id):
 			main_asset = pkgasset.parsed_asset.assets[pkgasset.parsed_meta.main_object_id]
 		else:
-			pkgasset.log_fail("Asset " + pkgasset.pathname + " guid " + pkgasset.parsed_meta.guid + " has no main object id!")
+			pkgasset.log_fail("Asset " + pkgasset.pathname + " guid " + pkgasset.parsed_meta.guid + " has no main object id " + str(pkgasset.parsed_meta.main_object_id) + "!")
 
 		var extra_resources: Dictionary = {}
 		if main_asset != null:
 			extra_resources = main_asset.get_extra_resources()
 		for extra_asset_fileid in extra_resources:
-			var file_ext: String = extra_resources.get(extra_asset_fileid)
+			var file_ext: String = pkgasset.parsed_meta.fixup_godot_extension(extra_resources.get(extra_asset_fileid))
 			var created_res: Resource = main_asset.get_extra_resource(extra_asset_fileid)
-			pkgasset.log_debug("Creating " + str(extra_asset_fileid) + " is " + str(created_res) + " at " + str(pkgasset.pathname.get_basename() + file_ext))
+			var basename: String = pkgasset.pathname.trim_suffix(".res").trim_suffix(".tres").get_basename()
+			pkgasset.log_debug("Creating " + str(extra_asset_fileid) + " is " + str(created_res) + " at " + str(basename + file_ext))
 			if created_res != null:
-				var new_pathname: String = "res://" + pkgasset.orig_pathname.get_basename() + file_ext  # ".skin.tres"
-				created_res.resource_name = pkgasset.orig_pathname.get_basename().get_file()
-				if FileAccess.file_exists(new_pathname):
-					created_res.take_over_path(new_pathname)
-				created_res.resource_path = new_pathname
-				ResourceSaver.save(created_res, new_pathname)
+				var new_pathname: String = "res://" + basename + file_ext  # ".skin.tres"
+				created_res.resource_name = basename.get_file() + file_ext
+				unidot_utils.save_resource(created_res, new_pathname)
 				#created_res = load(new_pathname)
 				pkgasset.parsed_meta.insert_resource(extra_asset_fileid, created_res)
 
 		if main_asset != null:
 			godot_resource = main_asset.create_godot_resource()
 
+		if get_file_extension_without_early_parse(pkgasset) != "" or get_asset_type(pkgasset) == ASSET_TYPE_ANIM:
+			pkgasset.parsed_asset.assets.clear()
+			pkgasset.parsed_asset = null
+			pkgasset.parsed_meta.parsed = null
+
 		if godot_resource == pkgasset.parsed_meta:
 			return false
 		if godot_resource != null:
 			# Save main resource at end, so that it can reference extra resources.
-			if FileAccess.file_exists(pkgasset.pathname):
-				godot_resource.take_over_path(pkgasset.pathname)
-			godot_resource.resource_path = pkgasset.pathname
-			ResourceSaver.save(godot_resource, pkgasset.pathname)
-		if godot_resource == null or pkgasset.pathname.ends_with(DEBUG_RAW_PARSED_ASSET_TYPES):
-			var rpa = raw_parsed_asset.new()
-			rpa.path = pkgasset.pathname
-			rpa.guid = pkgasset.guid
-			rpa.meta = pkgasset.parsed_meta.duplicate()
-			for key in pkgasset.parsed_asset.assets:
-				var parsed_obj: RefCounted = pkgasset.parsed_asset.assets[key]
-				rpa.objects[str(key) + ":" + str(parsed_obj.type)] = pkgasset.parsed_asset.assets[key].keys
-			rpa.resource_name + pkgasset.pathname.get_basename().get_file()
-			if FileAccess.file_exists(pkgasset.pathname + ".raw.tres"):
-				rpa.take_over_path(pkgasset.pathname + ".raw.tres")
-			ResourceSaver.save(rpa, pkgasset.pathname + ".raw.tres")
+			unidot_utils.save_resource(godot_resource, pkgasset.pathname)
+		if godot_resource == null:
+			if pkgasset.pathname.ends_with(DEBUG_RAW_PARSED_ASSET_TYPES):
+				var rpa = raw_parsed_asset.new()
+				rpa.path = pkgasset.pathname
+				rpa.guid = pkgasset.guid
+				rpa.meta = pkgasset.parsed_meta.duplicate()
+				for key in pkgasset.parsed_asset.assets:
+					var parsed_obj: RefCounted = pkgasset.parsed_asset.assets[key]
+					rpa.objects[str(key) + ":" + str(parsed_obj.type)] = pkgasset.parsed_asset.assets[key].keys
+				rpa.resource_name + pkgasset.pathname.get_basename().get_file()
+				unidot_utils.save_resource(rpa, pkgasset.pathname + ".raw.tres")
+			return false
 		return true
 
 
@@ -395,33 +535,16 @@ class SceneHandler:
 	extends YamlHandler
 
 	func preprocess_asset(pkgasset: Object, tmpdir: String, thread_subdir: String, path: String, data_buf: PackedByteArray, unique_texture_map: Dictionary = {}) -> String:
-		var is_prefab = pkgasset.orig_pathname.get_extension().to_lower() != "unity"
-		var new_pathname: String = pkgasset.pathname.get_basename() + (".prefab.tscn" if is_prefab else ".tscn")
+		var is_prefab = pkgasset.orig_pathname.get_extension().to_lower() != "scene"
+		var new_pathname: String = pkgasset.pathname.get_basename() + pkgasset.parsed_meta.fixup_godot_extension(".prefab.tscn" if is_prefab else ".tscn")
 		return new_pathname
 
 	func write_godot_asset(pkgasset, temp_path) -> bool:
-		var is_prefab = pkgasset.orig_pathname.get_extension().to_lower() != "unity"
+		var is_prefab = pkgasset.orig_pathname.get_extension().to_lower() != "scene"
 		var packed_scene: PackedScene = convert_scene.new().pack_scene(pkgasset, is_prefab)
 		if packed_scene != null:
-			if FileAccess.file_exists(pkgasset.pathname):
-				packed_scene.take_over_path(pkgasset.pathname)
-			else:
-				# Godot is giving an error in ResourceSaver.save() that it can't read the uid from the file while it's writing (get_uid)
-				# Why and how?!
-				# Let's experiment with manual UID generation...
-				# pkgasset.parsed_meta.
-				# ResourceUID.id_to_text(calc_md5(pkgasset.guid))
-				var new_uid = ResourceUID.create_id()
-				pkgasset.log_debug(ResourceUID.id_to_text(new_uid))
-				ResourceUID.add_id(new_uid, "res://" + pkgasset.pathname)
-				var fa: FileAccess = FileAccess.open("res://" + pkgasset.pathname, FileAccess.WRITE)
-				fa.store_string('[gd_scene format=3 uid="' + ResourceUID.id_to_text(new_uid) + '"]\n\n[node name="Node3D" type="Node3D"]\n')
-				fa.flush()
-				fa = null
-				EditorPlugin.new().get_editor_interface().get_resource_filesystem().update_file("res://" + pkgasset.pathname)
-			packed_scene.resource_path = "res://" + pkgasset.pathname
-			ResourceSaver.save(packed_scene, "res://" + pkgasset.pathname)
-			EditorPlugin.new().get_editor_interface().reload_scene_from_path("res://" + pkgasset.pathname)
+			unidot_utils.save_resource(packed_scene, "res://" + pkgasset.pathname)
+			unidot_utils.editor_interface.reload_scene_from_path("res://" + pkgasset.pathname)
 			return true
 		return false
 
@@ -449,9 +572,14 @@ class BaseModelHandler:
 						var fpos = outfile.get_position()
 						outfile.seek(0)
 						pkgasset.data_md5 = calc_md5(outfile.get_buffer(fpos))
+						outfile.close()
 						outfile = null
 						pkgasset.existing_data_md5 = calc_existing_md5(pkgasset.pathname)
 						already_rewrote_file = true
+
+		var extracted_assets_dir: String = post_import_material_remap_script.get_extracted_assets_dir(pkgasset.pathname)
+		if not DirAccess.dir_exists_absolute(extracted_assets_dir):
+			DirAccess.make_dir_absolute(extracted_assets_dir)
 		if already_rewrote_file:
 			return pkgasset.pathname
 		return ""
@@ -471,6 +599,9 @@ class BaseModelHandler:
 			if cfile.has_section_key("remap", "type"):
 				cfile.erase_section_key("remap", "type")
 			cfile.set_value("params", "import_script/path", "")
+			if pkgasset.pathname.validate_filename().is_empty():
+				pkgasset.log_fail("pathname became empty in model: " + str(pkgasset.pathname))
+				return false
 			cfile.save("res://" + pkgasset.pathname + ".import")
 			return true
 
@@ -479,15 +610,19 @@ class BaseModelHandler:
 		# I think these are the default settings now?? The option no longer exists???
 		### cfile.set_value("params", "materials/location", 1) # Store on Mesh, not Node.
 		### cfile.set_value("params", "materials/storage", 0) # Store in file. post-import will export.
-		cfile.set_value_compare("params", "animation/fps", 30)  # FIXME: This may fail in files whose FBX framerate is not 30
-		# Due to passing bake30 to FBX2glTF, it may ignore the original framerate...
-		# Unity seems to operate in terms of frames but no indication of time here....
+
+		cfile.set_value_compare("params", "animation/fps", pkgasset.parsed_meta.internal_data.get("anim_bake_fps", 30))
+		# fps should match the bake30 option passed to FBX2glTF, it may ignore the original framerate...
+		# The importer seems to operate in terms of frames but no indication of time here....
 		cfile.set_value_compare("params", "animation/import", importer.animation_import)
+		# Humanoid animations in particular are sensititve to immutable tracks being shared across rigs.
+		cfile.set_value_compare("params", "animation/remove_immutable_tracks", false)
 
 		# FIXME: Godot has a major bug if light baking is used:
 		# it leaves a file ".glb.unwrap_cache" open and causes future imports to fail.
 		cfile.set_value_compare("params", "meshes/light_baking", importer.meshes_light_baking)
-		cfile.set_value_compare("params", "meshes/ensure_tangents", importer.ensure_tangents)
+		# A bug exists in Godot 4.2 stable if meshes with blendshapes are imported without tangents. We should always generate them.
+		cfile.set_value_compare("params", "meshes/ensure_tangents", 1) # importer.ensure_tangents)
 		cfile.set_value_compare("params", "meshes/create_shadow_meshes", false)  # Until visual artifacts with shadow meshes get fixed
 		cfile.set_value_compare("params", "nodes/root_scale", pkgasset.parsed_meta.internal_data.get("scale_correction_factor", 1.0))
 		cfile.set_value_compare("params", "nodes/apply_root_scale", true)
@@ -503,21 +638,29 @@ class BaseModelHandler:
 		#var idx: int = 0
 		subresources["animations"] = {}
 
+		var fps_ratio: float = pkgasset.parsed_meta.internal_data.get("anim_frames_fps_ratio", 1.0)
+		var used_animation_names: Dictionary = pkgasset.parsed_meta.internal_data.get("used_animation_names", {})
 		for anim_clip in anim_clips:
 			var take_name = anim_clip["take_name"]
+			if not used_animation_names.has(take_name):
+				for key in used_animation_names:
+					pkgasset.log_warn("Substituting requested takeName " + str(take_name) + " for first animation " + str(key))
+					take_name = key # Usually just one. Often "Take 001"
+					break
 			if not subresources["animations"].has(take_name):
 				subresources["animations"][take_name] = {}
 			var take: Dictionary = subresources["animations"][take_name]
 			var idx: int = take.get("slices/amount", 0) + 1  # 1-indexed
 			var prefix: String = "slice_" + str(idx)
+
 			# FIXME: If take_name == name, godot won't actually apply the slice data.
 			take[prefix + "/name"] = anim_clip.get("name")
-			take[prefix + "/start_frame"] = anim_clip.get("start_frame")
-			take[prefix + "/end_frame"] = anim_clip.get("end_frame")
+			take[prefix + "/start_frame"] = fps_ratio * anim_clip.get("start_frame")
+			take[prefix + "/end_frame"] = fps_ratio * anim_clip.get("end_frame")
 			take["settings/loop_mode"] = anim_clip.get("loop_mode")
 			take[prefix + "/loop_mode"] = anim_clip.get("loop_mode")
 			take[prefix + "/save_to_file/enabled"] = false  # TODO
-			take[prefix + "/save_to_file/keep_custom_tracks"] = true  # TODO
+			take[prefix + "/save_to_file/keep_custom_tracks"] = false # Buggy through 4.2
 			take[prefix + "/save_to_file/path"] = ""  # TODO
 			take["slices/amount"] = idx  # 1-indexed
 			# animation/import
@@ -526,7 +669,7 @@ class BaseModelHandler:
 			subresources["nodes"] = {}
 		if not subresources["nodes"].has("PATH:AnimationPlayer"):
 			subresources["nodes"]["PATH:AnimationPlayer"] = {}
-		if importer.keys.get("animationType", 2) == 3:
+		if importer.keys.get("animationType", 2) == 3 or pkgasset.parsed_meta.is_force_humanoid():
 			if not subresources["nodes"].has("PATH:Skeleton3D"):
 				subresources["nodes"]["PATH:Skeleton3D"] = {}
 			var bone_map: BoneMap = importer.generate_bone_map_from_human()
@@ -545,6 +688,9 @@ class BaseModelHandler:
 		#cfile.set_value_compare("params", "animation/optimizer/enabled", optim_setting.get("enabled"))
 		#cfile.set_value_compare("params", "animation/optimizer/max_linear_error", optim_setting.get("max_linear_error"))
 		#cfile.set_value_compare("params", "animation/optimizer/max_angular_error", optim_setting.get("max_angular_error"))
+		if pkgasset.pathname.validate_filename().is_empty():
+			pkgasset.log_fail("pathname became empty for model: " + str(pkgasset.pathname))
+			return false
 		cfile.save("res://" + pkgasset.pathname + ".import")
 		return cfile.was_modified()
 
@@ -553,6 +699,9 @@ class BaseModelHandler:
 		if res != null:
 			pass
 		var cfile := ConfigFile.new()
+		if pkgasset.pathname.validate_filename().is_empty():
+			pkgasset.log_fail("pathname became empty in finished_import: " + str(pkgasset.pathname))
+			return
 		var import_file_path: String = "res://" + pkgasset.pathname + ".import"
 		if cfile.load(import_file_path) != OK:
 			pkgasset.log_fail("Unable to load " + str(import_file_path) + " to remove post-import script")
@@ -576,13 +725,13 @@ class BaseModelHandler:
 						unused_anims.erase(anim_properties[key])
 			for slice_key in active_slices:
 				anim_properties[slice_key + "/save_to_file/enabled"] = true
-				anim_properties[slice_key + "/save_to_file/keep_custom_tracks"] = true
+				anim_properties[slice_key + "/save_to_file/keep_custom_tracks"] = false # Buggy through 4.2
 				anim_properties[slice_key + "/save_to_file/path"] = active_slices[slice_key]
 		for take_name in unused_anims:
 			if not (subresources["animations"].has(take_name)):
 				subresources["animations"][take_name] = {}
 			subresources["animations"][take_name]["save_to_file/enabled"] = true
-			subresources["animations"][take_name]["save_to_file/keep_custom_tracks"] = true
+			subresources["animations"][take_name]["save_to_file/keep_custom_tracks"] = true # Non-slices are not buggy
 			subresources["animations"][take_name]["save_to_file/path"] = unused_anims[take_name]
 		if not subresources.has("meshes"):
 			subresources["meshes"] = {}
@@ -682,6 +831,9 @@ class FbxHandler:
 	func convert_to_float(s: String) -> Variant:
 		return s.to_float()
 
+	func convert_to_int(s: String) -> int:
+		return s.to_int()
+
 	func _is_fbx_binary(fbx_file_binary: PackedByteArray) -> bool:
 		return find_in_buffer(fbx_file_binary, "Kaydara FBX Binary".to_ascii_buffer(), 0, 64) != -1
 
@@ -765,7 +917,7 @@ class FbxHandler:
 		needle_buf[6] = 0
 		var scale_factor_pos: int = find_in_buffer(fbx_file_binary, needle_buf)
 		if scale_factor_pos == -1:
-			pkgasset.log_fail(filename + ": Failed to find UnitScaleFactor in ASCII FBX.")
+			pkgasset.log_fail(filename + ": Failed to find UnitScaleFactor in Binary FBX.")
 			return fbx_file_binary
 
 		# TODO: If any Model has Visibility == 0.0, then the mesh gets lost in FBX2glTF
@@ -834,6 +986,133 @@ class FbxHandler:
 		output_buf += fbx_file_binary.slice(newline_pos, len(fbx_file_binary))
 		return output_buf
 
+	const fbx_time_modes: Dictionary = {
+		# 0 (default) Appears to equate to KTIME_ONE_SECOND, or 46186158000 FPS.
+		0: 30, # However, the importer treats TimeMode=0 as 30fps, which is all we care about.
+		1: 120,
+		2: 100,
+		3: 60,
+		4: 50,
+		5: 48,
+		6: 30,
+		7: 30, # No idea... assume default = 60
+		8: 29.97, # "NTSC"
+		9: 29.97,
+		10: 25, # "PAL"
+		11: 24, # "CINEMA"
+		12: 1000, # milliseconds
+		13: 23.976, # cinematic
+	}
+
+	func _preprocess_fbx_anim_fps_binary(pkgasset: Object, fbx_file_binary: PackedByteArray) -> float:
+		var filename: String = pkgasset.pathname
+		var needle_buf: PackedByteArray = "\u0001PS\u0008...TimeModeS\u0004...enumS".to_ascii_buffer()
+		needle_buf[4] = 0
+		needle_buf[5] = 0
+		needle_buf[6] = 0
+		needle_buf[17] = 0
+		needle_buf[18] = 0
+		needle_buf[19] = 0
+		var fps = 1.0
+		var time_mode_pos: int = find_in_buffer(fbx_file_binary, needle_buf)
+		if time_mode_pos == -1:
+			pkgasset.log_fail(filename + ": Failed to find TimeMode in Binary FBX.")
+			return 30
+		var spb := StreamPeerBuffer.new()
+		spb.data_array = fbx_file_binary
+		spb.big_endian = false
+		spb.seek(time_mode_pos + len(needle_buf))
+		var tmps: String = spb.get_string(spb.get_32())
+		if spb.get_8() != ("S").to_ascii_buffer()[0]:
+			pkgasset.log_fail(filename + ": time mode type not a string, or subdatatype invalid " + str(tmps) + "|" + str(spb.get_position()))
+			return 30
+		spb.get_string(spb.get_32())
+		if spb.get_8() != ("I").to_ascii_buffer()[0]:
+			pkgasset.log_fail(filename + ": TimeMode enum value not an integer")
+			return 30
+		var enum_value: int = spb.get_32()
+		if fbx_time_modes.has(enum_value):
+			fps = fbx_time_modes[enum_value]
+			pkgasset.log_debug(filename + ": FBX standard framerate " + str(fps))
+			return fps
+
+		needle_buf = "\u0001PS\u000F...CustomFrameRateS".to_ascii_buffer()
+		needle_buf[4] = 0
+		needle_buf[5] = 0
+		needle_buf[6] = 0
+		var custom_fps_pos: int = find_in_buffer(fbx_file_binary, needle_buf)
+		if custom_fps_pos == -1:
+			pkgasset.log_fail(filename + ": Failed to find TimeMode in Binary FBX.")
+			return 30
+		spb.seek(custom_fps_pos + len(needle_buf))
+		var datatype: String = spb.get_string(spb.get_32())
+		if spb.get_8() != ("S").to_ascii_buffer()[0]:  # ord() is broken?!
+			pkgasset.log_fail(filename + ": not a string, or datatype invalid " + datatype)
+			return 30
+		var subdatatype: String = spb.get_string(spb.get_32())
+		if spb.get_8() != ("S").to_ascii_buffer()[0]:
+			pkgasset.log_fail(filename + ": not a string, or subdatatype invalid " + datatype + " " + subdatatype)
+			return 30
+		var extratype: String = spb.get_string(spb.get_32())
+		var number_type = spb.get_8()
+		var is_double: bool = false
+		if number_type == ("F").to_ascii_buffer()[0]:
+			fps = spb.get_float()
+		elif number_type == ("D").to_ascii_buffer()[0]:
+			fps = spb.get_double()
+			is_double = true
+		else:
+			pkgasset.log_fail(filename + ": not a float or double " + str(number_type))
+			return 30
+
+		pkgasset.log_debug(filename + ": Binary FBX: Custom Anim Framerate=" + str(fps))
+		# assets will have CustomFrameRate = -1 if TimeMode != 14
+		if fps < 0 or is_zero_approx(fps):
+			pkgasset.log_warn(filename + ": invalid CustomFrameRate: " + str(fps) + ": from time mode=" + str(enum_value))
+			return 30
+		return fps
+
+	func _preprocess_fbx_anim_fps_ascii(pkgasset: Object, buffer_as_ascii: String) -> float:
+		var filename: String = pkgasset.pathname
+		var time_mode_pos: int = buffer_as_ascii.find('"TimeMode"')
+		if time_mode_pos == -1:
+			pkgasset.log_fail(filename + ": Failed to find UnitScaleFactor in ASCII FBX.")
+			return 30
+		var newline_pos: int = buffer_as_ascii.find("\n", time_mode_pos)
+		var comma_pos: int = buffer_as_ascii.rfind(",", newline_pos)
+		if newline_pos == -1 or comma_pos == -1:
+			pkgasset.log_fail(filename + ": Failed to find value for UnitScaleFactor in ASCII FBX.")
+			return 30
+
+		var fps: float = 1
+		var time_mode_str: String = buffer_as_ascii.substr(comma_pos + 1, newline_pos - comma_pos - 1).strip_edges()
+		pkgasset.log_debug("TimeMode as string is " + str(time_mode_str))
+		var enum_value: int = convert_to_int(str(time_mode_str))
+		if fbx_time_modes.has(enum_value):
+			fps = fbx_time_modes[enum_value]
+			pkgasset.log_debug(filename + ": ASCII FBX standard framerate " + str(fps))
+			return fps
+
+		var framerate_pos: int = buffer_as_ascii.find('"CustomFrameRate"')
+		if framerate_pos == -1:
+			pkgasset.log_fail(filename + ": Failed to find UnitScaleFactor in ASCII FBX.")
+			return 30
+		newline_pos = buffer_as_ascii.find("\n", framerate_pos)
+		comma_pos = buffer_as_ascii.rfind(",", newline_pos)
+		if newline_pos == -1 or comma_pos == -1:
+			pkgasset.log_fail(filename + ": Failed to find value for UnitScaleFactor in ASCII FBX.")
+			return 30
+
+		var custom_fps_str: String = buffer_as_ascii.substr(comma_pos + 1, newline_pos - comma_pos - 1).strip_edges()
+		pkgasset.log_debug("CustomFrameRate as string is " + str(custom_fps_str))
+		fps = convert_to_float(str(custom_fps_str))
+		pkgasset.log_debug(filename + ": ASCII FBX: Custom Anim Framerate=" + str(fps))
+		# assets will have CustomFrameRate = -1 if TimeMode != 14
+		if fps < 0 or is_zero_approx(fps):
+			pkgasset.log_warn(filename + ": invalid CustomFrameRate: " + str(fps) + ": from time mode=" + str(enum_value))
+			return 30
+		return fps
+
 	func _get_parent_textures_paths(source_file_path: String) -> Dictionary:
 		# return source_file_path.get_basename() + "." + str(fileId) + extension
 		var retlist: Dictionary = {}
@@ -854,6 +1133,10 @@ class FbxHandler:
 
 	func _make_relative_to(filename: String, basedir: String):
 		var path_beginning: String = ""
+		if basedir.begins_with("res://"):
+			basedir = basedir.substr(6)
+		if filename.begins_with("res://"):
+			filename = filename.substr(6)
 		while not filename.begins_with(basedir + "/"):
 			path_beginning += "../"
 			basedir = basedir.get_base_dir()
@@ -890,20 +1173,45 @@ class FbxHandler:
 		if debug_outfile:
 			debug_outfile.store_buffer(fbx_file)
 			debug_outfile.flush()
+			debug_outfile.close()
 			debug_outfile = null
 
 		var is_binary: bool = _is_fbx_binary(fbx_file)
+		var fps: float
 		var texture_name_list: PackedStringArray = PackedStringArray()
 		if is_binary:
 			texture_name_list = _extract_fbx_textures_binary(pkgasset, fbx_file)
+			fps = _preprocess_fbx_anim_fps_binary(pkgasset, fbx_file)
 			fbx_file = _preprocess_fbx_scale_binary(pkgasset, fbx_file, importer.keys.get("meshes", {}).get("useFileScale", 0) == 1, importer.keys.get("meshes", {}).get("globalScale", 1))
 		else:
-			var buffer_as_ascii: String = fbx_file.get_string_from_utf8()  # may contain unicode
-			texture_name_list = _extract_fbx_textures_ascii(pkgasset, buffer_as_ascii)
+			var buffer_as_utf8: String = fbx_file.get_string_from_utf8()  # may contain unicode
+			texture_name_list = _extract_fbx_textures_ascii(pkgasset, buffer_as_utf8)
+			var buffer_as_ascii: String = fbx_file.get_string_from_ascii() # match 1-to-1 with bytes
+			fps = _preprocess_fbx_anim_fps_ascii(pkgasset, buffer_as_ascii)
 			fbx_file = _preprocess_fbx_scale_ascii(pkgasset, fbx_file, buffer_as_ascii, importer.keys.get("meshes", {}).get("useFileScale", 0) == 1, importer.keys.get("meshes", {}).get("globalScale", 1))
+		var d := DirAccess.open("res://")
+		var closest_bake_fps: float = 30
+		if fps <= 25:
+			closest_bake_fps = 24
+		if fps >= 40:
+			closest_bake_fps = 60
+		var fps_ratio: float = closest_bake_fps / fps
+		pkgasset.parsed_meta.internal_data["anim_orig_fbx_fps"] = fps
+		pkgasset.parsed_meta.internal_data["anim_bake_fps"] = closest_bake_fps
+		pkgasset.parsed_meta.internal_data["anim_frames_fps_ratio"] = fps_ratio
+		d.rename(temp_input_path, temp_input_path + "x")
+		d.remove(temp_input_path + "x")
 		var outfile: FileAccess = FileAccess.open(temp_input_path, FileAccess.WRITE_READ)
 		outfile.store_buffer(fbx_file)
 		outfile.flush()
+		pkgasset.log_debug("Flushed " + str(temp_input_path))
+		outfile.close()
+		pkgasset.log_debug("Closed " + str(temp_input_path))
+		var retry_count: int = 0
+		while not FileAccess.open(temp_input_path, FileAccess.READ_WRITE) and retry_count < 40:
+			pkgasset.log_debug("Retry " + str(temp_input_path) + " " + str(retry_count))
+			OS.delay_msec(500)
+			retry_count += 1
 		outfile = null
 		var unique_texture_map: Dictionary = {}
 		var texture_dirname = full_tmpdir
@@ -916,12 +1224,12 @@ class FbxHandler:
 				replaced_extension = "jpg"
 			unique_texture_map[fn_filename.get_basename() + "." + replaced_extension] = fn_filename
 		pkgasset.log_debug("Referenced textures: " + str(unique_texture_map.keys()))
-		var d = DirAccess.open("res://")
 		var tex_not_exists = {}
 		for fn in unique_texture_map.keys():
 			if not d.file_exists(texture_dirname + "/" + fn):
 				pkgasset.log_debug("Creating dummy texture: " + str(texture_dirname + "/" + fn))
 				var tmpf = FileAccess.open(texture_dirname + "/" + fn, FileAccess.WRITE_READ)
+				tmpf.close()
 				tmpf = null
 			var candidate_texture_dict = _get_parent_textures_paths(output_dirname + "/" + unique_texture_map[fn])
 			var tex_exists: bool = false
@@ -959,7 +1267,8 @@ class FbxHandler:
 		if cur_children.is_empty():
 			return out_map
 		var this_children = []
-		for child in cur_children:
+		for child_f in cur_children:
+			var child: int = int(child_f)
 			if gltf_nodes[child].get("skin", -1) >= 0 and gltf_nodes[child].get("mesh", -1) >= 0:
 				this_children.append(gltf_nodes[child]["name"])
 			out_map = assign_skinned_parents(out_map, gltf_nodes, gltf_nodes[child]["name"], gltf_nodes[child].get("children", []))
@@ -1007,10 +1316,111 @@ class FbxHandler:
 		var scale = xform.basis.get_scale()
 		json_node["scale"] = [scale.x, scale.y, scale.z]
 
+	func add_empty_animation(json: Dictionary, name: String):
+		var has_reset: bool = false
+		if not json.has("animations"):
+			json["animations"] = []
+		for anim in json["animations"]:
+			if anim.get("name", "") == name:
+				has_reset = true
+		if not has_reset:
+			json["animations"].append({"channels": [], "name": name, "samplers": []})
+
+	func add_accessor(json: Dictionary, glb_bin: PackedByteArray, acc_type: String, count: int, bin_data: PackedByteArray) -> int:
+		if not json.has("accessors"):
+			json["accessors"] = []
+		if not json.has("bufferViews"):
+			json["bufferViews"] = []
+		if not json.has("buffers"):
+			json["buffers"] = [{"byteLength": len(glb_bin)}]
+		json["buffers"][0]["byteLength"] += len(bin_data)
+		var acc: Dictionary = {
+			"bufferView": len(json["bufferViews"]),
+			"byteOffset": 0,
+			"componentType": 5126,
+			"count": count,
+			"type": acc_type,
+		}
+		if acc_type == "SCALAR":
+			acc["min"] = [0]
+			acc["max"] = [0]
+		var ret: int = len(json["accessors"])
+		json["accessors"].append(acc)
+		json["bufferViews"].append({"buffer": 0, "byteLength": len(bin_data), "byteOffset": len(glb_bin)})
+		glb_bin.append_array(bin_data)
+		return ret
+
+	func add_missing_humanoid_tracks_to_animations(pkgasset: Object, json: Dictionary, glb_bin: PackedByteArray, humanoid_bone_dict: Dictionary):
+		const TRANSLATION_PFX: String = "Translation$"
+		var node_names_to_index: Dictionary
+		var json_nodes = json.get("nodes", [])
+		for node_idx in range(len(json_nodes)):
+			node_names_to_index[json_nodes[node_idx].get("name", "")] = node_idx
+		var single_element_input_accessor_idx: int = -1
+		for anim in json.get("animations", []):
+			var human_tracks_used: Dictionary
+			for gltf_bone_name in humanoid_bone_dict:
+				if humanoid_bone_dict[gltf_bone_name] == "Hips" or humanoid_bone_dict[gltf_bone_name] == "Root":
+					human_tracks_used[TRANSLATION_PFX + gltf_bone_name] = false
+				human_tracks_used[gltf_bone_name] = false
+			for channel in anim["channels"]:
+				if not channel["target"].has("node"):
+					continue
+				if channel["target"]["path"] == "rotation":
+					var node_name: String = json.nodes[channel["target"]["node"]].get("name", "")
+					if human_tracks_used.has(node_name):
+						human_tracks_used[node_name] = true
+				if channel["target"]["path"] == "translation":
+					var node_name: String = json.nodes[channel["target"]["node"]].get("name", "")
+					if human_tracks_used.has(TRANSLATION_PFX + node_name):
+						human_tracks_used[TRANSLATION_PFX + node_name] = true
+			for node_name in human_tracks_used:
+				if human_tracks_used[node_name] == true:
+					continue
+				var is_translation: bool = node_name.begins_with(TRANSLATION_PFX)
+				if is_translation:
+					node_name = node_name.substr(len(TRANSLATION_PFX))
+				if not node_names_to_index.has(node_name):
+					pkgasset.log_fail("node_names_to_index is missing " + str(node_name))
+					continue
+				var node_idx: int = node_names_to_index[node_name]
+				# pkgasset.log_debug("anim " + str(anim.get("name", "")) + " : Adding missing track " + str(node_name) + " node_idx " + str(node_idx) + " @" + str(len(glb_bin)))
+				var json_node: Dictionary = json["nodes"][node_idx]
+				var pba: PackedByteArray
+				var spb: StreamPeerBuffer = StreamPeerBuffer.new()
+				if single_element_input_accessor_idx == -1:
+					spb.big_endian = false
+					spb.data_array = pba
+					spb.put_float(0.0)
+					single_element_input_accessor_idx = add_accessor(json, glb_bin, "SCALAR", 1, spb.data_array)
+				pba = PackedByteArray()
+				spb = StreamPeerBuffer.new()
+				spb.big_endian = false
+				spb.data_array = pba
+				bone_map_editor_plugin.gltf_matrix_to_trs(json_node)
+				var value_accessor: int = -1
+				if is_translation:
+					var json_pos: Array = json_node.get("translation", [0.0, 0.0, 0.0]).duplicate()
+					pkgasset.log_debug("Got " + str(node_name) + " translation: " + str(json_pos))
+					for flt in range(3):
+						spb.put_float(json_pos[flt])
+					value_accessor = add_accessor(json, glb_bin, "VEC3", 1, spb.data_array)
+				else:
+					var json_quat: Array = json_node.get("rotation", [0.0, 0.0, 0.0, 1.0])
+					for flt in range(4):
+						spb.put_float(json_quat[flt])
+					value_accessor = add_accessor(json, glb_bin, "VEC4", 1, spb.data_array)
+				var sampler: int = len(anim["samplers"])
+				# pkgasset.log_debug("animation on node " + str(node_name) + ": " + str(sampler))
+				anim["samplers"].append({"input": single_element_input_accessor_idx, "output": value_accessor})
+				anim["channels"].append({"sampler": sampler, "target": {"node": node_idx, "path": "translation" if is_translation else "rotation"}})
+
 	func gltf_remove_node(json: Dictionary, node_idx: int):
 		json["nodes"].remove_at(node_idx)  # remove_at index
 		for node in json["nodes"]:
 			var children: Array = node.get("children", [])
+			for i in range(len(children)):
+				children[i] = int(children[i])
 			children.erase(node_idx)  # erase by value
 			for i in range(len(children)):
 				if children[i] > node_idx:
@@ -1038,6 +1448,9 @@ class FbxHandler:
 				if channel.get("target", {}).get("node", -1) > node_idx:
 					channel["target"]["node"] -= 1
 
+	func encode_uri_components(path: String):
+		return path.replace("%", "%25").replace("+", "%2B")
+
 	func preprocess_asset(pkgasset: Object, tmpdir: String, thread_subdir: String, path: String, data_buf: PackedByteArray, unique_texture_map: Dictionary = {}) -> String:
 		var user_path_base: String = OS.get_user_data_dir()
 		pkgasset.log_debug("I am an FBX " + str(path))
@@ -1050,6 +1463,9 @@ class FbxHandler:
 		var tmp_bin_output_path: String = tmpdir + "/" + thread_subdir + "/buffer.bin"
 		if SHOULD_CONVERT_TO_GLB:
 			output_path = full_output_path.get_basename() + ".glb"
+		var extracted_assets_dir: String = post_import_material_remap_script.get_extracted_assets_dir(pkgasset.pathname)
+		if not DirAccess.dir_exists_absolute(extracted_assets_dir):
+			DirAccess.make_dir_absolute(extracted_assets_dir)
 		if USE_BUILTIN_FBX:
 			return pkgasset.pathname
 		var stdout: Array = [].duplicate()
@@ -1064,16 +1480,31 @@ class FbxHandler:
 		# --long-indices auto
 		# --compute-normals never|broken|missing|always
 		# --blend-shape-normals --blend-shape-tangents
-		var cmdline_args := ["--pbr-metallic-roughness", "--fbx-temp-dir", tmpdir + "/" + thread_subdir, "--normalize-weights", "1", "--anim-framerate", "bake30", "-i", tmpdir + "/" + path, "-o", tmp_gltf_output_path]
+		var fps_bake_mode: String = "bake" + str(pkgasset.parsed_meta.internal_data.get("anim_bake_fps", 30))
+		var cmdline_args := ["--pbr-metallic-roughness", "--fbx-temp-dir", tmpdir + "/" + thread_subdir, "--normalize-weights", "1", "--anim-framerate", fps_bake_mode, "-i", tmpdir + "/" + path, "-o", tmp_gltf_output_path]
 		pkgasset.log_debug(addon_path + " " + " ".join(cmdline_args))
 		var ret = OS.execute(addon_path, cmdline_args, stdout)
+		for i in range(5):
+			OS.delay_msec(500)
+			#d.rename(tmpdir + "/" + path, tmpdir + "/x" + path)
+			#d.copy(tmpdir + "/x" + path, tmpdir + "/" + path)
+			#d.remove(tmpdir + "/x" + path)
+			OS.delay_msec(500)
+			# Hack, but I don't know what to do about this for now. The .close() is async or something.
+			if ret == 1 and "".join(stdout).strip_edges().is_empty():
+				pkgasset.log_warn("Attempt to rerun FBX2glTF to mitigate windows file close race " + str(i) + ".")
+				ret = OS.execute(addon_path, cmdline_args, stdout)
 		pkgasset.log_debug("FBX2glTF returned " + str(ret) + " -----")
 		pkgasset.log_debug(str(stdout))
 		pkgasset.log_debug("-----------------------------")
 		d.rename(tmp_bin_output_path, bin_output_path)
 		d.rename(tmp_gltf_output_path, gltf_output_path)
 		var f: FileAccess = FileAccess.open(gltf_output_path, FileAccess.READ)
+		if f == null:
+			pkgasset.log_fail("Failed to open gltf output " + gltf_output_path)
+			return ""
 		var data: String = f.get_buffer(f.get_length()).get_string_from_utf8()
+		f.close()
 		f = null
 		var jsonres = JSON.new()
 		jsonres.parse(data)
@@ -1084,10 +1515,10 @@ class FbxHandler:
 		### Remove RootNode and migrate root nodes into the scene.
 		var default_scene: Dictionary = json["scenes"][json.get("scene", 0)]
 		# Godot prepends the scene name to the name of meshes, for some reason...
-		# "Root Scene" is hardcoded in post_import_unity_model.gd so we use it here.
+		# "Root Scene" is hardcoded in post_import_model.gd so we use it here.
 		default_scene["name"] = "Root Scene"
 		# default_scene["name"] = pkgasset.pathname.get_file().get_basename()
-		if len(default_scene["nodes"]) == 1:  # Disabled for now.
+		if len(default_scene["nodes"]) == 1:  # Remove redundant "RootNode" node from FBX2glTF.
 			var root_node_idx: int = default_scene["nodes"][0]
 			var root_node: Dictionary = json["nodes"][root_node_idx]
 			if root_node.get("name", "") == "RootNode" and not root_node.get("children", []).is_empty():
@@ -1097,7 +1528,8 @@ class FbxHandler:
 						var root_children: Array = root_node["children"]
 						default_scene["nodes"] = []
 						root_node.erase("children")
-						for child_idx in root_children:
+						for child_idx_f in root_children:
+							var child_idx: int = int(child_idx_f)
 							default_scene["nodes"].append(child_idx)
 							var child_node: Dictionary = json["nodes"][child_idx]
 							if not root_xform.is_equal_approx(Transform3D.IDENTITY):
@@ -1105,11 +1537,13 @@ class FbxHandler:
 						gltf_remove_node(json, root_node_idx)
 		f = FileAccess.open(bin_output_path, FileAccess.READ)
 		bindata = f.get_buffer(f.get_length())
+		var bindata_orig_length: int = len(bindata)
+		f.close()
 		f = null
 		if SHOULD_CONVERT_TO_GLB:
 			json["buffers"][0].erase("uri")
 		else:
-			json["buffers"][0]["uri"] = bin_output_path.get_file()
+			json["buffers"][0]["uri"] = encode_uri_components(bin_output_path.get_file())
 		if json.has("images"):
 			for img in json["images"]:
 				var img_name: String = img.get("name")
@@ -1123,7 +1557,8 @@ class FbxHandler:
 					if unique_texture_map.has(img_name):
 						img_uri = unique_texture_map.get(img_name)
 						img_name = img_uri
-				img["uri"] = img_uri
+				img_uri = img_uri.get_basename() + "." + img_uri.get_extension().to_lower()
+				img["uri"] = encode_uri_components(img_uri)
 				img["name"] = img_name.get_file().get_basename()
 		if json.has("materials"):
 			var material_to_texture_name = {}.duplicate()
@@ -1138,21 +1573,28 @@ class FbxHandler:
 			pkgasset.parsed_meta.internal_data["material_to_texture_name"] = material_to_texture_name
 
 		var importer = pkgasset.parsed_meta.importer
-		var humanoid_original_transforms: Dictionary = {}
+		var humanoid_original_transforms: Dictionary = {} # name -> Transform3D
+		var original_rotations: Dictionary = {} # name -> Quaternion
+		var orig_hip_position: Vector3
 		var human_skin_nodes: Array = []
-		var is_humanoid: bool = importer.keys.get("animationType", 2) == 3
+		var is_humanoid: bool = importer.keys.get("animationType", 2) == 3 or pkgasset.parsed_meta.is_force_humanoid()
 		var bone_map_dict: Dictionary
-		if is_humanoid and json.has("nodes") and importer.keys.get("avatarSetup", 1) >= 1:
+		var copy_avatar: bool = false
+		if is_humanoid and json.has("nodes") and (importer.keys.get("avatarSetup", 1) >= 1 or pkgasset.parsed_meta.is_force_humanoid()):
 			if importer.keys.get("avatarSetup", 1) == 2 or importer.keys.get("copyAvatar", 0) == 1:
 				var src_ava = importer.keys.get("lastHumanDescriptionAvatarSource", [null, 0, "", 0])
 				var src_ava_meta = pkgasset.meta_dependencies.get(src_ava[2], null)
 				if src_ava_meta == null:
-					pkgasset.log_fail("Unable to lookup meta dependency", "lastHumanDescriptionAvatarSource", src_ava)
+					pkgasset.log_fail("Unable to lookup meta copy avatar dependency", "lastHumanDescriptionAvatarSource", src_ava)
 				else:
 					bone_map_dict = src_ava_meta.importer.generate_bone_map_dict_from_human()
 					humanoid_original_transforms = src_ava_meta.internal_data.get("humanoid_original_transforms", {}).duplicate()
+					orig_hip_position = src_ava_meta.internal_data.get("hips_position", Vector3())
+					original_rotations = src_ava_meta.internal_data.get("original_rotations", {}).duplicate()
+					pkgasset.log_debug("Copying from avatar " + str(src_ava_meta.path) + " " + str(src_ava_meta.guid) + " orig transforms " + str(len(src_ava_meta.internal_data.get("humanoid_original_transforms", {}))))
+					copy_avatar = true
 
-			elif len(importer.keys.get("humanDescription", {}).get("human", [])) < 10:
+			if not copy_avatar and len(importer.keys.get("humanDescription", {}).get("human", [])) < 10:
 				var skel: Skeleton3D = Skeleton3D.new()
 				for node in json["nodes"]:
 					var node_name = node.get("name", "")
@@ -1161,7 +1603,7 @@ class FbxHandler:
 				for node in json["nodes"]:
 					var node_name = node.get("name", "")
 					for chld in node.get("children", ""):
-						skel.set_bone_parent(chld, i)
+						skel.set_bone_parent(int(chld), i)
 					i += 1
 				i = 0
 				for node in json["nodes"]:
@@ -1171,57 +1613,108 @@ class FbxHandler:
 					skel.set_bone_pose_rotation(i, xform.basis.get_rotation_quaternion())
 					skel.set_bone_pose_scale(i, xform.basis.get_scale())
 					i += 1
-				pkgasset.parsed_meta.autodetected_bone_map_dict = bone_map_editor_plugin.auto_mapping_process_dictionary(skel)
+				pkgasset.parsed_meta.autodetected_bone_map_dict = bone_map_editor_plugin.auto_mapping_process_dictionary(skel, pkgasset.log_debug, pkgasset.parsed_meta.is_force_humanoid())
+				# The above fails if Hips could not be found. If forcing humanoid, try anyway in case this is an outfit.
+				if pkgasset.parsed_meta.is_force_humanoid() and pkgasset.parsed_meta.autodetected_bone_map_dict.is_empty():
+					pkgasset.parsed_meta.autodetected_bone_map_dict = bone_map_editor_plugin.auto_mapping_process_dictionary(skel, pkgasset.log_debug, true, true)
+					if pkgasset.parsed_meta.autodetected_bone_map_dict.is_empty() and len(default_scene["nodes"]) < 100:
+						for root_idx in default_scene["nodes"]:
+							var try_bone_map = bone_map_editor_plugin.auto_mapping_process_dictionary(skel, pkgasset.log_debug, true, true, root_idx)
+							if len(try_bone_map) > len(pkgasset.parsed_meta.autodetected_bone_map_dict):
+								pkgasset.parsed_meta.autodetected_bone_map_dict = try_bone_map
 				skel.free()
 
-			if importer.keys.get("avatarSetup", 1) == 1 and importer.keys.get("copyAvatar", 0) != 1:
+			if not copy_avatar:
+				pkgasset.log_debug(str(importer.keys.get("humanDescription", {}).get("human", [])))
 				pkgasset.log_debug("AAAA set to humanoid and has nodes")
 				bone_map_dict = importer.generate_bone_map_dict_from_human()
 				pkgasset.log_debug(str(bone_map_dict))
-				bone_map_editor_plugin.silhouette_fix_gltf(json, importer.generate_bone_map_from_human(), SILHOUETTE_FIX_THRESHOLD)
 
-			var node_idx = 0
-			var hips_node_idx = -1
+			var node_parents: Dictionary
+			for x_node_idx in range(len(json["nodes"])):
+				for chld in json["nodes"][x_node_idx].get("children", []):
+					node_parents[int(chld)] = x_node_idx
+
+			# Discover missing Root bone if any, and correct for name conflicts.
+			var node_idx: int = 0
+			var human_skin_set: Dictionary
 			for node in json["nodes"]:
 				var node_name = node.get("name", "")
-				pkgasset.log_debug("AAAA node name " + str(node_name))
+				# pkgasset.log_debug("AAAA node name " + str(node_name))
 				if bone_map_dict.has(node_name):
 					var godot_human_name: String = bone_map_dict[node_name]
-					if godot_human_name == "Hips":
-						hips_node_idx = node_idx
+					human_skin_nodes.push_back(node_idx)
+					human_skin_set[node_idx] = true
+				node_idx += 1
+
+			var root_bone_name: String = ""
+			for key in bone_map_dict:
+				if bone_map_dict[key] == "Root":
+					root_bone_name = key
+			var cur_human_node_idx: int = -1 if human_skin_nodes.is_empty() else human_skin_nodes[-1] # Doesn't matter which...just need to find a common ancestor.
+			pkgasset.log_debug("cur_human_node_idx=" + str(cur_human_node_idx) + " / " + str(json["nodes"][cur_human_node_idx]))
+			# Add up to three levels up into the skeleton. Our goal is to make the toplevel Armature node be a skeleton, so that we are guaranteed a root bone.
+			while node_parents.has(cur_human_node_idx):
+				var new_root_idx = node_parents[cur_human_node_idx]
+				var node = json["nodes"][new_root_idx]
+				pkgasset.log_debug("Adding node to skin " + str(new_root_idx) + " parent of " + str(cur_human_node_idx))
+				pkgasset.parsed_meta.internal_data["humanoid_root_bone"] = node["name"]
+				if not bone_map_dict.has(node["name"]):
+					root_bone_name = node["name"]
+				if not human_skin_set.has(new_root_idx):
+					human_skin_nodes.push_back(new_root_idx)
+					human_skin_set[new_root_idx] = true
+				cur_human_node_idx = new_root_idx
+			if root_bone_name != "":
+				bone_map_dict[root_bone_name] = "Root"
+
+			pkgasset.log_debug("human_skin_nodes is now " +str(human_skin_nodes))
+
+			# Based on a conversation with other devs, RESET is expected to be the initial pose, before silhouette fix
+			add_empty_animation(json, "RESET")
+			# This will both fill out RESET and add missing tracks into all animations.
+			add_missing_humanoid_tracks_to_animations(pkgasset, json, bindata, bone_map_dict)
+
+			# Now we correct the silhouette, either by copying from another model, or applying silhouette fixer.
+			if copy_avatar:
+				var hip_parent_node_idx = -1
+				for x_node_idx in range(len(json["nodes"])):
+					var node: Dictionary = json["nodes"][x_node_idx]
+					var node_name: String = node.get("name", "")
+					if original_rotations.has(node_name):
+						var quat: Quaternion = original_rotations[node_name]
+						bone_map_editor_plugin.gltf_matrix_to_trs(node)
+						node["rotation"] = [quat.x, quat.y, quat.z, quat.w]
+					if bone_map_dict.get(node_name, "") == "Hips":
+						node["translation"] = [orig_hip_position.x, orig_hip_position.y, orig_hip_position.z]
+						hip_parent_node_idx = node_parents.get(x_node_idx, -1)
+				while hip_parent_node_idx != -1:
+					if json["nodes"][hip_parent_node_idx].has("translation"):
+						json["nodes"][hip_parent_node_idx].erase("translation")
+					hip_parent_node_idx = node_parents.get(hip_parent_node_idx, -1)
+			elif not pkgasset.parsed_meta.is_silhouette_fix_disabled():
+				bone_map_editor_plugin.silhouette_fix_gltf(json, importer.generate_bone_map_from_human(), SILHOUETTE_FIX_THRESHOLD)
+				for node in json["nodes"]:
+					var node_name: String = node.get("name", "")
+					bone_map_editor_plugin.gltf_matrix_to_trs(node)
+					var rot: Array = node.get("rotation", [0, 0, 0, 1])
+					original_rotations[node_name] = Quaternion(rot[0], rot[1], rot[2], rot[3])
+					var trans: Array = node.get("translation", [0, 0, 0])
+					if bone_map_dict.get(node_name, "") == "Hips":
+						pkgasset.parsed_meta.internal_data["hips_position"] = Vector3(trans[0], trans[1], trans[2])
+
+			# Adding missing tracks just to the T-Pose animation after silhouette fix generates a T-Pose
+			add_empty_animation(json, "_T-Pose_")
+			add_missing_humanoid_tracks_to_animations(pkgasset, json, bindata, bone_map_dict)
+
+			# Finally, record the original post-silhouette transforms for transform_fileid_to_rotation_delta
+			for node in json["nodes"]:
+				var node_name = node.get("name", "")
+				if bone_map_dict.has(node_name):
+					var godot_human_name: String = bone_map_dict[node_name]
 					if godot_human_name not in humanoid_original_transforms:
 						humanoid_original_transforms[godot_human_name] = gltf_to_transform3d(node)
-					human_skin_nodes.push_back(node_idx)
-				node_idx += 1
-			# Add up to three levels up into the skeleton. Our goal is to make the toplevel Armature node be a skeleton, so that we are guaranteed a root bone.
-			for i in range(3):
-				if hips_node_idx == -1:
-					break
-				node_idx = 0
-				var new_root_idx = -1
-				var scene_nodes = json["scenes"][0]["nodes"].duplicate()
-				for node in json["nodes"]:
-					# "RootNode" is always created by the FBX2glTF conversion, so we promote these to gltf root scene nodes.
-					if node["name"] == "RootNode":
-						scene_nodes.append_array(node.get("children", []))
-						continue
-					for child in node.get("children", []):
-						if child == hips_node_idx:
-							pkgasset.log_debug("Found the child " + str(child) + " type " + str(typeof(child)) + " hni type " + str(typeof(hips_node_idx)))
-							pkgasset.parsed_meta.internal_data["humanoid_root_bone"] = node["name"]
-							bone_map_dict[node["name"]] = "Root"
-							if "Root" not in humanoid_original_transforms:
-								humanoid_original_transforms["Root"] = gltf_to_transform3d(node)
-							new_root_idx = node_idx
-							human_skin_nodes.push_back(new_root_idx)
-							break
-					if new_root_idx != -1:
-						break
-					node_idx += 1
-				if scene_nodes.find(new_root_idx) != -1:
-					break # FIXME: Try to avoid putting the root of a scene into the skeleton.
-				hips_node_idx = new_root_idx
-			pkgasset.parsed_meta
+
 		if not human_skin_nodes.is_empty():
 			if not json.has("skins"):
 				json["skins"] = []
@@ -1230,6 +1723,7 @@ class FbxHandler:
 		# skinned_parents use the original gltf names before the remap.
 		pkgasset.parsed_meta.internal_data["skinned_parents"] = assign_skinned_parents({}.duplicate(), json["nodes"], "", json["scenes"][json.get("scene", 0)]["nodes"])
 		pkgasset.parsed_meta.internal_data["godot_sanitized_to_orig_remap"] = {"bone_name": {}}
+		var used_animation_names: Dictionary
 		# Anything after this point will be using sanitized names, and should go through godot_sanitized_to_orig_remap / bone_map_dict
 		for key in ["scenes", "nodes", "meshes", "skins", "images", "materials", "animations"]:
 			pkgasset.parsed_meta.internal_data["godot_sanitized_to_orig_remap"][key] = {}
@@ -1267,9 +1761,9 @@ class FbxHandler:
 				# TODO: Should we prevent empty names?
 
 				var next_num: int = used_names.get(orig_name, 1)
-				# Ensure that objects have a unique name in compliance with Unity's uniqueness rules
+				# Ensure that objects have a unique name in compliance with their uniqueness rules
 				# Godot's rule is Gizmo, Gizmo2, Gizmo3.
-				# Unity's rule is Gizmo, Gizmo 1, Gizmo 2
+				# their rule is Gizmo, Gizmo 1, Gizmo 2
 				# While we ignore the extra space anyway, the off-by-one here is killer. :'-(
 				# So we must proactively rename nodes to avoid duplicates...
 				while used_names.has(try_name):
@@ -1281,6 +1775,7 @@ class FbxHandler:
 				var sanitized_try_name: String = sanitize_unique_name(try_name)
 				if key == "animations":
 					sanitized_try_name = sanitize_anim_name(try_name)
+					used_animation_names[sanitized_try_name] = elem
 				if orig_name != sanitized_try_name:
 					pkgasset.parsed_meta.internal_data["godot_sanitized_to_orig_remap"][key][sanitized_try_name] = orig_name
 				if key == "nodes":
@@ -1290,17 +1785,17 @@ class FbxHandler:
 				used_names[orig_name] = next_num
 				used_names[try_name] = 1
 
-		if is_humanoid and json.has("nodes") and importer.keys.get("avatarSetup", 1) >= 1:
+		if is_humanoid and json.has("nodes") and (importer.keys.get("avatarSetup", 1) >= 1 or pkgasset.parsed_meta.is_force_humanoid()):
 			for node in json["nodes"]:
 				var node_name: String = node.get("name", "")
-				if not bone_map_dict.has(node_name):
+				if bone_map_dict.has(node_name):
+					node_name = bone_map_dict[node_name]
+				if not humanoid_original_transforms.has(node_name):
 					humanoid_original_transforms[node_name] = gltf_to_transform3d(node)
-			if importer.keys.get("avatarSetup", 1) == 2 or importer.keys.get("copyAvatar", 0) == 1:
-				for node in json["nodes"]:
-					var node_name: String = node.get("name", "")
-					gltf_transform3d_into_json(node, humanoid_original_transforms[node_name])
 		# humanoid_original_transforms uses post-sanitized node names.
 		pkgasset.parsed_meta.internal_data["humanoid_original_transforms"] = humanoid_original_transforms
+		pkgasset.parsed_meta.internal_data["original_rotations"] = original_rotations
+		pkgasset.parsed_meta.internal_data["used_animation_names"] = used_animation_names
 
 		var out_json_data: PackedByteArray = JSON.new().stringify(json).to_utf8_buffer()
 		var full_output: PackedByteArray = out_json_data
@@ -1321,6 +1816,13 @@ class FbxHandler:
 			spb.put_32(0x4E4942)
 			spb.put_data(bindata)
 			spb.put_32(0)
+		elif len(bindata) != bindata_orig_length:
+			f = FileAccess.open(bin_output_path, FileAccess.READ_WRITE)
+			f.seek_end(0)
+			f.store_buffer(bindata.slice(bindata_orig_length))
+			f.flush()
+			f.close()
+			f = null
 
 		pkgasset.data_md5 = calc_md5(full_output)
 		if not SHOULD_CONVERT_TO_GLB:
@@ -1332,6 +1834,7 @@ class FbxHandler:
 			f = FileAccess.open(output_path, FileAccess.WRITE_READ)
 			f.store_buffer(full_output)
 			f.flush()
+			f.close()
 			f = null
 		else:
 			d.remove(gltf_output_path)
@@ -1339,6 +1842,20 @@ class FbxHandler:
 				d.remove(bin_output_path)
 
 		return return_output_path
+
+
+class TextHandler:
+	extends AssetHandler
+
+	func get_asset_type(pkgasset: Object):
+		return ASSET_TYPE_TEXTURE
+
+	func uses_godot_importer(pkgasset: Object) -> bool:
+		return false
+
+	func write_godot_asset(pkgasset: Object, temp_path: String) -> bool:
+		super.write_godot_asset(pkgasset, temp_path)
+		return false # Tells package dialog that this resource cannot be loaded so it shouldn't show an error
 
 
 class DisabledHandler:
@@ -1349,6 +1866,9 @@ class DisabledHandler:
 
 	func write_and_preprocess_asset(pkgasset: Object, tmpdir: String, thread_subdir: String) -> String:
 		return "asset_not_supported"
+
+	func uses_godot_importer(pkgasset: Object) -> bool:
+		return false
 
 	func write_godot_asset(pkgasset: Object, temp_path: String) -> bool:
 		return false
@@ -1380,6 +1900,7 @@ var file_handlers: Dictionary = {
 	"fbx": FbxHandler.new(),
 	"obj": BaseModelHandler.new(),
 	"dae": BaseModelHandler.new(),
+	"blend": BaseModelHandler.new(),
 	#"obj": DisabledHandler.new(), # .obj is broken due to multithreaded importer
 	#"dae": DisabledHandler.new(), # .dae is broken due to multithreaded importer
 	"glb": FbxHandler.new(),
@@ -1394,18 +1915,19 @@ var file_handlers: Dictionary = {
 	# "exr": image_handler,
 	"hdr": image_handler,
 	"dds": image_handler,
-	"tif": image_handler,
-	"tiff": image_handler,
+	"psd": image_handler, # convert.exe
+	"tif": image_handler, # convert.exe
+	"tiff": image_handler, # convert.exe
 	"webp": image_handler,
 	"svg": image_handler,
 	"svgz": image_handler,
 	"wav": AudioHandler.new().create_with_type("wav", "AudioStreamSample"),
-	"ogg": AudioHandler.new().create_with_type("ogg", "AudioStreamOGG"),
+	"ogg": AudioHandler.new().create_with_type("oggvorbisstr", "AudioStreamOGG"),
 	"mp3": AudioHandler.new().create_with_type("mp3", "AudioStreamMP3"),
 	# "aif": audio_handler, # Unsupported.
 	# "tif": image_handler, # Unsupported.
 	"asset": YamlHandler.new(),  # Generic file format
-	"unity": SceneHandler.new(),  # Unity Scenes
+	"scene": SceneHandler.new(),  # Unidot Scenes
 	"prefab": SceneHandler.new(),  # Prefabs (sub-scenes)
 	"mask": YamlHandler.new(),  # Avatar Mask for animations
 	"mesh": YamlHandler.new(),  # Mesh data, sometimes .asset
@@ -1418,7 +1940,26 @@ var file_handlers: Dictionary = {
 	"controller": YamlHandler.new(),  # Animator Controller
 	"anim": YamlHandler.new(),  # Animation... # TODO: This should be by type (.asset), not extension
 	# ALSO: animations can be contained inside other assets, such as controllers. we need to recognize this and extract them.
-	"default": DefaultHandler.new()
+	"default": DefaultHandler.new(),
+	"txt": TextHandler.new(),
+	"html": TextHandler.new(),
+	"htm": TextHandler.new(),
+	"pdf": TextHandler.new(),
+	"xml": TextHandler.new(),
+	"bytes": TextHandler.new(),
+	"json": TextHandler.new(),
+	"csv": TextHandler.new(),
+	"yaml": TextHandler.new(),
+	"fnt": AudioHandler.new().create_with_type("font_data_bmfont", "FontFile"),
+	"font": AudioHandler.new().create_with_type("font_data_bmfont", "FontFile"),
+	"ttf": AudioHandler.new().create_with_type("font_data_dynamic", "FontFile"),
+	"ttc": AudioHandler.new().create_with_type("font_data_dynamic", "FontFile"),
+	"otf": AudioHandler.new().create_with_type("font_data_dynamic", "FontFile"),
+	"otc": AudioHandler.new().create_with_type("font_data_dynamic", "FontFile"),
+	"woff": AudioHandler.new().create_with_type("font_data_dynamic", "FontFile"),
+	"woff2": AudioHandler.new().create_with_type("font_data_dynamic", "FontFile"),
+	"pfb": AudioHandler.new().create_with_type("font_data_dynamic", "FontFile"),
+	"pfm": AudioHandler.new().create_with_type("font_data_dynamic", "FontFile"),
 }
 
 
@@ -1428,6 +1969,7 @@ func create_temp_dir() -> String:
 	dres.make_dir_recursive(tmpdir)
 	var f = FileAccess.open(tmpdir + "/.gdignore", FileAccess.WRITE_READ)
 	f.flush()
+	f.close()
 	f = null
 	return tmpdir
 
@@ -1441,8 +1983,9 @@ func get_asset_type(pkgasset: Object) -> int:
 
 
 func uses_godot_importer(pkgasset: Object) -> bool:
-	var asset_type = get_asset_type(pkgasset)
-	return asset_type == ASSET_TYPE_TEXTURE or asset_type == ASSET_TYPE_MODEL
+	var path = pkgasset.orig_pathname
+	var asset_handler: AssetHandler = file_handlers.get(path.get_extension().to_lower(), file_handlers.get("default"))
+	return asset_handler.uses_godot_importer(pkgasset)
 
 
 func preprocess_asset(asset_database: Object, pkgasset: Object, tmpdir: String, thread_subdir: String) -> String:
@@ -1465,12 +2008,85 @@ func preprocess_asset(asset_database: Object, pkgasset: Object, tmpdir: String, 
 				if asset_handler.write_godot_import(pkgasset, true):
 					# Make an empty file so it will be found by a scan!
 					var f: FileAccess = FileAccess.open(pkgasset.pathname, FileAccess.WRITE_READ)
+					f.close()
 					f = null
 		return ret_output_path
 	return ""
 
 
-# pkgasset: unitypackagefile.UnityPackageAsset type
+func preprocess_asset_stage2(pkgasset: Object, tmpdir: String, guid_to_pkgasset: Dictionary, stage2_dict_lock: Mutex, stage2_extra_asset_dict: Dictionary):
+	var path = pkgasset.orig_pathname
+	var asset_handler: AssetHandler = file_handlers.get(path.get_extension().to_lower(), file_handlers.get("default"))
+	if pkgasset.parsed_asset == null:
+		pkgasset.parsed_meta.log_debug(0, "Asset was not parsed " + str(path))
+		return
+	for key in pkgasset.parsed_asset.assets:
+		var obj = pkgasset.parsed_asset.assets[key]
+		if obj.type == "Material":
+			var ret: String = obj.bake_roughness_texture_if_needed(tmpdir, guid_to_pkgasset, stage2_dict_lock, stage2_extra_asset_dict)
+			if not ret.is_empty():
+				pkgasset.parsed_meta.log_debug(0, "Asset " + str(obj.keys.get("m_Name", "")) + " baked a roughness texture " + str(ret))
+			else:
+				pkgasset.parsed_meta.log_debug(0, "Asset " + str(obj.keys.get("m_Name", "")) + " did not have a roughness texture")
+
+
+func write_additional_import_dependencies(pkgasset: Object, guid_to_pkgasset: Dictionary) -> Array[String]:
+	var dependencies: Array[String]
+	for extra_tex_filename in pkgasset.parsed_meta.internal_data.get("extra_textures", []):
+		if extra_tex_filename.validate_filename().is_empty():
+			pkgasset.log_fail("pathname became empty: " + str(extra_tex_filename))
+			continue
+		var extra_tex_data: Dictionary = pkgasset.parsed_meta.internal_data["extra_textures"][extra_tex_filename].duplicate()
+		var temp_path: String = extra_tex_data["temp_path"]
+		var source_meta_guid: String = extra_tex_data["source_meta_guid"]
+		var source_meta: Object
+		if guid_to_pkgasset.has(source_meta_guid):
+			source_meta = guid_to_pkgasset[source_meta_guid].parsed_meta
+		if source_meta == null:
+			source_meta = pkgasset.parsed_meta.lookup_meta_by_guid(source_meta_guid)
+		if source_meta == null:
+			pkgasset.log_fail("Unable to write import file for " + str(extra_tex_filename) + " due to missing guid " + str(source_meta_guid))
+			continue
+		extra_tex_data.erase("temp_path")
+		extra_tex_data.erase("source_meta_guid")
+		var path = pkgasset.orig_pathname
+		var asset_handler: AssetHandler = file_handlers.get(path.get_extension().to_lower(), file_handlers.get("default"))
+
+		var cfile_source := ConfigFile.new()
+		var cfile := ConfigFile.new() # AssetHandler.ConfigFileCompare.new(pkgasset)
+		if cfile_source.load("res://" + source_meta.path + ".import") != OK:
+			pkgasset.log_fail("Unable to load source " + str(source_meta.path) + ".import file for extra texture " + extra_tex_filename)
+			continue
+		cfile.set_value("remap", "importer", cfile_source.get_value("remap", "importer", "texture"))
+		cfile.set_value("remap", "importer2", cfile_source.get_value("remap", "importer", "texture"))
+		pkgasset.log_debug("Extra dependency " + str(extra_tex_filename) + " from " + str(source_meta.path) + " has importer " + str(cfile.get_value("remap", "importer")))
+		cfile.set_value("remap", "type", cfile_source.get_value("remap", "type", "CompressedTexture2D"))
+		if cfile.load("res://" + extra_tex_filename + ".import") != OK:
+			pkgasset.log_fail("Unable to load " + str(source_meta.path) + "extra texture " + extra_tex_filename + ".import file")
+			continue
+		for section_key in cfile_source.get_section_keys("params"):
+			if not extra_tex_data.has(section_key):
+				cfile.set_value("params", section_key, cfile_source.get_value("params", section_key))
+		for section_key in extra_tex_data:
+			cfile.set_value("params", section_key, extra_tex_data[section_key])
+		cfile.save("res://" + extra_tex_filename + ".import")
+		var hackhack = FileAccess.get_file_as_string("res://" + extra_tex_filename + ".import")
+		# WHY?!?!?!?! ConfigFile always writes importer="keep" no matter what I do above
+		# So we do a string replace, which seems to work.
+		hackhack = hackhack.replace('importer="keep"', 'importer="texture"')
+		var f := FileAccess.open("res://" + extra_tex_filename + ".import", FileAccess.WRITE_READ)
+		f.store_string(hackhack)
+		f.close()
+		
+		var dres = DirAccess.open("res://")
+		pkgasset.log_debug("Renaming " + temp_path + " to " + extra_tex_filename)
+		dres.rename(temp_path, extra_tex_filename)
+		dependencies.append(extra_tex_filename)
+	pkgasset.parsed_meta.internal_data.erase("extra_textures")
+	return dependencies
+
+
+# pkgasset: package_file.PkgAsset type
 func write_godot_asset(pkgasset: Object, temp_path: String) -> bool:
 	var path = pkgasset.orig_pathname
 	var asset_handler: AssetHandler = file_handlers.get(path.get_extension().to_lower(), file_handlers.get("default"))

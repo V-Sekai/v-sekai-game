@@ -4,7 +4,7 @@
 @tool
 extends Resource
 
-const object_adapter_class: GDScript = preload("./unity_object_adapter.gd")
+const object_adapter_class: GDScript = preload("./object_adapter.gd")
 const scene_node_state_class: GDScript = preload("./scene_node_state.gd")
 
 
@@ -24,6 +24,15 @@ func smallestTransform(a, b):
 		return a.transform.fileID < b.transform.fileID
 	else:
 		return b.fileID < a.fileID
+
+
+func get_global_transform(node: Node):
+	if not (node is Node3D):
+		return Transform3D.IDENTITY
+	var n3d = node as Node3D
+	if node.get_parent() == null or n3d.top_level:
+		return n3d.transform
+	return get_global_transform(node.get_parent()) * n3d.transform
 
 
 func recursive_print(pkgasset, node: Node, indent: String = ""):
@@ -111,7 +120,7 @@ func pack_scene(pkgasset, is_prefab) -> PackedScene:
 
 	var ps: RefCounted = node_state.prefab_state
 	for asset in pkgasset.parsed_asset.assets.values():
-		var parent: RefCounted = null  # UnityTransform
+		var parent: RefCounted = null  # UnidotTransform
 		if asset.is_stripped:
 			pass  # Ignore stripped components.
 		elif asset.is_non_stripped_prefab_reference:
@@ -122,7 +131,7 @@ func pack_scene(pkgasset, is_prefab) -> PackedScene:
 			ps.non_stripped_prefab_references[prefab_instance_id].push_back(asset)
 		elif asset.type == "Transform" or asset.type == "PrefabInstance":
 			parent = asset.parent
-			if parent != null and parent.is_prefab_reference:
+			if parent != null and parent.is_prefab_reference and (asset.type == "PrefabInstance" or not asset.is_prefab_reference):
 				var prefab_instance_id: int = parent.prefab_instance[1]
 				var prefab_source_object: int = parent.prefab_source_object[1]
 				if not ps.transforms_by_parented_prefab.has(prefab_instance_id):
@@ -133,7 +142,7 @@ func pack_scene(pkgasset, is_prefab) -> PackedScene:
 				#ps.transforms_by_parented_prefab_source_obj[str(prefab_instance_id) + "/" + str(prefab_source_object)] = parent
 				ps.child_transforms_by_stripped_id[parent.fileID].push_back(asset)
 			#elif parent != null and asset.type == "PrefabInstance":
-			#	var uk: String = asset.parent.uniq_key
+			#	var uk: String = asset.parent.fileID
 			#	if not ps.prefab_parents.has(uk):
 			#		ps.prefab_parents[uk] = []
 			#	ps.prefab_parents[uk].append(asset)
@@ -157,7 +166,7 @@ func pack_scene(pkgasset, is_prefab) -> PackedScene:
 				scene_contents.remove_child(dirlight)
 				dirlight = null
 			var sky_material: Variant = pkgasset.parsed_meta.get_godot_resource(asset.keys.get("m_SkyboxMaterial"))
-			if sky_material == null:
+			if sky_material == null and asset.keys.get("m_SkyboxMaterial")[1] != 0:
 				# Just use a default skybox for now...
 				sky_material = ProceduralSkyMaterial.new()
 				sky_material.sky_top_color = Color(0.454902, 0.678431, 0.87451, 1)
@@ -179,7 +188,7 @@ func pack_scene(pkgasset, is_prefab) -> PackedScene:
 				else:
 					eng = 1
 				env.background_color = ccol
-				env.background_energy = eng
+				env.background_energy_multiplier = eng
 				env.ambient_light_color = ccol
 				env.ambient_light_energy = eng
 				env.ambient_light_sky_contribution = 0
@@ -215,7 +224,7 @@ func pack_scene(pkgasset, is_prefab) -> PackedScene:
 			else:
 				occlusion.occluder = SphereOccluder3D.new()  # wrong type
 		elif asset.type != "GameObject":
-			# alternatively, is it a subclass of UnityComponent?
+			# alternatively, is it a subclass of UnidotComponent?
 			parent = asset.gameObject
 			if parent != null and parent.is_prefab_reference:
 				var prefab_instance_id: int = parent.prefab_instance[1]
@@ -228,19 +237,17 @@ func pack_scene(pkgasset, is_prefab) -> PackedScene:
 				#ps.gameobjects_by_parented_prefab_source_obj[str(prefab_instance_id) + "/" + str(prefab_source_object)] = parent
 				ps.components_by_stripped_id[parent.fileID].push_back(asset)
 
-	var skelleys_with_no_parent: Array = node_state.initialize_skelleys(pkgasset.parsed_asset.assets.values())
+	var skelleys_with_no_parent: Array = node_state.initialize_skelleys(pkgasset.parsed_asset.assets.values(), is_prefab)
 
-	if len(skelleys_with_no_parent) == 1:
-		scene_contents = skelleys_with_no_parent[0].godot_skeleton
-		scene_contents.name = "RootSkeleton"
-		node_state = node_state.state_with_owner(scene_contents)
-	elif len(skelleys_with_no_parent) > 1:
-		# assert(not is_prefab)
+	if len(skelleys_with_no_parent) >= 1:
 		if scene_contents == null:
-			pkgasset.log_fail("Not able to handle multiple skeletons with no parent in a prefab")
-		else:
-			for noparskel in skelleys_with_no_parent:
-				scene_contents.add_child(noparskel.godot_skeleton, true)
+			scene_contents = Node3D.new()
+			scene_contents.name = "RootNode3D"
+		node_state = node_state.state_with_owner(scene_contents)
+		for noparskel in skelleys_with_no_parent:
+			if noparskel.humanoid_avatar_meta != null:
+				node_state = node_state.state_with_avatar_meta(noparskel.humanoid_avatar_meta)
+			scene_contents.add_child(noparskel.godot_skeleton, true)
 	#var fileid_to_prefab_nodepath = {}.duplicate()
 	#var fileid_to_prefab_ref = {}.duplicate()
 	#pkgasset.parsed_meta.fileid_to_prefab_nodepath = {}
@@ -251,11 +258,6 @@ func pack_scene(pkgasset, is_prefab) -> PackedScene:
 			var skelley: RefCounted = asset.get_skelley(node_state)
 			if skelley != null:
 				skelley.skinned_mesh_renderers.append(asset)
-	for skelley in skelleys_with_no_parent:
-		for smr in skelley.skinned_mesh_renderers:
-			var ret: Node = smr.create_skinned_mesh(node_state)
-			if ret != null:
-				smr.log_debug("Finally added SkinnedMeshRenderer " + str(smr.uniq_key) + " into top-level Skeleton " + str(scene_contents.get_path_to(ret)))
 
 	node_state.env = env
 	node_state.set_main_name_map(node_state.prefab_state.gameobject_name_map, node_state.prefab_state.prefab_gameobject_name_map)
@@ -267,9 +269,9 @@ func pack_scene(pkgasset, is_prefab) -> PackedScene:
 		var skel: RefCounted = null
 		# FIXME: PrefabInstances pointing to a scene whose root node is a Skeleton may not work.
 		if asset.transform != null:
-			skel = node_state.uniq_key_to_skelley.get(asset.transform.uniq_key, null)
+			skel = node_state.fileID_to_skelley.get(asset.transform.fileID, null)
 		if skel != null:
-			if len(skelleys_with_no_parent) > 1:
+			if len(skelleys_with_no_parent) >= 1:
 				# If a toplevel node is part of a skeleton, insert the skeleton between the actual root and the toplevel node.
 				scene_contents.add_child(skel.godot_skeleton, true)
 				skel.owner = scene_contents
@@ -289,10 +291,18 @@ func pack_scene(pkgasset, is_prefab) -> PackedScene:
 			if asset.type == "PrefabInstance":
 				node_state.add_prefab_to_parent_transform(0, asset.fileID)
 
+	for skelley in skelleys_with_no_parent:
+		for smr in skelley.skinned_mesh_renderers:
+			var ret: Node = smr.create_skinned_mesh(node_state)
+			if ret != null:
+				smr.log_debug("Finally added SkinnedMeshRenderer " + str(smr) + " into top-level Skeleton " + str(scene_contents.get_path_to(ret)))
+
 	# scene_contents = node_state.owner
 	if scene_contents == null:
 		pkgasset.log_fail("Failed to parse scene " + pkgasset.pathname)
 		return null
+
+	process_lod_groups(scene_contents, ps)
 
 	if not is_prefab:
 		# Remove redundant directional light.
@@ -317,7 +327,7 @@ func pack_scene(pkgasset, is_prefab) -> PackedScene:
 				if camera.environment != null:
 					env.background_mode = camera.environment.background_mode
 					env.background_color = camera.environment.background_color
-					env.background_energy = camera.environment.background_energy
+					env.background_energy_multiplier = camera.environment.background_energy_multiplier
 				for mono in node_state.get_components(camera_obj, "MonoBehaviour"):
 					if str(mono.monoscript[2]) == "948f4100a11a5c24981795d21301da5c":  # PostProcessingLayer
 						pp_layer_bits = mono.keys.get("volumeLayer.m_Bits", mono.keys.get("volumeLayer", {}).get("m_Bits", 0))
@@ -333,17 +343,95 @@ func pack_scene(pkgasset, is_prefab) -> PackedScene:
 					if mono.keys.get("isGlobal", 0) == 1 and mono.keys.get("weight", 0) > 0.0:
 						mono.log_debug("Would merge PostProcessingVolume profile " + str(mono.keys.get("sharedProfile")))
 
+	for plugin in pkgasset.parsed_meta.get_enabled_plugins():
+		plugin.setup_post_scene(pkgasset, arr, skelleys_with_no_parent, node_state, scene_contents)
+
+	var light_probes: Array[Node] = scene_contents.find_children("*", "LightmapProbe")
+	var heights = []
+
+	for probe in light_probes:
+		heights.append(get_global_transform(probe).origin.y)
+	# LightmapProbe operations are non-linear.
+	# Godot becomes very slow if you have 2600 probes, and it crashes with "Out of memory" if you have more than 2700
+	# (Out of memory due to resizing an array over 1 billion elements, not due to actual memory consumption)
+	# So we will limit probes scene-wide to 2500.
+	var did_warn_too_many: bool = false
+	const max_probe_before_sampling: int = 1500
+	const max_probe_after_sampling: int = 300
+	const probe_sample_denom: int = 13
+	var max_height: float = 1000.0
+	if len(heights) > max_probe_before_sampling:
+		heights.sort()
+		max_height = heights[max_probe_before_sampling]
+	if len(heights) > max_probe_after_sampling:
+		var min_x: int = min(len(heights), max_probe_before_sampling)
+		var probe_sample_num: int = max_probe_after_sampling * probe_sample_denom / min_x
+		pkgasset.log_warn("Deleting " + str(len(heights) - max_probe_before_sampling) + " light probes above y=" + str(max_height) + " to prevent engine bug.")
+		pkgasset.log_warn("Sampling " + str(min_x * probe_sample_num / probe_sample_denom) + " remaining light probes to prevent engine bug.")
+		var i: int = 0
+		for probe in light_probes:
+			var delete_probe: bool = get_global_transform(probe).origin.y >= max_height
+			if delete_probe:
+				pkgasset.log_debug("Deleting probe " + str(probe.get_parent().name + "/" + str(probe.name)) + " at " + str(probe.transform.origin))
+			else:
+				i += 1
+				if (i % probe_sample_denom) >= probe_sample_num:
+					delete_probe = true
+					pkgasset.log_debug("Deleting/sampling probe " + str(probe.get_parent().name + "/" + str(probe.name)) + " at " + str(probe.transform.origin))
+			if delete_probe:
+				if probe.owner != scene_contents:
+					pkgasset.log_fail("Unable to delete light probe at " + str(probe.transform.origin) + " because of scene instance. Please modify " + str(probe.owner.scene_file_path))
+				probe.owner = null
+				probe.get_parent().remove_child(probe)
+				probe.queue_free()
+
 	var packed_scene: PackedScene = PackedScene.new()
 	packed_scene.pack(scene_contents)
 	pkgasset.log_debug("Finished packing " + pkgasset.pathname + " with " + str(scene_contents.get_child_count()) + " nodes.")
 	recursive_print(pkgasset, scene_contents)
-	var editable_hack: Dictionary = packed_scene._bundled
-	for ecpath in ps.prefab_instance_paths:
-		pkgasset.log_debug(str(editable_hack.keys()))
-		editable_hack.get("editable_instances").push_back(str(ecpath))
-	packed_scene._bundled = editable_hack
-	packed_scene.pack(scene_contents)
-	#pkgasset.log_debug(packed_scene)
-	#var pi = packed_scene.instance(PackedScene.GEN_EDIT_STATE_INSTANCE)
-	#pkgasset.log_debug(pi.get_child_count())
 	return packed_scene
+
+
+func process_lod_groups(scene_contents: Node, ps: RefCounted):
+
+	for lod_group in ps.lod_groups:
+		var prev_distance_m: float = 0.0
+		var prev_fade_m: float = 0.0
+		# Formula: 0.65 / screenRelativeHeight * m_Size = distance_in_meters
+		# For example, 0.65 / 0.8125 * 5 = 4.0
+		# or 0.65 / 0.216 * 1 = 3.0
+		# LODGroup scale factor is confusingly aspect ratio dependent.
+		# We scale by another factor or 2 to account for 16:9 aspect ratio.
+		# It seems to make LOD switches less noticeable.
+		var size_m = lod_group.keys.get("m_Size", 1.0)
+		var animate_crossfade: bool = lod_group.keys.get("m_AnimateCrossFading", 0) == 1
+		for lod in lod_group.keys.get("m_LODs", []):
+			var screen_relative_height: float = lod.get("screenRelativeHeight", 1.0)
+			var distance_m = 2.0 * 0.65 / screen_relative_height * size_m
+			var fade_width: float = lod.get("fadeTransitionWidth", 0.0)
+			if animate_crossfade:
+				fade_width = 0.5 # Hardcode half a meter of fade overlap. No idea...
+			else:
+				fade_width = fade_width * (distance_m - prev_distance_m) # fraction of the length of this LOD.
+			for renderer_ref_dict in lod.get("renderers", []):
+				var renderer_ref: Array
+				if typeof(renderer_ref_dict) == TYPE_DICTIONARY:
+					renderer_ref = renderer_ref_dict["renderer"]
+				var np: NodePath = lod_group.meta.fileid_to_nodepath.get(renderer_ref[1], lod_group.meta.prefab_fileid_to_nodepath.get(renderer_ref[1], NodePath()))
+				if not np.is_empty():
+					var node: Node = scene_contents.get_node(np)
+					var visual_inst: VisualInstance3D = node as VisualInstance3D
+					if node != null and visual_inst == null:
+						visual_inst = node.get_child(0) as VisualInstance3D
+					if visual_inst != null:
+						visual_inst.visibility_range_begin = prev_distance_m
+						visual_inst.visibility_range_begin_margin = prev_fade_m
+						visual_inst.visibility_range_end = distance_m
+						visual_inst.visibility_range_end_margin = fade_width
+						# Dependencies seems buggy, so we use Self and don't set the visibility parent.
+						#visual_inst.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
+						# Self is really hard to work with as it has overlap...
+						# So we'll use DISABLED for now... which should act like low-water mark / high-water mark.
+						visual_inst.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_DISABLED
+			prev_distance_m = distance_m
+			prev_fade_m = fade_width

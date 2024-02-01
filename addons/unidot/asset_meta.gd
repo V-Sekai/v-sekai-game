@@ -4,9 +4,11 @@
 @tool
 extends Resource
 
-const yaml_parser_class: GDScript = preload("./unity_object_parser.gd")
-const object_adapter_class: GDScript = preload("./unity_object_adapter.gd")
+const yaml_parser_class: GDScript = preload("./yaml_parser.gd")
+const object_adapter_class: GDScript = preload("./object_adapter.gd")
 const bin_parser_class: GDScript = preload("./deresuteme/decode.gd")
+const unidot_utils_class: GDScript = preload("./unidot_utils.gd")
+var unidot_utils := unidot_utils_class.new()
 
 
 class DatabaseHolder:
@@ -40,11 +42,14 @@ var object_adapter: RefCounted = object_adapter_class.new()
 var database_holder
 var log_database_holder
 var log_message_holder = LogMessageHolder.new()
+var mutex := Mutex.new() # Currently used only in bake_roughness_textures_if_needed
 @export var path: String = ""
+@export var orig_path: String = ""
+var orig_path_short: String
 @export var guid: String = ""
 @export var importer_keys: Dictionary = {}
 @export var importer_type: String = ""
-var importer  # unity_object_adapter.UnityAssetImporter subclass
+var importer  # object_adapter.UnidotAssetImporter subclass
 # for .fbx, must use fileIDToRecycleName in meta.
 @export var internal_data: Dictionary = {}
 
@@ -56,6 +61,7 @@ var importer  # unity_object_adapter.UnityAssetImporter subclass
 
 var prefab_transform_fileid_to_rotation_delta: Dictionary = {} # int -> Transform
 var prefab_transform_fileid_to_parent_fileid: Dictionary = {} # int -> int
+var prefab_transform_fileid_to_scale_signs: Dictionary = {} # int -> Vector3(+/-1, +/-1, +/-1) only if not +1,+1,+1 or -1,-1,-1.
 var prefab_fileid_to_nodepath = {}
 var prefab_fileid_to_skeleton_bone = {}  # int -> string
 var prefab_fileid_to_utype = {}  # int -> int
@@ -72,6 +78,7 @@ var fileid_to_component_fileids: Dictionary = {}  # int -> int
 @export var prefab_source_id_pair_to_stripped_id: Dictionary = {} # Vector2i -> int. if not here, we do XOR.
 @export var transform_fileid_to_rotation_delta: Dictionary = {} # int -> Transform
 @export var transform_fileid_to_parent_fileid: Dictionary = {} # int -> int
+@export var transform_fileid_to_scale_signs: Dictionary = {} # int -> Vector3(+/-1, +/-1, +/-1) only if not +1,+1,+1 or -1,-1,-1.
 @export var fileid_to_nodepath: Dictionary = {}  # int -> NodePath: scene_node_state.add_fileID
 @export var fileid_to_skeleton_bone: Dictionary = {}  # int -> string: scene_node_state.add_fileID_to_skeleton_bone
 @export var fileid_to_utype: Dictionary = {}  # int -> int: parse_binary_asset/parse_asset
@@ -100,7 +107,7 @@ var fileid_to_component_fileids: Dictionary = {}  # int -> int
 class ParsedAsset:
 	extends RefCounted
 	var local_id_alias: Dictionary = {}  # type*100000 + file_index*2 -> real fileId
-	var assets: Dictionary = {}  # int fileID -> unity_object_adapter.UnityObject
+	var assets: Dictionary = {}  # int fileID -> object_adapter.UnidotObject
 
 
 var parsed: ParsedAsset = null
@@ -132,36 +139,52 @@ func clear_logs():
 	log_message_holder = LogMessageHolder.new()
 
 
+const ERROR_COLOR_TAG := "FAIL: "
+const WARNING_COLOR_TAG := "warn: "
+
 # Log messages related to this asset
 func log_debug(fileid: int, msg: String):
+	if log_message_holder == null or log_database_holder == null:
+		return # We had a use-after-free crash here on one import run
+	if not log_database_holder.database.enable_verbose_logs:
+		return
 	var fileidstr = ""
 	if fileid != 0:
 		fileidstr = " @" + str(fileid)
 	var seq_str: String = "%08d " % log_database_holder.database.global_log_count
 	log_database_holder.database.global_log_count += 1
-	var log_str: String = seq_str + msg + fileidstr
-	log_message_holder.all_logs.append(log_str)
+	var log_str: String = seq_str + orig_path_short + ": " + msg + fileidstr
+	var len_diff = len(log_message_holder.all_logs) - len(log_message_holder.warnings_fails)
+	if len_diff == log_database_holder.database.log_limit_per_guid:
+		log_str = seq_str + "Dropping all future debug logs from this file!"
+	if len_diff <= log_database_holder.database.log_limit_per_guid:
+		log_message_holder.all_logs.append(log_str)
 	log_database_holder.database.log_debug([null, fileid, self.guid, 0], msg)
 
 
 # Anything that is unexpected but does not necessarily imply corruption.
 # For example, successfully loaded a resource with default fileid
 func log_warn(fileid: int, msg: String, field: String = "", remote_ref: Array = [null, 0, "", null]):
+	if log_message_holder == null or log_database_holder == null:
+		return
 	var fieldstr: String = ""
 	if not field.is_empty():
 		fieldstr = "." + field + ": "
 	var fileidstr: String = ""
-	if remote_ref[1] != 0:
-		fileidstr = " ref " + str(remote_ref[2]) + ":" + str(remote_ref[1])
+	if len(remote_ref) >= 2 and remote_ref[1] != 0:
+		var ref_guid_str = str(remote_ref[2])
+		if log_database_holder.database.guid_to_path.has(ref_guid_str):
+			ref_guid_str = log_database_holder.database.guid_to_path[ref_guid_str].get_file()
+		fileidstr = " ref " + ref_guid_str + ":" + str(remote_ref[1])
 	if fileid != 0:
 		fileidstr += " @" + str(fileid)
 	var seq_str: String = "%08d " % log_database_holder.database.global_log_count
 	log_database_holder.database.global_log_count += 1
-	var log_str: String = seq_str + fieldstr + msg + fileidstr
+	var log_str: String = seq_str + orig_path_short + ": " + WARNING_COLOR_TAG + fieldstr + msg + fileidstr
 	log_message_holder.all_logs.append(log_str)
 	log_message_holder.warnings_fails.append(log_str)
 	var xref: Array = remote_ref
-	if xref[1] != 0 and (typeof(xref[2]) == TYPE_NIL or xref[2].is_empty()):
+	if len(xref) > 3 and xref[1] != 0 and (typeof(xref[2]) == TYPE_NIL or xref[2].is_empty()):
 		xref = [null, xref[1], self.guid, xref[3]]
 	log_database_holder.database.log_warn([null, fileid, self.guid, 0], msg, field, xref)
 
@@ -169,24 +192,68 @@ func log_warn(fileid: int, msg: String, field: String = "", remote_ref: Array = 
 # Anything that implies the asset will be corrupt / lost data.
 # For example, some reference or field could not be assigned.
 func log_fail(fileid: int, msg: String, field: String = "", remote_ref: Array = [null, 0, "", null]):
+	if log_message_holder == null or log_database_holder == null:
+		return
 	var fieldstr = ""
 	if not field.is_empty():
 		fieldstr = "." + field + ": "
 	var fileidstr = ""
 	if len(remote_ref) >= 2 and remote_ref[1] != 0:
-		fileidstr = " ref " + str(remote_ref[2]) + ":" + str(remote_ref[1])
+		var ref_guid_str = str(remote_ref[2])
+		if log_database_holder.database.guid_to_path.has(ref_guid_str):
+			ref_guid_str = log_database_holder.database.guid_to_path[ref_guid_str].get_file()
+		fileidstr = " ref " + ref_guid_str + ":" + str(remote_ref[1])
 	if fileid != 0:
 		fileidstr += " @" + str(fileid)
 	var seq_str: String = "%08d " % log_database_holder.database.global_log_count
 	log_database_holder.database.global_log_count += 1
-	var log_str: String = seq_str + fieldstr + msg + fileidstr
+	var log_str: String = seq_str + orig_path_short + ": " + ERROR_COLOR_TAG + fieldstr + msg + fileidstr
 	log_message_holder.all_logs.append(log_str)
 	log_message_holder.warnings_fails.append(log_str)
 	log_message_holder.fails.append(log_str)
 	var xref: Array = remote_ref
-	if len(xref) > 2 and xref[1] != 0 and (typeof(xref[2]) == TYPE_NIL or xref[2].is_empty()):
+	if len(xref) > 3 and xref[1] != 0 and (typeof(xref[2]) == TYPE_NIL or xref[2].is_empty()):
 		xref = [null, xref[1], self.guid, xref[3]]
 	log_database_holder.database.log_fail([null, fileid, self.guid, 0], msg, field, xref)
+
+
+func fixup_godot_extension(godot_extn: String) -> String:
+	if godot_extn.ends_with(".tres"):
+		if not log_database_holder.database.use_text_resources:
+			if godot_extn.ends_with(".anim.tres"):
+				return godot_extn.substr(0, len(godot_extn) - 10) + ".anim"
+			if godot_extn.ends_with(".mat.tres"):
+				return godot_extn.substr(0, len(godot_extn) - 9) + ".material"
+			return godot_extn.substr(0, len(godot_extn) - 5) + ".res"
+	if godot_extn.ends_with(".tscn"):
+		if not log_database_holder.database.use_text_scenes:
+			return godot_extn.substr(0, len(godot_extn) - 5) + ".scn"
+	return godot_extn
+
+
+func get_enabled_plugins() -> Array[RefCounted]:
+	return log_database_holder.database.get_enabled_plugins()
+
+
+func is_silhouette_fix_disabled() -> bool:
+	return log_database_holder.database.debug_disable_silhouette_fix
+
+
+func is_force_humanoid() -> bool:
+	return log_database_holder.database.force_humanoid
+
+
+func is_humanoid() -> bool:
+	if not transform_fileid_to_rotation_delta:
+		return false
+	if not autodetected_bone_map_dict and not humanoid_bone_map_dict and not humanoid_bone_map_crc32_dict:
+		return false
+	return true
+
+
+# Set to false to debug or avoid auto-playing animations
+func setting_animtree_active() -> bool:
+	return log_database_holder.database.set_animation_trees_active
 
 
 func toposort_prefab_recurse(meta: Resource, tt: TopsortTmp):
@@ -346,6 +413,10 @@ func remap_prefab_fileids(prefab_fileid: int, target_prefab_meta: Resource):
 		self.prefab_fileid_to_gameobject_fileid[xor_or_stripped(target_fileid, prefab_fileid)] = xor_or_stripped(target_prefab_meta.fileid_to_gameobject_fileid.get(target_fileid), prefab_fileid)
 	for target_fileid in target_prefab_meta.prefab_fileid_to_gameobject_fileid:
 		self.prefab_fileid_to_gameobject_fileid[xor_or_stripped(target_fileid, prefab_fileid)] = xor_or_stripped(target_prefab_meta.prefab_fileid_to_gameobject_fileid.get(target_fileid), prefab_fileid)
+	for target_fileid in target_prefab_meta.transform_fileid_to_scale_signs:
+		self.prefab_transform_fileid_to_scale_signs[xor_or_stripped(target_fileid, prefab_fileid)] = target_prefab_meta.transform_fileid_to_scale_signs.get(target_fileid)
+	for target_fileid in target_prefab_meta.prefab_transform_fileid_to_scale_signs:
+		self.prefab_transform_fileid_to_scale_signs[xor_or_stripped(target_fileid, prefab_fileid)] = target_prefab_meta.prefab_transform_fileid_to_scale_signs.get(target_fileid)
 
 
 func calculate_prefab_nodepaths_recursive():
@@ -367,12 +438,16 @@ func calculate_prefab_nodepaths_recursive():
 
 
 func xor_or_stripped(fileID: int, prefab_fileID: int) -> int:
-	#if fileID == -12901736176340512 or prefab_fileID == 1386572426:
-	#	var s: String
-	#	for ke in prefab_source_id_pair_to_stripped_id:
-	#		s += ",(" + str((ke.x << 32) | ke.y) + "," + str((ke.z << 32) | ke.w) + "): " + str(prefab_source_id_pair_to_stripped_id[ke])
-	#	log_debug(prefab_fileID, s)
-	return prefab_source_id_pair_to_stripped_id.get(Vector4i(prefab_fileID >> 32, prefab_fileID & 0xffffffff, fileID >> 32, fileID & 0xffffffff), prefab_fileID ^ fileID)
+	# Note the first part of this is looking up a pair of 64-bit integer keys in Godot which only supports tuples of 32-bits each.
+	return prefab_source_id_pair_to_stripped_id.get(Vector4i(
+			~(~prefab_fileID >> 32) if prefab_fileID < 0 else prefab_fileID >> 32,
+			prefab_fileID & 0xffffffff,
+			~(~fileID >> 32) if fileID < 0 else fileID >> 32,
+			fileID & 0xffffffff),
+	# https://forum.unity.com/threads/how-is-fileid-generated-for-m_correspondingsourceobject.726704/#post-4851011
+	# See also excellent reference code by gamedolphon:
+	# https://github.com/gamedolphin/bevity/blob/master/pkg/primitives/prefabs.rs
+		(prefab_fileID ^ fileID) & 0x7fffffffffffffff)
 
 
 # This overrides a built-in resource, storing the resource inside the database itself.
@@ -385,11 +460,20 @@ func override_resource(fileID: int, name: String, godot_resource: Resource):
 # We cannot store an external resource reference because
 # Godot will fail to load the entire database if a single file is missing.
 func insert_resource(fileID: int, godot_resource: Resource):
+	if godot_resource == null:
+		log_fail(fileID, "Unable to insert null resource!")
+		return
+	if godot_resource.resource_path.is_empty() or godot_resource.resource_path == "res://" or godot_resource.resource_path.contains("::"):
+		log_fail(fileID, "Unable to insert " + str(godot_resource.get_class()) + " resource " + str(godot_resource.resource_name) + " at invalid path " + str(godot_resource.resource_path))
+		return
 	godot_resources[fileID] = str(godot_resource.resource_path)
 
 
 # Another version, passing in the path directly.
 func insert_resource_path(fileID: int, godot_resource_path: String):
+	if godot_resource_path.is_empty() or godot_resource_path == "res://" or godot_resource_path.contains("::"):
+		log_fail(fileID, "Unable to insert resource at invalid path " + str(godot_resource_path))
+		return
 	godot_resources[fileID] = str(godot_resource_path)
 
 
@@ -413,9 +497,9 @@ func initialize(database: Resource):
 	self.prefab_fileid_to_utype = {}
 	self.prefab_type_to_fileids = {}
 	if self.importer_type == "":
-		self.importer = object_adapter.instantiate_unity_object(self, 0, 0, "AssetImporter")
+		self.importer = object_adapter.instantiate_unidot_object(self, 0, 0, "AssetImporter")
 	else:
-		self.importer = object_adapter.instantiate_unity_object(self, 0, 0, self.importer_type)
+		self.importer = object_adapter.instantiate_unidot_object(self, 0, 0, self.importer_type)
 	self.importer.keys = importer_keys
 
 
@@ -436,51 +520,51 @@ func lookup_meta_by_guid(target_guid: String) -> Resource:  # returns asset_meta
 	return found_meta
 
 
-func lookup_meta(unityref: Array) -> Resource:  # returns asset_meta type
-	if unityref.is_empty() or len(unityref) != 4:
-		log_fail(0, "UnityRef in wrong format: " + str(unityref), "ref", unityref)
+func lookup_meta(unidot_ref: Array) -> Resource:  # returns asset_meta type
+	if unidot_ref.is_empty() or len(unidot_ref) != 4:
+		log_fail(0, "UnidotRef in wrong format: " + str(unidot_ref), "ref", unidot_ref)
 		return null
-	# log_debug(0, "LOOKING UP: " + str(unityref) + " FROM " + guid + "/" + path)
-	var local_id: int = unityref[1]
+	# log_debug(0, "LOOKING UP: " + str(unidot_ref) + " FROM " + guid + "/" + path)
+	var local_id: int = unidot_ref[1]
 	if local_id == 0:
 		return null
 	var found_meta: Resource = self
-	if typeof(unityref[2]) != TYPE_NIL and unityref[2] != self.guid:
-		var target_guid: String = unityref[2]
+	if typeof(unidot_ref[2]) != TYPE_NIL and unidot_ref[2] != self.guid:
+		var target_guid: String = unidot_ref[2]
 		found_meta = lookup_meta_by_guid(target_guid)
 	return found_meta
 
 
-func lookup(unityref: Array, silent: bool = false) -> RefCounted:
-	var found_meta: Resource = lookup_meta(unityref)
+func lookup(unidot_ref: Array, silent: bool = false) -> RefCounted:
+	var found_meta: Resource = lookup_meta(unidot_ref)
 	if found_meta == null:
 		return null
-	var local_id: int = unityref[1]
+	var local_id: int = unidot_ref[1]
 	# Not implemented:
-	#var local_id: int = found_meta.local_id_alias.get(unityref.fileID, unityref.fileID)
+	#var local_id: int = found_meta.local_id_alias.get(unidot_ref.fileID, unidot_ref.fileID)
 	if found_meta.parsed == null:
 		if not silent:
-			log_fail(0, "Target ref " + found_meta.path + ":" + str(local_id) + " (" + found_meta.guid + ")" + " was not yet parsed! from " + path + " (" + guid + ")", "ref", unityref)
+			log_fail(0, "Target ref " + found_meta.path + ":" + str(local_id) + " (" + found_meta.guid + ")" + " was not yet parsed! from " + path + " (" + guid + ")", "ref", unidot_ref)
 		return null
 	var ret: RefCounted = found_meta.parsed.assets.get(local_id)
 	if ret == null:
 		if not silent:
-			log_fail(0, "Target ref " + found_meta.path + ":" + str(local_id) + " (" + found_meta.guid + ")" + " is null! from " + path + " (" + guid + ")", "ref", unityref)
+			log_fail(0, "Target ref " + found_meta.path + ":" + str(local_id) + " (" + found_meta.guid + ")" + " is null! from " + path + " (" + guid + ")", "ref", unidot_ref)
 		return null
 	ret.meta = found_meta
 	return ret
 
 
-func lookup_or_instantiate(unityref: Array, type: String) -> RefCounted:
-	var found_object: RefCounted = lookup(unityref, true)
+func lookup_or_instantiate(unidot_ref: Array, type: String) -> RefCounted:
+	var found_object: RefCounted = lookup(unidot_ref, true)
 	if found_object != null:
 		#if found_object.type != type: # Too hard to verify because it could be a subclass.
-		#	log_warn(0, "lookup_or_instantiate " + str(found_object.uniq_key) + " not type " + str(type), "ref", unityref)
+		#	log_warn(0, "lookup_or_instantiate " + str(found_object) + " not type " + str(type), "ref", unidot_ref)
 		return found_object
-	var found_meta: Resource = lookup_meta(unityref)
+	var found_meta: Resource = lookup_meta(unidot_ref)
 	if found_meta == null:
 		return null
-	return object_adapter.instantiate_unity_object(found_meta, unityref[1], 0, type)
+	return object_adapter.instantiate_unidot_object(found_meta, unidot_ref[1], 0, type)
 
 
 func set_owner_rec(node: Node, owner: Node):
@@ -489,8 +573,8 @@ func set_owner_rec(node: Node, owner: Node):
 		set_owner_rec(n, owner)
 
 
-func get_godot_node(unityref: Array) -> Node:
-	var found_meta: Resource = lookup_meta(unityref)
+func get_godot_node(unidot_ref: Array) -> Node:
+	var found_meta: Resource = lookup_meta(unidot_ref)
 	if found_meta == null:
 		return null
 	var ps: Resource = load("res://" + found_meta.path)
@@ -499,17 +583,17 @@ func get_godot_node(unityref: Array) -> Node:
 	if ps is PackedScene:
 		var root_node: Node = ps.instantiate()
 		var node: Node = root_node
-		var local_id: int = unityref[1]
+		var local_id: int = unidot_ref[1]
 		if local_id == 100100000:
-			log_warn(0, "Looking up prefab " + str(unityref) + " in loaded scene " + ps.resource_name, "ref", unityref)
+			log_warn(0, "Looking up prefab " + str(unidot_ref) + " in loaded scene " + ps.resource_name, "ref", unidot_ref)
 			return node
 		var np: NodePath = found_meta.fileid_to_nodepath.get(local_id, found_meta.prefab_fileid_to_nodepath.get(local_id, NodePath()))
 		if np == NodePath():
-			log_fail(0, "Could not find node " + str(unityref) + " in loaded scene " + ps.resource_name, "ref", unityref)
+			log_fail(0, "Could not find node " + str(unidot_ref) + " in loaded scene " + ps.resource_name, "ref", unidot_ref)
 			return null
 		node = node.get_node(np)
 		if node == null:
-			log_fail(0, "Path " + str(np) + " was missing in " + str(unityref) + " in loaded scene " + ps.resource_name, "ref", unityref)
+			log_fail(0, "Path " + str(np) + " was missing in " + str(unidot_ref) + " in loaded scene " + ps.resource_name, "ref", unidot_ref)
 			return null
 		if node is Skeleton3D:
 			var bone_to_reroot: String = found_meta.fileid_to_skeleton_bone.get(local_id, found_meta.prefab_fileid_to_skeleton_bone.get(local_id, ""))
@@ -553,16 +637,16 @@ func get_godot_node(unityref: Array) -> Node:
 	return null
 
 
-func get_godot_resource(unityref: Array, silent: bool = false) -> Resource:
-	var found_meta: Resource = lookup_meta(unityref)
+func get_godot_resource(unidot_ref: Array, silent: bool = false) -> Resource:
+	var found_meta: Resource = lookup_meta(unidot_ref)
 	if found_meta == null:
-		if len(unityref) == 4 and unityref[1] != 0:
-			var found_path: String = get_database().guid_to_path.get(unityref[2], "")
+		if len(unidot_ref) == 4 and unidot_ref[1] != 0:
+			var found_path: String = get_database().guid_to_path.get(unidot_ref[2], "")
 			if not silent:
-				log_warn(0, "Resource with no meta. Try blindly loading it: " + str(unityref) + "/" + found_path, "ref", unityref)
+				log_warn(0, "Resource with no meta. Try blindly loading it: " + str(unidot_ref) + "/" + found_path, "ref", unidot_ref)
 			return load("res://" + found_path)
 		return null
-	var local_id: int = unityref[1]
+	var local_id: int = unidot_ref[1]
 	# log_debug(0, "guid:" + str(found_meta.guid) +" path:" + str(found_meta.path) + " main_obj:" + str(found_meta.main_object_id) + " local_id:" + str(local_id))
 	if found_meta.fileid_to_nodepath.has(local_id) or found_meta.prefab_fileid_to_nodepath.has(local_id):
 		local_id = found_meta.main_object_id
@@ -571,15 +655,39 @@ func get_godot_resource(unityref: Array, silent: bool = false) -> Resource:
 	if found_meta.godot_resources.has(local_id):
 		var ret: Variant = found_meta.godot_resources.get(local_id, null)
 		if typeof(ret) != TYPE_OBJECT and typeof(ret) != TYPE_NIL:
+			if ret.is_empty() or ret == "res://" or ret.contains("::"):
+				found_meta.log_fail(local_id, "Unable to load resource for " + str(found_meta.path) + " at invalid path " + str(ret))
+				return
+
 			return load(ret)
 		else:
 			return ret
 	if found_meta.parsed == null:
 		if not silent:
-			log_fail(0, "Failed to find Resource at " + found_meta.path + ":" + str(local_id) + " (" + found_meta.guid + ")" + "! from " + path + " (" + guid + ")", "ref", unityref)
+			log_fail(0, "Failed to find Resource at " + found_meta.path + ":" + str(local_id) + " (" + found_meta.guid + ")" + "! from " + path + " (" + guid + ")", "ref", unidot_ref)
 		return null
+	if found_meta.parsed != null and found_meta.parsed.assets.get(local_id) != null:
+		godot_resources[local_id] = null # prevent infinite recursion
+		var uniobj: Object = found_meta.parsed.assets[local_id]
+		var res: Resource = uniobj.create_godot_resource()
+		if res != null:
+			var resource_name_part = uniobj.keys.get("m_Name", "")
+			if not res.resource_name.is_empty():
+				resource_name_part = res.resource_name
+			if resource_name_part.is_empty():
+				resource_name_part = str(local_id)
+			else:
+				res.resource_name = resource_name_part
+			var res_path: String = found_meta.path.get_basename() + "." + resource_name_part + uniobj.get_godot_extension()
+			var extracted_dir: String = found_meta.path.get_basename().get_base_dir().path_join("extracted")
+			if DirAccess.dir_exists_absolute(extracted_dir):
+				res_path = extracted_dir.path_join(res_path.get_file())
+			res.resource_path = res_path
+			unidot_utils.save_resource(res, res_path)
+			godot_resources[local_id] = res_path
+			return res
 	if not silent:
-		log_fail(0, "Target ref " + found_meta.path + ":" + str(local_id) + " (" + found_meta.guid + ")" + " would need to dynamically create a godot resource! from " + path + " (" + guid + ")", "ref", unityref)
+		log_fail(0, "Target ref " + found_meta.path + ":" + str(local_id) + " (" + found_meta.guid + ")" + " would need to dynamically create a godot resource! from " + path + " (" + guid + ")", "ref", unidot_ref)
 	#var res: Resource = found_meta.parsed.assets[local_id].create_godot_resource()
 	#found_meta.godot_resources[local_id] = res
 	#return res
@@ -670,7 +778,11 @@ func parse_binary_asset(bytearray: PackedByteArray) -> ParsedAsset:
 			type_to_fileids[output_obj.type] = PackedInt64Array().duplicate()
 		type_to_fileids[output_obj.type].push_back(output_obj.fileID)
 		if output_obj.is_stripped:
-			prefab_source_id_pair_to_stripped_id[Vector4i(output_obj.prefab_instance[1] >> 32, output_obj.prefab_instance[1] & 0xffffffff, output_obj.prefab_source_object[1] >> 32, output_obj.prefab_source_object[1] & 0xffffffff)] = output_obj.fileID
+			prefab_source_id_pair_to_stripped_id[Vector4i(
+				~(~output_obj.prefab_instance[1] >> 32) if output_obj.prefab_instance[1] < 0 else output_obj.prefab_instance[1] >> 32,
+				output_obj.prefab_instance[1] & 0xffffffff,
+				~(~output_obj.prefab_source_object[1] >> 32) if output_obj.prefab_source_object[1] < 0 else output_obj.prefab_source_object[1] >> 32,
+				output_obj.prefab_source_object[1] & 0xffffffff)] = output_obj.fileID
 		if not output_obj.is_stripped and output_obj.keys.get("m_GameObject", [null, 0, null, null])[1] != 0:
 			fileid_to_gameobject_fileid[output_obj.fileID] = output_obj.keys.get("m_GameObject")[1]
 		if not output_obj.is_stripped and output_obj.keys.get("m_Father", [null, 0, null, null])[1] != 0:
@@ -707,7 +819,7 @@ func parse_asset(file: Object) -> ParsedAsset:
 	while true:
 		i += 1
 		var lin = file.get_line()
-		var output_obj = yaml_parser.parse_line(lin, self, false, object_adapter.instantiate_unity_object)
+		var output_obj = yaml_parser.parse_line(lin, self, false, object_adapter.instantiate_unidot_object)
 		if output_obj != null:
 			if not BLACKLISTED_OBJECT_TYPES.has(output_obj.type) and self.main_object_id == 0 and output_obj.fileID > 0 and (output_obj.keys.get("m_ObjectHideFlags", 0) & 1) == 0 and (output_obj.fileID % 100000 == 0 or output_obj.fileID < 1000000):
 				log_warn(output_obj.fileID, "We have no main_object_id but found a nice round number " + str(output_obj.fileID))
@@ -718,7 +830,11 @@ func parse_asset(file: Object) -> ParsedAsset:
 				type_to_fileids[output_obj.type] = PackedInt64Array().duplicate()
 			type_to_fileids[output_obj.type].push_back(output_obj.fileID)
 			if output_obj.is_stripped:
-				prefab_source_id_pair_to_stripped_id[Vector4i(output_obj.prefab_instance[1] >> 32, output_obj.prefab_instance[1] & 0xffffffff, output_obj.prefab_source_object[1] >> 32, output_obj.prefab_source_object[1] & 0xffffffff)] = output_obj.fileID
+				prefab_source_id_pair_to_stripped_id[Vector4i(
+					~(~output_obj.prefab_instance[1] >> 32) if output_obj.prefab_instance[1] < 0 else output_obj.prefab_instance[1] >> 32,
+					output_obj.prefab_instance[1] & 0xffffffff,
+					~(~output_obj.prefab_source_object[1] >> 32) if output_obj.prefab_source_object[1] < 0 else output_obj.prefab_source_object[1] >> 32,
+					output_obj.prefab_source_object[1] & 0xffffffff)] = output_obj.fileID
 			if not output_obj.is_stripped and output_obj.keys.get("m_GameObject", [null, 0, null, null])[1] != 0:
 				fileid_to_gameobject_fileid[output_obj.fileID] = output_obj.keys.get("m_GameObject")[1]
 			if not output_obj.is_stripped and output_obj.keys.get("m_Father", [null, 0, null, null])[1] != 0:
@@ -744,16 +860,30 @@ func _init():
 	pass
 
 
+func override_instantiate_object(meta: Object, fileID: int, utype: int, type: String):
+	if path.get_extension().to_lower() == "prefab":
+		type = "PrefabImporter"
+		utype = 0
+	if path.get_extension().to_lower() == "scene":
+		type = "DefaultImporter"
+		utype = 0
+	return object_adapter.instantiate_unidot_object(meta, fileID, utype, type)
+
+
 func init_with_file(file: Object, path: String):
+	self.orig_path = path
 	self.path = path
+	orig_path_short = path
+	if len(path.get_basename()) > 25:
+		orig_path_short = path.get_basename().substr(0, 30) + "..." + path.get_extension()
 	self.resource_name = path
 	type_to_fileids = {}.duplicate()  # push_back is not idempotent. must clear to avoid duplicates.
 	if file == null:
 		return  # Dummy meta object
 
 	var magic = file.get_line()
-	log_debug(0, "Parsing meta file! " + file.get_path())
 	if not magic.begins_with("fileFormatVersion:"):
+		log_fail(0, "Failed to parse meta file! " + file.get_path())
 		return
 
 	var yaml_parser = yaml_parser_class.new()
@@ -761,12 +891,14 @@ func init_with_file(file: Object, path: String):
 	while true:
 		i += 1
 		var lin = file.get_line()
-		var output_obj: RefCounted = yaml_parser.parse_line(lin, self, true, object_adapter.instantiate_unity_object)
-		# unity_object_adapter.UnityObject
+		var output_obj: RefCounted = yaml_parser.parse_line(lin, self, true, self.override_instantiate_object)
+		# object_adapter.UnidotObject
 		if output_obj != null:
 			log_debug(output_obj.fileID, "Finished parsing output_obj: " + str(output_obj) + "/" + str(output_obj.type))
 			self.importer_keys = output_obj.keys
 			self.importer_type = output_obj.type
+			if path.get_extension() == "prefab":
+				self.importer_type = "PrefabImporter"
 			self.importer = output_obj
 			self.main_object_id = self.importer.get_main_object_id()
 			log_debug(output_obj.fileID, "Main object id for " + path + ": " + str(self.main_object_id))

@@ -6,6 +6,7 @@ extends AnimationTree
 
 var meta_to_blend_parameters: Dictionary = {}.duplicate()
 var blend_to_meta_parameter: Dictionary = {}.duplicate()
+var seek_requests: Array
 var _recurse: StringName = &""
 var _current_meta: StringName = &""
 
@@ -101,16 +102,21 @@ func _setup_blend_to_meta(prop: StringName):
 				if not meta_to_blend_parameters.has(meta):
 					meta_to_blend_parameters[meta] = [].duplicate()
 				meta_to_blend_parameters[meta].append(prop)
+				if prop.ends_with("/seek_request"):
+					seek_requests.append(prop)
 				if not tree_root.has_meta(meta):
 					tree_root.set_meta(meta, get(prop))
 				set_meta(meta, tree_root.get_meta(meta, get(prop)))
 		elif typeof(meta) != TYPE_NIL:
 			blend_to_meta_parameter[prop] = &""
+			if prop.ends_with("/seek_request"):
+				seek_requests.append(prop)
 			super.set(prop, meta)
 
 
 func _get(prop: StringName):
 	if tree_root == null:
+		seek_requests.clear()
 		meta_to_blend_parameters.clear()
 		blend_to_meta_parameter.clear()
 		return null
@@ -147,11 +153,16 @@ func _set(prop: StringName, value):
 			for param in self.tree_root.get_meta_list():
 				if self.has_meta(StringName(param)):
 					self.remove_meta(StringName(param))
+		seek_requests.clear()
 		meta_to_blend_parameters.clear()
 		blend_to_meta_parameter.clear()
 		if value != null:
 			for param in value.get_meta_list():
 				self.set_meta(StringName(param), value.get_meta(param))
+			if active:
+				for prop_data in get_property_list():
+					if prop_data["name"].begins_with("parameters/"):
+						_setup_blend_to_meta(prop_data["name"])
 		return false
 	if prop == &"active" and value != self.active:
 		for param in meta_to_blend_parameters:
@@ -160,11 +171,16 @@ func _set(prop: StringName, value):
 			for param in self.tree_root.get_meta_list():
 				if self.has_meta(StringName(param)):
 					self.remove_meta(StringName(param))
+		seek_requests.clear()
 		meta_to_blend_parameters.clear()
 		blend_to_meta_parameter.clear()
 		if value:
 			for param in self.tree_root.get_meta_list():
 				self.set_meta(StringName(param), self.tree_root.get_meta(param))
+			if self.tree_root != null:
+				for prop_data in get_property_list():
+					if prop_data["name"].begins_with("parameters/"):
+						_setup_blend_to_meta(prop_data["name"])
 		return false
 	if str(prop).begins_with("parameters/"):
 		var meta_parameter = blend_to_meta_parameter.get(prop)
@@ -173,7 +189,7 @@ func _set(prop: StringName, value):
 				set_meta(meta_parameter[0], value.x)
 				set_meta(meta_parameter[1], value.y)
 		else:
-			print("Hardcoded " + str(prop) + " " + str(value))
+			#print("Hardcoded " + str(prop) + " " + str(value))
 			if typeof(meta_parameter) == TYPE_STRING_NAME:
 				if meta_parameter != &"":
 					set_meta(meta_parameter, value)
@@ -197,7 +213,7 @@ func _set(prop: StringName, value):
 		if _current_meta == prop:
 			return false
 		_current_meta = prop
-		for blend_parameter in meta_to_blend_parameters:
+		for blend_parameter in meta_to_blend_parameters.get(prop.substr(9), {}):
 			if typeof(blend_parameter) == TYPE_STRING_NAME:
 				set(blend_parameter, value)
 			elif typeof(blend_parameter) == TYPE_ARRAY:
@@ -208,3 +224,18 @@ func _set(prop: StringName, value):
 		_current_meta = &""
 		return false
 	return false
+
+func _ready():
+	if active and tree_root != null:
+		for prop_data in get_property_list():
+			if prop_data["name"].begins_with("parameters/"):
+				_setup_blend_to_meta(prop_data["name"])
+
+func _process(_delta: float):
+	for prop in seek_requests:
+		var meta_parameter = blend_to_meta_parameter.get(prop)
+		if typeof(meta_parameter) == TYPE_STRING_NAME:
+			if meta_parameter != &"":
+				set(prop, get_meta(meta_parameter))
+		elif typeof(meta_parameter) != TYPE_NIL:
+			set(prop, get_meta(meta_parameter))

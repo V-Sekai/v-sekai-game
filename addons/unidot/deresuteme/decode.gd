@@ -18,7 +18,7 @@
 @tool
 extends RefCounted
 
-const object_adapter_class: GDScript = preload("../unity_object_adapter.gd")
+const object_adapter_class: GDScript = preload("../object_adapter.gd")
 
 var object_adapter = object_adapter_class.new()
 
@@ -120,6 +120,7 @@ class Stream:
 	extends StreamPeerBuffer
 	var d: PackedByteArray = self.data_array
 	var reference_prefab_guid_storage: Array
+	var dependency_guids: Dictionary
 
 	func _init(d: PackedByteArray, p: int = 0):
 		self.d = d
@@ -334,6 +335,7 @@ class Def:
 							push_error("Asset " + self.full_name + "/" + self.type_name + " invalid pptr " + str(v) + " @" + str(s.tell()))
 						else:
 							var ret_ref = [null, v.get("m_PathID", 0), referenced_guids[v.get("m_FileID", 0)], referenced_reftypes[v.get("m_FileID", 0)]]
+							s.dependency_guids[referenced_guids[v.get("m_FileID", 0)]] = v.get("m_PathID", 0)
 							if self.name == "prototype" or self.name == "prefab":
 								if ret_ref[2] != null:
 									#print(" Possible Ref " + str(self.full_name) + " to " + str(ret_ref[2]))
@@ -402,17 +404,18 @@ var defs: Array = [].duplicate()
 var referenced_guids: Array = [].duplicate()
 var referenced_reftypes: Array = [].duplicate()
 var objs: Array = [].duplicate()
+var obj_headers: Array # [byte_offset, class_id, pathId, type_id]
 
 var meta: RefCounted = null
 
 
-func _init(meta: RefCounted, file_contents: PackedByteArray):
+func _init(meta: RefCounted, file_contents: PackedByteArray, only_references: bool=false):
 	self.meta = meta
 	self.s = Stream.new(file_contents)
-	#t = self.s.read_str() # UnityRaw? or no?
+	#t = self.s.read_str() # UnidotRaw? or no?
 	#stream_ver = s.get_32()
-	#unity_version = self.s.read_str()
-	#unity_revision = self.s.read_str()
+	#unidot_version = self.s.read_str()
+	#unidot_revision = self.s.read_str()
 
 	#size = s.get_32()
 	#hdr_size = s.get_32()
@@ -452,11 +455,16 @@ func _init(meta: RefCounted, file_contents: PackedByteArray):
 	meta.log_debug(0, "After defs... NOW AT: " + str(self.s.tell()))
 	if self.file_gen < 10:
 		s.get_32()
-	var obj_headers: Array = self.decode_data_headers()
+	obj_headers = self.decode_data_headers()
 	# meta.log_debug(0, "After headers... NOW AT: " + str(self.s.tell()))
 	# meta.log_debug(0, str(obj_headers))
-	self.decode_guids()
-	self.objs = self.decode_data(obj_headers)
+	if not self.decode_guids():
+		return
+	if s.get_position() == s.get_size():
+		meta.log_fail(0, "Failed to initialize binary parser due to hitting end of stream")
+		return
+	if not only_references:
+		self.objs = self.decode_data(obj_headers)
 
 
 func decode_defs() -> Array:
@@ -478,6 +486,15 @@ func decode_defs() -> Array:
 	return defs
 
 
+func get_main_object_type() -> String:
+	for obj_header in obj_headers:
+		var class_id: int = obj_header[1]
+		var path_id: int = obj_header[2]
+		var type_id: int = obj_header[3]
+		if path_id > 0:
+			return defs[type_id].type_name
+	return ""
+
 #func decode_guids_backwards() -> void:
 #	var pos: int = s.tell()
 #	s.seek(table_size - 1)
@@ -495,7 +512,7 @@ func decode_defs() -> Array:
 #		s.seek(s.tell() - 2)
 
 
-func decode_guids() -> void:
+func decode_guids() -> bool:
 	# 02 00 00 00 01 00 00 00 5B 21 F1 AA FF FF FF FF 02 00 00 00 FA 19 14 BD FF FF FF FF
 	var unkcount: int = s.get_32()
 	s.skip(12 * unkcount)
@@ -503,6 +520,9 @@ func decode_guids() -> void:
 		s.skip(3)  # Undo the previous skip. FIXME: Probably wrong
 	var count: int = s.get_32()
 	meta.log_debug(0, "referenced guids count " + str(count) + " at " + str(s.tell()))
+	if count > 10000:
+		meta.log_error(0, "More than 10000 guids referenced is probably an error.")
+		return false
 	# null GUID is implied!
 	referenced_guids.push_back(null)
 	referenced_reftypes.push_back(0)
@@ -516,10 +536,14 @@ func decode_guids() -> void:
 		referenced_reftypes.push_back(s.get_u32())
 		var path: String = s.read_str()
 		referenced_guids.push_back(guid)
+		meta.dependency_guids[guid] = 0
 		i += 1
 	if self.file_gen >= 20:
 		s.get_32()  # Unknown ref type
 	s.read_str()  # Seems to have an extra string here.
+	if s.get_position() == s.get_size():
+		return false
+	return true
 
 
 func decode_data_headers() -> Array:
@@ -586,7 +610,7 @@ func decode_data_headers() -> Array:
 func decode_data(obj_headers: Array) -> Array:
 	meta.log_debug(0, str(referenced_guids) + " then " + str(referenced_reftypes))
 	for g in referenced_guids:
-		meta.dependency_guids[g] = 1
+		meta.dependency_guids[g] = 0
 	var save: int = self.s.tell()
 	var objs: Array = [].duplicate()
 	for obj_header in obj_headers:
@@ -599,12 +623,20 @@ func decode_data(obj_headers: Array) -> Array:
 			continue
 		var read_variant: Variant = self.defs[type_id].read(self.s, referenced_guids, referenced_reftypes)
 		var type_name: String = self.defs[type_id].type_name
+		if type_name == "EditorExtensionImpl":
+			meta.log_warn(path_id, "Ignoring EditorExtensionImpl object.")
+			continue
 		var is_stripped: bool = type_name == "EditorExtension"
 		if is_stripped:
 			type_name = object_adapter.to_classname(class_id)
-		var obj: RefCounted = object_adapter.instantiate_unity_object(meta, path_id, class_id, type_name)
+		var obj: RefCounted = object_adapter.instantiate_unidot_object(meta, path_id, class_id, type_name)
+		if obj == null:
+			continue
 		obj.is_stripped = is_stripped
-		obj.keys = read_variant
+		if typeof(read_variant) == TYPE_DICTIONARY:
+			obj.keys = read_variant
+		else:
+			meta.log_fail(path_id, "Defs for " + str(class_id) + " " + str(type_name) + " were type " + str(typeof(read_variant)) + " value..100 " + str(read_variant).substr(0, 100))
 		# m_SourcePrefab (new PrefabInstance) and m_ParentPrefab (legacy Prefab) used in scenes and prefabs.
 		# Terrain uses prefab (trees), prototype (details) for prefab references.
 		# If there are any other unusual Object->Prefab dependencies, it might be good to list them,
@@ -619,6 +651,8 @@ func decode_data(obj_headers: Array) -> Array:
 			meta.prefab_dependency_guids[source_prefab_guid] = 1
 		objs.push_back(obj)
 	self.s.seek(save)
+	for guid in s.dependency_guids:
+		meta.dependency_guids[guid] = s.dependency_guids[guid]
 	return objs
 
 
@@ -703,7 +737,7 @@ func decode_attrtab() -> Def:
 	var level: int = 0
 	var name: String = ""
 	var type_name: String = ""
-	var unity4_nesting: Array[int] = [1]
+	var version4_nesting: Array[int] = [1]
 	var a4: int = 0
 	var a1: int = 0
 	var a2: int = 0
@@ -728,10 +762,10 @@ func decode_attrtab() -> Def:
 			type_name = lookup_string(stab, type_off)
 			# meta.log_debug(0, "code " + str(code) + " unk1/2" + str(unk) + "_" + str(unk2) + " ident " + str(guid) + " name " + str(name) + " type_name " + str(type_name) + " flags " + str(flags) + " idx " + str(idx) + " off "+ str(type_off) + " size " + str(size) + " idx " + str(idx) + " name_off " + str(name_off))
 		else:
-			while unity4_nesting[-1] == 0:
-				unity4_nesting.pop_back()
-			unity4_nesting[-1] -= 1
-			level = len(unity4_nesting) - 1
+			while version4_nesting[-1] == 0:
+				version4_nesting.pop_back()
+			version4_nesting[-1] -= 1
+			level = len(version4_nesting) - 1
 			type_name = attrs_spb.read_str()
 			name = attrs_spb.read_str()
 			size = attrs_spb.get_u32()
@@ -741,7 +775,7 @@ func decode_attrtab() -> Def:
 			flags = attrs_spb.get_u32()
 			var nested_count: int = attrs_spb.get_u32()
 			if nested_count != 0:
-				unity4_nesting.push_back(nested_count)
+				version4_nesting.push_back(nested_count)
 				attr_cnt += nested_count
 		if size == 0xffffffff:
 			size = -1

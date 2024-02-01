@@ -6,14 +6,14 @@ extends RefCounted
 
 ############ FIXME: This should be Array(fileId, guid, utype)
 #### WE CANNOT STORE Resource AS INNER CLASS!!
-#class UnityRef extends Resource:
+#class UnidotRef extends Resource:
 #	var fileID: int = 0
 #	var guid: String = ""
 #	var utype: int = 0
 #	func to_string() -> String:
 #		return _to_string()
 #	func _to_string() -> String:
-#		var ret: String = "[UNITY REF {fileID: " + str(fileID)
+#		var ret: String = "[REF {fileID: " + str(fileID)
 #		if not guid.is_empty():
 #			ret += ", guid: " + str(guid)
 #		ret += "}]"
@@ -58,6 +58,7 @@ var single_quote_line: String = ""
 var has_brace_line: bool = false
 var has_double_quote_line: bool = false
 var has_single_quote_line: bool = false
+var prev_key_simple: String = ""
 var prev_key: String = ""
 var prev_complex_key: String = ""
 var current_obj_tree: Array = []
@@ -71,9 +72,51 @@ var line_number: int = 0
 func _init():
 	current_obj = null
 	arr_obj_key_regex = RegEx.new()
-	arr_obj_key_regex.compile("^-?\\s?([^\"\'{}:]*):\\s*")
+	arr_obj_key_regex.compile("^-?\\s?([^\"\'{}:]*[^\"\'{}:\\s])\\s*:\\s*")
 	search_obj_key_regex = RegEx.new()
-	search_obj_key_regex.compile("\\s*([^\"\'{}:]*):\\s*")
+	search_obj_key_regex.compile("\\s*([^\"\'{}:]*[^\"\'{}:\\s])\\s*:\\s*")
+
+
+static func parse_main_object_type(yaml: String) -> String:
+	var first_indent: int = yaml.find("\n  ")
+	if first_indent == -1:
+		return ""
+	var last_colon: int = yaml.rfind(":", first_indent)
+	if last_colon == -1:
+		return ""
+	var last_newline: int = yaml.rfind("\n", last_colon) + 1
+	return yaml.substr(last_newline, last_colon - last_newline).strip_edges()
+
+
+static func parse_dependency_guids(yaml: String, asset_meta: Object) -> Dictionary:
+	var idx: int = 0
+	var dependencies: Dictionary
+	while true:
+		idx = yaml.find("guid:", idx)
+		if idx == -1:
+			break
+		var comma := yaml.find(",", idx)
+		var lbrace := yaml.rfind("{", idx)
+		var brace := yaml.find("}", idx)
+		var newline := yaml.find("}", idx)
+		if brace != -1 and brace < comma:
+			comma = brace
+		if newline != -1 and newline < comma:
+			idx = newline
+			continue
+		var guid_str := yaml.substr(idx + 5, comma - idx - 5).strip_edges()
+		var fileid_idx := yaml.find("fileID:", lbrace)
+		var fileid_comma := yaml.find(",", fileid_idx)
+		if fileid_comma > brace:
+			fileid_comma = brace
+		var fileid: int = 0
+		if fileid_idx != -1:
+			fileid = yaml.substr(fileid_idx + 7, fileid_comma - fileid_idx - 7).strip_edges().to_int()
+		dependencies[guid_str] = fileid
+		idx = comma
+	if asset_meta:
+		asset_meta.dependency_guids = dependencies
+	return dependencies
 
 
 func parse_value(line: String, keyname: String, parent_key: String) -> Variant:
@@ -111,8 +154,8 @@ func parse_value(line: String, keyname: String, parent_key: String) -> Variant:
 		var is_vec3: bool = false
 		var is_rect: bool = false
 		var is_quat: bool = false
-		var value_ref: Array = []  # UnityRef
-		# UnityRef, Vector2, Vector3, Quaternion?
+		var value_ref: Array = []  # UnidotRef
+		# UnidotRef, Vector2, Vector3, Quaternion?
 		var offset = 1
 		while true:
 			var match_obj = search_obj_key_regex.search(line, offset)
@@ -204,8 +247,8 @@ func xprint(s: String):
 	pass
 
 
-func parse_line(line: Variant, meta: Object, is_meta: bool, xinstantiate_unity_object: Callable) -> Resource:  # unity_object_adapter.UnityObject
-	var instantiate_unity_object = xinstantiate_unity_object
+func parse_line(line: Variant, meta: Object, is_meta: bool, xinstantiate_unidot_object: Callable) -> Resource:  # object_adapter.UnidotObject
+	var instantiate_unidot_object = xinstantiate_unidot_object
 	line_number = line_number + 1
 	if line_number % 10000 == 0:
 		meta.log_debug(current_obj_fileID, "guid " + str(meta.guid if meta != null else "null") + " line " + str(line_number))
@@ -219,9 +262,11 @@ func parse_line(line: Variant, meta: Object, is_meta: bool, xinstantiate_unity_o
 	var obj_key_match: RegExMatch = arr_obj_key_regex.search(line_plain)
 	var value_start: int = 2
 	var this_key: String = ""
+	var this_prev_key_simple: String = prev_key_simple
 	if obj_key_match != null:
 		value_start = 0 + obj_key_match.get_end()
 		this_key = obj_key_match.get_string(1)
+		prev_key_simple = this_key
 	var missing_brace: bool = false
 	var missing_single_quote: bool = false
 	var missing_double_quote: bool = false
@@ -258,7 +303,7 @@ func parse_line(line: Variant, meta: Object, is_meta: bool, xinstantiate_unity_o
 			current_obj_stripped = line.ends_with(" stripped")
 	elif line == "%YAML 1.1":
 		pass
-	elif line == "%TAG !u! tag:unity3d.com,2011:":
+	elif line.begins_with("%TAG !u! tag:"):
 		pass
 	elif is_meta and line.begins_with("fileFormatVersion:"):
 		# usually 2?
@@ -283,7 +328,7 @@ func parse_line(line: Variant, meta: Object, is_meta: bool, xinstantiate_unity_o
 		if current_obj != null:
 			meta.log_fail(current_obj_fileID, "Creating toplevel object without header")
 		current_obj_type = line.split(":")[0]
-		current_obj = instantiate_unity_object.call(meta, current_obj_fileID, current_obj_utype, current_obj_type)
+		current_obj = instantiate_unidot_object.call(meta, current_obj_fileID, current_obj_utype, current_obj_type)
 		if current_obj_stripped:
 			current_obj.is_stripped = true
 	elif line == "" and has_single_quote_line:
@@ -315,6 +360,12 @@ func parse_line(line: Variant, meta: Object, is_meta: bool, xinstantiate_unity_o
 	elif has_brace_line and new_indentation_level > continuation_line_indentation_level and not line_plain.ends_with("}"):
 		brace_line += " " + line_plain
 		meta.log_fail(current_obj_fileID, "Missing brace mid: " + brace_line)  # Never seen structs big enough to wrap twice.
+	elif not current_obj_tree.is_empty() and obj_key_match == null and not has_brace_line and not has_single_quote_line and not has_double_quote_line and typeof(current_obj_tree.back()) == TYPE_DICTIONARY and typeof(current_obj_tree.back().get(this_prev_key_simple, null)) == TYPE_STRING and new_indentation_level > indentation_level:
+		#print("Found an indented line " + str(line_plain))
+		current_obj_tree.back()[this_prev_key_simple] += " " + line_plain
+	elif not current_obj_tree.is_empty() and not line_plain.begins_with("-") and not has_brace_line and not has_single_quote_line and not has_double_quote_line and typeof(current_obj_tree.back()) == TYPE_ARRAY and typeof(current_obj_tree.back()[-1]) == TYPE_STRING and new_indentation_level > indentation_level:
+		#print("Found an indented arr line " + str(line_plain))
+		current_obj_tree.back()[-1] += " " + line_plain
 	else:
 		if new_indentation_level > continuation_line_indentation_level or end_single_multiline:
 			var endcontinuation: bool = false
@@ -390,16 +441,16 @@ func parse_line(line: Variant, meta: Object, is_meta: bool, xinstantiate_unity_o
 						# other Object->Prefab/GameObject/Transform references need to be added here:
 						"m_SourcePrefab", "m_ParentPrefab", "prefab", "prototype":
 							# meta.log_debug(current_obj_fileID, " Possible Ref " + str(this_key))
-							meta.prefab_dependency_guids[parsed_val[2]] = 1
+							meta.prefab_dependency_guids[parsed_val[2]] = parsed_val[1]
 					if is_meta:
-						meta.meta_dependency_guids[parsed_val[2]] = 1
-					meta.dependency_guids[parsed_val[2]] = 1
+						meta.meta_dependency_guids[parsed_val[2]] = parsed_val[1]
+					meta.dependency_guids[parsed_val[2]] = parsed_val[1]
 				current_obj_tree.back()[this_key] = parsed_val
 		elif line_plain.begins_with("- "):
 			var parsed_val = parse_value(line_plain.substr(2), "", prev_complex_key)
 			if typeof(parsed_val) == TYPE_ARRAY and len(parsed_val) >= 3 and parsed_val[0] == null and typeof(parsed_val[2]) == TYPE_STRING:
 				if is_meta:
-					meta.meta_dependency_guids[parsed_val[2]] = 1
-				meta.dependency_guids[parsed_val[2]] = 1
+					meta.meta_dependency_guids[parsed_val[2]] = parsed_val[1]
+				meta.dependency_guids[parsed_val[2]] = parsed_val[1]
 			current_obj_tree.back().push_back(parsed_val)
 	return object_to_return
