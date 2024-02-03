@@ -28,12 +28,13 @@ func _enter_tree() -> void:
 	_setup_authority()
 
 func _ready() -> void:
+	if collision_shape:
+		collision_shape.disabled = not is_multiplayer_authority()
+	else:
+		printerr("Collision shape not found!")
+	
 	if is_multiplayer_authority():
-		if collision_shape:
-			collision_shape.disabled = false
-		else:
-			printerr("Collision shape not found!")
-			
+		pass
 		#Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	else:
 		if player_movement_controller:

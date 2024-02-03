@@ -1,6 +1,9 @@
 extends XROrigin3D
 
 @export var xr_camera: XRCamera3D = null
+var left_hand_controller: XRController3D = null
+var right_hand_controller: XRController3D = null
+
 @export var player_movement_controller: Node = null
 
 @export var xr_camera_scene: PackedScene = null
@@ -8,9 +11,6 @@ extends XROrigin3D
 @export var head_child_scenes: Array[PackedScene] = []
 @export var left_hand_child_scenes: Array[PackedScene] = []
 @export var right_hand_child_scenes: Array[PackedScene] = []
-
-var left_hand_controller: XRController3D = null
-var right_hand_controller: XRController3D = null
 
 ##
 ## Adds an XRCamera3D node as a child and returns it.

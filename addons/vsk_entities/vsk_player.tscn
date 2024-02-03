@@ -1,8 +1,9 @@
-[gd_scene load_steps=19 format=3 uid="uid://doafhtfvstuff"]
+[gd_scene load_steps=20 format=3 uid="uid://doafhtfvstuff"]
 
 [ext_resource type="Script" path="res://addons/vsk_entities/vsk_player.gd" id="1_ily3q"]
 [ext_resource type="Script" path="res://addons/vsk_entities/extensions/interpolate_origin_to_zero_node_3d.gd" id="2_jhmsa"]
 [ext_resource type="PackedScene" uid="uid://cfngp8rd4ii47" path="res://addons/vsk_entities/extensions/player_movement_controller.tscn" id="2_lxa8t"]
+[ext_resource type="Script" path="res://addons/vsk_entities/extensions/player_snapshot_interpolation.gd" id="3_ewiba"]
 [ext_resource type="Script" path="res://addons/vsk_entities/extensions/interpolate_angle_to_zero_anchored_node_3d.gd" id="3_km368"]
 [ext_resource type="Script" path="res://addons/vsk_entities/extensions/player_xr_origin.gd" id="4_pk7ri"]
 [ext_resource type="PackedScene" uid="uid://bslhttmjse5ys" path="res://addons/vsk_entities/extensions/player_xr_camera_3d.tscn" id="5_poivo"]
@@ -12,6 +13,7 @@
 [ext_resource type="PackedScene" uid="uid://7f42cd5n28nu" path="res://addons/vsk_entities/extensions/player_movement/xr_controller/xr_controller_movement_jump.tscn" id="9_nap77"]
 [ext_resource type="PackedScene" uid="uid://cgtymgaebafux" path="res://addons/vsk_entities/extensions/models/right_hand.tscn" id="10_6s44a"]
 [ext_resource type="PackedScene" uid="uid://qecslyswsnjn" path="res://addons/vsk_entities/extensions/player_movement/xr_controller/xr_controller_movement_turn.tscn" id="11_edqlr"]
+[ext_resource type="Script" path="res://addons/vsk_entities/extensions/tracker_space.gd" id="14_ldvw4"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ks12f"]
 radius = 0.1
@@ -30,10 +32,10 @@ _bundled = {
 "version": 3
 }
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_13hgm"]
-albedo_color = Color(1, 0, 0, 1)
-
-[sub_resource type="SphereMesh" id="SphereMesh_5qth3"]
+[sub_resource type="CylinderMesh" id="CylinderMesh_77wtl"]
+top_radius = 0.0
+bottom_radius = 0.05
+height = 0.1
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_klfjt"]
 properties/0/path = NodePath(".:position")
@@ -60,6 +62,10 @@ xr_camera = NodePath("../PositionInterpolation/RotationInterpolation/PlayerXROri
 position_interpolation = NodePath("../PositionInterpolation")
 rotation_interpolation = NodePath("../PositionInterpolation/RotationInterpolation")
 
+[node name="PlayerSnapshotInterpolation" type="Node" parent="." node_paths=PackedStringArray("synced_tracker_space")]
+script = ExtResource("3_ewiba")
+synced_tracker_space = NodePath("../PositionInterpolation/RotationInterpolation/SyncedTrackerSpace")
+
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
 shape = SubResource("CapsuleShape3D_ks12f")
@@ -69,6 +75,7 @@ disabled = true
 script = ExtResource("2_jhmsa")
 
 [node name="RotationInterpolation" type="Node3D" parent="PositionInterpolation" node_paths=PackedStringArray("anchor_node")]
+transform = Transform3D(1.00302, 0, 0, 0, 1.00302, 0, 0, 0, 1.00302, 0, 0, 0)
 script = ExtResource("3_km368")
 anchor_node = NodePath("PlayerXROrigin3D/PlayerXRCamera3D")
 
@@ -84,10 +91,37 @@ right_hand_child_scenes = Array[PackedScene]([ExtResource("10_6s44a"), ExtResour
 
 [node name="PlayerXRCamera3D" parent="PositionInterpolation/RotationInterpolation/PlayerXROrigin3D" instance=ExtResource("5_poivo")]
 
-[node name="DebugMesh" type="MeshInstance3D" parent="PositionInterpolation/RotationInterpolation/PlayerXROrigin3D"]
-material_override = SubResource("StandardMaterial3D_13hgm")
-mesh = SubResource("SphereMesh_5qth3")
-skeleton = NodePath("../../../..")
+[node name="SyncedTrackerSpace" type="Node3D" parent="PositionInterpolation/RotationInterpolation" node_paths=PackedStringArray("xr_origin", "synced_head_tracker", "synced_left_tracker", "synced_right_tracker")]
+process_priority = -1
+editor_description = "This node is a container for synced trackers. If the VSKPlayer has authority, they will update the position of the synced trackers inside this node to match their local trackers. These synced trackers will then by used by the MultiplayerSynchronizer to transmit positional data to other clients, which will then be used for the avatar's representation. The tracker space is positionally relative to the XRCamera."
+script = ExtResource("14_ldvw4")
+xr_origin = NodePath("../PlayerXROrigin3D")
+synced_head_tracker = NodePath("SyncedHeadTracker")
+synced_left_tracker = NodePath("SyncedLeftHandTracker")
+synced_right_tracker = NodePath("SyncedRightHandTracker")
+
+[node name="SyncedHeadTracker" type="Node3D" parent="PositionInterpolation/RotationInterpolation/SyncedTrackerSpace"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="PositionInterpolation/RotationInterpolation/SyncedTrackerSpace/SyncedHeadTracker"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+mesh = SubResource("CylinderMesh_77wtl")
+skeleton = NodePath("../..")
+
+[node name="SyncedLeftHandTracker" type="Node3D" parent="PositionInterpolation/RotationInterpolation/SyncedTrackerSpace"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3, -0.2, -0.5)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="PositionInterpolation/RotationInterpolation/SyncedTrackerSpace/SyncedLeftHandTracker"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+mesh = SubResource("CylinderMesh_77wtl")
+skeleton = NodePath("../..")
+
+[node name="SyncedRightHandTracker" type="Node3D" parent="PositionInterpolation/RotationInterpolation/SyncedTrackerSpace"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, -0.2, -0.5)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="PositionInterpolation/RotationInterpolation/SyncedTrackerSpace/SyncedRightHandTracker"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+mesh = SubResource("CylinderMesh_77wtl")
+skeleton = NodePath("../..")
 
 [node name="MultiplayerSynchronizerSpawn" type="MultiplayerSynchronizer" parent="."]
 unique_name_in_owner = true
@@ -97,3 +131,5 @@ replication_config = SubResource("SceneReplicationConfig_klfjt")
 [node name="MultiplayerSynchronizerUpdate" type="MultiplayerSynchronizer" parent="."]
 unique_name_in_owner = true
 replication_config = SubResource("SceneReplicationConfig_ga4ik")
+
+[connection signal="synchronized" from="MultiplayerSynchronizerUpdate" to="PlayerSnapshotInterpolation" method="_on_update_synchronized"]
