@@ -16,7 +16,7 @@ func _handle_transition(transition: Transition, source: State):
 	get_parent()._handle_transition(transition, source)
 
 
-func _get_configuration_warnings() -> PackedStringArray:
+func _get_configuration_warnings() -> Array:
 	var warnings = super._get_configuration_warnings()
 	# check if we have any child nodes which are not transitions
 	for child in get_children():

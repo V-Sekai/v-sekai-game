@@ -212,7 +212,7 @@ func _handle_transition(transition: Transition, source: State):
 	get_parent()._handle_transition(transition, source)
 
 
-func _get_configuration_warnings() -> PackedStringArray:
+func _get_configuration_warnings() -> Array:
 	var warnings = super._get_configuration_warnings()
 	if get_child_count() == 0:
 		warnings.append("Compound states should have at least one child state.")

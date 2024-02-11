@@ -143,7 +143,7 @@ func step():
 	_state._state_step()
 
 
-func _get_configuration_warnings() -> PackedStringArray:
+func _get_configuration_warnings() -> Array:
 	var warnings = []
 	if get_child_count() != 1:
 		warnings.append("StateChart must have exactly one child")

@@ -274,7 +274,7 @@ func _queue_transition(transition: Transition):
 	set_process(true)
 
 
-func _get_configuration_warnings() -> PackedStringArray:
+func _get_configuration_warnings() -> Array:
 	var result = []
 	# if not at least one of our ancestors is a StateChart add a warning
 	var parent = get_parent()
