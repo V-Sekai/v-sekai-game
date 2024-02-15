@@ -8,11 +8,15 @@
 
 ## How do I get involved?
 
-We're happy to accept pull requests for features and bug fixes. Please join our [official Discord server](https://discord.gg/7BQDHesck8) for more information.
+We're happy to accept pull requests for features and bug fixes. Please join our <a href="https://discord.gg/H3s3PD49XC">
+        <img src="https://img.shields.io/discord/1138836561102897172?logo=discord"
+            alt="official Discord server"></a> for more information.
 
 - Website: [https://v-sekai.org/](https://v-sekai.org/)
 - Twitter: [https://twitter.com/vsekaiofficial](https://twitter.com/vsekaiofficial)
-- Discord: [https://discord.gg/7BQDHesck8](https://discord.gg/7BQDHesck8)
+- Discord: <a href="https://discord.gg/H3s3PD49XC">
+        <img src="https://img.shields.io/discord/1138836561102897172?logo=discord"
+            alt="Chat on Discord"></a>
 
 You can find our issues and suggestions at the [documentation website](https://v-sekai.github.io/manuals).
 
