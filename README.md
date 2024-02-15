@@ -8,9 +8,9 @@
 
 ## How do I get involved?
 
-We're happy to accept pull requests for features and bug fixes. Please join our <a href="https://discord.gg/H3s3PD49XC">
+We're happy to accept pull requests for features and bug fixes. Please join our official V-Sekai discord server <a href="https://discord.gg/H3s3PD49XC">
         <img src="https://img.shields.io/discord/1138836561102897172?logo=discord"
-            alt="official Discord server"></a> for more information.
+            alt="Chat on Discord"></a> for more information.
 
 - Website: [https://v-sekai.org/](https://v-sekai.org/)
 - Twitter: [https://twitter.com/vsekaiofficial](https://twitter.com/vsekaiofficial)
