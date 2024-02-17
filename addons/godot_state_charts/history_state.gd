@@ -32,7 +32,7 @@ func _state_restore(saved_state: SavedState, _child_levels: int = -1) -> void:
 		history = our_state.history
 
 
-func _get_configuration_warnings() -> Array:
+func _get_configuration_warnings() -> PackedStringArray:
 	var warnings = super._get_configuration_warnings()
 
 	# a history state must be a child of a compound state otherwise it is useless

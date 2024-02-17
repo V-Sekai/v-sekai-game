@@ -45,7 +45,7 @@ func _state_enter(expect_transition: bool = false):
 	_animation_tree_state_machine.travel(target_state)
 
 
-func _get_configuration_warnings():
+func _get_configuration_warnings() -> PackedStringArray:
 	var warnings = super._get_configuration_warnings()
 
 	if animation_tree.is_empty():

@@ -64,7 +64,7 @@ func resolve_target() -> State:
 	return null
 
 
-func _get_configuration_warnings():
+func _get_configuration_warnings() -> PackedStringArray:
 	var warnings = []
 	if get_child_count() > 0:
 		warnings.append("Transitions should not have children")

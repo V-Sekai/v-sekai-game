@@ -50,7 +50,7 @@ func _state_enter(expect_transition: bool = false):
 	_animation_player.play(target_animation, custom_blend, custom_speed, from_end)
 
 
-func _get_configuration_warnings():
+func _get_configuration_warnings() -> PackedStringArray:
 	var warnings = super._get_configuration_warnings()
 
 	if animation_player.is_empty():
