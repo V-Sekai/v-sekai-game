@@ -95,9 +95,9 @@ jobs:
             tests: false
             sconsflags: platform=android arch=arm32 production=yes precision=double
             doc-test: false
-            bin: ./godot/bin/godot.android.editor.arm32
-            deploy-bin: ./godot/bin/godot.android.editor.arm32
-            editor-bin-name: godot.android.editor.arm32
+            bin: ./godot/bin/libgodot.android.editor.double.arm32.so
+            deploy-bin: ./godot/bin/libgodot.android.editor.double.arm32.so
+            editor-bin-name: libgodot.android.editor.double.arm32.so
             proj-conv: false
             artifact: true
             platform: android
@@ -114,9 +114,9 @@ jobs:
             tests: false
             sconsflags: platform=android arch=arm64 production=yes precision=double
             doc-test: false
-            bin: ./godot/bin/godot.android.editor.arm64
-            deploy-bin: ./godot/bin/godot.android.editor.arm64
-            editor-bin-name: godot.android.editor.arm64
+            bin: ./godot/bin/libgodot.android.editor.double.arm64.so
+            deploy-bin: ./godot/bin/libgodot.android.editor.double.arm64.so
+            editor-bin-name: libgodot.android.editor.double.arm64.so
             proj-conv: false
             artifact: true
             platform: android
@@ -133,9 +133,9 @@ jobs:
             tests: false
             sconsflags: platform=android arch=x86_32 production=yes precision=double
             doc-test: false
-            bin: ./godot/bin/godot.android.editor.x86_32
-            deploy-bin: ./godot/bin/godot.android.editor.x86_32
-            editor-bin-name: godot.android.editor.x86_32
+            bin: ./godot/bin/libgodot.android.editor.double.x86_32.so
+            deploy-bin: ./godot/bin/libgodot.android.editor.double.x86_32.so
+            editor-bin-name: libgodot.android.editor.double.x86_32.so
             proj-conv: false
             artifact: true
             platform: android
@@ -152,9 +152,9 @@ jobs:
             tests: false
             sconsflags: platform=android arch=x86_64 production=yes precision=double
             doc-test: false
-            bin: ./godot/bin/godot.android.editor.x86_64
-            deploy-bin: ./godot/bin/godot.android.editor.x86_64
-            editor-bin-name: godot.android.editor.x86_64
+            bin: ./godot/bin/libgodot.android.editor.double.x86_64.so
+            deploy-bin: ./godot/bin/libgodot.android.editor.double.x86_64.so
+            editor-bin-name: libgodot.android.editor.double.x86_64.so
             proj-conv: false
             artifact: true
             platform: android
