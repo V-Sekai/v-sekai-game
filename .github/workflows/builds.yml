@@ -50,25 +50,6 @@ jobs:
             arch: _x86_64
             deploy-platform-target: editor
 
-          - name: linux_editor_linux_deploy
-            runs-on: ubuntu-22.04
-            cache-name: linux-editor-deploy-linux-editor
-            target: editor
-            tests: false
-            sconsflags: linker=gold precision=double use_llvm=yes
-            doc-test: false
-            bin: ./godot/bin/godot.linuxbsd.editor.double.x86_64.llvm
-            deploy-bin: ./godot/bin/godot.linuxbsd.editor.double.x86_64.llvm
-            editor-bin-name: godot.linuxbsd.editor.double.x86_64.llvm
-            proj-conv: false
-            artifact: true
-            platform: linuxbsd
-            deploy: true
-            deploy-platform: linux
-            export-platform: Linux
-            arch: _x86_64
-            deploy-platform-target: editor
-
           - name: macos_editor_macos_deploy
             runs-on: "macos-latest"
             cache-name: macos-editor-deploy-macos-editor
@@ -292,18 +273,14 @@ jobs:
       - name: List files
         run: |
           ls -R ${{ env.GAME_NAME }}windows${{ matrix.arch }}
-          ls -R ${{ env.GAME_NAME }}linux${{ matrix.arch }}
           ls -R linux-editor-deploy-windows-editor
-          ls -R linux-editor-deploy-linux-editor
           ls -R macos-editor-deploy-macos-editor
         shell: bash
 
       - name: Archive files
         run: |
           zip -r ${{ env.GAME_NAME }}windows${{ matrix.arch }}.zip ${{ env.GAME_NAME }}windows${{ matrix.arch }}
-          zip -r ${{ env.GAME_NAME }}linux${{ matrix.arch }}.zip ${{ env.GAME_NAME }}linux${{ matrix.arch }}
           zip -r linux-editor-deploy-windows-editor.zip linux-editor-deploy-windows-editor
-          zip -r linux-editor-deploy-linux-editor.zip linux-editor-deploy-linux-editor
           zip -r macos-editor-deploy-macos-editor.zip macos-editor-deploy-macos-editor
 
       - name: Create and Upload Release
@@ -311,9 +288,7 @@ jobs:
         with:
           files: |
             ${{ env.GAME_NAME }}windows${{ matrix.arch }}.zip
-            ${{ env.GAME_NAME }}linux${{ matrix.arch }}.zip
             linux-editor-deploy-windows-editor.zip
-            linux-editor-deploy-linux-editor.zip
             macos-editor-deploy-macos-editor.zip
           generate_release_notes: true
           draft: true
