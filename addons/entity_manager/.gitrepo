@@ -6,7 +6,7 @@
 [subrepo]
 	remote = https://github.com/V-Sekai/entity_manager
 	branch = main
-	commit = 62dc1ade481ab66ac530528eeaa677ab7031f7cd
-	parent = 284d17f8a9a7ccb2399c99da1ef28c760eac4404
+	commit = e0dbbf25075a4eb09763c397cac08c0105b39579
+	parent = 2b4483c1af68db1d3aba760f238954bb1f296bde
 	method = merge
 	cmdver = 0.4.6
