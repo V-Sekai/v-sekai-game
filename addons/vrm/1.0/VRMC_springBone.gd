@@ -24,10 +24,23 @@ func _get_skel_godot_node(gstate: GLTFState, nodes: Array, _skeletons: Array, sk
 	return null
 
 
+func _adjust_magnitude(pfa: PackedFloat64Array, scale: float):
+	if len(pfa) > 0:
+		if pfa.count(pfa[0]) == len(pfa):
+			pfa.clear()
+		if not is_zero_approx(scale):
+			for i in range(len(pfa)):
+				pfa[i] = pfa[i] / scale
+
+
 func _parse_secondary_node(secondary_node: Node, vrm_extension: Dictionary, gstate: GLTFState) -> void:
 	var nodes = gstate.get_nodes()
 	var skeletons = gstate.get_skeletons()
-	var skeleton: Skeleton3D = secondary_node.get_parent().get_node("%GeneralSkeleton")
+	var skeleton: Skeleton3D = null
+	if secondary_node.owner == null:
+		skeleton = secondary_node.get_parent().get_node("%GeneralSkeleton")
+	else:
+		skeleton = secondary_node.owner.get_node("%GeneralSkeleton")
 
 	var colliders: Array[vrm_collider] = []
 	var collider_groups: Array[vrm_collider_group] = []
@@ -36,7 +49,7 @@ func _parse_secondary_node(secondary_node: Node, vrm_extension: Dictionary, gsta
 		var gltfnode: GLTFNode = nodes[int(collider_gltf["node"])]
 		var collider = vrm_collider.new()
 		var pose_diff: Basis = Basis()
-		if gltfnode.skeleton == -1:
+		if gltfnode.skeleton == -1 or skeleton == null:
 			var found_node: Node = gstate.get_scene_node(int(collider_gltf["node"]))
 			collider.node_path = secondary_node.get_path_to(found_node)
 			collider.bone = ""
@@ -86,7 +99,8 @@ func _parse_secondary_node(secondary_node: Node, vrm_extension: Dictionary, gsta
 		collider_group.colliders.clear()
 
 		for collider_node in cgroup["colliders"]:
-			collider_group.colliders.append(colliders[collider_node])
+			if collider_node < len(colliders):
+				collider_group.colliders.append(colliders[int(collider_node)])
 		collider_groups.append(collider_group)
 
 	var spring_bones: Array[vrm_spring_bone] = []
@@ -94,30 +108,48 @@ func _parse_secondary_node(secondary_node: Node, vrm_extension: Dictionary, gsta
 		if sbone.get("joints", []).size() == 0:
 			continue
 		var first_joint: Dictionary = sbone["joints"][0]
-		var first_bone_node: int = first_joint["node"]
+		var first_bone_node: int = int(first_joint["node"])
 		var gltfnode: GLTFNode = nodes[int(first_bone_node)]
 		if skeleton != _get_skel_godot_node(gstate, nodes, skeletons, gltfnode.skeleton):
 			push_error("VRM1: spring joint points to differnt skeleton")
 
 		var spring_bone: vrm_spring_bone = vrm_spring_bone.new()
 		spring_bone.comment = sbone.get("name", "")
+		spring_bone.hit_radius_scale = 0
+		spring_bone.stiffness_scale = 0
+		spring_bone.gravity_scale = 0
+		spring_bone.drag_force_scale = 0
 		for sjoint in sbone["joints"]:
-			spring_bone.hit_radius.append(float(sbone.get("hitRadius", 0.0)))
-			spring_bone.stiffness_force.append(float(sbone.get("stiffiness", 1.0)))
-			spring_bone.gravity_power.append(float(sbone.get("gravityPower", 0.0)))
-			var gravity_dir = sbone.get("gravityDir", [0.0, -1.0, 0.0])
+			spring_bone.hit_radius.append(float(sjoint.get("hitRadius", 0.0)))
+			spring_bone.hit_radius_scale = max(spring_bone.hit_radius_scale, spring_bone.hit_radius[-1])
+			spring_bone.stiffness_force.append(float(sjoint.get("stiffiness", 1.0)))
+			spring_bone.stiffness_scale = max(spring_bone.stiffness_scale, spring_bone.stiffness_force[-1])
+			spring_bone.gravity_power.append(float(sjoint.get("gravityPower", 0.0)))
+			spring_bone.gravity_scale = max(spring_bone.gravity_scale, spring_bone.gravity_power[-1])
+			var gravity_dir = sjoint.get("gravityDir", [0.0, -1.0, 0.0])
 			spring_bone.gravity_dir.append(Vector3(gravity_dir[0], gravity_dir[1], gravity_dir[2]))
-			spring_bone.drag_force.append(float(sbone.get("dragForce", 0.5)))
+			spring_bone.drag_force.append(float(sjoint.get("dragForce", 0.5)))
+			spring_bone.drag_force_scale = max(spring_bone.drag_force_scale, spring_bone.drag_force[-1])
 
 			var bone_node: int = sjoint["node"]
 			var bone_name: String = nodes[int(bone_node)].resource_name
-			if skeleton.find_bone(bone_name) == -1:
+			if skeleton == null or skeleton.find_bone(bone_name) == -1:
 				# Note that we make an assumption that a given SpringBone object is
 				# only part of a single Skeleton*. This error might print if a given
 				# SpringBone references bones from multiple Skeleton's.
 				printerr("Failed to find node " + str(bone_node) + " in skel " + str(skeleton))
 			else:
 				spring_bone.joint_nodes.append(bone_name)
+
+		_adjust_magnitude(spring_bone.hit_radius, spring_bone.hit_radius_scale)
+		_adjust_magnitude(spring_bone.stiffness_force, spring_bone.stiffness_scale)
+		_adjust_magnitude(spring_bone.gravity_power, spring_bone.gravity_scale)
+		_adjust_magnitude(spring_bone.drag_force, spring_bone.drag_force_scale)
+
+		if len(spring_bone.gravity_dir) > 0:
+			spring_bone.gravity_dir_default = spring_bone.gravity_dir[0]
+			if spring_bone.gravity_dir.count(spring_bone.gravity_dir_default) == len(spring_bone.gravity_dir):
+				spring_bone.gravity_dir.clear()
 
 		if not spring_bone.comment.is_empty():
 			spring_bone.resource_name = spring_bone.comment.split("\n")[0]
@@ -135,7 +167,7 @@ func _parse_secondary_node(secondary_node: Node, vrm_extension: Dictionary, gsta
 		if center_node_idx != -1:
 			var center_gltfnode: GLTFNode = nodes[int(center_node_idx)]
 			var bone_name: String = center_gltfnode.resource_name
-			if center_gltfnode.skeleton == gltfnode.skeleton and skeleton.find_bone(bone_name) != -1:
+			if skeleton != null and center_gltfnode.skeleton == gltfnode.skeleton and skeleton.find_bone(bone_name) != -1:
 				spring_bone.center_bone = bone_name
 				spring_bone.center_node = NodePath()
 			else:
@@ -150,7 +182,6 @@ func _parse_secondary_node(secondary_node: Node, vrm_extension: Dictionary, gsta
 	secondary_node.set_script(vrm_secondary)
 	secondary_node.set("skeleton", secondary_node.get_path_to(skeleton))
 	secondary_node.set("spring_bones", spring_bones)
-	secondary_node.set("collider_groups", collider_groups)
 
 
 func _add_joints_recursive(new_joints_set: Dictionary, gltf_nodes: Array, bone: int, include_child_meshes: bool = false) -> void:
@@ -255,19 +286,13 @@ static func _get_humanoid_skel(root_node: Node3D) -> Skeleton3D:
 
 func _export_post(state: GLTFState):
 	var secondary: vrm_secondary = state.get_additional_data("VRMC_springBone")
-	var collider_groups: Array[vrm_collider_group] = secondary.collider_groups.duplicate()
+	var collider_groups: Array[vrm_collider_group]
 	var spring_bones: Array[vrm_spring_bone] = secondary.spring_bones
 	var skel: Skeleton3D = secondary.get_node(secondary.skeleton)
 
 	var unique_collider_groups: Dictionary = {}
 	var unique_colliders: Dictionary = {}
 	var colliders: Array[vrm_collider] = []
-	for current_group in collider_groups:
-		unique_collider_groups[current_group] = true
-		for collider in current_group.colliders:
-			if collider not in unique_colliders:
-				unique_colliders[collider] = len(colliders)
-				colliders.push_back(collider)
 	for current_spring in spring_bones:
 		for collider_group in current_spring.collider_groups:
 			if unique_collider_groups.has(collider_group):
@@ -289,7 +314,8 @@ func _export_post(state: GLTFState):
 	for skely in state.skeletons:
 		skel_to_godot_bone_to_gltf_node_map[skely.get_godot_skeleton()] = skely.get_godot_bone_node()
 	var godot_node_to_idx: Dictionary = {}
-	for i in range(len(json["nodes"])):
+	var json_nodes: Array = json["nodes"]
+	for i in range(len(json_nodes)):
 		godot_node_to_idx[state.get_scene_node(i)] = i
 	godot_node_to_idx[secondary.get_parent()] = godot_node_to_idx[secondary]
 
@@ -315,10 +341,13 @@ func _export_post(state: GLTFState):
 			}
 		var node_idx: int
 		if collider.bone != "":
-			node_idx = skel_to_godot_bone_to_gltf_node_map[skel][skel.find_bone(collider.bone)]
+			node_idx = skel_to_godot_bone_to_gltf_node_map.get(skel, {}).get(skel.find_bone(collider.bone), -1)
 		else:
 			# FIXME: This case should perhaps no longer be supported.
-			node_idx = godot_node_to_idx[secondary.get_node(collider.node_path)]
+			node_idx = godot_node_to_idx.get(secondary.get_node(collider.node_path), -1)
+		if node_idx == -1:
+			push_warning("Unable to find spring bone collider node " + str(collider.node_path) + "/" + str(collider.bone))
+			continue
 		json_colliders.push_back({"node": node_idx, "shape": shape})
 	sbone_extension["colliders"] = json_colliders
 
@@ -356,30 +385,51 @@ func _export_post(state: GLTFState):
 				push_warning("Missing collider_group_indices in vrm export.")
 		spring["colliderGroups"] = spring_groups
 		var joints: Array = []
-		var prev_node: int = 0
+		var prev_node_index: int = 0
 		for i in range(len(springbone.joint_nodes)):
 			var joint: Dictionary = {}
 			if springbone.joint_nodes[i] == "":
-				var node_idx = len(json["nodes"])
+				var node_idx = len(json_nodes)
 				var delta: Vector3 = skel.get_bone_rest(skel.find_bone(springbone.joint_nodes[i - 1])).origin
 				var pos: Vector3 = delta.normalized() * 0.07
-				json["nodes"].append({"name": json["nodes"][prev_node]["name"] + "_end", "translation": [pos[0], pos[1], pos[2]]})
-				prev_node = node_idx
+				var prev_node_dict: Dictionary = json_nodes[prev_node_index]
+				json_nodes.append({"name": prev_node_dict["name"] + "_end", "translation": [pos[0], pos[1], pos[2]]})
+				if not prev_node_dict.has("children"):
+					prev_node_dict["children"] = []
+				var prev_node_children: Array = prev_node_dict["children"]
+				prev_node_children.append(node_idx)
+				prev_node_index = node_idx
 			else:
-				prev_node = skel_to_godot_bone_to_gltf_node_map[skel][skel.find_bone(springbone.joint_nodes[i])]
-			joint["node"] = prev_node
-			if not is_zero_approx(springbone.hit_radius[i]):
-				joint["hitRadius"] = springbone.hit_radius[i]
-			if not is_equal_approx(springbone.stiffness_force[i], 1.0):
-				joint["stiffness"] = springbone.stiffness_force[i]
-			if not is_zero_approx(springbone.gravity_power[i]):
-				joint["gravityPower"] = springbone.gravity_power[i]
-			var grav: Vector3 = springbone.gravity_dir[i]
-			if not grav.is_equal_approx(Vector3(0, -1, 0)) and not is_zero_approx(springbone.gravity_power[i]):
-				joint["gravityDir"] = [grav[0], grav[1], grav[2]]
-			if not is_equal_approx(springbone.drag_force[i], 0.5):
-				joint["dragForce"] = springbone.drag_force[i]
+				prev_node_index = skel_to_godot_bone_to_gltf_node_map.get(skel, {}).get(skel.find_bone(springbone.joint_nodes[i]), -1)
+			if prev_node_index == -1:
+				continue
+			joint["node"] = prev_node_index
+
+			var gravity_dir: Vector3 = (springbone.gravity_dir[i] if i < len(springbone.gravity_dir) else springbone.gravity_dir_default)
+
+			var pfa: PackedFloat64Array = springbone.gravity_power
+			var gravity_power: float = (1.0 if pfa.is_empty() else pfa[i] if i < len(pfa) else pfa[-1]) * springbone.gravity_scale
+			pfa = springbone.stiffness_force
+			var stiffness: float = springbone.stiffness_scale * (1.0 if pfa.is_empty() else pfa[i] if i < len(pfa) else pfa[-1])
+			pfa = springbone.drag_force
+			var drag_force: float = springbone.drag_force_scale * (1.0 if pfa.is_empty() else pfa[i] if i < len(pfa) else pfa[-1])
+			pfa = springbone.hit_radius
+			var hit_radius = springbone.hit_radius_scale * (1.0 if pfa.is_empty() else pfa[i] if i < len(pfa) else pfa[-1])
+
+			if not is_zero_approx(hit_radius):
+				joint["hitRadius"] = hit_radius
+			if not is_equal_approx(stiffness, 1.0):
+				joint["stiffness"] = stiffness
+			if not is_zero_approx(gravity_power):
+				joint["gravityPower"] = gravity_power
+			if not gravity_dir.is_equal_approx(Vector3(0, -1, 0)) and not is_zero_approx(gravity_power):
+				joint["gravityDir"] = [gravity_dir[0], gravity_dir[1], gravity_dir[2]]
+			if not is_equal_approx(drag_force, 0.5):
+				joint["dragForce"] = drag_force
 			joints.push_back(joint)
+		if len(joints) < 2:
+			push_warning("Unable to resolve vrm springbone joints " + ','.join(springbone.joint_nodes))
+			continue
 		spring["joints"] = joints
 		json_springs.push_back(spring)
 	sbone_extension["springs"] = json_springs
