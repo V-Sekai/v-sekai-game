@@ -37,8 +37,10 @@ jobs:
             tests: false
             sconsflags: linker=gold precision=double use_mingw=yes
             doc-test: false
-            bin: ./godot/bin/godot.linuxbsd.editor.double.x86_64
-            deploy-bin: ./godot/bin/godot.windows.editor.double.x86_64.exe
+            bin: 
+              - ./godot/bin/godot.linuxbsd.editor.double.x86_64
+            deploy-bin: 
+              - ./godot/bin/godot.windows.editor.double.x86_64.exe
             editor-bin-name: godot.windows.editor.double.x86_64.exe
             proj-conv: false
             artifact: true
@@ -57,8 +59,10 @@ jobs:
             tests: false
             sconsflags: linker=gold precision=double use_llvm=yes
             doc-test: false
-            bin: ./godot/bin/godot.linuxbsd.editor.double.x86_64.llvm
-            deploy-bin: ./godot/bin/godot.linuxbsd.editor.double.x86_64.llvm
+            bin: 
+              - ./godot/bin/godot.linuxbsd.editor.double.x86_64.llvm
+            deploy-bin: 
+              - ./godot/bin/godot.linuxbsd.editor.double.x86_64.llvm
             editor-bin-name: godot.linuxbsd.editor.double.x86_64.llvm
             proj-conv: false
             artifact: true
@@ -76,8 +80,10 @@ jobs:
             tests: false
             sconsflags: linker=gold precision=double
             doc-test: false
-            bin: ./godot/bin/godot.macos.editor.double.x86_64
-            deploy-bin: ./godot/bin/godot.macos.editor.double.x86_64
+            bin: 
+              - ./godot/bin/godot.macos.editor.double.x86_64
+            deploy-bin: 
+              - ./godot/bin/godot.macos.editor.double.x86_64
             editor-bin-name: godot.macos.editor.double.x86_64
             proj-conv: false
             artifact: true
@@ -95,8 +101,10 @@ jobs:
             tests: false
             sconsflags: platform=android arch=arm32 production=yes precision=double
             doc-test: false
-            bin: ./godot/bin/libgodot.android.editor.double.arm32.so
-            deploy-bin: ./godot/bin/libgodot.android.editor.double.arm32.so
+            bin: 
+              - ./godot/bin/libgodot.android.editor.double.arm32.so
+            deploy-bin: 
+              - ./godot/bin/libgodot.android.editor.double.arm32.so
             editor-bin-name: libgodot.android.editor.double.arm32.so
             proj-conv: false
             artifact: true
@@ -114,8 +122,10 @@ jobs:
             tests: false
             sconsflags: platform=android arch=arm64 production=yes precision=double
             doc-test: false
-            bin: ./godot/bin/libgodot.android.editor.double.arm64.so
-            deploy-bin: ./godot/bin/libgodot.android.editor.double.arm64.so
+            bin: 
+              - ./godot/bin/libgodot.android.editor.double.arm64.so
+            deploy-bin: 
+              - ./godot/bin/libgodot.android.editor.double.arm64.so
             editor-bin-name: libgodot.android.editor.double.arm64.so
             proj-conv: false
             artifact: true
@@ -133,8 +143,10 @@ jobs:
             tests: false
             sconsflags: platform=android arch=x86_32 production=yes precision=double
             doc-test: false
-            bin: ./godot/bin/libgodot.android.editor.double.x86_32.so
-            deploy-bin: ./godot/bin/libgodot.android.editor.double.x86_32.so
+            bin: 
+              - ./godot/bin/libgodot.android.editor.double.x86_32.so
+            deploy-bin: 
+              - ./godot/bin/libgodot.android.editor.double.x86_32.so
             editor-bin-name: libgodot.android.editor.double.x86_32.so
             proj-conv: false
             artifact: true
@@ -152,8 +164,10 @@ jobs:
             tests: false
             sconsflags: platform=android arch=x86_64 production=yes precision=double
             doc-test: false
-            bin: ./godot/bin/libgodot.android.editor.double.x86_64.so
-            deploy-bin: ./godot/bin/libgodot.android.editor.double.x86_64.so
+            bin: 
+              - ./godot/bin/libgodot.android.editor.double.x86_64.so
+            deploy-bin: 
+              - ./godot/bin/libgodot.android.editor.double.x86_64.so
             editor-bin-name: libgodot.android.editor.double.x86_64.so
             proj-conv: false
             artifact: true
@@ -163,6 +177,7 @@ jobs:
             export-platform: Android
             arch: x86_64
             deploy-platform-target: editor
+
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
@@ -282,11 +297,13 @@ jobs:
           mkdir -p $TARGET
 
           # If deploy platform is windows, append .exe to the binary
-          if [ "${{ matrix.deploy-platform }}" == "windows" ]; then
-              cp -rf ${{ matrix.deploy-bin }} $TARGET/${{ env.GAME_NAME }}${{ matrix.deploy-platform }}.exe
-          else
-              cp -rf ${{ matrix.deploy-bin }} $TARGET/${{ env.GAME_NAME }}${{ matrix.deploy-platform }}
-          fi
+          for bin in ${{ matrix.deploy-bin }}; do
+              if [ "${{ matrix.deploy-platform }}" == "windows" ]; then
+                  cp -rf $bin $TARGET/${{ env.GAME_NAME }}${{ matrix.deploy-platform }}.exe
+              else
+                  cp -rf $bin $TARGET/${{ env.GAME_NAME }}${{ matrix.deploy-platform }}
+              fi
+          done
 
           cp -rf `pwd`/${{ env.GAME_NAME }}${{ matrix.deploy-platform }}.pck $TARGET/${{ env.GAME_NAME }}${{ matrix.deploy-platform }}.pck
           7z a -r $TARGET.zip $TARGET
@@ -303,7 +320,7 @@ jobs:
       - name: Generate C# glue
         if: ${{ matrix.build-mono }}
         run: |
-          ${{ matrix.bin }} --headless --generate-mono-glue ./modules/mono/glue || true
+          ${{ matrix.deploy-bin[0] }} --headless --generate-mono-glue ./modules/mono/glue || true
         shell: bash
 
       - name: Build .NET solutions
