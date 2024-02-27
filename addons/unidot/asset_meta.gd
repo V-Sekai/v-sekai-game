@@ -244,11 +244,17 @@ func is_force_humanoid() -> bool:
 
 
 func is_humanoid() -> bool:
-	if not transform_fileid_to_rotation_delta:
+	if transform_fileid_to_rotation_delta.is_empty():
 		return false
-	if not autodetected_bone_map_dict and not humanoid_bone_map_dict and not humanoid_bone_map_crc32_dict:
+	if autodetected_bone_map_dict.is_empty() and humanoid_bone_map_dict.is_empty() and humanoid_bone_map_crc32_dict.is_empty():
 		return false
 	return true
+
+func is_using_builtin_ufbx() -> bool:
+	#if Engine.get_version_info().hex >= 0x040300:
+	if ClassDB.class_exists(&"FBXDocument") and ClassDB.class_exists(&"FBXState"):
+		return true
+	return false
 
 
 # Set to false to debug or avoid auto-playing animations

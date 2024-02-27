@@ -1,11 +1,21 @@
 extends RefCounted
 
-var vrm_spring_bone_class = load("res://addons/vrm/vrm_spring_bone.gd")
-var vrm_collider_class = load("res://addons/vrm/vrm_collider.gd")
-var vrm_collider_group_class = load("res://addons/vrm/vrm_collider_group.gd")
-var vrm_meta_class = load("res://addons/vrm/vrm_meta.gd")
-var vrm_toplevel_class = load("res://addons/vrm/vrm_toplevel.gd")
-var vrm_secondary_class = load("res://addons/vrm/vrm_secondary.gd")
+var vrm_spring_bone_class
+var vrm_collider_class
+var vrm_collider_group_class
+var vrm_meta_class
+var vrm_toplevel_class
+var vrm_secondary_class
+
+func _init():
+	var da := DirAccess.open("res://")
+	if da.file_exists("res://addons/vrm/vrm_spring_bone.gd"):
+		vrm_spring_bone_class = load("res://addons/vrm/vrm_spring_bone.gd")
+		vrm_collider_class = load("res://addons/vrm/vrm_collider.gd")
+		vrm_collider_group_class = load("res://addons/vrm/vrm_collider_group.gd")
+		vrm_meta_class = load("res://addons/vrm/vrm_meta.gd")
+		vrm_toplevel_class = load("res://addons/vrm/vrm_toplevel.gd")
+		vrm_secondary_class = load("res://addons/vrm/vrm_secondary.gd")
 
 
 func find_key(keys: Dictionary, try_strings: Dictionary, type: int) -> Array:
@@ -38,7 +48,7 @@ func detect_spring_bone_collider(obj: RefCounted, state: RefCounted):
 	var colliders: Array
 	if typeof(obj.keys.get("Colliders", null)) == TYPE_ARRAY:
 		colliders = obj.keys["Colliders"]
-	if not colliders:
+	if colliders.is_empty():
 		colliders = [obj.keys]
 
 	var root_obj: RefCounted = obj
@@ -52,16 +62,16 @@ func detect_spring_bone_collider(obj: RefCounted, state: RefCounted):
 		var vrm_collider: Resource = vrm_collider_class.new()
 		vrm_collider_group.colliders.append(vrm_collider)
 		matched = find_key(collider, {"radius": 0}, TYPE_FLOAT)
-		if not matched:
+		if matched.is_empty():
 			obj.log_debug("vrm collider missing radius")
 			return # wrong format
 		var radius := float(matched[0])
 		vrm_collider.radius = radius
 		matched = find_key(collider, {"offset": 0, "center": 0, "position": 0}, TYPE_VECTOR3)
-		if not matched:
+		if matched.is_empty():
 			obj.log_debug("vrm collider missing offset")
 			return
-		var offset: Vector3 = matched[0]
+		var offset: Vector3 = matched[0] * Vector3(-1, 1, 1)
 		matched = find_key(collider, {"insidebound": 0, "m_bound": 0}, TYPE_INT)
 		if matched and matched[0]:
 			obj.log_warn("Ignoring inside collider " + str(root_obj.gameObject) + " radius=" + str(radius) + " offset=" + str(offset))
@@ -69,10 +79,10 @@ func detect_spring_bone_collider(obj: RefCounted, state: RefCounted):
 		matched = find_key(collider, {"tail":0}, TYPE_VECTOR3)
 		var tail: Vector3 = offset
 		if matched:
-			tail = matched[0]
+			tail = matched[0] * Vector3(-1, 1, 1)
 		else:
 			matched = find_key(collider, {"shapetype": 0}, TYPE_INT)
-			if not matched or matched[0] == 1:
+			if matched.is_empty() or matched[0] == 1:
 				matched = find_key(collider, {"height": 0}, TYPE_FLOAT)
 				if matched:
 					var height := float(matched[0])
@@ -106,15 +116,15 @@ func detect_spring_bone(obj: RefCounted, state: RefCounted):
 	var matched: Array
 	var root_obj: RefCounted = obj
 	matched = find_key(obj.keys, {"rootbones": 0}, TYPE_ARRAY)
-	if not matched:
+	if matched.is_empty():
 		matched = find_key(obj.keys, {"transform": 0, "root": 0}, -1)
-		if not matched:
+		if matched.is_empty():
 			return # wrong format
 	matched = find_key(obj.keys, {"drag": 0, "damp": 0, "spring": func(x): return 1 - x}, TYPE_FLOAT)
-	if not matched:
+	if matched.is_empty():
 		return # wrong format
 	matched = find_key(obj.keys, {"stiff": 0, "elastic": func(x): return 4.0 * x, "pull": func(x): return 4.0 * x}, TYPE_FLOAT)
-	if not matched:
+	if matched.is_empty():
 		return # wrong format
 	if "vrm_spring_bone_components" not in state.prefab_state.extra_data:
 		state.prefab_state.extra_data["vrm_spring_bone_components"] = []
@@ -142,7 +152,7 @@ func convert_spring_bone(obj: RefCounted, state: RefCounted) -> Array:
 	else:
 		matched = find_key(obj.keys, {"transform": 0, "root": 0}, -1)
 		# TODO: VRMSpringBone (old 0x0) is TYPE_ARRAY of transform
-		if not matched:
+		if matched.is_empty():
 			obj.log_debug("Failed to match springbone")
 			return [] # wrong format
 		my_fileid = matched[0][1] # always a Transform object
@@ -166,12 +176,12 @@ func convert_spring_bone(obj: RefCounted, state: RefCounted) -> Array:
 		return []
 
 	matched = find_key(obj.keys, {"drag": 0, "damp": 0, "spring": func(x): return 1 - x}, TYPE_FLOAT)
-	if not matched:
+	if matched.is_empty():
 		obj.log_fail("springbone component missing drag")
 		return [] # wrong format
 	var drag: float = matched[0]
 	matched = find_key(obj.keys, {"stiff": 0, "elastic": func(x): return 4.0 * x, "pull": func(x): return 4.0 * x}, TYPE_FLOAT)
-	if not matched:
+	if matched.is_empty():
 		obj.log_fail("springbone component missing stiff")
 		return [] # wrong format
 
@@ -191,6 +201,8 @@ func convert_spring_bone(obj: RefCounted, state: RefCounted) -> Array:
 	matched = find_key(obj.keys, {"radius": 0}, TYPE_FLOAT)
 	if matched:
 		radius = matched[0]
+		var transform_delta: Transform3D = obj.meta.transform_fileid_to_rotation_delta.get(my_fileid, obj.meta.prefab_transform_fileid_to_rotation_delta.get(my_fileid, Transform3D.IDENTITY))
+		radius = transform_delta.basis.get_scale().length() / sqrt(3) * radius
 
 	var add_end_bone: bool = not is_equal_approx(end_length, 0.0) or not end_offset.is_equal_approx(Vector3.ZERO)
 	obj.log_debug("Creating springbone from " + str(type) + " format: drag=" + str(drag) + " stiff=" + str(stiffness) + " radius=" + str(radius) + " gravity=" + str(gravity_multiplier * gravity_direction) + " endbone=" + str(add_end_bone))
@@ -221,6 +233,7 @@ func convert_spring_bone(obj: RefCounted, state: RefCounted) -> Array:
 				if go_fileid == 0:
 					go_fileid = monobehaviour.keys.get("m_GameObject")[1]
 				transform_fileid = monobehaviour.meta.prefab_gameobject_name_to_fileid_and_children.get(go_fileid, monobehaviour.meta.gameobject_name_to_fileid_and_children.get(go_fileid, {})).get(4, go_fileid)
+				var transform_delta: Transform3D = monobehaviour.meta.transform_fileid_to_rotation_delta.get(transform_fileid, monobehaviour.meta.prefab_transform_fileid_to_rotation_delta.get(transform_fileid, Transform3D.IDENTITY))
 				var bone: String = monobehaviour.meta.fileid_to_skeleton_bone.get(transform_fileid, monobehaviour.meta.prefab_fileid_to_skeleton_bone.get(transform_fileid, ''))
 				var nodepath: NodePath = monobehaviour.meta.fileid_to_nodepath.get(transform_fileid, monobehaviour.meta.prefab_fileid_to_nodepath.get(transform_fileid, NodePath()))
 				obj.meta.log_debug(transform_fileid, "Transform for bone " + str(bone) + " / " + str(nodepath) + " from " + str(go_fileid))
@@ -232,6 +245,10 @@ func convert_spring_bone(obj: RefCounted, state: RefCounted) -> Array:
 				var resource_name: String
 				for collider in vrm_collider_group.colliders:
 					collider.resource_name = nodepath.get_name(nodepath.get_name_count() - 1) if collider.bone.is_empty() else collider.bone
+					if collider.bone.is_empty() and collider.node_path == NodePath():
+						collider.radius = transform_delta.basis.get_scale().length() / sqrt(3) * collider.radius
+						collider.offset = transform_delta.basis * collider.offset
+						collider.tail = transform_delta.basis * collider.tail
 					collider.bone = bone
 					collider.node_path = nodepath
 				obj.log_debug("Collider " + str(vrm_collider_group) + " created at " + str(nodepath) + " bone=" + str(bone))
@@ -279,13 +296,22 @@ func convert_spring_bone(obj: RefCounted, state: RefCounted) -> Array:
 			# We don't want jiggly head bones and so on.
 			vrm_spring_bone.joint_nodes.remove_at(0)
 		vrm_spring_bone.resource_name = vrm_spring_bone.joint_nodes[0]
-
-		for joint_idx in range(len(vrm_spring_bone.joint_nodes)):
-			vrm_spring_bone.stiffness_force.append(stiffness)
-			vrm_spring_bone.drag_force.append(drag)
-			vrm_spring_bone.hit_radius.append(radius)
-			vrm_spring_bone.gravity_power.append(gravity_multiplier)
-			vrm_spring_bone.gravity_dir.append(gravity_direction)
+		# FIXME: We do not currently support parsing Curve, so we treat all bone as constant. This might cause issues with radius, for example.
+		if typeof(vrm_spring_bone.get(&"gravity_dir_default")) == TYPE_VECTOR3:
+			# New system is property + optional array of points.
+			# TODO: Parse Curve objects and convert to Godot curve, then put these in the vector, or maybe add support for Curve in godot-vrm
+			vrm_spring_bone.stiffness_scale = stiffness
+			vrm_spring_bone.drag_force_scale = drag
+			vrm_spring_bone.hit_radius_scale = radius
+			vrm_spring_bone.gravity_scale = gravity_multiplier
+			vrm_spring_bone.gravity_dir_default = gravity_direction
+		else:
+			for joint_idx in range(len(vrm_spring_bone.joint_nodes)):
+				vrm_spring_bone.stiffness_force.append(stiffness)
+				vrm_spring_bone.drag_force.append(drag)
+				vrm_spring_bone.hit_radius.append(radius)
+				vrm_spring_bone.gravity_power.append(gravity_multiplier)
+				vrm_spring_bone.gravity_dir.append(gravity_direction)
 		obj.log_debug("Created springbone with joints " + str(vrm_spring_bone.joint_nodes))
 		for vrm_collider_group in collider_groups:
 			vrm_spring_bone.collider_groups.append(vrm_collider_group)
@@ -348,10 +374,9 @@ func post_process_avatar(obj: RefCounted, state: RefCounted, node: Node, this_av
 			obj.log_fail("Incorrect script at secondary")
 			return []
 		secondary_node.skeleton = NodePath("../" + str(skelley.godot_skeleton.name))
+		skelley_to_vrm_spring_bones[skelley].sort_custom(func(a, b): return a.resource_name < b.resource_name)
 		for res in skelley_to_vrm_spring_bones[skelley]:
 			secondary_node.spring_bones.append(res)
-		for res in skelley_to_vrm_collider_groups_used[skelley].keys():
-			secondary_node.collider_groups.append(res)
 
 
 func setup_post_children(game_object: RefCounted, state: RefCounted, node: Node, this_avatar_meta: RefCounted):
@@ -370,7 +395,7 @@ func setup_post_scene(pkgasset: RefCounted, root_objects: Array, root_skelleys: 
 
 func initialize_skelleys(state: RefCounted, objs: Array, is_prefab: bool):
 	if vrm_collider_group_class == null or vrm_collider_class == null:
-		print("Failed to import vrm classes")
+		# print("Failed to import vrm classes")
 		return null
 
 	var some_obj: RefCounted = null
@@ -412,7 +437,7 @@ func initialize_skelleys(state: RefCounted, objs: Array, is_prefab: bool):
 					state.add_bone_to_skelley(new_skelley, transform_obj)
 					obj.log_debug(str(new_skelley.parent_transform) + " - " + str(transform_obj))
 					var x: RefCounted = new_skelley.parent_transform
-					if x.is_prefab_reference:
+					if x != null and x.is_prefab_reference:
 						var prefab_id = x.prefab_instance[1]
 						if not state.prefab_state.skelleys_by_parented_prefab.has(prefab_id):
 							state.prefab_state.skelleys_by_parented_prefab[prefab_id] = [].duplicate()
