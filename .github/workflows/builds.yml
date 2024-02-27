@@ -87,6 +87,82 @@ jobs:
             export-platform: Mac
             arch: _x86_64
             deploy-platform-target: editor
+
+          - name: linux_editor_android_arm32_deploy
+            runs-on: ubuntu-22.04
+            cache-name: linux-editor-deploy-android-arm32-editor
+            target: editor
+            tests: false
+            sconsflags: platform=android arch=arm32 production=yes precision=double
+            doc-test: false
+            bin: ./godot/bin/godot.android.editor.arm32
+            deploy-bin: ./godot/bin/godot.android.editor.arm32
+            editor-bin-name: godot.android.editor.arm32
+            proj-conv: false
+            artifact: true
+            platform: android
+            deploy: true
+            deploy-platform: android
+            export-platform: Android
+            arch: arm32
+            deploy-platform-target: editor
+
+          - name: linux_editor_android_arm64_deploy
+            runs-on: ubuntu-22.04
+            cache-name: linux-editor-deploy-android-arm64-editor
+            target: editor
+            tests: false
+            sconsflags: platform=android arch=arm64 production=yes precision=double
+            doc-test: false
+            bin: ./godot/bin/godot.android.editor.arm64
+            deploy-bin: ./godot/bin/godot.android.editor.arm64
+            editor-bin-name: godot.android.editor.arm64
+            proj-conv: false
+            artifact: true
+            platform: android
+            deploy: true
+            deploy-platform: android
+            export-platform: Android
+            arch: arm64
+            deploy-platform-target: editor
+
+          - name: linux_editor_android_x86_32_deploy
+            runs-on: ubuntu-22.04
+            cache-name: linux-editor-deploy-android-x86_32-editor
+            target: editor
+            tests: false
+            sconsflags: platform=android arch=x86_32 production=yes precision=double
+            doc-test: false
+            bin: ./godot/bin/godot.android.editor.x86_32
+            deploy-bin: ./godot/bin/godot.android.editor.x86_32
+            editor-bin-name: godot.android.editor.x86_32
+            proj-conv: false
+            artifact: true
+            platform: android
+            deploy: true
+            deploy-platform: android
+            export-platform: Android
+            arch: x86_32
+            deploy-platform-target: editor
+
+          - name: linux_editor_android_x86_64_deploy
+            runs-on: ubuntu-22.04
+            cache-name: linux-editor-deploy-android-x86_64-editor
+            target: editor
+            tests: false
+            sconsflags: platform=android arch=x86_64 production=yes precision=double
+            doc-test: false
+            bin: ./godot/bin/godot.android.editor.x86_64
+            deploy-bin: ./godot/bin/godot.android.editor.x86_64
+            editor-bin-name: godot.android.editor.x86_64
+            proj-conv: false
+            artifact: true
+            platform: android
+            deploy: true
+            deploy-platform: android
+            export-platform: Android
+            arch: x86_64
+            deploy-platform-target: editor
     steps:
       - name: Harden Runner
         uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
