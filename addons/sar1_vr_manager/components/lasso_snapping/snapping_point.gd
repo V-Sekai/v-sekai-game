@@ -3,12 +3,6 @@
 # snapping_point.gd
 # SPDX-License-Identifier: MIT
 
-@uid("uid://bmwwhe2pp6uxn") # Generated automatically, do not modify.
-# Copyright (c) 2018-present. This file is part of V-Sekai https://v-sekai.org/.
-# SaracenOne & K. S. Ernest (Fire) Lee & Lyuma & MMMaellon & Contributors
-# snapping_point.gd
-# SPDX-License-Identifier: MIT
-
 extends RigidBody3D
 
 @export var snapping_power: float = 1

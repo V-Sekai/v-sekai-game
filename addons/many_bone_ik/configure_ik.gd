@@ -3,7 +3,6 @@
 # configure_ik.gd
 # SPDX-License-Identifier: MIT
 
-@uid("uid://d32516hkodad7") # Generated automatically, do not modify.
 @tool
 extends EditorScript
 
