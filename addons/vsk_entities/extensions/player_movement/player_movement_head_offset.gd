@@ -1,3 +1,8 @@
+# Copyright (c) 2018-present. This file is part of V-Sekai https://v-sekai.org/.
+# SaracenOne & K. S. Ernest (Fire) Lee & Lyuma & MMMaellon & Contributors
+# player_movement_head_offset.gd
+# SPDX-License-Identifier: MIT
+
 extends "player_movement_provider.gd"
 
 @export var _velocity_accumulation = Vector3()

@@ -1,3 +1,8 @@
+# Copyright (c) 2018-present. This file is part of V-Sekai https://v-sekai.org/.
+# SaracenOne & K. S. Ernest (Fire) Lee & Lyuma & MMMaellon & Contributors
+# player_xr_origin.gd
+# SPDX-License-Identifier: MIT
+
 extends XROrigin3D
 
 @export var xr_camera: XRCamera3D = null

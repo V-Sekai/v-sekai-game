@@ -1,3 +1,8 @@
+# Copyright (c) 2018-present. This file is part of V-Sekai https://v-sekai.org/.
+# SaracenOne & K. S. Ernest (Fire) Lee & Lyuma & MMMaellon & Contributors
+# xr_controller_movement_turn.gd
+# SPDX-License-Identifier: MIT
+
 extends "xr_controller_movement_provider.gd"
 
 const player_movement_turn_const = preload("../player_movement_turn.gd")

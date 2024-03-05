@@ -1,3 +1,8 @@
+# Copyright (c) 2018-present. This file is part of V-Sekai https://v-sekai.org/.
+# SaracenOne & K. S. Ernest (Fire) Lee & Lyuma & MMMaellon & Contributors
+# interpolate_angle_to_zero_anchored_node_3d.gd
+# SPDX-License-Identifier: MIT
+
 extends Node3D
 
 var rotation_offset: float = 0.0

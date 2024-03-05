@@ -1,3 +1,8 @@
+# Copyright (c) 2018-present. This file is part of V-Sekai https://v-sekai.org/.
+# SaracenOne & K. S. Ernest (Fire) Lee & Lyuma & MMMaellon & Contributors
+# vsk_player.gd
+# SPDX-License-Identifier: MIT
+
 extends CharacterBody3D
 
 @export var player_movement_controller: Node = null

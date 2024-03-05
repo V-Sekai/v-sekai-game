@@ -35,7 +35,7 @@ if [ $# -eq 0 ]; then
                 ':!:.git/*' ':!:thirdparty/*' ':!:addons/vrm' ':!:addons/godot_state_charts' ':!:addons/xr_vignette' \
                 ':!:addons/unidot_importer' ':!:addons/Godot-MToon-Shader' ':!:addons/gut' ':!:addons/smoothing' \
                 ':!:.git/*' ':!:thirdparty/*' ':!:*/thirdparty/*' ':!:platform/android/java/lib/src/com/google/*' \
-                ':!:*-so_wrap.*' ':!:tests/python_build/*')
+                ':!:*-so_wrap.*' ':!:addons/godot-xr-tools/*' ':!:addons/unidot/*' ':!:tests/python_build/*')
 else
     # $1 should be a file listing file paths to process. Used in CI.
     files=$(cat "$1" | grep -v "thirdparty/" | grep -E "\.(c|h|cpp|hpp|cc|hh|cxx|m|mm|inc|java|glsl)$" | grep -v "platform/android/java/lib/src/com/google/" | grep -v "\-so_wrap\." | grep -v "tests/python_build/")

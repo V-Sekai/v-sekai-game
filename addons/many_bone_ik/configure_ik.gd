@@ -1,3 +1,8 @@
+# Copyright (c) 2018-present. This file is part of V-Sekai https://v-sekai.org/.
+# SaracenOne & K. S. Ernest (Fire) Lee & Lyuma & MMMaellon & Contributors
+# configure_ik.gd
+# SPDX-License-Identifier: MIT
+
 @uid("uid://d32516hkodad7") # Generated automatically, do not modify.
 @tool
 extends EditorScript

@@ -1,3 +1,8 @@
+# Copyright (c) 2018-present. This file is part of V-Sekai https://v-sekai.org/.
+# SaracenOne & K. S. Ernest (Fire) Lee & Lyuma & MMMaellon & Contributors
+# player_movement_controller.gd
+# SPDX-License-Identifier: MIT
+
 extends Node
 
 @onready var _gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
