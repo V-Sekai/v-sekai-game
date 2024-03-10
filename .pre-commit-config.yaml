@@ -1,21 +1,10 @@
 repos:
-  - repo: local
-    hooks:
-        - id: copyright-headers
-          name: copyright-headers
-          language: python
-          files: \.(c|h|cpp|hpp|cc|cxx|m|mm|inc|java|gd)$
-          entry: python3 .github/copyright_headers.py
-          exclude: >-
-            (?x)^(
-              .*thirdparty.*|
-              addons/vrm.*|
-              addons/godot_state_charts.*|
-              addons/xr_vignette.*|
-              addons/unidot_importer.*|
-              addons/Godot-MToon-Shader.*|
-              addons/gut.*|
-              addons/smoothing.*|
-              addons/godot-xr-tools.*|
-              addons/unidot.*
-            )
+- repo: https://github.com/gitleaks/gitleaks
+  rev: v8.16.3
+  hooks:
+  - id: gitleaks
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v4.4.0
+  hooks:
+  - id: end-of-file-fixer
+  - id: trailing-whitespace
