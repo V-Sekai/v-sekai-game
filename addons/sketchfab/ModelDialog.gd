@@ -27,8 +27,8 @@ var download_url
 var download_size
 var editor_interface
 
-func set_uid(uid):
-	self.uid = uid
+func set_uid(p_uid):
+	self.uid = p_uid
 
 func _ready():
 	$All.visible = false

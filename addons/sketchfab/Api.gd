@@ -93,7 +93,7 @@ func request_download(uid):
 
 	return _handle_result(result)
 
-func search_models(q, categories, animated, staff_picked, min_face_count, max_face_count, sort_by, domain_suffix):
+func search_models(q, categories, animated, staff_picked, min_face_count, max_face_count, sort_by, domain_suffix, license):
 
 	var query = {}
 
@@ -118,6 +118,9 @@ func search_models(q, categories, animated, staff_picked, min_face_count, max_fa
 		query.max_face_count = max_face_count
 	if sort_by:
 		query.sort_by = sort_by
+	
+	if license:
+		query.license = license
 
 	busy = true
 

@@ -39,7 +39,8 @@ func search(query, categories, animated, staff_picked, min_face_count, max_face_
 		min_face_count,
 		max_face_count,
 		sort_by,
-		domain_suffix
+		domain_suffix,
+		"by"
 	)
 	trailer.modulate.a = 0.0
 

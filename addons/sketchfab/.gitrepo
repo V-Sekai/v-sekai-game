@@ -6,7 +6,7 @@
 [subrepo]
 	remote = https://github.com/V-Sekai/sketchfab-godot-plugin.git
 	branch = master
-	commit = 4bcda965a47cd7e462510b1804fc539ff78581af
-	parent = f79ff0a33456405900d6c82729978ad1386a1e44
+	commit = 7dc787d399c8550b6a161e496b2c5a1db155257f
+	parent = 75131b5548f1fb98a8eeab5dcf299a4085d9c374
 	method = merge
 	cmdver = 0.4.6

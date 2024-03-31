@@ -15,8 +15,8 @@ var editor_interface :EditorInterface
 
 var dialog
 
-func set_data(data):
-	self.data = data
+func set_data(p_data):
+	self.data = p_data
 
 func _enter_tree():
 	custom_minimum_size = custom_minimum_size * 1.0
