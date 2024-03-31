@@ -83,7 +83,7 @@ func request(path, payload = null, options = DEFAULT_OPTIONS):
 	while reconnect_tries:
 		http.poll()
 		if http.get_status() != HTTPClient.STATUS_CONNECTED:
-			http.connect_to_host(hostname, -1, use_ssl, false)
+			http.connect_to_host(hostname, -1, TLSOptions.client())
 			while true:
 				await Engine.get_main_loop().process_frame
 				if terminated:
@@ -123,9 +123,8 @@ func request(path, payload = null, options = DEFAULT_OPTIONS):
 				uri += "&" + _dict_to_query_string(payload)
 			elif encoding == "json":
 				headers.append("Content-Type: application/json")
-				var json =  JSON.new()
-				json.parse(str(payload))
-				encoded_payload = json.to_string()
+				encoded_payload = JSON.stringify(payload)
+				print(encoded_payload)
 			elif encoding == "form":
 				headers.append("Content-Type: application/x-www-form-urlencoded")
 				encoded_payload = _dict_to_query_string(payload)
@@ -293,9 +292,9 @@ func request(path, payload = null, options = DEFAULT_OPTIONS):
 	if file:
 		data = bytes
 	else:
-		var json =  JSON.new()
-		
-		data = json.parse_string(response_body) if response_body else null
+		print("Raw server response: ", response_body)
+		data = JSON.parse_string(response_body) if response_body else null
+
 	emit_signal("completed", Result.new(response_code, data))
 
 func _get_option(options, key):
