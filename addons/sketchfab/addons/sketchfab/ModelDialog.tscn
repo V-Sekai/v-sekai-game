@@ -1,0 +1,170 @@
+[gd_scene load_steps=3 format=3 uid="uid://dr8lfhmwttj46"]
+
+[ext_resource type="Script" path="res://addons/sketchfab/ModelDialog.gd" id="1"]
+[ext_resource type="Script" path="res://addons/sketchfab/HttpImage.gd" id="2"]
+
+[node name="ModelDialog" type="Window"]
+size = Vector2i(650, 523)
+wrap_controls = true
+min_size = Vector2i(650, 450)
+script = ExtResource("1")
+
+[node name="All" type="VBoxContainer" parent="."]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 5.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+
+[node name="_" type="MarginContainer" parent="All"]
+layout_mode = 2
+offset_right = 1152.0
+offset_bottom = 61.0
+mouse_filter = 0
+
+[node name="_" type="VBoxContainer" parent="All/_"]
+layout_mode = 2
+offset_right = 1152.0
+offset_bottom = 61.0
+
+[node name="Model" type="Label" parent="All/_/_"]
+layout_mode = 2
+offset_right = 1152.0
+offset_bottom = 26.0
+size_flags_horizontal = 3
+text = "Model"
+max_lines_visible = 1
+
+[node name="_" type="HBoxContainer" parent="All/_/_"]
+layout_mode = 2
+offset_top = 30.0
+offset_right = 1152.0
+offset_bottom = 61.0
+
+[node name="User" type="Label" parent="All/_/_/_"]
+self_modulate = Color(1, 1, 1, 0.752941)
+layout_mode = 2
+offset_top = 2.0
+offset_right = 765.0
+offset_bottom = 28.0
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.0
+text = "User"
+max_lines_visible = 1
+
+[node name="ViewOnSite" type="Button" parent="All/_/_/_"]
+layout_mode = 2
+offset_left = 769.0
+offset_right = 1152.0
+offset_bottom = 31.0
+size_flags_horizontal = 3
+text = "View on Sketchfab"
+
+[node name="Image" type="TextureRect" parent="All"]
+custom_minimum_size = Vector2i(256, 256)
+layout_mode = 2
+offset_top = 65.0
+offset_right = 1152.0
+offset_bottom = 321.0
+size_flags_horizontal = 3
+script = ExtResource("2")
+
+[node name="_2" type="MarginContainer" parent="All"]
+layout_mode = 2
+offset_top = 325.0
+offset_right = 1152.0
+offset_bottom = 333.0
+size_flags_horizontal = 3
+mouse_filter = 0
+
+[node name="Download" type="Button" parent="All/_2"]
+layout_mode = 2
+offset_right = 1152.0
+offset_bottom = 8.0
+clip_text = true
+
+[node name="ProgressBar" type="ProgressBar" parent="All/_2"]
+visible = false
+layout_mode = 2
+offset_right = 1152.0
+offset_bottom = 27.0
+step = 1.0
+
+[node name="Size" type="Label" parent="All/_2"]
+visible = false
+layout_mode = 2
+offset_top = -8.0
+offset_right = 1152.0
+offset_bottom = 15.0
+size_flags_horizontal = 3
+
+[node name="_3" type="MarginContainer" parent="All"]
+layout_mode = 2
+offset_top = 337.0
+offset_right = 1152.0
+offset_bottom = 648.0
+size_flags_vertical = 3
+mouse_filter = 0
+
+[node name="_" type="GridContainer" parent="All/_3"]
+layout_mode = 2
+offset_right = 1152.0
+offset_bottom = 311.0
+size_flags_horizontal = 3
+columns = 2
+
+[node name="_" type="Label" parent="All/_3/_"]
+layout_mode = 2
+offset_right = 574.0
+offset_bottom = 26.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "Model information"
+uppercase = true
+
+[node name="_2" type="Label" parent="All/_3/_"]
+layout_mode = 2
+offset_left = 578.0
+offset_right = 1152.0
+offset_bottom = 26.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "License"
+uppercase = true
+
+[node name="Info" type="Label" parent="All/_3/_"]
+self_modulate = Color(1, 1, 1, 0.752941)
+layout_mode = 2
+offset_top = 30.0
+offset_right = 574.0
+offset_bottom = 311.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "Info
+Info
+Info"
+autowrap_mode = 3
+
+[node name="License" type="Label" parent="All/_3/_"]
+self_modulate = Color(1, 1, 1, 0.752941)
+layout_mode = 2
+offset_left = 578.0
+offset_top = 30.0
+offset_right = 1152.0
+offset_bottom = 311.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "License
+License
+License
+License
+License
+License"
+autowrap_mode = 3
+clip_text = true
+
+[connection signal="pressed" from="All/_/_/_/ViewOnSite" to="." method="_on_view_on_site_pressed"]
+[connection signal="pressed" from="All/_2/Download" to="." method="_on_download_pressed"]

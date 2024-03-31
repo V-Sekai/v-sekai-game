@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/ingydotnet/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/V-Sekai/sketchfab-godot-plugin.git
+	branch = master
+	commit = 66b82b543c37bfce23fbf8ab8286d2c1e8acbb05
+	parent = 26482e6e7e7e5424b9baebb067bd6800518cdaab
+	method = merge
+	cmdver = 0.4.6

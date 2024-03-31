@@ -1,0 +1,77 @@
+[gd_scene load_steps=3 format=3 uid="uid://dtwqjq4siv6g6"]
+
+[ext_resource type="Script" path="res://addons/sketchfab/ResultItem.gd" id="1"]
+[ext_resource type="Script" path="res://addons/sketchfab/HttpImage.gd" id="2"]
+
+[node name="ResultItem" type="MarginContainer"]
+size_flags_horizontal = 3
+focus_mode = 2
+mouse_filter = 0
+script = ExtResource("1")
+
+[node name="_2" type="Button" parent="."]
+layout_mode = 2
+offset_right = 100.0
+offset_bottom = 160.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_default_cursor_shape = 2
+
+[node name="_" type="VBoxContainer" parent="."]
+layout_mode = 2
+offset_right = 100.0
+offset_bottom = 160.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="_" type="MarginContainer" parent="_"]
+layout_mode = 2
+offset_right = 100.0
+offset_bottom = 100.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="Image" type="TextureRect" parent="_/_"]
+custom_minimum_size = Vector2i(100, 100)
+layout_mode = 2
+offset_right = 100.0
+offset_bottom = 100.0
+size_flags_horizontal = 3
+size_flags_vertical = 7
+mouse_filter = 2
+script = ExtResource("2")
+
+[node name="_2" type="MarginContainer" parent="_"]
+layout_mode = 2
+offset_top = 104.0
+offset_right = 100.0
+offset_bottom = 160.0
+mouse_filter = 2
+
+[node name="_" type="VBoxContainer" parent="_/_2"]
+layout_mode = 2
+offset_right = 100.0
+offset_bottom = 56.0
+mouse_filter = 2
+
+[node name="ModelName" type="Label" parent="_/_2/_"]
+layout_mode = 2
+offset_right = 100.0
+offset_bottom = 26.0
+size_flags_vertical = 1
+text = "Title"
+max_lines_visible = 2
+
+[node name="UserName" type="Label" parent="_/_2/_"]
+self_modulate = Color(1, 1, 1, 0.501961)
+layout_mode = 2
+offset_top = 30.0
+offset_right = 100.0
+offset_bottom = 56.0
+size_flags_vertical = 1
+text = "by"
+max_lines_visible = 2
+
+[connection signal="pressed" from="_2" to="." method="_on_Button_pressed"]
