@@ -15,6 +15,7 @@ dest_files=["res://.godot/imported/roboto_mono_regular.ttf-dbb55f637014eef9d7968
 Rendering=null
 antialiasing=1
 generate_mipmaps=true
+disable_embedded_bitmaps=true
 multichannel_signed_distance_field=true
 msdf_pixel_range=8
 msdf_size=48

@@ -24,9 +24,15 @@ var max_retries = VSKMultiplayerManager.DEFAULT_MAX_RETRIES
 var test_audio = ""
 var display_name_override = ""
 
-
+##
+## Called once all the startup function is complete. Sets up the ingame gui,
+## then executes a crossfade and yields. After it's complete, it will either
+## attempt to host a server if a map commandline argument was provided,
+## join a server if an ip commandline argument was provided, or attempt
+## to go the main menu
+##
 func _startup_complete() -> void:
-	await VSKPreloadManager.all_preloading_done
+	await VSKFadeManager.execute_fade
 
 	if !ip.is_empty():
 		await VSKGameFlowManager.join_server(ip, port)
@@ -56,15 +62,18 @@ func startup() -> void:
 
 	print("V-Sekai Build: %s" % vsk_version_const.get_build_label())
 
+	setup_vsk_singletons()
 
-func flow_preload() -> void:
+	if Engine.is_editor_hint():
+		return
+
 	VSKGameFlowManager.go_to_preloading()
 	if !VSKPreloadManager.request_preloading_tasks():
-		printerr("Could not request preloading tasks!")
+		assert(false, "Could not request preloading tasks!")
 
-
-func execute_fade() -> void:
-	await VSKFadeManager.execute_fade(VSKFadeManager.FadeState.FADE_IN).fade_complete
+	await VSKFadeManager.execute_fade.call_deferred(self, "fade_complete")
+	await VSKPreloadManager.all_preloading_done
+	_startup_complete()
 
 
 func parse_commandline_args() -> void:
