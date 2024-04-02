@@ -1,0 +1,55 @@
+[gd_scene load_steps=7 format=3 uid="uid://b5wds6xceo4ts"]
+
+[ext_resource type="PackedScene" uid="uid://b852i0g1n05bn" path="res://vsk_default/scenes/prefabs/beachball.tscn" id="2"]
+[ext_resource type="PackedScene" uid="uid://cr4xerufsmv43" path="res://vsk_default/art/sky_celebration/main_room.gltf" id="2_u22pi"]
+[ext_resource type="PackedScene" uid="uid://dwpdq1n745bmn" path="res://vsk_default/scenes/prefabs/basketball.tscn" id="4"]
+[ext_resource type="Script" path="res://addons/vsk_map/vsk_map_definition.gd" id="5"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4eapr"]
+metallic = 1.0
+roughness = 0.0
+
+[sub_resource type="SphereMesh" id="5"]
+
+[node name="SkyCelebration" type="Node3D"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 4, 0, 2.38419e-07)
+script = ExtResource("5")
+vskeditor_preview_camera_path = NodePath("")
+
+[node name="DirectionalLight" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.542277, 0.110847, -0.832856, -0.739241, 0.408171, 0.535648, 0.399323, 0.906151, -0.139399, 0, 2, 0)
+light_bake_mode = 1
+shadow_enabled = true
+directional_shadow_blend_splits = true
+
+[node name="SkyCelebrationMainRoom" parent="." instance=ExtResource("2_u22pi")]
+
+[node name="Beachball" parent="." instance=ExtResource("2")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 1.16515, 0.797572, -4.32313)
+
+[node name="Basketball" parent="." instance=ExtResource("4")]
+transform = Transform3D(0.959383, 0, 0.282107, 0, 1, 0, -0.282107, 0, 0.959383, 1.20525, 1.24595, -0.336987)
+
+[node name="ReflectionProbe" type="ReflectionProbe" parent="."]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 1.20525, 5, 4.13925)
+visible = false
+size = Vector3(45, 12, 24)
+origin_offset = Vector3(0, -3.5, 0)
+box_projection = true
+enable_shadows = true
+cull_mask = 1
+
+[node name="ReflectionSphere" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -3.2361, 1.03249, 12.1393)
+visible = false
+material_override = SubResource("StandardMaterial3D_4eapr")
+mesh = SubResource("5")
+
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(6.12303e-17, 0, 1, 0, 1, 0, -1, 0, 6.12303e-17, -3.40745, 1.38727, 8.23338)
+text = "Hello, and welcome to V-Sekai!
+
+This is a work in progress demonstration."
+horizontal_alignment = 0
+
+[editable path="SkyCelebrationMainRoom"]
