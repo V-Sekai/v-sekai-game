@@ -8,8 +8,6 @@
 
 ## How do I get involved?
 
-<a href="https://discord.gg/H3s3PD49XC"><img src="https://img.shields.io/discord/1138836561102897172?logo=discord" alt="Chat on Discord"></a>
-
 We're happy to accept pull requests for features and bug fixes. 
 
 - Website: [https://v-sekai.org/](https://v-sekai.org/)
