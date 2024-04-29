@@ -116,9 +116,11 @@ settings/enabled=true
 
 [display]
 
-window/size/viewport_width=1920
-window/size/viewport_height=1080
+window/size/viewport_width=1280
+window/size/viewport_height=800
 window/size/resizable=false
+window/size/extend_to_title=true
+window/energy_saving/keep_screen_on=false
 window/stretch/mode="canvas_items"
 window/stretch/aspect="keep_height"
 window/vsync/vsync_mode=2
