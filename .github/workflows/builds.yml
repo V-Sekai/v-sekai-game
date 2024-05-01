@@ -10,7 +10,7 @@ on:
 
 env:
   GAME_NAME: vsekai_game_
-  GODOT_REF: groups-4.3.2024-03-02T193957Z
+  GODOT_REF: groups-4.3.2024-04-29T120152Z
   GODOT_REPOSITORY: v-sekai/godot
   SCONSFLAGS: verbose=yes warnings=extra werror=no module_text_server_fb_enabled=yes use_thinlto=yes
   DOTNET_NOLOGO: true
@@ -76,16 +76,16 @@ jobs:
             tests: false
             sconsflags: linker=gold precision=double
             doc-test: false
-            bin: ./godot/bin/godot.macos.editor.double.x86_64
-            deploy-bin: ./godot/bin/godot.macos.editor.double.x86_64
-            editor-bin-name: godot.macos.editor.double.x86_64
+            bin: ./godot/bin/godot.macos.editor.double.arm64
+            deploy-bin: ./godot/bin/godot.macos.editor.double.arm64
+            editor-bin-name: godot.macos.editor.double.arm64
             proj-conv: false
             artifact: true
             platform: macos
             deploy: true
             deploy-platform: macos
             export-platform: Mac
-            arch: _x86_64
+            arch: _arm64
             deploy-platform-target: editor
     steps:
       - name: Harden Runner
