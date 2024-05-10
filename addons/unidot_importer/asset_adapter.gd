@@ -77,6 +77,14 @@ class AssetHandler:
 		func was_modified() -> bool:
 			return modified
 
+	static func file_exists_hack(dres: DirAccess, fn: String):
+		if not dres.file_exists(fn):
+			return false
+		var fa = FileAccess.open(fn, FileAccess.READ)
+		if fa == null:
+			return false
+		return fa.get_length() != 0
+
 	func calc_existing_md5(fname: String) -> PackedByteArray:
 		var dres: DirAccess = DirAccess.open("res://")
 		if not dres.file_exists(fname):
@@ -109,9 +117,12 @@ class AssetHandler:
 			pkgasset.data_md5 = calc_md5(data_buf)
 			if pkgasset.existing_data_md5 != pkgasset.data_md5:
 				var outfile: FileAccess = FileAccess.open(tmpdir + "/" + path, FileAccess.WRITE_READ)
-				outfile.store_buffer(data_buf)
-				outfile.flush()
-				outfile.close()
+				if outfile == null:
+					pkgasset.log_fail("Unable to open file " + str(tmpdir + "/"+  path) + " for writing!")
+				else:
+					outfile.store_buffer(data_buf)
+					outfile.flush()
+					outfile.close()
 				outfile = null
 			output_path = pkgasset.pathname
 		if len(output_path) == 0:
@@ -138,6 +149,9 @@ class AssetHandler:
 
 	func preprocess_asset(pkgasset: Object, tmpdir: String, thread_subdir: String, path: String, data_buf: PackedByteArray, unique_texture_map: Dictionary = {}) -> String:
 		return ""
+
+	func about_to_import(pkgasset: Object):
+		pass
 
 	func finished_import(pkgasset: Object, res: Resource):
 		if res == null:
@@ -168,7 +182,7 @@ class ImageHandler:
 		if not is_png and path.get_extension().to_lower() == "png":
 			pkgasset.log_debug("I am a JPG pretending to be a " + str(path.get_extension()) + " " + str(path))
 			full_output_path = full_output_path.get_basename() + ".jpg"
-		elif is_png and path.get_extension().to_lower() != "png":
+		elif (is_png or is_tiff or is_psd) and path.get_extension().to_lower() != "png":
 			pkgasset.log_debug("I am a PNG pretending to be a " + str(path.get_extension()) + " " + str(path))
 			full_output_path = full_output_path.get_basename() + ".png"
 		pkgasset.log_debug("PREPROCESS_IMAGE " + str(is_tiff or is_psd) + "/" + str(is_png) + " path " + str(path) + " to " + str(full_output_path))
@@ -185,13 +199,25 @@ class ImageHandler:
 			var addon_path: String = "convert" # ImageMagick installed system-wide.
 			if OS.get_name() == "Windows":
 				addon_path = post_import_material_remap_script.resource_path.get_base_dir().path_join("convert.exe")
-				if addon_path.begins_with("res://"):
-					if not d.file_exists(addon_path):
-						pkgasset.log_warn("Not converting tiff to png because convert.exe is not present.")
-						return ""
-					if OS.get_name() == "Windows":
-						addon_path = "convert.exe"
-			var ret = OS.execute(addon_path, [temp_output_path.get_basename() + ext, temp_output_path], stdout)
+				if d.file_exists(addon_path):
+					addon_path = ProjectSettings.globalize_path(addon_path)
+				else:
+					pkgasset.log_warn("Not converting tiff to png because convert.exe is not present.")
+					addon_path = "convert.exe"
+			# [0] forces multi-layer files to only output the first layer. Otherwise filenames may be -0, -1, -2...
+			var convert_src: String = temp_output_path.get_basename() + ext + "[0]"
+			var convert_dst: String = temp_output_path
+			var convert_args: Array = [convert_src, convert_dst]
+			var ret = OS.execute(addon_path, convert_args, stdout)
+			for i in range(5):
+				OS.delay_msec(500)
+				OS.delay_msec(500)
+				# Hack, but I don't know what to do about this for now. The .close() is async or something.
+				if ret == 1 or "".join(stdout).strip_edges().find("@ error") != -1:
+					pkgasset.log_warn("Attempt to rerun FBX2glTF to mitigate windows file close race " + str(i) + ".")
+					ret = OS.execute(addon_path, convert_args, stdout)
+			pkgasset.log_debug("convert " + str(addon_path) + " " + str(convert_args) + " => result " + str(ret))
+			pkgasset.log_debug(str(stdout))
 			d.remove(temp_output_path.get_basename() + ext)
 			var res_file: FileAccess = FileAccess.open(temp_output_path, FileAccess.READ)
 			pkgasset.data_md5 = calc_md5(res_file.get_buffer(res_file.get_length()))
@@ -615,7 +641,8 @@ class BaseModelHandler:
 		# The importer seems to operate in terms of frames but no indication of time here....
 		cfile.set_value_compare("params", "animation/import", importer.animation_import)
 		# Humanoid animations in particular are sensititve to immutable tracks being shared across rigs.
-		cfile.set_value_compare("params", "animation/remove_immutable_tracks", false)
+		cfile.set_value_compare("params", "animation/remove_immutable_tracks", (importer.keys.get("animationType", 2) == 3 or pkgasset.parsed_meta.is_force_humanoid()))
+		cfile.set_value_compare("params", "animation/import_rest_as_RESET", true)
 
 		# FIXME: Godot has a major bug if light baking is used:
 		# it leaves a file ".glb.unwrap_cache" open and causes future imports to fail.
@@ -680,13 +707,13 @@ class BaseModelHandler:
 			# This would break skins and unpacked prefabs.
 			if pkgasset.parsed_meta.is_using_builtin_ufbx():
 				var silhouette_anim: Animation = pkgasset.parsed_meta.internal_data.get("silhouette_anim", null)
-				if silhouette_anim != null:
+				if silhouette_anim != null and pkgasset.parsed_meta.internal_data.get("copy_avatar_src", []):
 					subresources["nodes"]["PATH:Skeleton3D"]["rest_pose/load_pose"] = 2
 					subresources["nodes"]["PATH:Skeleton3D"]["rest_pose/external_animation_library"] = silhouette_anim
 				subresources["nodes"]["PATH:Skeleton3D"]["retarget/rest_fixer/fix_silhouette/enable"] = false
-				#subresources["nodes"]["PATH:Skeleton3D"]["retarget/rest_fixer/fix_silhouette/enable"] = true
-				#subresources["nodes"]["PATH:Skeleton3D"]["retarget/rest_fixer/fix_silhouette/filter"] = [&"LeftFoot", &"RightFoot", &"LeftToes", &"RightToes"]
-				#subresources["nodes"]["PATH:Skeleton3D"]["retarget/rest_fixer/fix_silhouette/threshold"] = SILHOUETTE_FIX_THRESHOLD
+				subresources["nodes"]["PATH:Skeleton3D"]["retarget/rest_fixer/fix_silhouette/enable"] = true
+				subresources["nodes"]["PATH:Skeleton3D"]["retarget/rest_fixer/fix_silhouette/filter"] = [&"LeftFoot", &"RightFoot", &"LeftToes", &"RightToes"]
+				subresources["nodes"]["PATH:Skeleton3D"]["retarget/rest_fixer/fix_silhouette/threshold"] = SILHOUETTE_FIX_THRESHOLD
 				subresources["nodes"]["PATH:Skeleton3D"]["retarget/rest_fixer/reset_all_bone_poses_after_import"] = false
 			else:
 				subresources["nodes"]["PATH:Skeleton3D"]["retarget/rest_fixer/fix_silhouette/enable"] = false
@@ -705,7 +732,28 @@ class BaseModelHandler:
 		cfile.save("res://" + pkgasset.pathname + ".import")
 		return cfile.was_modified()
 
+	func about_to_import(pkgasset: Object):
+		var dres := DirAccess.open("res://")
+		for tex_name in pkgasset.parsed_meta.unique_texture_map:
+			var tex_uri = pkgasset.parsed_meta.unique_texture_map[tex_name]
+			var tex_pathname: String = "res://".path_join(pkgasset.pathname.get_base_dir().path_join(tex_name))
+			if not file_exists_hack(dres, tex_pathname):
+				var src_tex: Texture2D = ResourceLoader.load("res://".path_join(pkgasset.pathname.get_base_dir().path_join(tex_uri))) as Texture2D
+				if src_tex != null:
+					var tmp_tex: Texture2D = src_tex.duplicate()
+					tmp_tex.set_meta(&"src_tex", src_tex)
+					tmp_tex.resource_name = tex_name
+					if not tex_pathname.begins_with("res://"):
+						tex_pathname = "res://" + tex_pathname
+					pkgasset.log_debug("Would reference non-existent texture " + str(tex_pathname) + " from " + str(tex_name) + " rather than " + str(tex_uri))
+					tmp_tex.take_over_path(tex_pathname)
+					pkgasset.parsed_meta.taken_over_import_references[tex_name] = tmp_tex
+			else:
+				pkgasset.log_debug("Would reference existing texture " + str(tex_pathname) + " from " + str(tex_name) + " rather than " + str(tex_uri))
+
 	func finished_import(pkgasset: Object, res: Resource):
+		pkgasset.log_debug("taken_over_import_references: " + str(pkgasset.parsed_meta.taken_over_import_references))
+		pkgasset.parsed_meta.taken_over_import_references.clear()
 		super.finished_import(pkgasset, res)
 		if res != null:
 			pass
@@ -773,10 +821,10 @@ class BaseModelHandler:
 		cfile.save(import_file_path)
 
 	func write_godot_asset(pkgasset: Object, temp_path: String) -> bool:
+		var dres = DirAccess.open("res://")
 		# super.write_godot_asset(pkgasset, temp_path)
 		# Duplicate code since super causes a weird nonsensical error cannot call "importer()" function...
 		if pkgasset.existing_data_md5 != pkgasset.data_md5:
-			var dres = DirAccess.open("res://")
 			pkgasset.log_debug("Renaming " + temp_path + " to " + pkgasset.pathname)
 			dres.rename(temp_path, pkgasset.pathname)
 			if temp_path.ends_with(".gltf"):
@@ -925,11 +973,11 @@ class FbxHandler:
 				strlist.append(buffer_as_ascii.substr(nextpos + 1, lastquote - nextpos - 1))
 		return strlist
 
-	func _extract_fbx_objects_binary(obj_type: String, pkgasset: Object, fbx_file_binary: PackedByteArray) -> PackedStringArray:
+	func _extract_fbx_object_offsets_binary(obj_type: String, pkgasset: Object, fbx_file_binary: PackedByteArray) -> Dictionary:
 		var spb: StreamPeerBuffer = StreamPeerBuffer.new()
 		spb.data_array = fbx_file_binary
 		spb.big_endian = false
-		var strlist: PackedStringArray = PackedStringArray()
+		var str_offsets: Dictionary
 
 		# Binary FBX serializes ids such as Model::SomeNodeName as S__\x00\x00SomeNodeName\x00\x01Model
 		var modelname_needle_buf: PackedByteArray = (".\u0001" + obj_type).to_ascii_buffer()
@@ -941,7 +989,7 @@ class FbxHandler:
 			while fbx_file_binary[length_prefix_pos] != 0:
 				if length_prefix_pos < 4:
 					push_error("Failed to find beginning of Model name")
-					return strlist
+					return str_offsets
 				length_prefix_pos -= 1
 			var nextpos: int = find_in_buffer(fbx_file_binary, modelname_needle_buf, modelname_needle_pos + 7)
 			spb.seek(length_prefix_pos - 3)
@@ -951,22 +999,144 @@ class FbxHandler:
 			assert(strlen + 1 + length_prefix_pos == modelname_needle_pos + 2 + len(obj_type))
 			if strlen >= len(obj_type) + 2 and strlen < 1024:
 				var fn_utf8: PackedByteArray = spb.get_data(strlen - len(obj_type) - 2)[1]  # NOTE: Do we need to detect charset? FBX should be unicode
-				strlist.append(fn_utf8.get_string_from_utf8())
+				var mesh_name: String = fn_utf8.get_string_from_utf8()
+				if not str_offsets.has(mesh_name):
+					str_offsets[mesh_name] = []
+				str_offsets[mesh_name].append(Vector2i(spb.get_position(), nextpos))
 			modelname_needle_pos = nextpos
-		return strlist
+		return str_offsets
 
-	func _extract_fbx_objects_ascii(obj_type: String, pkgasset: Object, buffer_as_utf8: String) -> PackedStringArray:
-		var strlist: PackedStringArray = PackedStringArray()
-		var modelname_needle = '"' + obj_type + '::'
+	func _extract_fbx_object_offsets_ascii(obj_type: String, pkgasset: Object, buffer_as_utf8: String) -> Dictionary:
+		var str_offsets: Dictionary
+		var modelname_needle: String = '"' + obj_type + '::'
 		var modelname_needle_pos: int = buffer_as_utf8.find(modelname_needle)
+		print("ASCII " + modelname_needle + " " + str(modelname_needle_pos))
 		while modelname_needle_pos != -1:
 			var modelname_needle_end: int = buffer_as_utf8.find('"', modelname_needle_pos + len(obj_type) + 3)
+			print("ASCII QUOT " + str(modelname_needle_end))
 			if modelname_needle_end == -1:
+				print("ASCII EMD " + str(modelname_needle_end))
 				break
+			var model_needle_end: int = buffer_as_utf8.find(modelname_needle, modelname_needle_end)
+			if model_needle_end == -1:
+				model_needle_end = buffer_as_utf8.find("::", modelname_needle_end)
 			var str_utf8: String = buffer_as_utf8.substr(modelname_needle_pos + len(obj_type) + 3, modelname_needle_end - modelname_needle_pos - len(obj_type) - 3)
-			strlist.append(str_utf8) # str_ascii.to_ascii_buffer().get_string_from_utf8()
+			if not str_offsets.has(str_utf8):
+				str_offsets[str_utf8] = []
+			str_offsets[str_utf8].append(Vector2i(modelname_needle_end, model_needle_end))
 			modelname_needle_pos = buffer_as_utf8.find(modelname_needle, modelname_needle_end)
-		return strlist
+			print("ASCII DO " + str(modelname_needle_pos))
+		return str_offsets
+
+	func _extract_fbx_objects_binary(obj_type: String, pkgasset: Object, fbx_file_binary: PackedByteArray) -> PackedStringArray:
+		return PackedStringArray(_extract_fbx_object_offsets_binary(obj_type, pkgasset, fbx_file_binary).keys())
+
+	func _extract_fbx_objects_ascii(obj_type: String, pkgasset: Object, buffer_as_utf8: String) -> PackedStringArray:
+		return PackedStringArray(_extract_fbx_object_offsets_ascii(obj_type, pkgasset, buffer_as_utf8).keys())
+
+	func _extract_fbx_geometry_material_order_binary(pkgasset: Object, fbx_file_binary: PackedByteArray) -> Dictionary:
+		var spb: StreamPeerBuffer = StreamPeerBuffer.new()
+		spb.data_array = fbx_file_binary
+		spb.big_endian = false
+		var str_offsets: Dictionary = _extract_fbx_object_offsets_binary("Geometry", pkgasset, fbx_file_binary)
+		var material_order_by_mesh: Dictionary
+		var duplicate_map: Dictionary
+		for mesh_name in str_offsets:
+			for which_mesh in str_offsets[mesh_name]:
+				var start_mesh: int = which_mesh.x
+				var end_mesh: int = which_mesh.y
+				# print("Found binary mesh " + str(mesh_name) + ": " + str(start_mesh) + "/" + str(end_mesh))
+				var layer_element_material_pos: int = find_in_buffer(fbx_file_binary, ("\u0014LayerElementMaterial").to_ascii_buffer(), start_mesh, end_mesh)
+				if layer_element_material_pos == -1:
+					continue
+				var materials_key_pos: int = find_in_buffer(fbx_file_binary, ("\u0009Materialsi").to_ascii_buffer(), layer_element_material_pos, end_mesh)
+				if materials_key_pos == -1:
+					continue
+				spb.seek(materials_key_pos + 11)
+				var face_count: int = spb.get_u32()
+				var encoding: int = spb.get_u32() # 0 = raw; 1 = deflate
+				var compressed_size: int = spb.get_u32()
+				# print("comp " + str(compressed_size) + " face count " + str(face_count) + " one " + str(one_int))
+				if face_count > 250000000: # one_int != 1 or (sometimes this is 0)
+					push_error("Incorrect compression tag for Materials " + str(encoding) + " face count " + str(face_count))
+					continue
+				if end_mesh != -1 and compressed_size > end_mesh - materials_key_pos - 11:
+					push_error("Invalid compressed size " + str(compressed_size))
+					continue
+				var compressed_data = spb.get_data(compressed_size)[1]
+				var face_indices: PackedInt32Array
+				if encoding == 1:
+					face_indices = compressed_data.decompress(face_count * 4, FileAccess.COMPRESSION_DEFLATE).to_int32_array()
+				else:
+					face_indices = compressed_data.to_int32_array()
+				if len(face_indices) != face_count:
+					push_warning("incorrect number of decompressed face indices")
+					continue
+				var material_order: PackedInt32Array
+				var found_face_indices: PackedInt32Array
+				for idx in face_indices:
+					if idx > face_count or idx < 0:
+						push_error("Incorrect material index " + str(idx))
+					if idx >= len(found_face_indices):
+						found_face_indices.resize(idx + 1)
+					if found_face_indices[idx] == 0:
+						material_order.append(idx)
+					found_face_indices[idx] = 1
+				if not material_order_by_mesh.has(mesh_name):
+					material_order_by_mesh[mesh_name] = []
+				material_order_by_mesh[mesh_name].append(material_order)
+		return material_order_by_mesh
+
+	func _extract_fbx_geometry_material_order_ascii(pkgasset: Object, buffer_as_utf8: String) -> Dictionary:
+		var str_offsets: Dictionary = _extract_fbx_object_offsets_ascii("Geometry", pkgasset, buffer_as_utf8)
+		var material_order_by_mesh: Dictionary
+		for mesh_name in str_offsets:
+			for which_mesh in str_offsets[mesh_name]:
+				var start_mesh: int = which_mesh.x
+				var end_mesh: int = which_mesh.y
+				var mat_pos: int = buffer_as_utf8.find("LayerElementMaterial:", start_mesh)
+				if mat_pos == -1 or mat_pos > end_mesh:
+					print("Cont 1 " + str(mat_pos) + " " + str(end_mesh))
+					continue
+				var materials_pos: int = buffer_as_utf8.find("Materials:", mat_pos + 21)
+				if materials_pos == -1 or materials_pos > end_mesh:
+					print("Cont 2 " + str(mat_pos) + " " + str(end_mesh) + " " + str(materials_pos))
+					continue
+				var close_brace_pos: int = buffer_as_utf8.find("}", materials_pos)
+				if close_brace_pos == -1 or close_brace_pos > end_mesh:
+					print("Cont 3 " + str(mat_pos) + " " + str(close_brace_pos) + " " + str(materials_pos))
+					continue
+				var open_brace_pos: int = buffer_as_utf8.find("{", materials_pos)
+				if open_brace_pos == -1 or open_brace_pos > close_brace_pos:
+					print("Cont 4 " + str(mat_pos) + " " + str(open_brace_pos) + " " + str(close_brace_pos))
+					continue
+				var star_pos: int = buffer_as_utf8.find("*", materials_pos)
+				if star_pos == -1 or star_pos > open_brace_pos:
+					print("Cont 5 " + str(mat_pos) + " " + str(star_pos) + " " + str(open_brace_pos))
+					continue
+				var face_count: int = buffer_as_utf8.substr(star_pos + 1, open_brace_pos - star_pos - 1).strip_edges().to_int()
+				var array_start = buffer_as_utf8.find(":", open_brace_pos)
+				if array_start == -1 or array_start > close_brace_pos:
+					print("Cont 6 " + str(mat_pos) + " " + str(array_start) + " " + str(close_brace_pos))
+					continue
+				var face_index_strs: PackedStringArray = buffer_as_utf8.substr(array_start + 1, close_brace_pos - array_start - 1).split(",")
+				var material_order: PackedInt32Array
+				var found_face_indices: PackedInt32Array
+				for idx_str in face_index_strs:
+					var idx: int = idx_str.strip_edges().to_int()
+					if idx > face_count or idx < 0:
+						push_error("Incorrect material index " + str(idx))
+					if idx >= len(found_face_indices):
+						found_face_indices.resize(idx + 1)
+					if found_face_indices[idx] == 0:
+						material_order.append(idx)
+					found_face_indices[idx] = 1
+				if not material_order_by_mesh.has(mesh_name):
+					material_order_by_mesh[mesh_name] = []
+				print(material_order)
+				material_order_by_mesh[mesh_name].append(material_order)
+		return material_order_by_mesh
+
 
 	func _preprocess_fbx_scale_binary(pkgasset: Object, fbx_file_binary: PackedByteArray, useFileScale: bool, globalScale: float) -> PackedByteArray:
 		if useFileScale and is_equal_approx(globalScale, 1.0):
@@ -1138,12 +1308,12 @@ class FbxHandler:
 		var filename: String = pkgasset.pathname
 		var time_mode_pos: int = buffer_as_ascii.find('"TimeMode"')
 		if time_mode_pos == -1:
-			pkgasset.log_fail(filename + ": Failed to find UnitScaleFactor in ASCII FBX.")
+			pkgasset.log_fail(filename + ": Failed to find TimeMode in ASCII FBX.")
 			return 30
 		var newline_pos: int = buffer_as_ascii.find("\n", time_mode_pos)
 		var comma_pos: int = buffer_as_ascii.rfind(",", newline_pos)
 		if newline_pos == -1 or comma_pos == -1:
-			pkgasset.log_fail(filename + ": Failed to find value for UnitScaleFactor in ASCII FBX.")
+			pkgasset.log_fail(filename + ": Failed to find value for TimeMode in ASCII FBX.")
 			return 30
 
 		var fps: float = 1
@@ -1157,12 +1327,12 @@ class FbxHandler:
 
 		var framerate_pos: int = buffer_as_ascii.find('"CustomFrameRate"')
 		if framerate_pos == -1:
-			pkgasset.log_fail(filename + ": Failed to find UnitScaleFactor in ASCII FBX.")
+			pkgasset.log_fail(filename + ": Failed to find CustomFrameRate in ASCII FBX.")
 			return 30
 		newline_pos = buffer_as_ascii.find("\n", framerate_pos)
 		comma_pos = buffer_as_ascii.rfind(",", newline_pos)
 		if newline_pos == -1 or comma_pos == -1:
-			pkgasset.log_fail(filename + ": Failed to find value for UnitScaleFactor in ASCII FBX.")
+			pkgasset.log_fail(filename + ": Failed to find value for CustomFrameRate in ASCII FBX.")
 			return 30
 
 		var custom_fps_str: String = buffer_as_ascii.substr(comma_pos + 1, newline_pos - comma_pos - 1).strip_edges()
@@ -1244,21 +1414,24 @@ class FbxHandler:
 		var node_name_list: PackedStringArray
 		var mesh_name_list: PackedStringArray
 		var animation_name_list: PackedStringArray
+		var material_order_by_mesh: Dictionary
 		if is_binary:
 			texture_name_list = _extract_fbx_textures_binary(pkgasset, fbx_file)
 			fps = _preprocess_fbx_anim_fps_binary(pkgasset, fbx_file)
-			node_name_list = _extract_fbx_objects_binary("Model", pkgasset, fbx_file)
-			mesh_name_list = _extract_fbx_objects_binary("Geometry", pkgasset, fbx_file)
-			animation_name_list = _extract_fbx_objects_binary("AnimStack", pkgasset, fbx_file)
+			#node_name_list = _extract_fbx_objects_binary("Model", pkgasset, fbx_file)
+			#mesh_name_list = _extract_fbx_objects_binary("Geometry", pkgasset, fbx_file)
+			#animation_name_list = _extract_fbx_objects_binary("AnimStack", pkgasset, fbx_file)
+			material_order_by_mesh = _extract_fbx_geometry_material_order_binary(pkgasset, fbx_file)
 			fbx_file = _preprocess_fbx_scale_binary(pkgasset, fbx_file, importer.keys.get("meshes", {}).get("useFileScale", 0) == 1, importer.keys.get("meshes", {}).get("globalScale", 1))
 		else:
 			var buffer_as_utf8: String = fbx_file.get_string_from_utf8()  # may contain unicode
 			texture_name_list = _extract_fbx_textures_ascii(pkgasset, buffer_as_utf8)
 			var buffer_as_ascii: String = fbx_file.get_string_from_ascii() # match 1-to-1 with bytes
 			fps = _preprocess_fbx_anim_fps_ascii(pkgasset, buffer_as_ascii)
-			node_name_list = _extract_fbx_objects_ascii("Model", pkgasset, buffer_as_utf8)
-			mesh_name_list = _extract_fbx_objects_ascii("Geometry", pkgasset, buffer_as_utf8)
-			animation_name_list = _extract_fbx_objects_ascii("AnimStack", pkgasset, buffer_as_utf8)
+			#node_name_list = _extract_fbx_objects_ascii("Model", pkgasset, buffer_as_utf8)
+			#mesh_name_list = _extract_fbx_objects_ascii("Geometry", pkgasset, buffer_as_utf8)
+			#animation_name_list = _extract_fbx_objects_ascii("AnimStack", pkgasset, buffer_as_utf8)
+			material_order_by_mesh = _extract_fbx_geometry_material_order_ascii(pkgasset, buffer_as_utf8)
 			fbx_file = _preprocess_fbx_scale_ascii(pkgasset, fbx_file, buffer_as_ascii, importer.keys.get("meshes", {}).get("useFileScale", 0) == 1, importer.keys.get("meshes", {}).get("globalScale", 1))
 		var d := DirAccess.open("res://")
 		var closest_bake_fps: float = 30
@@ -1308,7 +1481,7 @@ class FbxHandler:
 			var tex_exists: bool = false
 			for candidate_fn in candidate_texture_dict:
 				#pkgasset.log_debug("candidate " + str(candidate_fn) + " INPKG=" + str(pkgasset.packagefile.path_to_pkgasset.has(candidate_fn)) + " FILEEXIST=" + str(d.file_exists(candidate_fn)))
-				if pkgasset.packagefile.path_to_pkgasset.has(candidate_fn) or d.file_exists(candidate_fn):
+				if pkgasset.packagefile.path_to_pkgasset.has(candidate_fn) or file_exists_hack(d, candidate_fn):
 					unique_texture_map[fn] = candidate_texture_dict[candidate_fn]
 					tex_exists = true
 					break
@@ -1331,10 +1504,12 @@ class FbxHandler:
 
 		var extra_data = {
 			"unique_texture_map": unique_texture_map,
-			"node_name_list": node_name_list,
-			"mesh_name_list": mesh_name_list,
-			"animation_name_list": animation_name_list,
+			#"node_name_list": node_name_list,
+			#"mesh_name_list": mesh_name_list,
+			#"animation_name_list": animation_name_list,
+			"material_order_by_mesh": material_order_by_mesh,
 		}
+		pkgasset.parsed_meta.unique_texture_map = unique_texture_map
 		var output_path: String = self.preprocess_asset(pkgasset, tmpdir, thread_subdir, input_path, fbx_file, extra_data)
 		#if len(output_path) == 0:
 		#	output_path = path
@@ -1547,18 +1722,30 @@ class FbxHandler:
 			var trk: int = anim.add_track(Animation.TYPE_ROTATION_3D)
 			anim.track_set_path(trk, NodePath("Skeleton3D:" + node.resource_name))
 			anim.rotation_track_insert_key(trk, 0.0, node.rotation)
+			var par_idx: int = node.parent
+			var hip_descendent: bool = false
+			while par_idx != -1:
+				if par_idx == hip_node_idx:
+					hip_descendent = true
+				par_idx = nodes[par_idx].parent
+			if not hip_descendent:
+				trk = anim.add_track(Animation.TYPE_POSITION_3D)
+				anim.track_set_path(trk, NodePath("Skeleton3D:" + node.resource_name))
+				anim.position_track_insert_key(trk, 0.0, node.position)
 		return anim
 
 	func preprocess_asset_ufbx(pkgasset: Object, tmpdir: String, thread_subdir: String, path: String, data_buf: PackedByteArray, extra_data: Dictionary = {}) -> String:
 		# I think we should depend on relative paths for this, for example make dummy textures to get it to generate the materials, then move them back.
 		# We can do the FBXDocument step in preprocess, so we will know in advance if this works.
 		var unique_texture_map: Dictionary = extra_data["unique_texture_map"]
+		var material_order_by_mesh: Dictionary = extra_data["material_order_by_mesh"]
 		var used_animation_names: Dictionary
 		var orig_to_godot_sanitized_anim_takes: Dictionary
 
 		var godot_sanitized_to_orig_remap: Dictionary = {"bone_name": {}, "nodes": {}, "meshes": {}, "animations": {}}
 		# Anything after this point will be using sanitized names, and should go through godot_sanitized_to_orig_remap / bone_map_dict
 		# for key in ["scenes", "nodes", "meshes", "skins", "images", "materials", "animations"]:
+
 		var doc = ClassDB.instantiate(&"FBXDocument")
 		var state = ClassDB.instantiate(&"FBXState")
 		state.import_as_skeleton_bones = true
@@ -1570,14 +1757,17 @@ class FbxHandler:
 		var meshes = state.get_meshes()
 		var materials = state.get_materials()
 		var animations = state.get_animations()
+		pkgasset.log_debug("Preprocessing ufbx nodes " + str(len(nodes)))
 
 		var used_names: Dictionary
+		var used_godot_skel_names: Dictionary
 		for node_i in range(len(nodes)):
-			var node = nodes[node_i]
+			var node: GLTFNode = nodes[node_i]
 			var godot_mangled_name: String = node.resource_name
 			var orig_name: String = node.original_name
+			pkgasset.log_debug("Found node " + str(node.parent) + "/" + str(node_i) + " " + str(godot_mangled_name) + " " + str(orig_name))
 			if node_i == 0:
-				if godot_mangled_name == "Root" and orig_name == "":
+				if orig_name == "":
 					continue
 				else:
 					pkgasset.log_debug("Found a different node " + str(godot_mangled_name) + "/" + str(orig_name) + " instead of Root")
@@ -1594,10 +1784,18 @@ class FbxHandler:
 				var mesh = meshes[node.mesh]
 				var mesh_mangled_name: String = mesh.resource_name
 				godot_sanitized_to_orig_remap["meshes"][mesh_mangled_name] = try_name
+				if node.skeleton >= 0:
+					# For meshes that are also bones that are also nodes (since the current godot importer makes bones for meshes)
+					godot_sanitized_to_orig_remap["nodes"][godot_mangled_name.validate_node_name()] = try_name
+			if node.skeleton >= 0:
+				used_godot_skel_names[node.resource_name] = 2
+		var material_idx_by_mesh = {}
+		var used_node_names = {}
 		used_names = {}
 		var unnamed_material_count: int = 0
+		var internal_material_order_by_mesh_rev: Dictionary
 		for mesh_i in range(len(meshes)):
-			var mesh = meshes[mesh_i]
+			var mesh: GLTFMesh = meshes[mesh_i]
 			var godot_mangled_name: String = mesh.resource_name
 			var orig_name: String = mesh.original_name
 			var next_num: int = used_names.get(orig_name, 1)
@@ -1614,6 +1812,37 @@ class FbxHandler:
 				for surf_i in range(imp_mesh.get_surface_count()):
 					if imp_mesh.get_surface_material(surf_i) == null or imp_mesh.get_surface_material(surf_i).resource_name.is_empty():
 						unnamed_material_count += 1
+			# Handle material sort orderp
+			var material_key_idx: int = 0
+			if material_idx_by_mesh.has(orig_name):
+				material_key_idx = material_idx_by_mesh[orig_name]
+				material_idx_by_mesh[orig_name] += 1
+			else:
+				material_idx_by_mesh[orig_name] = 1
+			var material_used: PackedInt32Array = PackedInt32Array()
+			var material_order: PackedInt32Array = PackedInt32Array()
+			if mesh.mesh != null:
+				material_used.resize(mesh.mesh.get_surface_count())
+			if material_order_by_mesh.has(orig_name):
+				var material_order_temp: PackedInt32Array = PackedInt32Array()
+				if len(material_order_by_mesh[orig_name]) > material_key_idx:
+					material_order_temp = material_order_by_mesh[orig_name][material_key_idx]
+				else:
+					material_order_temp = material_order_by_mesh[orig_name][-1]
+				for mat in material_order_temp:
+					if mat >= 0 and mat < len(material_used):
+						if material_used[mat] == 0:
+							material_used[mat] = -1
+							material_order.append(mat)
+			for mat in range(len(material_used)):
+				if not material_used[mat]:
+					material_order.append(mat)
+			for mat in range(len(material_order)):
+				material_used[material_order[mat]] = mat
+			material_used = material_order
+			internal_material_order_by_mesh_rev[godot_mangled_name] = material_used
+		pkgasset.parsed_meta.internal_data["material_order_by_mesh_rev"] = internal_material_order_by_mesh_rev
+
 		used_names = {}
 		for anim_i in range(len(animations)):
 			var anim = animations[anim_i]
@@ -1638,10 +1867,11 @@ class FbxHandler:
 		var is_humanoid: bool = importer.keys.get("animationType", 2) == 3 or pkgasset.parsed_meta.is_force_humanoid()
 		var bone_map_dict: Dictionary
 		var copy_avatar: bool = false
+		var src_ava: Array = []
 		var silhouette_anim: Animation
 		if is_humanoid and (importer.keys.get("avatarSetup", 1) >= 1 or pkgasset.parsed_meta.is_force_humanoid()):
 			if importer.keys.get("avatarSetup", 1) == 2 or importer.keys.get("copyAvatar", 0) == 1:
-				var src_ava = importer.keys.get("lastHumanDescriptionAvatarSource", [null, 0, "", 0])
+				src_ava = importer.keys.get("lastHumanDescriptionAvatarSource", [null, 0, "", 0])
 				var src_ava_meta = pkgasset.meta_dependencies.get(src_ava[2], null)
 				if src_ava_meta == null:
 					pkgasset.log_fail("Unable to lookup meta copy avatar dependency", "lastHumanDescriptionAvatarSource", src_ava)
@@ -1716,39 +1946,23 @@ class FbxHandler:
 			while nodes[cur_human_node_idx].parent != -1:
 				var new_root_idx = nodes[cur_human_node_idx].parent
 				var node = nodes[new_root_idx]
+				if node.original_name.is_empty() or node.skeleton < 0:
+					break
 				pkgasset.log_debug("Adding node to skin " + str(new_root_idx) + " parent of " + str(cur_human_node_idx))
 				pkgasset.parsed_meta.internal_data["humanoid_root_bone"] = node.resource_name
+				pkgasset.log_debug("Attempt root bone name: " + str(node.resource_name) + " in map: " + str(bone_map_dict.has(node.resource_name)))
 				if not bone_map_dict.has(node.resource_name):
 					root_bone_name = node.resource_name
 				if not human_skin_set.has(new_root_idx):
 					human_skin_nodes.push_back(new_root_idx)
 					human_skin_set[new_root_idx] = true
 				cur_human_node_idx = new_root_idx
+			pkgasset.log_debug("Root bone name: " + str(root_bone_name))
 			if root_bone_name != "":
 				bone_map_dict[root_bone_name] = "Root"
 
 			var hip_parent_node_idx = -1
 			var hip_node_idx = -1
-
-			# Now we correct the silhouette, either by copying from another model, or applying silhouette fixer.
-			if copy_avatar:
-				for x_node_idx in range(len(nodes)):
-					var node: Dictionary = nodes[x_node_idx]
-					var node_name: String = node.get("name", "")
-					if original_rotations.has(node_name):
-						var quat: Quaternion = original_rotations[node_name]
-						#node["rotation"] = [quat.x, quat.y, quat.z, quat.w]
-					if bone_map_dict.get(node_name, "") == "Hips":
-						#node["translation"] = [orig_hip_position.x, orig_hip_position.y, orig_hip_position.z]
-						hip_parent_node_idx = node.parent
-						hip_node_idx = x_node_idx
-			else:
-				## bone_map_editor_plugin.silhouette_fix_gltf(json, importer.generate_bone_map_from_human(), SILHOUETTE_FIX_THRESHOLD)
-				for node in nodes:
-					var node_name: String = node.resource_name
-					original_rotations[node_name] = node.rotation
-					if bone_map_dict.get(node_name, "") == "Hips":
-						pkgasset.parsed_meta.internal_data["hips_position"] = node.position
 
 			for node in nodes:
 				if bone_map_dict.get(node.resource_name, "") == "Hips":
@@ -1756,27 +1970,23 @@ class FbxHandler:
 			while hip_parent_node_idx != -1:
 				hip_parent_node_idx = nodes[hip_parent_node_idx].parent
 
-			# used_names = {}
-			for godot_bone_name in bone_map_dict:
-				var mapped_bone_name = bone_map_dict[godot_bone_name]
-				if mapped_bone_name != godot_bone_name:
-					if godot_sanitized_to_orig_remap.has(mapped_bone_name):
-						var next_num: int = used_names.get(mapped_bone_name, 1)
-						var try_name: String = mapped_bone_name
-						while used_names.has(try_name):
-							try_name = "%s %d" % [mapped_bone_name, next_num]
+			var prof_bone_names = {}
+			var prof = SkeletonProfileHumanoid.new()
+			for prof_i in range(prof.bone_size):
+				prof_bone_names[prof.get_bone_name(prof_i)] = 2
+			used_names = used_godot_skel_names
+			for godot_bone_name in godot_sanitized_to_orig_remap["bone_name"].keys().duplicate():
+				if not bone_map_dict.has(godot_bone_name):
+					#if mapped_bone_name != godot_bone_name:
+					if prof_bone_names.has(godot_bone_name):
+						var next_num: int = used_names.get(godot_bone_name, 2)
+						var try_name: String = godot_bone_name
+						while used_names.has(try_name) or prof_bone_names.has(try_name):
+							try_name = "%s%d" % [godot_bone_name, next_num] # Godot naming convention
 							next_num += 1
-						used_names[mapped_bone_name] = next_num
-						used_names[try_name] = 1
-						godot_sanitized_to_orig_remap["bone_name"][mapped_bone_name] = try_name
-
-			if silhouette_anim == null:
-				silhouette_anim = create_rest_pose_anim(nodes, hip_node_idx)
-
-			# Adding missing tracks just to the T-Pose animation after silhouette fix generates a T-Pose
-			#add_empty_animation(json, "_T-Pose_")
-			#add_missing_humanoid_tracks_to_animations(pkgasset, json, bindata, bone_map_dict)
-			pkgasset.parsed_meta.internal_data["silhouette_anim"] = silhouette_anim
+						used_names[godot_bone_name] = next_num
+						used_names[try_name] = 2
+						godot_sanitized_to_orig_remap["bone_name"][try_name] = godot_sanitized_to_orig_remap["bone_name"][godot_bone_name]
 
 			# Finally, record the original post-silhouette transforms for transform_fileid_to_rotation_delta
 			for node in nodes:
@@ -1789,17 +1999,79 @@ class FbxHandler:
 					humanoid_original_transforms[node_name] = node.xform
 
 			pkgasset.parsed_meta.internal_data["humanoid_original_transforms"] = humanoid_original_transforms
+
+
+			# Now we correct the silhouette, either by copying from another model, or applying silhouette fixer.
+			if copy_avatar:
+				for x_node_idx in range(len(nodes)):
+					var node: GLTFNode = nodes[x_node_idx]
+					var node_name: String = node.resource_name
+					if original_rotations.has(node_name):
+						var quat: Quaternion = original_rotations[node_name]
+						#node["rotation"] = [quat.x, quat.y, quat.z, quat.w]
+					if bone_map_dict.get(node_name, "") == "Hips":
+						#node["translation"] = [orig_hip_position.x, orig_hip_position.y, orig_hip_position.z]
+						hip_parent_node_idx = node.parent
+						hip_node_idx = x_node_idx
+			else:
+				## bone_map_editor_plugin.silhouette_fix_gltf(json, importer.generate_bone_map_from_human(), SILHOUETTE_FIX_THRESHOLD)
+				for node in nodes:
+					var node_name: String = node.resource_name
+					original_rotations[node_name] = node.rotation
+				#for node in nodes:
+					#var tmp: Variant = node.get_additional_data("GODOT_rest_transform")
+					#if typeof(tmp) == TYPE_TRANSFORM3D:
+						#node.xform = tmp
+						#node.position = node.xform.origin
+						#node.rotation = node.xform.basis.get_rotation_quaternion()
+						#node.scale = node.xform.basis.get_scale()
+				for node in nodes:
+					var node_name: String = node.resource_name
+					if bone_map_dict.get(node_name, "") == "Hips":
+						var pos: Vector3 = node.position
+						var par_id: int = node.parent
+						var global_xform: Transform3D
+						while par_id != -1:
+							if nodes[par_id].skeleton < 0:
+								break
+							var n: GLTFNode = nodes[par_id]
+							pos = n.xform * pos
+							n.xform = Transform3D(n.xform.basis, Vector3.ZERO)
+							n.position = Vector3.ZERO
+							global_xform = n.xform * global_xform
+							par_id = n.parent
+						pos = Vector3(0.0, pos.y, 0.0)
+						pos = global_xform.affine_inverse() * pos
+						node.position = pos
+						node.xform = Transform3D(node.xform.basis, pos)
+						pkgasset.parsed_meta.internal_data["hips_position"] = pos
+
 			pkgasset.parsed_meta.internal_data["original_rotations"] = original_rotations
+
+			if silhouette_anim == null:
+				silhouette_anim = create_rest_pose_anim(nodes, hip_node_idx)
+
+			# Adding missing tracks just to the T-Pose animation after silhouette fix generates a T-Pose
+			#add_empty_animation(json, "_T-Pose_")
+			#add_missing_humanoid_tracks_to_animations(pkgasset, json, bindata, bone_map_dict)
+			pkgasset.parsed_meta.internal_data["silhouette_anim"] = silhouette_anim
+			if copy_avatar:
+				pkgasset.parsed_meta.internal_data["copy_avatar_src"] = src_ava
 
 		var skinned_parents: Dictionary
 		for node in nodes:
 			if node.mesh != -1 and node.skin != -1:
 				var parent_name := ""
 				if node.parent != -1:
-					parent_name = nodes[node.parent].original_name
+					var par_node = nodes[node.parent]
+					parent_name = godot_sanitized_to_orig_remap.get("bone_name", {}).get(
+						par_node.resource_name, godot_sanitized_to_orig_remap.get("nodes", {}).get(
+							par_node.resource_name, par_node.original_name))
 				if not skinned_parents.has(parent_name):
 					skinned_parents[parent_name] = []
-				skinned_parents[parent_name].append(node.original_name)
+				skinned_parents[parent_name].append(godot_sanitized_to_orig_remap.get("bone_name", {}).get(
+					node.resource_name, godot_sanitized_to_orig_remap.get("nodes", {}).get(
+						node.resource_name, node.original_name)))
 
 		pkgasset.parsed_meta.internal_data["skinned_parents"] = skinned_parents
 		pkgasset.parsed_meta.internal_data["godot_sanitized_to_orig_remap"] = godot_sanitized_to_orig_remap
@@ -1935,9 +2207,10 @@ class FbxHandler:
 		var is_humanoid: bool = importer.keys.get("animationType", 2) == 3 or pkgasset.parsed_meta.is_force_humanoid()
 		var bone_map_dict: Dictionary
 		var copy_avatar: bool = false
+		var src_ava: Array
 		if is_humanoid and json.has("nodes") and (importer.keys.get("avatarSetup", 1) >= 1 or pkgasset.parsed_meta.is_force_humanoid()):
 			if importer.keys.get("avatarSetup", 1) == 2 or importer.keys.get("copyAvatar", 0) == 1:
-				var src_ava = importer.keys.get("lastHumanDescriptionAvatarSource", [null, 0, "", 0])
+				src_ava = importer.keys.get("lastHumanDescriptionAvatarSource", [null, 0, "", 0])
 				var src_ava_meta = pkgasset.meta_dependencies.get(src_ava[2], null)
 				if src_ava_meta == null:
 					pkgasset.log_fail("Unable to lookup meta copy avatar dependency", "lastHumanDescriptionAvatarSource", src_ava)
@@ -2075,6 +2348,8 @@ class FbxHandler:
 				json["skins"] = []
 			json["skins"].append({"joints": human_skin_nodes})
 
+		if copy_avatar:
+			pkgasset.parsed_meta.internal_data["copy_avatar_src"] = src_ava
 		# skinned_parents use the original gltf names before the remap.
 		pkgasset.parsed_meta.internal_data["skinned_parents"] = assign_skinned_parents({}.duplicate(), json["nodes"], "", json["scenes"][json.get("scene", 0)]["nodes"])
 		pkgasset.parsed_meta.internal_data["godot_sanitized_to_orig_remap"] = {"bone_name": {}}
@@ -2385,6 +2660,12 @@ func preprocess_asset_stage2(pkgasset: Object, tmpdir: String, guid_to_pkgasset:
 				pkgasset.parsed_meta.log_debug(0, "Asset " + str(obj.keys.get("m_Name", "")) + " did not have a roughness texture")
 
 
+func about_to_import(pkgasset: Object):
+	var path = pkgasset.orig_pathname
+	var asset_handler: AssetHandler = file_handlers.get(path.get_extension().to_lower(), file_handlers.get("default"))
+	asset_handler.about_to_import(pkgasset)
+
+
 func write_additional_import_dependencies(pkgasset: Object, guid_to_pkgasset: Dictionary) -> Array[String]:
 	var dependencies: Array[String]
 	for extra_tex_filename in pkgasset.parsed_meta.internal_data.get("extra_textures", []):
@@ -2404,8 +2685,6 @@ func write_additional_import_dependencies(pkgasset: Object, guid_to_pkgasset: Di
 			continue
 		extra_tex_data.erase("temp_path")
 		extra_tex_data.erase("source_meta_guid")
-		var path = pkgasset.orig_pathname
-		var asset_handler: AssetHandler = file_handlers.get(path.get_extension().to_lower(), file_handlers.get("default"))
 
 		var cfile_source := ConfigFile.new()
 		var cfile := ConfigFile.new() # AssetHandler.ConfigFileCompare.new(pkgasset)
