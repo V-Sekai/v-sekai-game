@@ -305,7 +305,7 @@ class UnidotObject:
 			last_material = node.get_active_material(old_surface_count - 1)
 
 		var last_extra_material: Resource = last_material
-		var current_materials_raw: Array = [].duplicate()
+		var current_materials: Array = [].duplicate()
 
 		var prefix: String = material_prefix + str(old_surface_count - 1) + ":"
 		var new_prefix: String = prefix
@@ -315,17 +315,8 @@ class UnidotObject:
 			var mat: Resource = node.get_active_material(material_idx)
 			if mat != null and str(mat.resource_name).begins_with(prefix):
 				break
-			current_materials_raw.push_back(mat)
+			current_materials.push_back(mat)
 			material_idx += 1
-
-		var mat_slots: PackedInt32Array = meta.fileid_to_material_order_rev.get(fileID, meta.prefab_fileid_to_material_order_rev.get(fileID, PackedInt32Array()))
-		var current_materials: Array
-		current_materials.resize(len(mat_slots))
-		for i in range(len(mat_slots)):
-			current_materials[i] = current_materials_raw[mat_slots[i]]
-		for i in range(len(mat_slots), len(current_materials_raw)):
-			current_materials.append(current_materials_raw[i])
-		log_debug("Current mat slots " + str(mat_slots) + " materials before: " + str(current_materials))
 
 		while last_extra_material != null and (str(last_extra_material.resource_name).begins_with(prefix) or str(last_extra_material.resource_name).begins_with(new_prefix)):
 			if str(last_extra_material.resource_name).begins_with(new_prefix):
@@ -344,11 +335,6 @@ class UnidotObject:
 		var new_materials_size = props.get("_materials_size", material_idx)
 
 		if props.has("_mesh"):
-			var mesh_ref: Array = props["_mesh_ref"]
-			var mesh_meta: Resource = meta.lookup_meta(mesh_ref)
-			if mesh_meta != null:
-				meta.fileid_to_material_order_rev[fileID] = mesh_meta.fileid_to_material_order_rev.get(mesh_ref[1], PackedInt32Array())
-				log_debug("GET " + str(fileID) + ": " + str(mesh_ref[1]) + " from " + str(mesh_meta.fileid_to_material_order_rev.get(mesh_ref[1])))
 			node.mesh = props.get("_mesh")
 			node.material_override = null
 
@@ -370,15 +356,9 @@ class UnidotObject:
 				# GI_MODE_DISABLED seems buggy and ignores light probes.
 				node.gi_mode = GeometryInstance3D.GI_MODE_DYNAMIC
 
-
-		mat_slots = meta.fileid_to_material_order_rev.get(fileID, meta.prefab_fileid_to_material_order_rev.get(fileID, PackedInt32Array()))
 		current_materials.resize(new_materials_size)
 		for i in range(new_materials_size):
-			var idx = mat_slots[i] if i < len(mat_slots) else i
-			if idx < new_materials_size:
-				current_materials[idx] = props.get("_materials/" + str(i), current_materials[i])
-
-		log_debug("After mat slots " + str(mat_slots) + " materials after: " + str(current_materials))
+			current_materials[i] = props.get("_materials/" + str(i), current_materials[i])
 
 		var new_surface_count: int = 0 if node.mesh == null else node.mesh.get_surface_count()
 		if new_surface_count != 0 and node.mesh != null:
@@ -4362,9 +4342,7 @@ class UnidotPrefabInstance:
 				instanced_scene.scene_file_path = ""
 				set_owner_rec(instanced_scene, state.owner)
 		var anim_player: AnimationPlayer = instanced_scene.get_node_or_null("AnimationPlayer") as AnimationPlayer
-		# Scenes with only a RESET but not a unidot-created _T-Pose_ are following the Godot convention of rest-pose as RESET.
-		# In Godot engine versions which support rest-as-RESET, the model will already be posed correctly and we do not want this.
-		if anim_player != null and anim_player.has_animation(&"RESET") and anim_player.has_animation(&"_T-Pose_"):
+		if anim_player != null and anim_player.has_animation(&"RESET"):
 			var root_node: Node = anim_player.get_node(anim_player.root_node)
 			var reset_anim: Animation = anim_player.get_animation(&"RESET")
 			if reset_anim != null:
@@ -5453,7 +5431,6 @@ class UnidotMeshFilter:
 			var new_mesh: Mesh = meta.get_godot_resource(mesh_ref)
 			log_debug("MeshFilter " + str(self) + " ref " + str(mesh_ref) + " new mesh " + str(new_mesh) + " old mesh " + str(node.mesh))
 			outdict["_mesh"] = new_mesh  # property track?
-			outdict["_mesh_ref"] = mesh_ref  # property track?
 		return outdict
 
 	func get_filter_mesh() -> Array:  # UnidotRef
@@ -5536,11 +5513,7 @@ class UnidotMeshRenderer:
 		assign_object_meta(new_node)
 		if meta.get_database().enable_unidot_keys:
 			new_node.editor_description = str(self)
-		var mesh_ref: Array = self.get_mesh()
-		var mesh_meta: Resource = meta.lookup_meta(mesh_ref)
-		if mesh_meta != null:
-			new_node.mesh = meta.get_godot_resource(mesh_ref)
-			meta.fileid_to_material_order_rev[fileID] = mesh_meta.fileid_to_material_order_rev.get(mesh_ref[1], PackedInt32Array())
+		new_node.mesh = meta.get_godot_resource(self.get_mesh())
 
 		if is_stripped or gameObject.is_stripped:
 			log_fail("Oh no i am stripped MeshRenderer create_godot_node_orig")
@@ -5548,9 +5521,8 @@ class UnidotMeshRenderer:
 		if mf != null:
 			state.add_fileID(new_node, mf)
 		var idx: int = 0
-		var mat_slots: PackedInt32Array = meta.fileid_to_material_order_rev.get(fileID, meta.prefab_fileid_to_material_order_rev.get(fileID, PackedInt32Array()))
 		for m in keys.get("m_Materials", []):
-			new_node.set_surface_override_material(mat_slots[idx] if idx < len(mat_slots) else idx, meta.get_godot_resource(m))
+			new_node.set_surface_override_material(idx, meta.get_godot_resource(m))
 			idx += 1
 		return new_node
 
@@ -5676,7 +5648,7 @@ class UnidotSkinnedMeshRenderer:
 					var skin_rotation_delta: Transform3D = skin_humanoid_rotation_delta.get(skin.get_bind_name(idx), Transform3D.IDENTITY)
 					var rotation_delta: Transform3D = meta.transform_fileid_to_rotation_delta.get(bone_fileID, meta.prefab_transform_fileid_to_rotation_delta.get(bone_fileID))
 					if !rotation_delta.is_equal_approx(skin_rotation_delta):
-						log_debug("skin " + str(idx) + " : This fileID is a humanoid bone rotation offset=" + str(rotation_delta.basis.get_rotation_quaternion()) + " scale " + str(rotation_delta.basis.get_scale()) + " pos " + str(rotation_delta.origin))
+						log_debug("skin " + str(idx) + " : This fileID is a humanoid bone rotation offset=" + str(rotation_delta.basis.get_rotation_quaternion()) + " scale " + str(rotation_delta.basis.get_scale()))
 						skin.set_bind_pose(idx, rotation_delta * skin_rotation_delta.affine_inverse() * skin.get_bind_pose(idx))
 		return skin
 
@@ -5684,7 +5656,6 @@ class UnidotSkinnedMeshRenderer:
 		var outdict = super.convert_properties(node, uprops)
 		if uprops.has("m_Mesh"):
 			var mesh_ref: Array = get_ref(uprops, "m_Mesh")
-			outdict["_mesh_ref"] = mesh_ref
 			var new_mesh: Mesh = meta.get_godot_resource(mesh_ref)
 			outdict["_mesh"] = new_mesh  # property track?
 			var skin_ref: Array = mesh_ref
