@@ -96,6 +96,7 @@ NetworkManager="*res://addons/network_manager/network_manager.gd"
 ScreenshotManager="*res://addons/sar1_screenshot_manager/screenshot_manager.gd"
 ConnectionUtil="*res://addons/gd_util/connection_util.gd"
 VSKVersion="*res://addons/vsk_version/vsk_version.gd"
+Telemetry="*res://addons/telemetry/telemetry.gd"
 
 [compression]
 
