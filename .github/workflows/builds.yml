@@ -166,7 +166,7 @@ jobs:
           egress-policy: audit
 
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: V-Sekai/v-sekai-game
           ref: ${{ env.VSK_GAME_BRANCH }}
@@ -364,7 +364,7 @@ jobs:
 
     steps:
       - name: Checkout desync
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: V-Sekai/desync
           fetch-depth: 0
@@ -392,7 +392,7 @@ jobs:
           ls -la
 
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: other
 
@@ -553,7 +553,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Download artifact
         uses: actions/download-artifact@v2
