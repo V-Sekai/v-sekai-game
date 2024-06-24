@@ -60,10 +60,4 @@ runs:
         echo "Building with flags:" platform=$PLATFORM target=$TARGET tests=${{ inputs.tests }} ${{ env.SCONSFLAGS }}
         if [ "$TARGET" != "editor" ]; then rm -rf editor; fi  # Ensure we don't include editor code.
         scons platform=$PLATFORM target=$TARGET tests=${{ inputs.tests }} ${{ env.SCONSFLAGS }} arch=$ARCH
-
-    - name: Move bin contents
-      shell: bash
-      run: |
-        cp -r bin/* ..        
-        cp -r modules/mono/glue/* modules/mono/glue
-        cp bin/* ..
+        
