@@ -1,0 +1,574 @@
+name: Package V-Sekai SDK
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+    branches:
+      - "**"
+
+concurrency:
+  group: ci-${{github.actor}}-${{github.head_ref || github.run_number}}-${{github.ref}}-deploy
+  cancel-in-progress: true
+
+env:
+  GAME_NAME: vsekai_game_
+  GODOT_REF: groups-4.3.2024-06-19T122756Z
+  VSK_GAME_BRANCH: 7ebac31f495b952d659bff42dcbea7234e27fc1d
+  GODOT_REPOSITORY: v-sekai/godot
+  SCONSFLAGS: verbose=yes warnings=extra werror=no module_text_server_fb_enabled=yes use_thinlto=yes
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  EM_VERSION: 3.1.18
+  EM_CACHE_FOLDER: "emsdk-cache"
+
+jobs:
+  godot-build:
+    runs-on: ${{ matrix.runs-on }}
+    name: ${{ matrix.name }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: linux_editor_win_deploy
+            runs-on: ubuntu-22.04
+            cache-name: linux-editor-deploy-windows-editor
+            target: editor
+            tests: false
+            sconsflags: linker=gold precision=double use_mingw=yes
+            doc-test: false
+            bin: ./godot/bin/godot.linuxbsd.editor.double.x86_64
+            deploy-bin: ./godot/bin/godot.windows.editor.double.x86_64.exe
+            editor-bin-name: godot.windows.editor.double.x86_64.exe
+            proj-conv: false
+            artifact: true
+            platform: linuxbsd
+            deploy: true
+            deploy-pdb: true
+            deploy-platform: windows
+            export-platform: Windows
+            build-arch: x86_64
+            deploy-arch: x86_64
+            arch: _x86_64
+            deploy-platform-target: editor
+
+          - name: linux_editor_linux_deploy
+            runs-on: ubuntu-22.04
+            cache-name: linux-editor-deploy-linux-editor
+            target: editor
+            tests: false
+            sconsflags: linker=gold precision=double use_llvm=yes
+            doc-test: false
+            bin: ./godot/bin/godot.linuxbsd.editor.double.x86_64.llvm
+            deploy-bin: ./godot/bin/godot.linuxbsd.editor.double.x86_64.llvm
+            editor-bin-name: godot.linuxbsd.editor.double.x86_64.llvm
+            proj-conv: false
+            artifact: true
+            platform: linuxbsd
+            deploy: true
+            deploy-platform: linux
+            export-platform: Linux
+            build-arch: x86_64
+            deploy-arch: x86_64
+            arch: _x86_64
+            deploy-platform-target: editor
+
+          - name: macos_editor_macos_deploy
+            runs-on: "macos-latest"
+            cache-name: macos-editor-deploy-macos-editor
+            target: editor
+            tests: false
+            sconsflags: linker=gold precision=double generate_bundle=yes
+            doc-test: false
+            bin: ./godot/bin/godot.macos.editor.double.arm64
+            deploy-bin: ./godot/bin/godot_macos_editor_double.app
+            editor-bin-name: godot.macos.editor.double.arm64
+            proj-conv: false
+            artifact: true
+            platform: macos
+            deploy: true
+            deploy-platform: macos
+            export-platform: Mac
+            build-arch: arm64
+            deploy-arch: arm64
+            arch: _arm64
+            deploy-platform-target: editor
+
+          # - name: linux_editor_android_arm32_deploy
+          #   runs-on: ubuntu-22.04
+          #   cache-name: linux-editor-deploy-android-editor
+          #   target: editor
+          #   tests: false
+          #   sconsflags: linker=gold precision=double
+          #   doc-test: false
+          #   bin: ./godot/bin/godot.linuxbsd.editor.double.arm64
+          #   deploy-bin: ./godot/bin/libgodot.android.editor.double.arm64.so
+          #   editor-bin-name: godot.linuxbsd.editor.double.arm64
+          #   proj-conv: false
+          #   artifact: true
+          #   platform: linuxbsd
+          #   deploy: false
+          #   deploy-pdb: true
+          #   deploy-platform: android
+          #   export-platform: Android
+          #   build-arch: arm64
+          #   deploy-arch: arm32
+          #   arch: _arm32
+          #   deploy-platform-target: editor
+
+          # - name: linux_editor_android_arm64_deploy
+          #   runs-on: ubuntu-22.04
+          #   cache-name: linux-editor-deploy-android-editor
+          #   target: editor
+          #   tests: false
+          #   sconsflags: linker=gold precision=double
+          #   doc-test: false
+          #   bin: ./godot/bin/godot.linuxbsd.editor.double.arm64
+          #   deploy-bin: ./godot/bin/libgodot.android.editor.double.arm32.so
+          #   editor-bin-name: godot.linuxbsd.editor.double.arm64
+          #   proj-conv: false
+          #   artifact: true
+          #   platform: linuxbsd
+          #   deploy: true
+          #   deploy-pdb: true
+          #   deploy-platform: android
+          #   export-platform: Android
+          #   build-arch: arm32
+          #   deploy-arch: arm64
+          #   arch: _arm64
+          #   deploy-platform-target: editor
+
+          - name: linux_editor_web_deploy
+            runs-on: ubuntu-22.04
+            cache-name: linux-editor-deploy-web-editor
+            target: editor
+            tests: false
+            sconsflags: linker=gold precision=double
+            doc-test: false
+            bin: ./godot/bin/godot.linuxbsd.editor.double.x86_64
+            deploy-bin: ./godot/bin/godot.web.editor.double.x86_64.html
+            editor-bin-name: godot.web.editor.double.x86_64.html
+            proj-conv: false
+            artifact: true
+            platform: linuxbsd
+            deploy: false
+            deploy-platform: web
+            export-platform: Web
+            build-arch: x86_64
+            deploy-arch: wasm
+            arch: _x86_64
+            deploy-platform-target: editor
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@17d0e2bd7d51742c71671bd19fa12bdc9d40a3d6 # v2.8.1
+        with:
+          egress-policy: audit
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          repository: V-Sekai/v-sekai-game
+          ref: ${{ env.VSK_GAME_BRANCH }}
+
+      - name: Linux dependencies for gold linker
+        if: ${{ matrix.platform == 'linux' }}
+        run: |
+          sudo apt-get install -qq binutils
+        shell: bash
+
+      - name: Install MinGW
+        if: ${{ matrix.deploy-platform == 'windows' }}
+        run: |
+          sudo add-apt-repository ppa:savoury1/build-tools
+          sudo apt-get update
+          sudo apt-get install mingw-w64
+          sudo update-alternatives --set x86_64-w64-mingw32-gcc /usr/bin/x86_64-w64-mingw32-gcc-posix
+          sudo update-alternatives --set x86_64-w64-mingw32-g++ /usr/bin/x86_64-w64-mingw32-g++-posix
+        shell: bash
+
+      - name: Setup Godot build cache
+        uses: ./.github/actions/godot-cache
+        with:
+          cache-name: ${{ matrix.cache-name }}
+          continue-on-error: true
+
+      - name: Setup Vulkan SDK
+        if: ${{ matrix.platform == 'macos' }}
+        run: |
+          sh ./.github/install_vulkan_sdk_macos.sh
+
+      - name: Set up Emscripten latest
+        if: ${{ matrix.platform == 'web' ||  matrix.deploy-platform == 'web'}}
+        uses: mymindstorm/setup-emsdk@6ab9eb1bda2574c4ddb79809fc9247783eaf9021 # v14
+        with:
+          version: ${{env.EM_VERSION}}
+          actions-cache-folder: ${{env.EM_CACHE_FOLDER}}
+
+      - name: Verify Emscripten setup
+        if: ${{ matrix.platform == 'web' ||  matrix.deploy-platform == 'web'}}
+        run: |
+          emcc -v
+        shell: bash
+
+      - name: Setup python, scons and golang
+        uses: ./.github/actions/godot-deps
+        with:
+          godot-ref: ${{ env.GODOT_REF }}
+          godot-repository: ${{ env.GODOT_REPOSITORY }}
+
+      - name: Set up .NET Sdk
+        uses: actions/setup-dotnet@4d6c8fcf3c8f7a60068d26b594648e99df24cee3 # v4.0.0
+        if: ${{ matrix.build-mono }}
+        with:
+          dotnet-version: "6.0.x"
+
+      - name: Setup GCC problem matcher
+        uses: ammaraskar/gcc-problem-matcher@0f9c86f9e693db67dacf53986e1674de5f2e5f28 # master
+
+      - name: Compilation
+        uses: ./.github/actions/godot-build
+        with:
+          sconsflags: ${{ env.SCONSFLAGS }} ${{ matrix.sconsflags }}
+          platform: ${{ matrix.platform }}
+          target: ${{ matrix.target }}
+          tests: ${{ matrix.tests }}
+          deploy: ${{ matrix.deploy }}
+          deploy-platform: ${{ matrix.deploy-platform }}
+          deploy-platform-target: ${{ matrix.deploy-platform-target }}
+
+      - name: Compilation
+        if: ${{ matrix.deploy-platform == 'windows' || matrix.deploy-platform == 'web' }}
+        uses: ./.github/actions/godot-build
+        with:
+          sconsflags: ${{ env.SCONSFLAGS }} ${{ matrix.sconsflags }}
+          platform: ${{ matrix.platform }}
+          target: ${{ matrix.target }}
+          tests: false
+          deploy: false
+          deploy-platform: ${{ matrix.platform }}
+          deploy-platform-target: ${{ matrix.target }}
+
+      - name: Generate build constants
+        uses: ./.github/actions/vsk-generate-constants
+
+      - name: Export Game
+        if: ${{ matrix.deploy }}
+        run: |
+          mkdir -p .godot/editor .godot/imported export_${{ matrix.deploy-platform }}
+          chmod +x ${{ matrix.bin }}
+          ${{ matrix.bin }} --headless --xr-mode off --export-pack ${{ matrix.export-platform }}  `pwd`/${{ env.GAME_NAME }}${{ matrix.deploy-platform }}.pck --path . || true
+        timeout-minutes: 20
+        shell: bash
+
+      - name: Prepare artifacts
+        if: ${{ matrix.deploy }}
+        run: |
+          ls
+          # Check if the .pck file exists
+          if [ ! -f ./${{ env.GAME_NAME }}${{ matrix.deploy-platform }}.pck ]; then
+              echo "Error: ${{ env.GAME_NAME }}${{ matrix.deploy-platform }}.pck does not exist."
+              exit 1
+          fi
+
+          # Check if the path to the .pck file is correct
+          if [ ! -f `pwd`/${{ env.GAME_NAME }}${{ matrix.deploy-platform }}.pck ]; then
+              echo "Error: The path to ${{ env.GAME_NAME }}${{ matrix.deploy-platform }}.pck is incorrect."
+              exit 1
+          fi
+
+          rm -rf ${{ env.GAME_NAME }}${{ matrix.deploy-platform }}
+          export TARGET=${{ env.GAME_NAME }}${{ matrix.deploy-platform }}
+          mkdir -p $TARGET
+
+          # If deploy platform is windows, append .exe to the binary
+          if [ "${{ matrix.deploy-platform }}" == "windows" ]; then
+              cp -rf ${{ matrix.deploy-bin }} $TARGET/${{ env.GAME_NAME }}${{ matrix.deploy-platform }}.exe
+          else
+              cp -rf ${{ matrix.deploy-bin }} $TARGET/${{ env.GAME_NAME }}${{ matrix.deploy-platform }}
+          fi
+
+          cp -rf `pwd`/${{ env.GAME_NAME }}${{ matrix.deploy-platform }}.pck $TARGET/${{ env.GAME_NAME }}${{ matrix.deploy-platform }}.pck
+          7z a -r $TARGET.zip $TARGET
+        shell: bash
+
+      - name: Upload Godot Artifact Export
+        if: ${{ matrix.deploy }}
+        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808 # v4.3.3
+        with:
+          name: ${{ env.GAME_NAME }}${{ matrix.deploy-platform }}
+          path: |
+            ${{ env.GAME_NAME }}${{ matrix.deploy-platform }}
+
+      - name: Generate C# glue
+        if: ${{ matrix.build-mono }}
+        run: |
+          ${{ matrix.bin }} --headless --generate-mono-glue ./modules/mono/glue || true
+        shell: bash
+
+      - name: Build .NET solutions
+        if: ${{ matrix.build-mono }}
+        run: |
+          ./modules/mono/build_scripts/build_assemblies.py --godot-output-dir=./bin --godot-platform=linuxbsd
+        shell: bash
+
+      - name: Unit tests
+        if: ${{ matrix.tests }}
+        run: |
+          ${{ matrix.bin }} --version
+          ${{ matrix.bin }} --help
+          ${{ matrix.bin }} --test --headless
+        shell: bash
+
+      - name: Check for class reference updates
+        if: ${{ matrix.doc-test }}
+        run: |
+          echo "Running --doctool to see if this changes the public API without updating the documentation."
+          echo -e "If a diff is shown, it means that your code/doc changes are incomplete and you should update the class reference with --doctool.\n\n"
+          ${{ matrix.bin }} --doctool --headless 2>&1 > /dev/null || true
+          git diff --color --exit-code && ! git ls-files --others --exclude-standard | sed -e 's/^/New doc file missing in PR: /' | grep 'xml$'
+        shell: bash
+
+      - name: Test project converter
+        if: ${{ matrix.proj-conv }}
+        run: |
+          mkdir -p converter_test
+          cd converter_test
+          touch project.godot
+          ${{ matrix.bin }} --headless --validate-conversion-3to4
+          cd ..
+          rm converter_test -rf
+        shell: bash
+
+      - name: Prepare artifact
+        if: ${{ matrix.artifact }}
+        run: |
+          chmod +x godot/bin/godot.* || true
+        shell: bash
+
+      - name: Upload artifact
+        uses: ./.github/actions/upload-artifact
+        if: ${{ matrix.artifact }}
+        with:
+          name: ${{ matrix.cache-name }}
+
+  index:
+    needs: godot-build
+    name: Generate index.html
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        include:
+          - triplet: x86_64-unknown-linux-gnu
+
+    steps:
+      - name: Checkout desync
+        uses: actions/checkout@v2
+        with:
+          repository: V-Sekai/desync
+          fetch-depth: 0
+
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: "^1.15.6"
+
+      - uses: actions/cache@v1
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      - run: go test
+      - run: GOOS=windows GOARCH=amd64 go build -o ./archive/desync-windows-amd64.exe ./cmd/desync
+      - run: GOOS=darwin GOARCH=amd64 go build -o ./archive/desync-macos-amd64 ./cmd/desync
+      - run: GOOS=linux GOARCH=amd64 go build -o ./archive/desync-linux-amd64 ./cmd/desync
+      - name: Debug
+        shell: bash
+        run: |
+          pwd
+          ls -la
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          path: other
+
+      - name: Cache Go modules
+        uses: actions/cache@v2
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      - name: Cache CMake build
+        uses: actions/cache@v2
+        with:
+          path: other/**/build
+          key: ${{ runner.os }}-cmake-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-cmake-
+
+      - run: chmod +x ./archive/desync-linux-amd64
+
+      - name: Install Ninja Build
+        run: sudo apt-get update && sudo apt-get install -y libglfw3-dev libxinerama-dev libxcursor-dev libxi-dev libsuitesparse-dev libmetis-dev ninja-build
+
+      - name: Run CMake, Install, Copy to Archive, and Clean Up
+        run: |
+          root_dir=$(pwd)
+          for dir in 31_geodesiac_path 32_intrinsic_triangulations; do
+              build_dir=${root_dir}/other/$dir/build
+              install_dir=${root_dir}/other/${dir}_install
+              archive_dir=${root_dir}/archive/${dir}_install/
+
+              mkdir -p $build_dir
+              cd $build_dir
+
+              cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$install_dir -G Ninja ${root_dir}/other/$dir
+              ninja
+              cmake --install .
+              cp -r $install_dir $archive_dir
+
+              rm -rf ${root_dir}/other/$dir/*
+          done
+
+      - name: Package Code
+        # This script is used to package the code into chunks of 64MB. The chunk size of 64MB is a recommendation from a large game studio's CDN engineering team.
+        run: |
+          mkdir -p archive/store
+          for dir in 01_about 02_github_meta 11_vsekai_game 12_contraptions 13_grid 14_planner 15_launcher 16_model_explorer 17_okhsl_picker 18_paint_mixer 19_godot 21_desync 22_cloth_dynamics 23_shader_motion 24_mesh_transformer 26_animation_provider 28_vertex_snapping 29_ply 31_geodesiac_path 32_intrinsic_triangulations 33_convex_decompositions 34_blender 35_sample_gui_in_vr 36_avatar_vr_demo 42_demo_to_game 43_notebooks 51_docker_groups 52_flux_config 53_entity_database 54_mvsqlite 55_pipeline 56_vsona_bot 57_elixir_mvsqlite 58_godot_mvsqlite 61_base_mesh 71_vsekai_manuals 80_objaverse_downloader LICENSE.md README.md; do
+            ./archive/desync-linux-amd64 tar -i -s archive/store --chunk-size 4096:16384:65536 archive/$dir.caidx other/$dir
+          done
+
+      - name: Package Cockroachdb
+        run: |
+          mkdir -p archive/store
+          wget -qO- https://binaries.cockroachdb.com/cockroach-v23.2.3.linux-amd64.tgz | tar xvz
+          mv cockroach-v23.2.3.linux-amd64/cockroach cockroach-v23.2.3.linux-amd64/cockroach-${{ matrix.triplet }}
+          cp -i cockroach-v23.2.3.linux-amd64/cockroach-${{ matrix.triplet }} ./archive/
+
+      - name: Package Foundationdb
+        run: |
+          mkdir -p archive/store
+          wget https://github.com/apple/foundationdb/releases/download/7.1.29/foundationdb-clients_7.1.29-1_amd64.deb
+          wget https://github.com/apple/foundationdb/releases/download/7.1.29/foundationdb-server_7.1.29-1_amd64.deb
+          wget https://github.com/apple/foundationdb/releases/download/7.1.29/foundationdb-7.1.29-x64.msi
+          wget https://github.com/apple/foundationdb/releases/download/7.1.29/FoundationDB-7.1.29_arm64.pkg
+          mv foundationdb-clients_7.1.29-1_amd64.deb archive/
+          mv foundationdb-server_7.1.29-1_amd64.deb archive/
+          mv foundationdb-7.1.29-x64.msi archive/
+          mv FoundationDB-7.1.29_arm64.pkg archive/
+
+      - name: Download linux-editor-deploy-windows-editor artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: linux-editor-deploy-windows-editor
+          path: "./archive/"
+
+      - name: Download linux-editor-deploy-linux-editor artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: linux-editor-deploy-linux-editor
+          path: "./archive/"
+
+      - name: Download macos-editor-deploy-macos-editor artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: macos-editor-deploy-macos-editor
+          path: "./archive/"
+
+      - name: Generate index.html
+        run: |
+          echo "<!DOCTYPE html>" > ./archive/index.html
+          echo "<html>" >> ./archive/index.html
+          echo "<head>" >> ./archive/index.html
+          echo "<title>V-Sekai Kit Contents</title>" >> ./archive/index.html
+          echo "</head>" >> ./archive/index.html
+          echo "<body>" >> ./archive/index.html
+          echo "<h1>V-Sekai Kit Contents</h1>" >> ./archive/index.html
+          echo "<h2>Instructions</h2>" >> ./archive/index.html
+
+          # Windows
+          echo "<h3>Windows</h3>" >> ./archive/index.html
+          echo "<pre><code>./desync-windows-amd64.exe untar -s https://v-sekai.github.io/world/store -i https://v-sekai.github.io/world/vsk_game.caidx VSK_game --no-same-owner</code></pre>" >> ./archive/index.html
+          echo "<pre><code>./desync-windows-amd64.exe untar -s https://v-sekai.github.io/world/store -i https://v-sekai.github.io/world/vsk_godot.caidx VSK_godot --no-same-owner</code></pre>" >> ./archive/index.html
+
+          # Mac
+          echo "<h3>Mac</h3>" >> ./archive/index.html
+          echo "<pre><code>./desync-macos-amd64 untar -s https://v-sekai.github.io/world/store -i https://v-sekai.github.io/world/vsk_game.caidx VSK_game --no-same-owner</code></pre>" >> ./archive/index.html
+          echo "<pre><code>./desync-macos-amd64 untar -s https://v-sekai.github.io/world/store -i https://v-sekai.github.io/world/vsk_godot.caidx VSK_godot --no-same-owner</code></pre>" >> ./archive/index.html
+
+          # Linux
+          echo "<h3>Linux</h3>" >> ./archive/index.html
+          echo "<pre><code>./desync-linux-amd64 untar -s https://v-sekai.github.io/world/store -i https://v-sekai.github.io/world/vsk_game.caidx VSK_game --no-same-owner</code></pre>" >> ./archive/index.html
+          echo "<pre><code>./desync-linux-amd64 untar -s https://v-sekai.github.io/world/store -i https://v-sekai.github.io/world/vsk_godot.caidx VSK_godot --no-same-owner</code></pre>" >> ./archive/index.html
+
+          echo "<ul>" >> ./archive/index.html
+          # List desync binaries first
+          for file in $(ls ./archive/desync-* 2> /dev/null); do
+          stripped_file=$(echo "$file" | sed 's|./archive/||')
+          echo "<li><a href=\"https://v-sekai.github.io/world/$stripped_file\">$stripped_file</a></li>" >> ./archive/index.html
+          done
+          # Then list caidx files
+          for file in $(ls ./archive/*.caidx 2> /dev/null); do
+          stripped_file=$(echo "$file" | sed 's|./archive/||')
+          echo "<li><a href=\"https://v-sekai.github.io/world/$stripped_file\">$stripped_file</a></li>" >> ./archive/index.html
+          done
+          # Then list the remaining files
+          find ./archive -type f ! -name 'desync-*' ! -name '*.caidx' | while read file; do
+          stripped_file=$(echo "$file" | sed 's|./archive/||')
+          echo "<li><a href=\"https://v-sekai.github.io/world/$stripped_file\">$stripped_file</a></li>" >> ./archive/index.html
+          done
+          echo "</ul>" >> ./archive/index.html
+          echo "</body>" >> ./archive/index.html
+          echo "</html>" >> ./archive/index.html
+
+      - name: Install spaces-cli
+        if: github.ref == 'refs/heads/main'
+        run: |
+          npm install -g spaces-cli
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: archive
+          path: "archive"
+
+  pages:
+    if: github.ref == 'refs/heads/main'
+    needs: index
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: archive
+          path: "archive"
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "archive"
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
