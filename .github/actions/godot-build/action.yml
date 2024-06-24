@@ -46,9 +46,8 @@ runs:
         SCONS_CACHE_LIMIT: ${{ inputs.scons-cache-limit }}
       run: |
         WORKING_DIR=$(pwd)
-        ls -l $WORKING_DIR
-        mkdir -p $WORKING_DIR/bin $WORKING_DIR/modules/mono/glue 
-        cd $WORKING_DIR/godot
+        mkdir -p bin modules/mono/glue 
+        cd godot
         if [[ "${{ inputs.deploy }}" == "true" ]]; then
           export PLATFORM=${{ inputs.deploy-platform }}
           export TARGET=${{ inputs.deploy-platform-target }}
@@ -60,7 +59,10 @@ runs:
         fi
         echo "Building with flags:" platform=$PLATFORM target=$TARGET tests=${{ inputs.tests }} ${{ env.SCONSFLAGS }}
         if [ "$TARGET" != "editor" ]; then rm -rf editor; fi  # Ensure we don't include editor code.
-        scons platform=$PLATFORM target=$TARGET tests=${{ inputs.tests }} ${{ env.SCONSFLAGS }}
-        cp -r $WORKING_DIR/godot/bin/* $WORKING_DIR/bin        
-        cp -r $WORKING_DIR/godot/modules/mono/glue/* $WORKING_DIR/modules/mono/glue
-        ls -l $WORKING_DIR/bin
+        scons platform=$PLATFORM target=$TARGET tests=${{ inputs.tests }} ${{ env.SCONSFLAGS }} arch=$ARCH
+
+    - name: Move bin contents
+      run: |
+        cp -r bin/* ..        
+        cp -r modules/mono/glue/* modules/mono/glue
+        cp bin/* ..
