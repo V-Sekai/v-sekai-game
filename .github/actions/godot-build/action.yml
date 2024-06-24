@@ -58,6 +58,7 @@ runs:
         echo "Building with flags:" platform=$PLATFORM target=$TARGET tests=${{ inputs.tests }} ${{ env.SCONSFLAGS }}
         if [ "$TARGET" != "editor" ]; then rm -rf editor; fi  # Ensure we don't include editor code.
         scons platform=$PLATFORM target=$TARGET tests=${{ inputs.tests }} ${{ env.SCONSFLAGS }}
-        cp -r bin/* $WORKING_DIR/bin        
-        cp -r modules/mono/glue/* $WORKING_DIR/modules/mono/glue
+        cp -r $WORKING_DIR/godot/bin/* $WORKING_DIR/bin        
+        cp -r $WORKING_DIR/godot/modules/mono/glue/* $WORKING_DIR/modules/mono/glue
         ls -l $WORKING_DIR/bin
+        
