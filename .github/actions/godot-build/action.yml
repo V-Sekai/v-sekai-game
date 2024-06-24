@@ -50,11 +50,13 @@ runs:
         mkdir -p $WORKING_DIR/bin $WORKING_DIR/modules/mono/glue 
         cd $WORKING_DIR/godot
         if [[ "${{ inputs.deploy }}" == "true" ]]; then
-          PLATFORM=${{ inputs.deploy-platform }}
-          TARGET=${{ inputs.deploy-platform-target }}
+          export PLATFORM=${{ inputs.deploy-platform }}
+          export TARGET=${{ inputs.deploy-platform-target }}
+          export ARCH=${{ inputs.deploy-arch }}
         else
-          PLATFORM=${{ inputs.platform }}
-          TARGET=${{ inputs.target }}
+          export PLATFORM=${{ inputs.platform }}
+          export TARGET=${{ inputs.target }}
+          export ARCH=${{ inputs.build-arch }}
         fi
         echo "Building with flags:" platform=$PLATFORM target=$TARGET tests=${{ inputs.tests }} ${{ env.SCONSFLAGS }}
         if [ "$TARGET" != "editor" ]; then rm -rf editor; fi  # Ensure we don't include editor code.
