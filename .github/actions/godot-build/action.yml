@@ -7,8 +7,14 @@ inputs:
   tests:
     description: Unit tests.
     default: false
+  build-arch:
+    description: Arch.
+    default: false
   deploy:
     description: Deploy game.
+    default: false
+  deploy-arch:
+    description: Deploy arch.
     default: false
   deploy-platform:
     description: Deploy game platform.
