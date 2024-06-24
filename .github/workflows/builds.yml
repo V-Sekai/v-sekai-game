@@ -440,20 +440,23 @@ jobs:
         # This script is used to package the code into chunks of 64MB. The chunk size of 64MB is a recommendation from a large game studio's CDN engineering team.
         run: |
           mkdir -p archive/store
-          for dir in godot_macos_editor_double.app 01_about 02_github_meta 11_vsekai_game 12_contraptions 13_grid 14_planner 15_launcher 16_model_explorer 17_okhsl_picker 18_paint_mixer 19_godot 21_desync 22_cloth_dynamics 23_shader_motion 24_mesh_transformer 26_animation_provider 28_vertex_snapping 29_ply 31_geodesiac_path 32_intrinsic_triangulations 33_convex_decompositions 34_blender 35_sample_gui_in_vr 36_avatar_vr_demo 42_demo_to_game 43_notebooks 51_docker_groups 52_flux_config 53_entity_database 54_mvsqlite 55_pipeline 56_vsona_bot 57_elixir_mvsqlite 58_godot_mvsqlite 61_base_mesh 71_vsekai_manuals 80_objaverse_downloader LICENSE.md README.md; do
+          for dir in godot_macos_editor_double.app 01_about 11_vsekai_game 12_contraptions 13_grid 14_planner 15_launcher 16_model_explorer 17_okhsl_picker 18_paint_mixer 19_godot 21_desync 22_cloth_dynamics 23_shader_motion 24_mesh_transformer 26_animation_provider 28_vertex_snapping 29_ply 31_geodesiac_path 32_intrinsic_triangulations 33_convex_decompositions 34_blender 35_sample_gui_in_vr 36_avatar_vr_demo 42_demo_to_game 43_notebooks 51_docker_groups 52_flux_config 53_entity_database 54_mvsqlite 55_pipeline 56_vsona_bot 57_elixir_mvsqlite 58_godot_mvsqlite 61_base_mesh 71_vsekai_manuals 80_objaverse_downloader LICENSE.md README.md; do
             ./archive/desync-linux-amd64 tar -i -s archive/store --chunk-size 4096:16384:65536 archive/$dir.caidx other/$dir
           done
 
-      - name: Package Cockroachdb
+      - name: Setup
         run: |
           mkdir -p archive/store
+
+      - name: Package Cockroachdb
+        run: |
           wget -qO- https://binaries.cockroachdb.com/cockroach-v23.2.3.linux-amd64.tgz | tar xvz
           mv cockroach-v23.2.3.linux-amd64/cockroach cockroach-v23.2.3.linux-amd64/cockroach-${{ matrix.triplet }}
           cp -i cockroach-v23.2.3.linux-amd64/cockroach-${{ matrix.triplet }} ./archive/
+          ./archive/desync-linux-amd64 tar -i -s archive/store --chunk-size 4096:16384:65536 archive/cockroach-${{ matrix.triplet }}.caidx other/cockroach-${{ matrix.triplet }}
 
       - name: Package Foundationdb
         run: |
-          mkdir -p archive/store
           wget https://github.com/apple/foundationdb/releases/download/7.1.29/foundationdb-clients_7.1.29-1_amd64.deb
           wget https://github.com/apple/foundationdb/releases/download/7.1.29/foundationdb-server_7.1.29-1_amd64.deb
           wget https://github.com/apple/foundationdb/releases/download/7.1.29/foundationdb-7.1.29-x64.msi
@@ -462,24 +465,32 @@ jobs:
           mv foundationdb-server_7.1.29-1_amd64.deb archive/
           mv foundationdb-7.1.29-x64.msi archive/
           mv FoundationDB-7.1.29_arm64.pkg archive/
+          ./archive/desync-linux-amd64 tar -i -s archive/store --chunk-size 4096:16384:65536 archive/foundationdb-clients_7.1.29-1_amd64.caidx other/foundationdb-clients_7.1.29-1_amd64
+          ./archive/desync-linux-amd64 tar -i -s archive/store --chunk-size 4096:16384:65536 archive/foundationdb-server_7.1.29-1_amd64.caidx other/foundationdb-server_7.1.29-1_amd64
 
       - name: Download linux-editor-deploy-windows-editor artifact
         uses: actions/download-artifact@v2
         with:
           name: linux-editor-deploy-windows-editor
           path: "./archive/"
+        run: |
+          ./archive/desync-linux-amd64 tar -i -s archive/store --chunk-size 4096:16384:65536 archive/linux-editor-deploy-windows-editor.caidx other/linux-editor-deploy-windows-editor
 
       - name: Download linux-editor-deploy-linux-editor artifact
         uses: actions/download-artifact@v2
         with:
           name: linux-editor-deploy-linux-editor
           path: "./archive/"
+        run: |
+          ./archive/desync-linux-amd64 tar -i -s archive/store --chunk-size 4096:16384:65536 archive/linux-editor-deploy-linux-editor.caidx other/linux-editor-deploy-linux-editor
 
       - name: Download macos-editor-deploy-macos-editor artifact
         uses: actions/download-artifact@v2
         with:
           name: macos-editor-deploy-macos-editor
           path: "./archive/"
+        run: |
+          ./archive/desync-linux-amd64 tar -i -s archive/store --chunk-size 4096:16384:65536 archive/macos-editor-deploy-macos-editor.caidx other/macos-editor-deploy-macos-editor
 
       - name: Generate index.html
         run: |
