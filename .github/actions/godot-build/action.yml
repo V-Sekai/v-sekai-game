@@ -46,6 +46,7 @@ runs:
         SCONS_CACHE_LIMIT: ${{ inputs.scons-cache-limit }}
       run: |
         WORKING_DIR=$(pwd)
+        ls -l $WORKING_DIR
         mkdir -p $WORKING_DIR/bin $WORKING_DIR/modules/mono/glue 
         cd $WORKING_DIR/godot
         if [[ "${{ inputs.deploy }}" == "true" ]]; then
@@ -61,4 +62,3 @@ runs:
         cp -r $WORKING_DIR/godot/bin/* $WORKING_DIR/bin        
         cp -r $WORKING_DIR/godot/modules/mono/glue/* $WORKING_DIR/modules/mono/glue
         ls -l $WORKING_DIR/bin
-        
