@@ -62,6 +62,7 @@ runs:
         scons platform=$PLATFORM target=$TARGET tests=${{ inputs.tests }} ${{ env.SCONSFLAGS }} arch=$ARCH
 
     - name: Move bin contents
+      shell: bash
       run: |
         cp -r bin/* ..        
         cp -r modules/mono/glue/* modules/mono/glue
