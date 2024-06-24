@@ -374,7 +374,7 @@ jobs:
         with:
           go-version: "^1.15.6"
 
-      - uses: actions/cache@v1
+      - uses: actions/cache@v4
         with:
           path: ~/go/pkg/mod
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
@@ -397,7 +397,7 @@ jobs:
           path: other
 
       - name: Cache Go modules
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/go/pkg/mod
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
@@ -405,7 +405,7 @@ jobs:
             ${{ runner.os }}-go-
 
       - name: Cache CMake build
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: other/**/build
           key: ${{ runner.os }}-cmake-${{ github.sha }}
