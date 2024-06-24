@@ -45,29 +45,20 @@ runs:
         SCONS_CACHE: ${{ inputs.scons-cache }}
         SCONS_CACHE_LIMIT: ${{ inputs.scons-cache-limit }}
       run: |
-        echo "Building with flags:" platform=${{ inputs.platform }} target=${{ inputs.target }} tests=${{ inputs.tests }} ${{ env.SCONSFLAGS }}
-
-        if [ "${{ inputs.target }}" != "editor" ]; then
-          # Ensure we don't include editor code in export template builds.
-          rm -rf editor
-        fi
-
-        if [ "${{ github.event.number }}" != "" ]; then
-          # Set build identifier with pull request number if available. This is displayed throughout the editor.
-          export BUILD_NAME="gh-${{ github.event.number }}"
-        else
-          export BUILD_NAME="gh"
-        fi
-
+        WORKING_DIR=$(pwd)
+        ls -l $WORKING_DIR
+        mkdir -p $WORKING_DIR/bin $WORKING_DIR/modules/mono/glue 
+        cd $WORKING_DIR/godot
         if [[ "${{ inputs.deploy }}" == "true" ]]; then
-          export PLATFORM=${{ inputs.deploy-platform }}
-          export TARGET=${{ inputs.deploy-platform-target }}
-          export ARCH=${{ inputs.deploy-arch }}
+          PLATFORM=${{ inputs.deploy-platform }}
+          TARGET=${{ inputs.deploy-platform-target }}
         else
-          export PLATFORM=${{ inputs.platform }}
-          export TARGET=${{ inputs.target }}
-          export ARCH=${{ inputs.build-arch }}
+          PLATFORM=${{ inputs.platform }}
+          TARGET=${{ inputs.target }}
         fi
-
-        scons platform=$PLATFORM target=$TARGET tests=${{ inputs.tests }} ${{ env.SCONSFLAGS }} arch=$ARCH
-        ls -l bin/
+        echo "Building with flags:" platform=$PLATFORM target=$TARGET tests=${{ inputs.tests }} ${{ env.SCONSFLAGS }}
+        if [ "$TARGET" != "editor" ]; then rm -rf editor; fi  # Ensure we don't include editor code.
+        scons platform=$PLATFORM target=$TARGET tests=${{ inputs.tests }} ${{ env.SCONSFLAGS }}
+        cp -r $WORKING_DIR/godot/bin/* $WORKING_DIR/bin        
+        cp -r $WORKING_DIR/godot/modules/mono/glue/* $WORKING_DIR/modules/mono/glue
+        ls -l $WORKING_DIR/bin
