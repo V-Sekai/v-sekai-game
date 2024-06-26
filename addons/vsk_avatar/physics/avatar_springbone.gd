@@ -3,4 +3,4 @@
 # avatar_springbone.gd
 # SPDX-License-Identifier: MIT
 
-extends "res://addons/vrm/1.0/VRMC_springBone.gd"
+extends "res://addons/vrm/vrm_spring_bone.gd"
