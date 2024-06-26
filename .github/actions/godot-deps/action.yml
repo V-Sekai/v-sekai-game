@@ -1,0 +1,52 @@
+name: Setup python, scons and golang
+description: Setup python, install the pip version of scons and setup golang.
+inputs:
+  python-version:
+    description: The python version to use.
+    default: "3.x"
+  python-arch:
+    description: The python architecture.
+    default: "x64"
+  godot-ref:
+    description: The reference for the Godot engine repository.
+    default: master
+  godot-repository:
+    description: The Godot engine repository.
+    default: godotengine/godot
+  go-version:
+    description: The Go version to use.
+    default: "1.21"
+runs:
+  using: "composite"
+  steps:
+    # Use python 3.x release (works cross platform)
+    - name: Set up Python 3.x
+      uses: actions/setup-python@v4
+      with:
+        # Semantic version range syntax or exact version of a Python version
+        python-version: ${{ inputs.python-version }}
+        # Optional - x64 or x86 architecture, defaults to x64
+        architecture: ${{ inputs.python-arch }}
+
+    - name: Setup scons
+      shell: bash
+      run: |
+        python -c "import sys; print(sys.version)"
+        python -m pip install scons==4.4.0
+        scons --version
+
+    - name: Checkout godot engine repo
+      uses: actions/checkout@v3
+      with:
+        repository: ${{ inputs.godot-repository }}
+        path: godot
+        ref: ${{ inputs.godot-ref }}
+
+    - name: Set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: ${{ inputs.go-version }}
+
+    - name: Check Go version
+      shell: bash
+      run: go version
