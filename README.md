@@ -4,7 +4,7 @@
 [![All Contributors](https://img.shields.io/badge/all_contributors-8-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
-:warning: **Caution**: In active development, see the current development builds on [itch.io](https://saracenone.itch.io/groups-4x).
+:warning: **Caution**: In active development, see the current development builds on [Github](https://nightly.link/V-Sekai/world/workflows/build/main?preview).
 
 ## How do I get involved?
 
