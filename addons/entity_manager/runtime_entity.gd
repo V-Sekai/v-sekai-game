@@ -449,9 +449,9 @@ func _threaded_instance_setup(p_instance_id: int, p_network_reader: RefCounted) 
 	if not has_method("_threaded_instance_setup"):
 		return
 
-	if simulation_logic_node:
+	if simulation_logic_node and simulation_logic_node.has_method("_threaded_instance_setup"):
 		simulation_logic_node._threaded_instance_setup(p_instance_id, p_network_reader)
-	if network_logic_node:
+	if network_logic_node and network_logic_node.has_method("_threaded_instance_setup"):
 		network_logic_node._threaded_instance_setup(p_instance_id, p_network_reader)
-	if network_identity_node:
+	if network_identity_node and network_identity_node.has_method("_threaded_instance_setup"):
 		network_identity_node._threaded_instance_setup(p_instance_id, p_network_reader)
