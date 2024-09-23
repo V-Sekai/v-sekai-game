@@ -5,7 +5,7 @@ Tested on msys2 Windows 11, Popos.
 ## Readme for fire
 
 ```
-scoop install msys2
+scoop install msys2 gpg4win
 msys2
 pacman -S git python3 ssh-pageant
 # copy
