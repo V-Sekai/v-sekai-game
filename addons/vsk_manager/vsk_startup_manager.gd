@@ -71,7 +71,7 @@ func startup() -> void:
 	if !VSKPreloadManager.request_preloading_tasks():
 		assert(false, "Could not request preloading tasks!")
 
-	await VSKFadeManager.execute_fade.call_deferred(self, "fade_complete")
+	VSKFadeManager.execute_fade.call_deferred(self, "fade_complete")
 	await VSKPreloadManager.all_preloading_done
 	_startup_complete()
 

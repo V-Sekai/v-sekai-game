@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://1nd2u7tkhxsm"]
 
-[ext_resource type="Script" path="res://addons/vsk_manager/vsk_startup_manager.gd" id="1_ilifs"]
+[ext_resource type="Script" uid="uid://bv1lfedvrs5k6" path="res://addons/vsk_manager/vsk_startup_manager.gd" id="1_ilifs"]
 
 [node name="Node" type="Node"]
 script = ExtResource("1_ilifs")
