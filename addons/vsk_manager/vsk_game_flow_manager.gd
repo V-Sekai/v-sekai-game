@@ -37,9 +37,6 @@ var signal_table: Array = [
 	
 	{"singleton": "VSKMapManager", "signal": "map_load_callback", "method": "_map_load_callback"},
 	
-	{"singleton": "BackgroundLoader", "signal": "thread_started", "method": "quit_callback_increment"},
-	{"singleton": "BackgroundLoader", "signal": "thread_ended", "method": "quit_callback_decrement"},
-	
 	{"singleton": "ScreenshotManager", "signal": "screenshot_requested", "method": "_screenshot_requested"},
 	
 	{"singleton": "SpatialGameViewportManager", "signal": "viewport_updated", "method": "_spatial_game_viewport_updated"}
