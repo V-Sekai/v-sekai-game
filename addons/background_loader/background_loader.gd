@@ -11,10 +11,6 @@ const mutex_lock_const = preload("res://addons/gd_util/mutex_lock.gd")
 var _loading_tasks_mutex: Mutex = Mutex.new()
 var _loading_active: bool = true
 var _loading_tasks: Dictionary = {}
-var _loading_thread: Thread = null
-
-signal thread_started
-signal thread_ended
 
 signal task_set_stage(p_task_name, p_stage)
 signal task_set_stage_count(p_task_name, p_stage_count)
@@ -77,9 +73,8 @@ func _request_loading_task_internal(p_path: String, p_new_loading_task: LoadingT
 		else:
 			return false
 
-	if !_loading_thread.is_started():
-		if _loading_active:
-			_start_loading_thread()
+	if _loading_active:
+		_start_loading_task(p_path)
 
 	return true
 
@@ -137,31 +132,19 @@ func _task_set_loading_stage_count(p_task: String, p_stage_count: int) -> void:
 	task_set_stage_count.emit(p_task, p_stage_count)
 
 
-func _attempt_to_start_loading_thread() -> void:
-	var _mutex_lock = mutex_lock_const.new(_loading_tasks_mutex)
-	var loading_tasks: Dictionary = _get_loading_task_paths()
-	if loading_tasks.keys().size() > 0:
-		if !_loading_thread.is_started():
-			_start_loading_thread()
+func _start_loading_task(p_path: String) -> void:
+	print_debug("background_loader_task_started")
+	WorkerThreadPool.add_task(Callable(self, "_threaded_loading_method").bind(p_path))
 
-
-func _threaded_loading_complete() -> void:
-	_loading_thread.wait_to_finish()
-	print_debug("background_loader_thread_ended (success)")
-	thread_ended.emit()
-
-	_attempt_to_start_loading_thread()
-
-
-func _threaded_loading_method() -> void:
+func _threaded_loading_method(_p_path: String) -> void:
 	while get_loading_active() and !is_loading_task_queue_empty():
 		var tasks: Dictionary = _get_loading_task_paths()
-		if tasks.size() == 0:
+		if tasks.is_empty():
 			continue
-				
+
 		for task_path in tasks.keys():
 			var loading_task: LoadingTask = _loading_tasks[task_path]
-			
+
 			if !ResourceLoader.has_method("load_threaded_request_whitelisted"):
 				print("Warning: load_threaded_request_whitelisted is not available in this build. All loading will bypass the whitelist.")
 				loading_task.bypass_whitelist = true
@@ -184,7 +167,10 @@ func _threaded_loading_method() -> void:
 			if loading_task.load_path.is_empty():
 				continue
 
-			if !tasks[task_path]:
+			if tasks[task_path]:
+				Callable(self, "_task_cancelled").call_deferred(task_path)
+				_destroy_loading_task(task_path)
+			else:
 				var err = ResourceLoader.load_threaded_get_status(loading_task.load_path, [])
 				if err == ResourceLoader.THREAD_LOAD_LOADED:
 					Callable(self, "_task_done").call_deferred(task_path, OK, ResourceLoader.load_threaded_get(loading_task.load_path))
@@ -192,27 +178,11 @@ func _threaded_loading_method() -> void:
 				elif err != ResourceLoader.THREAD_LOAD_IN_PROGRESS:
 					Callable(self, "_task_done").call_deferred(task_path, FAILED, null)
 					_destroy_loading_task(task_path)
-			else:
-				Callable(self, "_task_cancelled").call_deferred(task_path)
-				_destroy_loading_task(task_path)
-
-	Callable(self, "_threaded_loading_complete").call_deferred()
 
 
 func is_quitting() -> void:
 	set_loading_active(false)
 
 
-func _start_loading_thread() -> void:
-	print_debug("background_loader_thread_started")
-	thread_started.emit()
-	var callable: Callable = Callable(self, "_threaded_loading_method")
-	var err: int = _loading_thread.start(callable)
-	if err != OK:
-		printerr("_start_loading_thread (failure)" + str(err))
-		thread_ended.emit()
-
-
 func _ready() -> void:
-	_loading_thread = Thread.new()
 	set_process(true)
