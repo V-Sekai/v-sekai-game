@@ -87,85 +87,86 @@ class HTTPState:
 
 			if status == HTTPClient.STATUS_CONNECTED or status == HTTPClient.STATUS_REQUESTING or status == HTTPClient.STATUS_BODY:
 				_connection_finished.emit(http)
-			elif status != HTTPClient.STATUS_CONNECTING and status != HTTPClient.STATUS_RESOLVING and status != HTTPClient.STATUS_CONNECTED:
+				return
+			if status != HTTPClient.STATUS_CONNECTING and status != HTTPClient.STATUS_RESOLVING and status != HTTPClient.STATUS_CONNECTED:
 				busy = false
 				printerr("GodotUroRequester: could not connect to host: status = %s" % [str(http.get_status())])
 				_connection_finished.emit(null)
 				return
-			else:
-				pass
-		else:
-			status = http.get_status()
-			if terminated:
-				if file:
-					file.close()
-				_request_finished.emit(false)
-				return
+			return
 
-			if status != HTTPClient.STATUS_REQUESTING and status != HTTPClient.STATUS_BODY:
-				_request_finished.emit(false)
-				return
+		status = http.get_status()
+		if terminated:
+			if file:
+				file.close()
+			_request_finished.emit(false)
+			return
 
-			if cancelled:
-				if file:
-					file.close()
-				cancelled = false
-				busy = false
-				http.close()
-				_request_finished.emit(false)
-				return
+		if status != HTTPClient.STATUS_REQUESTING and status != HTTPClient.STATUS_BODY:
+			_request_finished.emit(false)
+			return
 
-			if status == HTTPClient.STATUS_REQUESTING:
-				http.poll()
-				if status == HTTPClient.STATUS_BODY:
-					response_code = http.get_response_code()
-					response_headers = http.get_response_headers_as_dictionary()
+		if cancelled:
+			if file:
+				file.close()
+			cancelled = false
+			busy = false
+			http.close()
+			_request_finished.emit(false)
+			return
 
-					bytes = 0
-					if response_headers.has("Content-Length"):
-						total_bytes = int(response_headers["Content-Length"])
-					else:
-						total_bytes = -1
-					if not out_path.is_empty():
-						file = FileAccess.open(out_path, FileAccess.WRITE)
-						if file.is_null():
-							busy = false
-							status = HTTPClient.STATUS_CONNECTED  # failed to write to file
-							_request_finished.emit(false)
-							return
-
-			var last_yield = Time.get_ticks_msec()
-			while status == HTTPClient.STATUS_BODY:
-				var _poll_error: int = http.poll()
-
-				var chunk = http.read_response_body_chunk()
+		if status == HTTPClient.STATUS_REQUESTING:
+			http.poll()
+			if status == HTTPClient.STATUS_BODY:
 				response_code = http.get_response_code()
+				response_headers = http.get_response_headers_as_dictionary()
 
-				if file:
-					file.store_buffer(chunk)
+				bytes = 0
+				if response_headers.has("Content-Length"):
+					total_bytes = int(response_headers["Content-Length"])
 				else:
-					response_body.append_array(chunk)
-				bytes += chunk.size()
-				self.download_progressed.emit(bytes, total_bytes)
+					total_bytes = -1
+				if not out_path.is_empty():
+					file = FileAccess.open(out_path, FileAccess.WRITE)
+					if file.is_null():
+						busy = false
+						status = HTTPClient.STATUS_CONNECTED  # failed to write to file
+						_request_finished.emit(false)
+						return
 
-				var time = Time.get_ticks_msec()
+		var last_yield = Time.get_ticks_msec()
+		while status == HTTPClient.STATUS_BODY:
+			var _poll_error: int = http.poll()
 
-				status = http.get_status()
-				if status == HTTPClient.STATUS_CONNECTION_ERROR and !terminated and !cancelled:
-					if file:
-						file.close()
-					busy = false
-					_request_finished.emit(false)
-					return
+			var chunk = http.read_response_body_chunk()
+			response_code = http.get_response_code()
 
-				if status != HTTPClient.STATUS_BODY:
-					busy = false
-					_request_finished.emit(true)
-					if file:
-						file.close()
+			if file:
+				file.store_buffer(chunk)
+			else:
+				response_body.append_array(chunk)
+			bytes += chunk.size()
+			self.download_progressed.emit(bytes, total_bytes)
 
-				if time - last_yield > YIELD_PERIOD_MS:
-					return
+			var time = Time.get_ticks_msec()
+
+			status = http.get_status()
+			if status == HTTPClient.STATUS_CONNECTION_ERROR and !terminated and !cancelled:
+				if file:
+					file.close()
+				busy = false
+				_request_finished.emit(false)
+				return
+
+			if status != HTTPClient.STATUS_BODY:
+				busy = false
+				_request_finished.emit(true)
+				if file:
+					file.close()
+				return
+
+			if time - last_yield > YIELD_PERIOD_MS:
+				return
 
 	func connect_http(hostname: String, port: int, use_ssl: bool) -> HTTPClient:
 		sent_request = false
@@ -225,6 +226,14 @@ class HTTPState:
 
 
 func _process(_ts: float):
+	WorkerThreadPool.add_task(Callable(self, "_http_tick_task"))
+
+
+func _http_tick_task():
+	call_thread_safe("emit_http_tick")
+
+
+func emit_http_tick():
 	http_tick.emit()
 
 
@@ -232,7 +241,6 @@ func _init(p_http_client_limit: int = 5):
 	total_http_clients = p_http_client_limit
 	for i in range(total_http_clients):
 		http_client_pool.push_back(HTTPClient.new())
-
 
 func _acquire_client() -> HTTPClient:
 	if not http_client_pool.is_empty():
