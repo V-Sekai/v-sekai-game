@@ -136,6 +136,7 @@ func _start_loading_task(p_path: String) -> void:
 	print_debug("background_loader_task_started")
 	WorkerThreadPool.add_task(Callable(self, "_threaded_loading_method").bind(p_path))
 
+
 func _threaded_loading_method(_p_path: String) -> void:
 	while get_loading_active() and !is_loading_task_queue_empty():
 		var tasks: Dictionary = _get_loading_task_paths()
@@ -149,7 +150,7 @@ func _threaded_loading_method(_p_path: String) -> void:
 				print("Warning: load_threaded_request_whitelisted is not available in this build. All loading will bypass the whitelist.")
 				loading_task.bypass_whitelist = true
 
-			if loading_task.load_path == "":
+			if loading_task.load_path.is_empty():
 				if loading_task.bypass_whitelist:
 					print("Load " + str(task_path) + " of type " + str(loading_task.type_hint) + " **skip whitelist**")
 					ResourceLoader.call("load_threaded_request", task_path, loading_task.type_hint)
@@ -158,7 +159,7 @@ func _threaded_loading_method(_p_path: String) -> void:
 					ResourceLoader.call("load_threaded_request_whitelisted", task_path, loading_task.external_path_whitelist, loading_task.type_whitelist, loading_task.type_hint)
 
 				loading_task.load_path = task_path if task_path else ""
-				if loading_task.load_path != "":
+				if !loading_task.load_path.is_empty():
 					Callable(self, "_task_set_loading_stage_count").call_deferred(task_path, 100)
 				else:
 					Callable(self, "_task_done").call_deferred(task_path, ERR_FILE_UNRECOGNIZED, null)
