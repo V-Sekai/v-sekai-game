@@ -1,6 +1,6 @@
 # V-Sekai
 
-:warning: **Caution**: In active development, see the current development builds on [Github](https://nightly.link/V-Sekai/world/workflows/build/main?preview).
+:warning: **Caution**: In active development.
 
 ## How do I get involved?
 
