@@ -91,7 +91,7 @@ func _serialize_screenshot_done() -> void:
 	var result: Dictionary = image_thread.wait_to_finish()
 	var err: int = result["error"]
 	var path: String = result["path"]
-	print("Screenshot serialised at '%s' with error code: %s" % [path, str(err)])
+	print("Screenshot serialised at '%s' with error code: %s" % [path, error_string(err)])
 
 	pending = false
 	if err == OK:

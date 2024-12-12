@@ -988,7 +988,7 @@ func create_temp_folder() -> int:
 	if !directory.dir_exists("user://temp"):
 		err = directory.make_dir("user://temp")
 		if err != OK:
-			printerr("Could not create temp directory. Error code %s" % str(err))
+			printerr("Could not create temp directory. Error code %s" % error_string(err))
 		else:
 			print("Created temp directory!")
 
