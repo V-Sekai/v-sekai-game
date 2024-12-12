@@ -3,6 +3,7 @@
 # network_hands.gd
 # SPDX-License-Identifier: MIT
 
+@tool
 extends NetworkLogic
 
 const math_funcs_const = preload("res://addons/math_util/math_funcs.gd")
