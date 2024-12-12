@@ -566,6 +566,10 @@ config/default_autohost=false
 config/use_threaded_host_state_initalisation_func=true
 config/use_threaded_received_server_state_func=true
 
+[physics]
+
+3d/physics_engine="Jolt Physics"
+
 [rendering]
 
 textures/canvas_textures/default_texture_filter=2
