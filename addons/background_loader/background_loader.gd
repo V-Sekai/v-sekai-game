@@ -29,6 +29,11 @@ class LoadingTask:
 	func _init(p_type_hint: String):
 		type_hint = p_type_hint
 
+	func _to_string() -> String:
+		return "LoadingTask(load_path=%s, type_hint=%s, bypass_whitelist=%s, external_path_whitelist=%s, type_whitelist=%s, cancelled=%s)" % [
+			load_path, type_hint, str(bypass_whitelist), str(external_path_whitelist), str(type_whitelist), str(cancelled)
+		]
+
 
 func is_loading_task_queue_empty() -> bool:
 	var _mutex_lock = mutex_lock_const.new(_loading_tasks_mutex)
@@ -79,7 +84,7 @@ func _request_loading_task_internal(p_path: String, p_new_loading_task: LoadingT
 			return false
 
 	if _loading_active:
-		_start_loading_task(p_path)
+		_start_loading_task()
 
 	return true
 
@@ -138,12 +143,11 @@ func _task_set_loading_stage_count(p_task: String, p_stage_count: int) -> void:
 	task_set_stage_count.emit(p_task, p_stage_count)
 
 
-func _start_loading_task(p_path: String) -> void:
-	print_debug("background_loader_task_started %s" % p_path)
-	_threaded_loading_method(p_path)
+func _start_loading_task() -> void:
+	_threaded_loading_method()
 
 
-func _threaded_loading_method(_p_path: String) -> void:
+func _threaded_loading_method() -> void:
 	while get_loading_active() and !is_loading_task_queue_empty():
 		var tasks: Dictionary = _get_loading_task_paths()
 		if tasks.is_empty():
@@ -182,7 +186,7 @@ func _threaded_loading_method(_p_path: String) -> void:
 				var err = ResourceLoader.load_threaded_get_status(loading_task.load_path, [])
 				match err:
 					ResourceLoader.THREAD_LOAD_LOADED:
-						var resource = ResourceLoader.load_threaded_get(loading_task.load_path)
+						var resource: Resource = ResourceLoader.load_threaded_get(loading_task.load_path)
 						if resource:
 							print_debug("Successfully loaded resource: %s" % loading_task.load_path)
 							Callable(self, "_task_done").call_deferred(task_path, OK, resource)
