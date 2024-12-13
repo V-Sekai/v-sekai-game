@@ -158,7 +158,7 @@ func _threaded_loading_method() -> void:
 
 			if !ResourceLoader.has_method("load_threaded_request_whitelisted"):
 				print("Warning: load_threaded_request_whitelisted is not available in this build. All loading will bypass the whitelist.")
-			loading_task.bypass_whitelist = true
+				loading_task.bypass_whitelist = true
 
 			if loading_task.load_path.is_empty():
 				if loading_task.bypass_whitelist:
