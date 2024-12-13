@@ -35,7 +35,7 @@ func _reset_tween() -> void:
 	color = target_fade_color
 
 
-func execute_fade(p_start: Color, p_end: Color, p_time: float) -> void:
+func execute_fade_interpolation(p_start: Color, p_end: Color, p_time: float) -> void:
 	_reset_tween()
 
 	source_fade_color = p_start

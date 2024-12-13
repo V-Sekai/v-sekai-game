@@ -62,9 +62,9 @@ func execute_fade(p_fade_state: FadeState) -> Node:
 	VSKMenuManager.get_menu_root().set_input_blocking(true)
 
 	if p_fade_state == FadeState.FADE_IN:
-		FadeManager.call_deferred("execute_fade", FADE_COLOR, UNFADE_COLOR, FADE_TIME)
+		FadeManager.call_deferred("execute_fade_interpolation", FADE_COLOR, UNFADE_COLOR, FADE_TIME)
 	else:
-		FadeManager.call_deferred("execute_fade", UNFADE_COLOR, FADE_COLOR, FADE_TIME)
+		FadeManager.call_deferred("execute_fade_interpolation", UNFADE_COLOR, FADE_COLOR, FADE_TIME)
 
 	return self
 
