@@ -47,7 +47,7 @@ If you are a __*developer*__ or want to __*experiment*__ we provide builds for o
 
 You can **clone** this repository and **import** in the editor to get started. See [How to contribute](#how-do-i-help-contribute-books) for more instructions.
 
-Some files are provided in parts as **split zip** archives (.zip.001 .zip.002...). To **extract them** download all same name parts, move them to a folder and extract the .zip.001 file with software like **7-zip**.
+Some files are provided in parts as **split zip** archives (.zip.001 .zip.002...). To **extract them** download all same name parts, move them to a folder and extract the .zip.001 file with software like [**7-zip**](https://www.7-zip.org/) or [**PeaZip**](https://peazip.github.io/) (macOS).
 
 This project is highly experimental and still being evaluated for security. Hosting public instances is not recommended. :warning:<ins>**Use at your own risk!**</ins>:warning:
 
