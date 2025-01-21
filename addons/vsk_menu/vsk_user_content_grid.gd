@@ -26,7 +26,7 @@ func add_item(p_id: String, p_name: String, p_url: String) -> void:
 	vsk_user_content_item.set_url(p_url)
 
 	if vsk_user_content_item.vsk_content_button_pressed.connect(self._vsk_content_button_pressed) != OK:
-		printerr("Could not connect 'vsk_content_button_pressed'")
+		push_error("Could not connect 'vsk_content_button_pressed'")
 
 	get_node(grid_container_path).add_child(vsk_user_content_item, true)
 

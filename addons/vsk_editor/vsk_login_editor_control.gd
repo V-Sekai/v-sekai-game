@@ -95,7 +95,7 @@ func _init(p_vsk_editor: Node):
 	submit_button = Button.new()
 	submit_button.set_text("Submit")
 	if submit_button.pressed.connect(self._submit_button_pressed) != OK:
-		printerr("Could not connected signal 'pressed'")
+		push_error("Could not connected signal 'pressed'")
 
 	vbox_container.add_child(submit_button, true)
 
@@ -112,4 +112,4 @@ func _init(p_vsk_editor: Node):
 
 	assert(vsk_editor)
 	if vsk_editor.session_request_complete.connect(self._session_request_complete) != OK:
-		printerr("Could not connection signal 'session_request_complete'")
+		push_error("Could not connection signal 'session_request_complete'")

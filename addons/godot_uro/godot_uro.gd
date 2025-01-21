@@ -97,16 +97,16 @@ func _ready():
 func _init():
 	cfg = ConfigFile.new()
 	if cfg.load(get_uro_editor_config_path()) != OK:
-		printerr("Could not load editor token!")
+		push_error("Could not load editor token!")
 	elif cfg.load(get_uro_config_path()) != OK:
-		printerr("Could not load game token!")
+		push_error("Could not load game token!")
 
 	setup_configuration()
 
 	if cfg.save(get_uro_editor_config_path()) != OK:
-		printerr("Could not save editor token!")
+		push_error("Could not save editor token!")
 	elif cfg.save(get_uro_config_path()) != OK:
-		printerr("Could not save game token!")
+		push_error("Could not save game token!")
 
 	if godot_uro_api == null:
 		godot_uro_api = godot_uro_api_const.new(self)

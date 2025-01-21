@@ -36,7 +36,7 @@ func _ready() -> void:
 	if collision_shape:
 		collision_shape.disabled = not is_multiplayer_authority()
 	else:
-		printerr("Collision shape not found!")
+		push_error("Collision shape not found!")
 	
 	if is_multiplayer_authority():
 		pass
@@ -45,10 +45,10 @@ func _ready() -> void:
 		if player_movement_controller:
 			player_movement_controller.queue_free()
 		else:
-			printerr("Player movement controller not found!")
+			push_error("Player movement controller not found!")
 		
 		if camera:
 			camera.queue_free()
 			camera.get_parent().remove_child(camera)
 		else:
-			printerr("Player camera controller not found!")
+			push_error("Player camera controller not found!")

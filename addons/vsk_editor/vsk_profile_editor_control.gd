@@ -51,7 +51,7 @@ func _ready():
 	sign_out_button = Button.new()
 	sign_out_button.set_text("Log out")
 	if sign_out_button.pressed.connect(self._sign_out_button_pressed) != OK:
-		printerr("Could not connect signal 'pressed'")
+		push_error("Could not connect signal 'pressed'")
 
 	vbox_container.add_child(info_label, true)
 	vbox_container.add_child(sign_out_button, true)
@@ -64,31 +64,31 @@ func _ready():
 	if not vsk_editor:
 		return
 	if vsk_editor.session_deletion_complete.connect(self._session_deletion_complete) != OK:
-		printerr("Could not connect signal 'session_deletion_complete'")
+		push_error("Could not connect signal 'session_deletion_complete'")
 
 	var avatars_grid_node: Control = get_node_or_null(avatars_grid)
 	if avatars_grid_node:
 		if avatars_grid_node.vsk_content_button_pressed.connect(self._avatar_selected) != OK:
-			printerr("Could not connect signal 'vsk_content_button_pressed'")
+			push_error("Could not connect signal 'vsk_content_button_pressed'")
 
 	var maps_grid_node: Control = get_node_or_null(maps_grid)
 	if maps_grid_node:
 		if maps_grid_node.vsk_content_button_pressed.connect(self._map_selected) != OK:
-			printerr("Could not connect signal 'vsk_content_button_pressed'")
+			push_error("Could not connect signal 'vsk_content_button_pressed'")
 
 
 func _avatar_selected(p_id: String) -> void:
 	if avatar_dictionary.has(p_id):
 		DisplayServer.clipboard_set(p_id)
 	else:
-		printerr("Could not select avatar %s" % p_id)
+		push_error("Could not select avatar %s" % p_id)
 
 
 func _map_selected(p_id: String) -> void:
 	if map_dictionary.has(p_id):
 		DisplayServer.clipboard_set(p_id)
 	else:
-		printerr("Could not select map %s" % p_id)
+		push_error("Could not select map %s" % p_id)
 
 
 func _reload_avatars() -> void:
@@ -106,7 +106,7 @@ func _reload_avatars() -> void:
 
 			get_node(avatars_grid).add_item(id, avatar["name"], GodotUro.get_base_url() + avatar["user_content_preview"])
 	else:
-		printerr("Dashboard avatars returned with error %s" % GodotUro.godot_uro_helper_const.get_full_requester_error_string(async_result))
+		push_error("Dashboard avatars returned with error %s" % GodotUro.godot_uro_helper_const.get_full_requester_error_string(async_result))
 
 
 func _reload_maps() -> void:
@@ -124,7 +124,7 @@ func _reload_maps() -> void:
 
 			get_node(maps_grid).add_item(id, map["name"], GodotUro.get_base_url() + map["user_content_preview"])
 	else:
-		printerr("Dashboard maps returned with error %s" % GodotUro.godot_uro_helper_const.get_full_requester_error_string(async_result))
+		push_error("Dashboard maps returned with error %s" % GodotUro.godot_uro_helper_const.get_full_requester_error_string(async_result))
 
 
 func _on_tab_changed(tab):

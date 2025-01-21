@@ -294,7 +294,7 @@ func apply_project_settings() -> void:
 		# Save #
 		########
 		if ProjectSettings.save() != OK:
-			printerr("Could not save project settings!")
+			push_error("Could not save project settings!")
 
 
 func get_project_settings() -> void:
@@ -322,11 +322,11 @@ func _ready() -> void:
 	settings_changed()
 
 	if vr_user_preferences.settings_changed.connect(self.settings_changed) != OK:
-		printerr("Could not connect settings_changed!")
+		push_error("Could not connect settings_changed!")
 
 	vr_fader = ColorRect.new()
 	if FadeManager.color_changed.connect(self._fade_color_changed) != OK:
-		printerr("Could not connect 'color_changed'!")
+		push_error("Could not connect 'color_changed'!")
 
 	# Caches the laser material for laser use
 	laser_material = create_laser_material(false)
@@ -350,13 +350,13 @@ func _ready() -> void:
 		self._on_tracker_added.call_deferred(postracker.name, postracker.type)
 
 	if XRServer.interface_added.connect(self._on_interface_added, CONNECT_DEFERRED) != OK:
-		printerr("interface_added could not be connected")
+		push_error("interface_added could not be connected")
 	if XRServer.interface_removed.connect(self._on_interface_removed, CONNECT_DEFERRED) != OK:
-		printerr("interface_removed could not be connected")
+		push_error("interface_removed could not be connected")
 
 	if XRServer.tracker_added.connect(self._on_tracker_added, CONNECT_DEFERRED) != OK:
-		printerr("tracker_added could not be connected")
+		push_error("tracker_added could not be connected")
 	if XRServer.tracker_removed.connect(self._on_tracker_removed, CONNECT_DEFERRED) != OK:
-		printerr("tracker_removed could not be connected")
+		push_error("tracker_removed could not be connected")
 	set_process(true)
 	set_process_input(true)

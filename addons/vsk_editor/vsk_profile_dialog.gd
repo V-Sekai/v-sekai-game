@@ -35,7 +35,7 @@ func _instance_login_child_control() -> void:
 	if !control:
 		control = vsk_login_control_script_const.new(vsk_editor)
 		if control.session_request_successful.connect(self._state_changed) != OK:
-			printerr("Could not connect 'session_request_successful'")
+			push_error("Could not connect 'session_request_successful'")
 
 		add_child(control, true)
 
@@ -52,7 +52,7 @@ func _instance_profile_child_control() -> void:
 		control = vsk_profile_control_const.instantiate()
 		control.set_vsk_editor(vsk_editor)
 		if control.session_deletion_successful.connect(self._state_changed) != OK:
-			printerr("Could not connect 'session_deletion_successful'")
+			push_error("Could not connect 'session_deletion_successful'")
 
 		add_child(control, true)
 
@@ -80,7 +80,7 @@ func _about_to_close() -> void:
 
 func _ready() -> void:
 	if about_to_popup.connect(self._about_to_popup) != OK:
-		printerr("Could not connect to about_to_popup")
+		push_error("Could not connect to about_to_popup")
 	close_requested.connect(self._about_to_close)
 
 	popup_window = false

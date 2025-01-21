@@ -287,9 +287,9 @@ func decode_entity_remote_command(p_packet_sender_id: int, p_reliable: bool, p_r
 								var raw_data: PackedByteArray = writer.get_raw_data(writer.get_position())
 								network_manager.network_flow_manager.queue_packet_for_send(ref_pool_const.new(raw_data), target_id, MultiplayerPeer.TRANSFER_MODE_UNRELIABLE)
 						else:
-							printerr("RPC command has invalid target ID!")
+							push_error("RPC command has invalid target ID!")
 		else:
-			printerr("Could not find entity instantiate!")
+			push_error("Could not find entity instantiate!")
 	return p_network_reader
 
 

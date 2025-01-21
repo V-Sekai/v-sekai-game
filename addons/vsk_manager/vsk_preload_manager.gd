@@ -67,28 +67,28 @@ func _preloading_failed() -> void:
 ##
 func _preloading_task_done(p_task: String, p_err: int, p_resource: Resource) -> void:
 	if p_err != OK:
-		printerr("_preloading_task_done: task '{task}' failed with the error code '{error}'!".format({"task": p_task, "error": str(p_err)}))
+		push_error("_preloading_task_done: task '{task}' failed with the error code '{error}'!".format({"task": p_task, "error": str(p_err)}))
 		_preloading_failed()
 		return
 	if preloading_tasks.has(p_task):
 		var callback_array: Array = preloading_tasks[p_task]
 		if callback_array.is_empty():
-			printerr("_preloading_task_done: no callback data for task '%s'!" % p_task)
+			push_error("_preloading_task_done: no callback data for task '%s'!" % p_task)
 			_preloading_failed()
 			return
 
 		for callback in callback_array:
 			if callback:
 				if !callback.has("target"):
-					printerr("_preloading_task_done: no target data for task '%s'!" % p_task)
+					push_error("_preloading_task_done: no target data for task '%s'!" % p_task)
 					_preloading_failed()
 					return
 				if !callback.has("method"):
-					printerr("_preloading_task_done: no method data for task '%s'!" % p_task)
+					push_error("_preloading_task_done: no method data for task '%s'!" % p_task)
 					_preloading_failed()
 					return
 				if !callback.has("args"):
-					printerr("_preloading_task_done: no args data for task '%s'!" % p_task)
+					push_error("_preloading_task_done: no args data for task '%s'!" % p_task)
 					_preloading_failed()
 					return
 
@@ -101,19 +101,19 @@ func _preloading_task_done(p_task: String, p_err: int, p_resource: Resource) -> 
 						target.callv(method, [p_resource] + args)
 					else:
 						_preloading_failed()
-						printerr("_preloading_task_done: no valid method for task '%s'!" % p_task)
+						push_error("_preloading_task_done: no valid method for task '%s'!" % p_task)
 						return
 			else:
 				_preloading_failed()
-				printerr("_preloading_task_done: no callback data for task '%s'!" % p_task)
+				push_error("_preloading_task_done: no callback data for task '%s'!" % p_task)
 				return
 		if not preloading_tasks.erase(p_task):
-			printerr("_preloading_task_done: failed to erase task '%s'!" % p_task)
+			push_error("_preloading_task_done: failed to erase task '%s'!" % p_task)
 			_preloading_failed()
 			return
 	else:
 		_preloading_failed()
-		printerr("_preloading_task_done: invalid task '%s'!" % p_task)
+		push_error("_preloading_task_done: invalid task '%s'!" % p_task)
 		return
 
 	if preloading_tasks.is_empty():

@@ -33,7 +33,7 @@ static func fix_external_transform(p_root: Node, p_skeleton: Skeleton3D, _p_undo
 					# Do not apply transform to skeleton's bone attachments
 					# but apply to its children
 					if child is BoneAttachment3D and child.get_parent() == p_skeleton:
-						printerr("BoneAttachments are still funky, complain to Saracen!")
+						push_error("BoneAttachments are still funky, complain to Saracen!")
 						continue
 
 					# Do not apply transform to any meshes with the skeleton

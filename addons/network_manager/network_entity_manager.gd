@@ -161,7 +161,7 @@ func register_network_instance_id(p_network_instance_id: int, p_network_identity
 		network_instance_ids[p_network_instance_id] = p_network_identity
 		network_manager.emit_entity_network_id_registered(p_network_instance_id)
 	else:
-		printerr("Attempted to register duplicate network instance_id")
+		push_error("Attempted to register duplicate network instance_id")
 
 
 # Unregisters a network_instance from the network_instance_id map

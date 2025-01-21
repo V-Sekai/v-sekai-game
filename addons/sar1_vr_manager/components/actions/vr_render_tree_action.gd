@@ -48,8 +48,8 @@ func _ready() -> void:
 
 	var world_origin_scale_changed_result = VRManager.world_origin_scale_changed.connect(self._update_scale)
 	if world_origin_scale_changed_result != OK:
-		printerr("Failed to connect world_origin_scale_changed signal")
+		push_error("Failed to connect world_origin_scale_changed signal")
 
 	var xr_mode_changed_result = VRManager.xr_mode_changed.connect(self._xr_mode_changed)
 	if xr_mode_changed_result != OK:
-		printerr("Failed to connect xr_mode_changed signal")
+		push_error("Failed to connect xr_mode_changed signal")

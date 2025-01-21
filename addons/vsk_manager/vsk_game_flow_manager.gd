@@ -684,15 +684,15 @@ func _assign_gameroots() -> void:
 ##
 func _connect_pre_quitting_signals() -> void:
 	if connect("is_pre_quitting", BackgroundLoader.is_quitting) != OK:
-		printerr("Could not connect is_quitting for BackgroundLoader")
+		push_error("Could not connect is_quitting for BackgroundLoader")
 	if connect("is_pre_quitting", InputManager.is_quitting) != OK:
-		printerr("Could not connect is_quitting InputManager")
+		push_error("Could not connect is_quitting InputManager")
 	if connect("is_pre_quitting", VRManager.is_quitting) != OK:
-		printerr("Could not connect is_quitting VRManager")
+		push_error("Could not connect is_quitting VRManager")
 	if not mocap_manager:
 		return
 	if connect("is_pre_quitting", mocap_manager.is_quitting) != OK:
-		printerr("Could not connect is_quitting MocapManager")
+		push_error("Could not connect is_quitting MocapManager")
 
 
 ##

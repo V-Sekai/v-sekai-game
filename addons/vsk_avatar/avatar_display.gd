@@ -176,7 +176,7 @@ func create_bone_attachments() -> void:
 
 	var entity_node: Node3D = simulation_logic.get_entity_node()
 	if entity_node == null:
-		printerr("Entity node could not be found!")
+		push_error("Entity node could not be found!")
 
 	head_bone_attachment.set_entity(entity_node)
 	left_hand_bone_attachment.set_entity(entity_node)

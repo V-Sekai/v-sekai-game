@@ -25,7 +25,7 @@ func error_callback(p_err: int, p_extra_code: int) -> void:
 	if p_err != vsk_vrm_callback_const.VRM_OK:
 		var error_str: String = vsk_vrm_callback_const.get_error_string(p_err)
 
-		printerr(error_str + ("code: %s" % str(p_extra_code)))
+		push_error(error_str + ("code: %s" % str(p_extra_code)))
 		err_dialog.set_text(error_str)
 		err_dialog.popup_centered_clamped()
 

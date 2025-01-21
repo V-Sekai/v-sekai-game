@@ -22,12 +22,12 @@ func _ready() -> void:
 	movement_orientation_button = get_node_or_null(movement_orientation_nodepath)
 	setup_menu_button(movement_orientation_button, VRManager.vr_user_preferences.movement_orientation, VRManager.movement_orientation_names)
 	if movement_orientation_button.get_popup().connect("id_pressed", self._on_movement_orientation_changed) != OK:
-		printerr("Could not connect 'id_pressed'!")
+		push_error("Could not connect 'id_pressed'!")
 
 	turning_mode_button = get_node_or_null(turning_mode_nodepath)
 	setup_menu_button(turning_mode_button, VRManager.vr_user_preferences.turning_mode, VRManager.turning_mode_names)
 	if turning_mode_button.get_popup().id_pressed.connect(self._on_turning_mode_changed) != OK:
-		printerr("Could not connect 'id_pressed'!")
+		push_error("Could not connect 'id_pressed'!")
 
 	custom_player_height = get_node_or_null(custom_player_height_nodepath)
 	custom_player_height.value = VRManager.vr_user_preferences.custom_player_height
@@ -35,7 +35,7 @@ func _ready() -> void:
 	movement_type_button = get_node_or_null(movement_type_nodepath)
 	setup_menu_button(movement_type_button, VRManager.vr_user_preferences.movement_type, VRManager.movement_type_names)
 	if movement_type_button.get_popup().id_pressed.connect(self._on_movement_type_changed) != OK:
-		printerr("Could not connect 'id_pressed'!")
+		push_error("Could not connect 'id_pressed'!")
 
 	unindicate_restart_required()
 
@@ -46,7 +46,7 @@ func _gameflow_state_changed(_p_state) -> void:
 
 func will_appear() -> void:
 	if VSKGameFlowManager.gameflow_state_changed.connect(self._gameflow_state_changed) != OK:
-		printerr("Could not connect gameflow_state_changed!")
+		push_error("Could not connect gameflow_state_changed!")
 
 
 func will_disappear() -> void:

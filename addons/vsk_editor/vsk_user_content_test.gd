@@ -15,4 +15,4 @@ func _ready():
 	if vsk_editor:
 		vsk_editor.setup_editor(self, null, null)
 	else:
-		printerr("Could not load VSKEditor!")
+		push_error("Could not load VSKEditor!")

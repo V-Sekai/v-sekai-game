@@ -44,7 +44,7 @@ func _avatar_load_succeeded(p_url: String, p_packed_scene: PackedScene) -> void:
 
 
 func _avatar_load_failed(p_url: String, p_err: int) -> void:
-	printerr("Avatar load failed with error code: %s" % str(p_err))
+	push_error("Avatar load failed with error code: %s" % str(p_err))
 	if avatar_pending and p_url == avatar_path:
 		_avatar_load_finished()
 
@@ -52,7 +52,7 @@ func _avatar_load_failed(p_url: String, p_err: int) -> void:
 			load_error_avatar(p_err)
 		else:
 			avatar_cleared.emit()
-			printerr("Could not load failed avatar!")
+			push_error("Could not load failed avatar!")
 
 
 func _avatar_download_started(p_url: String) -> void:
@@ -107,5 +107,5 @@ func _on_avatar_setup_complete():
 
 
 func _on_avatar_setup_failed():
-	printerr("Avatar %s is not valid!" % get_avatar_model_path())
+	push_error("Avatar %s is not valid!" % get_avatar_model_path())
 	load_error_avatar(VSKAssetManager.ASSET_UNKNOWN_FAILURE)

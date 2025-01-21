@@ -111,7 +111,7 @@ func lock_movement() -> void:
 func unlock_movement() -> void:
 	movement_lock_count -= 1
 	if movement_lock_count < 0:
-		printerr("Player lock underflow!")
+		push_error("Player lock underflow!")
 
 
 func movement_is_locked() -> bool:

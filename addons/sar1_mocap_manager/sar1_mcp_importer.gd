@@ -63,6 +63,6 @@ func _import(source_file, save_path, options, platform_variants, gen_files) -> E
 			ResourceSaver.save(packed_scene, filename)
 			return OK
 	else:
-		printerr("Could not open mocap file for reading")
+		push_error("Could not open mocap file for reading")
 
 	return FAILED

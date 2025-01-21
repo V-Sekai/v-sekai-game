@@ -132,7 +132,7 @@ func request(p_path: String, p_payload: Dictionary, p_use_token: int, p_options:
 				headers.append("Content-Type: multipart/form-data; boundary=%s" % boundary_string)
 				encoded_payload = uro_requester_const._compose_multipart_body(p_payload, boundary_string)
 			_:
-				printerr("Unknown encoding type!")
+				push_error("Unknown encoding type!")
 				self._internal_request_done.emit()
 
 	var token = _get_option(p_options, "token")
@@ -141,7 +141,7 @@ func request(p_path: String, p_payload: Dictionary, p_use_token: int, p_options:
 
 	var request_result = http_client.request_raw(_get_option(p_options, "method"), uri, headers, encoded_payload)
 	if request_result != OK:
-		printerr("Failed to send request.")
+		push_error("Failed to send request.")
 		return
 
 	if not await http_state.wait_for_request():
@@ -173,7 +173,7 @@ func request(p_path: String, p_payload: Dictionary, p_use_token: int, p_options:
 			else:
 				return Result.new(godot_uro_helper_const.RequesterCode.HTTP_RESPONSE_NOT_OK, FAILED, response_code, data)
 	else:
-		printerr("GodotUroRequester: No response body!")
+		push_error("GodotUroRequester: No response body!")
 		return Result.new(godot_uro_helper_const.RequesterCode.UNKNOWN_STATUS_ERROR, FAILED, response_code, data)
 
 
@@ -221,7 +221,7 @@ static func _compose_multipart_body(p_dictionary: Dictionary, p_boundary_string:
 			buffer.append_array(disposition)
 			buffer.append_array(body)
 		else:
-			printerr("_compose_multipart_body: Unknown tpye!")
+			push_error("_compose_multipart_body: Unknown tpye!")
 
 	buffer.append_array(("\r\n--" + p_boundary_string + "--\r\n").to_utf8_buffer())
 

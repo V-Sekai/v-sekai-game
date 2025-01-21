@@ -117,7 +117,7 @@ func _screenshot_captured(p_info: Dictionary, p_image: Image) -> void:
 			var callable: Callable = self._unsafe_serialize_screenshot
 			callable = callable.bind({"image": p_image, "info": p_info})
 			if image_thread.start(callable) != OK:
-				printerr("Could not create start processing thread!")
+				push_error("Could not create start processing thread!")
 
 
 func capture_screenshot(p_info: Dictionary) -> void:

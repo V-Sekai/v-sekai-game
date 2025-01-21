@@ -55,7 +55,7 @@ func add_component_action(p_component_action: Node) -> void:
 		return
 
 	if component_action.has(p_component_action):
-		printerr("Attempted to add a duplicate module tracker!")
+		push_error("Attempted to add a duplicate module tracker!")
 		return
 
 	component_action.push_back(p_component_action)
@@ -70,7 +70,7 @@ func remove_component_action(p_component_action: Node) -> void:
 	if index != -1:
 		component_action.remove_at(index)
 	else:
-		printerr("Attempted to remove an invalid module tracker!")
+		push_error("Attempted to remove an invalid module tracker!")
 
 	p_component_action.queue_free()
 	remove_child(p_component_action)

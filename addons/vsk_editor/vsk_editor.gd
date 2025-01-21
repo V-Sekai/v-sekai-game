@@ -118,11 +118,11 @@ static func get_upload_data_for_packed_scene(p_vsk_exporter: Node, p_packed_scen
 					var buffer = file.get_buffer(file.get_length())
 					return {"filename": "autogen.scn", "content_type": "application/octet-stream", "data": buffer}
 
-			printerr("Failed to get upload data!")
+			push_error("Failed to get upload data!")
 		else:
-			printerr("Could not create temp directory")
+			push_error("Could not create temp directory")
 	else:
-		printerr("Could not load VSKExporter")
+		push_error("Could not load VSKExporter")
 
 	return {}
 
@@ -195,7 +195,7 @@ func _submit_button_pressed(p_upload_data: Dictionary) -> void:
 
 		user_content_submission_requested.emit(p_upload_data, {"packed_scene_created": packed_scene_created_callback, "packed_scene_creation_failed": packed_scene_creation_failed_callback, "packed_scene_pre_uploading": packed_scene_pre_uploading_callback, "packed_scene_uploaded": packed_scene_uploaded_callback, "packed_scene_upload_failed": packed_scene_upload_failed_callback})
 	else:
-		printerr("Progress dialog is null!")
+		push_error("Progress dialog is null!")
 
 
 func _cancel_button_pressed() -> void:
@@ -256,7 +256,7 @@ func _setup_progress_panel(p_root: Control) -> void:
 	p_root.add_child(vsk_progress_dialog, true)
 
 	if vsk_progress_dialog.cancel_button_pressed.connect(self._cancel_button_pressed) != OK:
-		printerr("Could not connect signal 'cancel_button_pressed'")
+		push_error("Could not connect signal 'cancel_button_pressed'")
 
 
 func _setup_info_panel(p_root: Control) -> void:
@@ -277,9 +277,9 @@ func _setup_upload_panel(p_root: Control) -> void:
 	p_root.add_child(vsk_upload_dialog, true)
 
 	if vsk_upload_dialog.submit_button_pressed.connect(self._submit_button_pressed) != OK:
-		printerr("Could not connect signal 'submit_button_pressed'")
+		push_error("Could not connect signal 'submit_button_pressed'")
 	if vsk_upload_dialog.requesting_user_content.connect(self._requesting_user_content) != OK:
-		printerr("Could not connect signal 'requesting_user_content'")
+		push_error("Could not connect signal 'requesting_user_content'")
 
 
 func _setup_profile_panel(p_root: Control) -> void:
@@ -367,7 +367,7 @@ func _packed_scene_created_callback() -> void:
 
 
 func _packed_scene_creation_failed_created_callback(p_error_message: String) -> void:
-	printerr("VSKEditor::_packed_scene_creation_failed_created_callback: " + p_error_message)
+	push_error("VSKEditor::_packed_scene_creation_failed_created_callback: " + p_error_message)
 
 	vsk_upload_dialog.hide()
 	vsk_progress_dialog.hide()
@@ -457,7 +457,7 @@ func _packed_scene_uploaded_callback(p_database_id: String) -> void:
 
 
 func _packed_scene_upload_failed_callback(p_error_message: String) -> void:
-	printerr("VSKEditor::_packed_scene_upload_failed_callback: " + str(p_error_message))
+	push_error("VSKEditor::_packed_scene_upload_failed_callback: " + str(p_error_message))
 
 	vsk_progress_dialog.hide()
 	vsk_upload_dialog.hide()
@@ -518,13 +518,13 @@ func _link_vsk_account_manager(p_node: Node) -> void:
 		
 		result = vsk_account_manager.session_renew_started.connect(self._session_renew_started)
 		if result != OK:
-			printerr("Could not connect signal 'session_renew_started'. Result %s" % str(result))
+			push_error("Could not connect signal 'session_renew_started'. Result %s" % str(result))
 		result = vsk_account_manager.session_request_complete.connect(self._session_request_complete)
 		if result != OK:
-			printerr("Could not connect signal 'session_request_complete'. Result %s" % str(result))
+			push_error("Could not connect signal 'session_request_complete'. Result %s" % str(result))
 		result = vsk_account_manager.session_deletion_complete.connect(self._session_deletion_complete)
 		if result != OK:
-			printerr("Could not connect signal 'session_deletion_complete'. Result %s" % str(result))
+			push_error("Could not connect signal 'session_deletion_complete'. Result %s" % str(result))
 
 		vsk_account_manager.call_deferred("start_session")
 

@@ -10,7 +10,7 @@ const UI_PIXELS_TO_METER = 1.0 / 1024
 
 static func find_child_control(p_root: Node) -> Control:
 	if not p_root:
-		printerr("p_root is null.")
+		push_error("p_root is null.")
 		return null
 
 	var control_node: Control = null

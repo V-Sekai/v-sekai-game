@@ -429,7 +429,7 @@ func process_input_audio(p_delta: float):
 					loudness = voice_buffer.loudness
 
 				if voice_buffers.size() > MAX_VOICE_BUFFERS:
-					printerr("Voice buffer overrun!")
+					push_error("Voice buffer overrun!")
 					voice_buffers.pop_front()
 					voice_buffer_overrun_count += 1
 
@@ -496,7 +496,7 @@ func setup() -> void:
 			audio_input_stream = AudioStreamWAV.new()
 			var err: int = audio_input_stream.load(test_audio)
 			if err != OK:
-				printerr("Test audio could not be loaded!")
+				push_error("Test audio could not be loaded!")
 				audio_input_stream = null
 			else:
 				print("Loaded successfully!")

@@ -31,7 +31,7 @@ static func start_recording(p_fps: int) -> MocapRecording:
 			mocap_recording.set_fps(p_fps)
 			mocap_recording.write_mocap_header()
 		else:
-			printerr("Could not open mocap file for writing")
+			push_error("Could not open mocap file for writing")
 
 	return mocap_recording
 
@@ -79,4 +79,4 @@ func _ready():
 	var directory: DirAccess = DirAccess.open("user://")
 	if !directory.dir_exists("user://mocap"):
 		if directory.make_dir_recursive("user://mocap") != OK:
-			printerr("Could not create mocap directory")
+			push_error("Could not create mocap directory")

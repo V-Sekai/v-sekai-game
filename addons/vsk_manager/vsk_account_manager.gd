@@ -69,9 +69,9 @@ func _update_session(p_renewal_token: String, p_access_token: String, p_id: Stri
 
 	godot_uro.cfg.set_value("api", "renewal_token", GodotUroData.renewal_token)
 	if godot_uro.cfg.save(godot_uro.get_uro_editor_config_path()) != OK:
-		printerr("Could not save editor token!")
+		push_error("Could not save editor token!")
 	if godot_uro.cfg.save(godot_uro.get_uro_config_path()) != OK:
-		printerr("Could not save game token!")
+		push_error("Could not save game token!")
 
 	if not token_changed:
 		return
@@ -120,7 +120,7 @@ func _process_result_and_delete(p_result: Dictionary) -> Dictionary:
 	var processed_result: Dictionary = godot_uro.godot_uro_helper_const.process_session_json(p_result)
 
 	if not godot_uro.godot_uro_helper_const.requester_result_is_ok(processed_result):
-		printerr("_process_result_and_delete: %s" % godot_uro.godot_uro_helper_const.get_full_requester_error_string(processed_result))
+		push_error("_process_result_and_delete: %s" % godot_uro.godot_uro_helper_const.get_full_requester_error_string(processed_result))
 		return processed_result
 
 	_delete_session()
@@ -303,6 +303,6 @@ func _enter_tree() -> void:
 	token_refresh_timer = Timer.new()
 	token_refresh_timer.set_name("TokenRefreshTimer")
 	if token_refresh_timer.timeout.connect(self._token_refresh_timer_timeout) != OK:
-		printerr("Could not connect signal 'timeout'")
+		push_error("Could not connect signal 'timeout'")
 
 	add_child(token_refresh_timer, true)

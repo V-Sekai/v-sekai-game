@@ -105,7 +105,7 @@ static func create_scene_for_mocap_recording(p_mocap_recording: MocapRecording) 
 				#var _sca_key_idx: int = animation.scale_track_insert_key(current_idx, current_time, Vector3(1.0, 1.0, 1.0))
 				current_idx += 1
 			else:
-				printerr("Animation mocap data track mismatch")
+				push_error("Animation mocap data track mismatch")
 
 		current_time += timestep
 

@@ -246,7 +246,7 @@ func _shard_heartbeat_timer_timeout() -> void:
 			if _is_session_alive() and advertised_server:
 				_shard_heartbeat_timer.start(_shard_heartbeat_frequency)
 		else:
-			printerr("Shard heartbeat failed!")
+			push_error("Shard heartbeat failed!")
 			
 ##
 ## If the shard is active, attempt to send a kill command to the server
@@ -315,10 +315,10 @@ func _auth_callback(p_sender_id: int, p_buffer: PackedByteArray) -> void:
 	else:
 		if _is_server():
 			force_disconnect()
-			printerr("Received invalid authentication message from host! Disconnecting!")
+			push_error("Received invalid authentication message from host! Disconnecting!")
 		else:
 			multiplayer.disconnect_peer(p_sender_id)
-			printerr("Received invalid authentication message from peer %s! Disconnecting!"
+			push_error("Received invalid authentication message from peer %s! Disconnecting!"
 			% str(p_sender_id))
 	
 	if p_sender_id == HOST_PEER_ID:
@@ -351,7 +351,7 @@ func _auth_callback(p_sender_id: int, p_buffer: PackedByteArray) -> void:
 					
 					var result: Error = multiplayer.complete_auth(p_sender_id)
 					if result != OK:
-						printerr("multiplayer.complete_auth error code %s!" % str(result))
+						push_error("multiplayer.complete_auth error code %s!" % str(result))
 	else:
 		if _is_server():
 			var peer_map_path: String = ""
@@ -372,9 +372,9 @@ func _auth_callback(p_sender_id: int, p_buffer: PackedByteArray) -> void:
 					
 					var result: Error = multiplayer.complete_auth(p_sender_id)
 					if result != OK:
-						printerr("multiplayer.complete_auth error code %s!" % str(result))
+						push_error("multiplayer.complete_auth error code %s!" % str(result))
 				else:
-					printerr("Peer's map path does not match peer: %s / host: %s!"
+					push_error("Peer's map path does not match peer: %s / host: %s!"
 					% [peer_map_path, VSKMapManager.get_current_map_path()])
 					
 					# TODO: instead of disconnecting the peer, send another message
@@ -719,7 +719,7 @@ func apply_project_settings() -> void:
 		if !ProjectSettings.has_setting("multiplayer/config/use_multiplayer_manager"):
 			ProjectSettings.set_setting("multiplayer/config/use_multiplayer_manager", use_multiplayer_manager)
 		if ProjectSettings.save() != OK:
-			printerr("Could not save project settings!")
+			push_error("Could not save project settings!")
 
 ##
 ## Loads all the project settings associated with this manager.
@@ -787,9 +787,9 @@ func setup() -> void:
 		add_child(_auth_heartbeat_timer, true)
 
 		if _shard_heartbeat_timer.timeout.connect(self._shard_heartbeat_timer_timeout) != OK:
-			printerr("Failed to connect ShardHeartbeatTimer timeout signal")
+			push_error("Failed to connect ShardHeartbeatTimer timeout signal")
 			return
 			
 		if _auth_heartbeat_timer.timeout.connect(self._auth_heartbeat_timer_timeout) != OK:
-			printerr("Failed to connect AuthHeartbeatTimer timeout signal")
+			push_error("Failed to connect AuthHeartbeatTimer timeout signal")
 			return

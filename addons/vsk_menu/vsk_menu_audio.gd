@@ -40,11 +40,11 @@ func setup_connections() -> void:
 	var button_node = get_node_or_null(button_nodepath)
 	if button_node:
 		if button_node.pressed.connect(self._on_pressed) != OK:
-			printerr("Could not connected 'pressed'!")
+			push_error("Could not connected 'pressed'!")
 		if button_node.mouse_entered.connect(self._on_mouse_entered) != OK:
-			printerr("Could not connected 'mouse_entered'!")
+			push_error("Could not connected 'mouse_entered'!")
 		if button_node.focus_entered.connect(self._on_focus_entered) != OK:
-			printerr("Could not connected 'focus_entered'!")
+			push_error("Could not connected 'focus_entered'!")
 
 
 func _exit_tree():

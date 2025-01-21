@@ -157,7 +157,7 @@ func setup_and_send_ordered_queue(p_time: float, p_queue: Array, p_time_sorted_q
 		if p_time >= packet.time:
 			var index: int = p_time_sorted_queue.find(packet)
 			if index < 0:
-				printerr("Index not found.")
+				push_error("Index not found.")
 				continue
 
 			if packet.id == network_constants_const.ALL_PEERS or packet.id == network_constants_const.SERVER_MASTER_PEER_ID or network_manager.peer_is_connected(packet.id):

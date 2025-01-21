@@ -203,7 +203,7 @@ func get_skeleton_bone_name(p_humanoid_bone_id: int) -> String:
 		jaw:
 			return jaw_bone_name
 		_:
-			printerr("Invald index")
+			push_error("Invald index")
 			return ""
 
 

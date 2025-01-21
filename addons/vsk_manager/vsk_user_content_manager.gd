@@ -83,12 +83,12 @@ func _user_content_asset_request_complete(p_url: String, p_request_object: Dicti
 		finished_asset_request()
 
 		if p_response_code != VSKAssetManager.ASSET_OK:
-			printerr("Asset download failed with code: %s" % str(p_response_code))
+			push_error("Asset download failed with code: %s" % str(p_response_code))
 
 		if not str(p_request_object["path"]).is_empty():
 			user_content_urls[p_url]["stage"] = VSKAssetManager.STAGE_DOWNLOADING
 			if !make_background_load_request(p_url, p_request_object["path"], p_request_object["skip_validation"], p_request_object["external_path_whitelist"], p_request_object["resource_whitelist"]):
-				printerr("make_background_load_request failed")
+				push_error("make_background_load_request failed")
 		else:
 			user_content_load_done.emit(p_url, p_response_code, null, p_request_object["skip_validation"])
 
@@ -122,13 +122,13 @@ func make_background_load_request(p_url: String, p_user_content_path: String, p_
 		background_loading_tasks[p_user_content_path] = [p_url]
 		if background_loading_tasks_in_progress == 0:
 			if BackgroundLoader.task_done.connect(self._background_loader_task_done) != OK:
-				printerr("Could not connect task_finished")
+				push_error("Could not connect task_finished")
 				return false
 			if BackgroundLoader.task_set_stage.connect(self._background_loader_task_stage) != OK:
-				printerr("Could not connect task_set_stage")
+				push_error("Could not connect task_set_stage")
 				return false
 			if BackgroundLoader.task_set_stage_count.connect(self._background_loader_task_stage_count) != OK:
-				printerr("Could not connect task_set_stage_count")
+				push_error("Could not connect task_set_stage_count")
 				return false
 
 		background_loading_tasks_in_progress += 1
@@ -167,7 +167,7 @@ func request_user_content_load(p_user_content_path: String, p_asset_type: int, p
 	user_content_urls[p_user_content_path] = {"stage": VSKAssetManager.STAGE_DOWNLOADING, "local_path": ""}
 
 	if !await make_asset_request(p_user_content_path, p_asset_type, p_bypass_whitelist, p_skip_validation, p_external_path_whitelist, p_resource_whitelist):
-		printerr("VSKUserContentManager: request %s failed!" % p_user_content_path)
+		push_error("VSKUserContentManager: request %s failed!" % p_user_content_path)
 
 
 func log_validation_result(p_url: String, p_user_content_type_name: String, p_validation_result: Dictionary) -> void:

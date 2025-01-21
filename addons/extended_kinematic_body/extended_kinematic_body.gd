@@ -196,9 +196,9 @@ func extended_move(p_motion: Vector3, _p_slide_attempts: int) -> Vector3:
 							is_grounded = true
 							_step_down(dss)
 				else:
-					printerr("extended_kinematic_body collider must be a capsule")
+					push_error("extended_kinematic_body collider must be a capsule")
 		else:
-			printerr("extended_kinematic_body can only have 1 collider")
+			push_error("extended_kinematic_body can only have 1 collider")
 
 	return motion
 

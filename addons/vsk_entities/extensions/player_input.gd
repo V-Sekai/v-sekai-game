@@ -39,7 +39,7 @@ func _ready():
 		if VRManager.xr_origin:
 			vr_locomotion_component = VRManager.xr_origin.get_component_by_name("LocomotionComponent")
 		else:
-			printerr("Could not access xr_origin!")
+			push_error("Could not access xr_origin!")
 
 
 func update_movement_input(p_target_basis: Basis) -> void:

@@ -57,7 +57,7 @@ func setup_vsk_singletons() -> void:
 
 func startup() -> void:
 	if VSKVersion == null:
-		printerr("VSKVersion must be moved up before VSKStartupManager in Autoloads")
+		push_error("VSKVersion must be moved up before VSKStartupManager in Autoloads")
 		return
 
 	print("V-Sekai Build: %s" % vsk_version_const.get_build_label())
@@ -128,7 +128,7 @@ func apply_project_settings() -> void:
 			ProjectSettings.set_setting("network/config/default_autohost", default_autohost)
 
 		if ProjectSettings.save() != OK:
-			printerr("Could not save project settings!")
+			push_error("Could not save project settings!")
 
 
 func get_project_settings() -> void:

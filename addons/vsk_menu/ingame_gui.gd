@@ -39,10 +39,10 @@ func gameflow_state_changed(p_state) -> void:
 
 func _ready():
 	if VSKGameFlowManager.gameflow_state_changed.connect(self.gameflow_state_changed) != OK:
-		printerr("Could not connect signal gameflow_state_changed")
+		push_error("Could not connect signal gameflow_state_changed")
 
 	if VSKAudioManager.audio_gate_or_muted_state_changed.connect(self.update_audio_icon) != OK:
-		printerr("Could not connect signal audio_gate_or_muted_state_changed")
+		push_error("Could not connect signal audio_gate_or_muted_state_changed")
 
 	audio_icon = get_node_or_null(audio_icon_path)
 	audio_icon_state = get_node_or_null(audio_icon_state_path)

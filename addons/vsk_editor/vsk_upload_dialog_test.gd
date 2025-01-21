@@ -19,7 +19,7 @@ func _on_ShowDialogButton_pressed():
 
 		vsk_editor.show_upload_panel(func_ref, vsk_types_const.UserContentType.Avatar)
 	else:
-		printerr("Could not load VSKEditor")
+		push_error("Could not load VSKEditor")
 
 
 func _ready():
@@ -27,7 +27,7 @@ func _ready():
 	if vsk_editor:
 		vsk_editor.setup_editor(self, null, null)
 	else:
-		printerr("Could not load VSKEditor")
+		push_error("Could not load VSKEditor")
 
 
 static func generate_test_image() -> Dictionary:

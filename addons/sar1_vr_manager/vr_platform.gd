@@ -36,7 +36,7 @@ static func create_pose(p_controller: XRController3D, p_name: String, p_pose: St
 
 func create_poses_for_controller(p_controller: XRController3D, p_origin: XROrigin3D) -> void:
 	if not p_origin:
-		printerr("VRPlatform: Origin does not exist!")
+		push_error("VRPlatform: Origin does not exist!")
 	var model_controller: XRController3D = XRController3D.new()
 	var model_origin: XRController3D = create_pose(model_controller, "ModelOrigin", "grip", p_controller.tracker)
 	p_origin.add_child(model_origin, true)
@@ -68,9 +68,9 @@ func add_controller(p_controller: XRController3D, p_origin: XROrigin3D):
 			p_controller.add_child(controller_actions, true)
 			if controller_actions.has_signal("on_action_pressed") and controller_actions.has_signal("on_action_released"):
 				if (controller_actions.connect("on_action_pressed", Callable(p_controller, "_on_action_pressed"))) != OK:
-					printerr("Could not connect signal 'on_action_pressed' !")
+					push_error("Could not connect signal 'on_action_pressed' !")
 				if (controller_actions.connect("on_action_released", Callable(p_controller, "_on_action_released"))) != OK:
-					printerr("Could not connect signal 'on_action_released' !")
+					push_error("Could not connect signal 'on_action_released' !")
 
 				p_controller.get_is_action_pressed_funcref = Callable(controller_actions, "is_action_pressed")
 				p_controller.get_analog_funcref = controller_actions.get_vector2

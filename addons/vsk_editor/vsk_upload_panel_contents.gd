@@ -127,7 +127,7 @@ func _get_submission_data() -> Dictionary:
 
 		return submission_data
 	else:
-		printerr("Invalid nodepaths!")
+		push_error("Invalid nodepaths!")
 
 	return {}
 

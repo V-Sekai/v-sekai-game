@@ -83,7 +83,7 @@ func _heartbeat_timer_timout() -> void:
 			if is_session_alive() and advertised_server:
 				shard_heartbeat_timer.start(shard_heartbeat_frequency)
 		else:
-			printerr("Shard heartbeat failed!")
+			push_error("Shard heartbeat failed!")
 
 # ID assigned from central shard master server
 var shard_id: String = ""
@@ -270,7 +270,7 @@ func get_random_spawn_transform_for_spawners(p_spawners: Array) -> Transform3D:
 			if node:
 				print("Node %s is invalid!" % node.get_name())
 			else:
-				printerr("Invalid spawner!")
+				push_error("Invalid spawner!")
 
 	return spawn_location
 
@@ -295,11 +295,11 @@ func add_player_scene(p_master_id: int) -> Node:
 		player_instances[p_master_id] = instantiate
 
 		if instantiate == null:
-			printerr("Could not instantitate player!")
+			push_error("Could not instantitate player!")
 
 		return instantiate
 	else:
-		printerr("Attempted to add duplicate client player scene!")
+		push_error("Attempted to add duplicate client player scene!")
 		return null
 
 
@@ -311,7 +311,7 @@ func remove_player_scene(p_master_id: int) -> void:
 	print("Removing player scene for {master_id}...".format({"master_id": str(p_master_id)}))
 
 	if not player_instances.has(p_master_id):
-		printerr("Attempted to remove unrecorded client player scene!")
+		push_error("Attempted to remove unrecorded client player scene!")
 		return
 
 	var instantiate: Node = player_instances[p_master_id]
@@ -386,7 +386,7 @@ func remove_player_display_name(p_master_id: int) -> void:
 	if player_display_names.has(p_master_id):
 		player_display_names.erase(p_master_id)
 	else:
-		printerr("Attempted to remove unrecorded client display name!")
+		push_error("Attempted to remove unrecorded client display name!")
 
 
 ##
@@ -439,7 +439,7 @@ func remove_player_avatar_path(p_master_id: int) -> void:
 	if player_avatar_paths.has(p_master_id):
 		player_avatar_paths.erase(p_master_id)
 	else:
-		printerr("Attempted to remove unrecorded client avatar path!")
+		push_error("Attempted to remove unrecorded client avatar path!")
 
 
 ##
@@ -562,7 +562,7 @@ func _host_setup_map(p_instances: Dictionary, p_fade_skipped: bool) -> void:
 		return
 
 	if not p_instances["map"]:
-		printerr("Could not instantiate map!")
+		push_error("Could not instantiate map!")
 		network_callback.emit(INVALID_MAP, {})
 		return
 
@@ -677,7 +677,7 @@ func _host_create_server_state() -> void:
 	if use_threaded_host_state_initalisation_func:
 		if state_initialization_thread.start(_threaded_host_state_initialization_func) != OK:
 			_host_state_task_decrement()
-			printerr("Could not start 'state_initialization_thread' thread'")
+			push_error("Could not start 'state_initialization_thread' thread'")
 	else:
 		call_deferred("_unthreaded_host_state_initialization_func")
 
@@ -714,7 +714,7 @@ func _threaded_requested_server_state_complete(p_thread: Thread, p_network_id: i
 		if NetworkManager.network_replication_manager.connect("spawn_state_for_new_client_ready", self._server_state_ready_to_send) == OK:
 			NetworkManager.network_replication_manager.create_spawn_state_for_new_client(p_network_id)
 		else:
-			printerr("Could not connect spawn_state_for_new_client_ready!")
+			push_error("Could not connect spawn_state_for_new_client_ready!")
 
 	_host_state_task_decrement()
 
@@ -741,7 +741,7 @@ func _requested_server_state(p_network_id: int) -> void:
 	var callable: Callable = Callable(self, "_threaded_requested_server_state_func")
 	if thread.start(callable.bind({"thread": thread, "network_id": p_network_id})) != OK:
 		_host_state_task_decrement()
-		printerr("Could not start 'state_initialization_thread'!")
+		push_error("Could not start 'state_initialization_thread'!")
 
 
 ##########################
@@ -766,7 +766,7 @@ func join_game(p_ip: String, p_port: int) -> void:
 	if NetworkManager.join_game(p_ip, p_port):
 		pass
 	else:
-		printerr("Could not join game!")
+		push_error("Could not join game!")
 
 
 func _peer_registration_complete() -> void:
@@ -800,7 +800,7 @@ func _client_state_initialization_fade_complete(p_instance: Node, p_skipped: boo
 		return
 
 	if not p_instance:
-		printerr("Could not instantiate map!")
+		push_error("Could not instantiate map!")
 		network_callback.emit(INVALID_MAP, {})
 		return
 
@@ -813,7 +813,7 @@ func _client_state_initialization_complete(p_instance: Node) -> void:
 	server_state_ready.emit()
 
 	if not p_instance:
-		printerr("Could not instantiate map!")
+		push_error("Could not instantiate map!")
 		network_callback.emit(INVALID_MAP, {})
 		_host_state_task_decrement()
 		return
@@ -878,7 +878,7 @@ func _received_server_state(p_server_state: Dictionary) -> void:
 		state_initialization_thread.set_thread_safety_checks_enabled(false)
 		if state_initialization_thread.start(callable) != OK:
 			_host_state_task_decrement()
-			printerr("Could not start 'state_initialization_thread'!")
+			push_error("Could not start 'state_initialization_thread'!")
 	else:
 		call_deferred("_unthreaded_received_server_state_initialization_func", p_server_state)
 
@@ -907,7 +907,7 @@ func _peer_list_changed() -> void:
 			if is_session_alive() and advertised_server:
 				shard_heartbeat_timer.start(shard_heartbeat_frequency)
 		else:
-			printerr("Shard peer list update failed!")
+			push_error("Shard peer list update failed!")
 
 
 ##
@@ -1052,24 +1052,24 @@ func setup() -> void:
 		add_child(shard_heartbeat_timer, true)
 
 		if shard_heartbeat_timer.timeout.connect(self._heartbeat_timer_timout) != OK:
-			printerr("Failed to connect ShardHeartbeatTimer timeout signal")
+			push_error("Failed to connect ShardHeartbeatTimer timeout signal")
 			return
 
 		var godot_speech: Node = GodotSpeech
 		if godot_speech:
 			NetworkManager.network_voice_manager.get_voice_buffers = VSKAudioManager.get_voice_buffers
 			if !NetworkManager.network_voice_manager.get_voice_buffers.is_valid():
-				printerr("Could not register get_voice_buffers callfunc")
+				push_error("Could not register get_voice_buffers callfunc")
 
 			NetworkManager.network_voice_manager.get_sequence_id = VSKAudioManager.get_current_voice_id
 			if !NetworkManager.network_voice_manager.get_sequence_id.is_valid():
-				printerr("Could not register get_sequence_id callfunc")
+				push_error("Could not register get_sequence_id callfunc")
 		else:
-			printerr("Could not find GodotSpeech node")
+			push_error("Could not find GodotSpeech node")
 
 		NetworkManager.network_voice_manager.should_send_audio = VSKAudioManager.should_send_audio
 		if !NetworkManager.network_voice_manager.should_send_audio.is_valid():
-			printerr("Could not register should_send_audio callfunc")
+			push_error("Could not register should_send_audio callfunc")
 
 		if use_threaded_host_state_initalisation_func:
 			state_initialization_thread = Thread.new()
@@ -1092,7 +1092,7 @@ func apply_project_settings() -> void:
 			ProjectSettings.set_setting("network/config/shard_heartbeat_frequency", shard_heartbeat_frequency)
 
 		if ProjectSettings.save() != OK:
-			printerr("Could not save project settings!")
+			push_error("Could not save project settings!")
 
 
 func get_project_settings() -> void:
