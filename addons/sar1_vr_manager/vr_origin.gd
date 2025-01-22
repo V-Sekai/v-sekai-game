@@ -37,19 +37,19 @@ func clear_controllers() -> void:
 		remove_tracker(tracker_name)
 
 	if not active_controllers.is_empty():
-		printerr("Active controllers are not empty after clearing!")
+		push_error("Active controllers are not empty after clearing!")
 		return
 
 	if unknown_controller_count != 0:
-		printerr("Unknown controller count is not zero after clearing!")
+		push_error("Unknown controller count is not zero after clearing!")
 		return
 
 	if not hand_controllers.is_empty():
-		printerr("Hand controllers are not empty after clearing!")
+		push_error("Hand controllers are not empty after clearing!")
 		return
 
 	if left_hand_controller != null or right_hand_controller != null:
-		printerr("Left or right hand controller is not null after clearing!")
+		push_error("Left or right hand controller is not null after clearing!")
 		return
 
 
@@ -96,7 +96,7 @@ func add_tracker(p_tracker_name: StringName) -> void:
 			tracker_added.emit(controller)
 		else:
 			controller.free()
-			printerr("Attempted to add duplicate active tracker!")
+			push_error("Attempted to add duplicate active tracker!")
 
 
 func remove_tracker(p_tracker_name: StringName) -> void:
@@ -126,9 +126,9 @@ func remove_tracker(p_tracker_name: StringName) -> void:
 			if controller.is_inside_tree():
 				controller.queue_free()
 		else:
-			printerr("Attempted to erase an invalid tracker!")
+			push_error("Attempted to erase an invalid tracker!")
 	else:
-		printerr("Attempted to erase an invalid active tracker!")
+		push_error("Attempted to erase an invalid active tracker!")
 
 
 func _on_tracker_added(p_tracker_name: StringName, p_type: int) -> void:
@@ -192,9 +192,9 @@ func _ready() -> void:
 	for key in VRManager.xr_trackers:
 		add_tracker(key)
 	if VRManager.tracker_added.connect(self._on_tracker_added) != OK:
-		printerr("tracker_added could not be connected")
+		push_error("tracker_added could not be connected")
 	if VRManager.tracker_removed.connect(self._on_tracker_removed) != OK:
-		printerr("tracker_removed could not be connected")
+		push_error("tracker_removed could not be connected")
 
 	vr_camera = get_node("ARVRCamera")
 
@@ -230,11 +230,11 @@ func _exit_tree() -> void:
 	if VRManager.tracker_added.is_connected(self._on_tracker_added):
 		VRManager.tracker_added.disconnect(self._on_tracker_added)
 	else:
-		printerr("tracker_added could not be disconnected")
+		push_error("tracker_added could not be disconnected")
 	if VRManager.tracker_removed.is_connected(self._on_tracker_removed):
 		VRManager.tracker_removed.disconnect(self._on_tracker_removed)
 	else:
-		printerr("tracker_removed could not be disconnected")
+		push_error("tracker_removed could not be disconnected")
 
 
 func _enter_tree() -> void:

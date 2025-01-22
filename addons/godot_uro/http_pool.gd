@@ -90,7 +90,7 @@ class HTTPState:
 				return
 			if status != HTTPClient.STATUS_CONNECTING and status != HTTPClient.STATUS_RESOLVING and status != HTTPClient.STATUS_CONNECTED:
 				busy = false
-				printerr("GodotUroRequester: could not connect to host: status = %s" % [str(http.get_status())])
+				push_error("GodotUroRequester: could not connect to host: status = %s" % [str(http.get_status())])
 				_connection_finished.emit(null)
 				return
 			return
@@ -195,7 +195,7 @@ class HTTPState:
 			var tls_options: TLSOptions = TLSOptions.client(null)
 			connect_err = http.connect_to_host(hostname, port, tls_options)
 			if connect_err != OK:
-				printerr("GodotUroRequester: could not connect to host: returned error %s" % str(connect_err))
+				push_error("GodotUroRequester: could not connect to host: returned error %s" % str(connect_err))
 				http.close()
 				http = HTTPClient.new()
 				return null

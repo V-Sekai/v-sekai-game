@@ -139,7 +139,7 @@ static func update_fake_coefficients(p_left_blink, p_right_blink, p_brow_up, p_j
 
 
 func get_orientation() -> Quaternion:
-	printerr("get_orientation not implemented!")
+	push_error("get_orientation not implemented!")
 	return Quaternion()
 
 

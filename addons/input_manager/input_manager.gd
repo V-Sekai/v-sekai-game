@@ -164,10 +164,10 @@ func _joy_connection_changed(p_index: int, p_connected: bool) -> void:
 		call_deferred("remove_actions_for_input_device", p_index)
 		if connected_joypads.has(p_index):
 			if !connected_joypads.erase(p_index):
-				printerr("Could not erased: {index}".format({"index": str(p_index)}))
+				push_error("Could not erased: {index}".format({"index": str(p_index)}))
 			connection_status = "disconnected"
 		else:
-			printerr("Could not erase joypad index: {index}".format({"index": str(p_index)}))
+			push_error("Could not erase joypad index: {index}".format({"index": str(p_index)}))
 			connection_status = "invalid disconnect"
 
 	print("Connection changed: {index} - {connection_status}".format({"index": str(p_index), "connection_status": connection_status}))
@@ -178,7 +178,7 @@ func _enter_tree() -> void:
 		return
 	var connect_result: int = Input.joy_connection_changed.connect(self._joy_connection_changed, CONNECT_DEFERRED)
 	if connect_result != OK:
-		printerr("joy_connection_changed: could not connect!")
+		push_error("joy_connection_changed: could not connect!")
 
 
 func _exit_tree() -> void:

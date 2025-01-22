@@ -144,7 +144,7 @@ func menu_request_increment() -> void:
 
 func menu_request_decrement() -> void:
 	if menu_request_count <= 0:
-		printerr("Menu request count is not greater than 0.")
+		push_error("Menu request count is not greater than 0.")
 		return
 
 	menu_request_count -= 1
@@ -219,7 +219,7 @@ func setup_vr_viewport() -> void:
 
 			FlatViewport.texture_rect_menu.texture = menu_canvas_pivot_instance.get_menu_viewport().get_texture()
 			if FlatViewport.menu_gui_input.connect(self.menu_gui_input) != OK:
-				printerr("Could could connect gui_input signal!")
+				push_error("Could could connect gui_input signal!")
 
 
 func setup_flat_viewport() -> void:
@@ -337,7 +337,7 @@ func setup() -> void:
 		menu_root.theme = project_theme
 
 	if VRManager.xr_mode_changed.connect(self.setup_viewport) != OK:
-		printerr("Failed to connect VRManager.xr_mode_changed signal.")
+		push_error("Failed to connect VRManager.xr_mode_changed signal.")
 
 	# Setup the fader for the flat view
 	flat_fader = ColorRect.new()
@@ -347,7 +347,7 @@ func setup() -> void:
 	flat_fader.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 	if FadeManager.color_changed.connect(self._fade_color_changed) != OK:
-		printerr("Failed to connect FadeManager.color_changed signal.")
+		push_error("Failed to connect FadeManager.color_changed signal.")
 
 
 func _input(p_event: InputEvent):
@@ -371,4 +371,4 @@ func _ready():
 		set_process_input(true)
 
 	if VRManager.new_origin_assigned.connect(self.new_origin_assigned) != OK:
-		printerr("Failed to connect VRManager.new_origin_assigned signal.")
+		push_error("Failed to connect VRManager.new_origin_assigned signal.")

@@ -43,6 +43,6 @@ func _ready() -> void:
 		return
 	print("vr_action TRACKER " + str(tracker.get_path()))
 	if tracker.button_pressed.connect(self._on_action_pressed) != OK:
-		printerr("action_pressed not connected!")
+		push_error("action_pressed not connected!")
 	if tracker.button_released.connect(self._on_action_released) != OK:
-		printerr("action_released not connected!")
+		push_error("action_released not connected!")

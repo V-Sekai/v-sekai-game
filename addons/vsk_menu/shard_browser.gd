@@ -69,7 +69,7 @@ func _ready() -> void:
 
 func will_appear() -> void:
 	if VSKGameFlowManager.gameflow_state_changed.connect(self._gameflow_state_changed) != OK:
-		printerr("Could not connect gameflow_state_changed!")
+		push_error("Could not connect gameflow_state_changed!")
 
 
 func will_disappear() -> void:

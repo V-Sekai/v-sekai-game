@@ -94,13 +94,13 @@ func _update() -> void:
 			pointer_receiver.collision_layer = collision_layer
 
 			if pointer_receiver.pointer_pressed.connect(Callable(self, "on_pointer_pressed")) != OK:
-				printerr("Failed to connect pointer_receiver.pointer_pressed signal.")
+				push_error("Failed to connect pointer_receiver.pointer_pressed signal.")
 
 			if pointer_receiver.pointer_release.connect(Callable(self, "on_pointer_release")) != OK:
-				printerr("Failed to connect pointer_receiver.pointer_release signal.")
+				push_error("Failed to connect pointer_receiver.pointer_release signal.")
 
 			if pointer_receiver.pointer_moved.connect(Callable(self, "on_pointer_moved")) != OK:
-				printerr("Failed to connect pointer_receiver.pointer_moved signal.")
+				push_error("Failed to connect pointer_receiver.pointer_moved signal.")
 		else:
 			collision_shape.set_shape(null)
 

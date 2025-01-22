@@ -33,7 +33,7 @@ func _update_viewport(p_viewport: SubViewport, p_use_vr: bool) -> void:
 
 func create_spatial_game_viewport() -> SubViewport:
 	if spatial_game_viewport:
-		printerr("SpatialGameViewport has already been created!")
+		push_error("SpatialGameViewport has already been created!")
 		return spatial_game_viewport
 
 	spatial_game_viewport = SubViewport.new()

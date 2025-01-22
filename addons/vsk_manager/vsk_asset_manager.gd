@@ -62,7 +62,7 @@ func clear_cache() -> void:
 	var dir: DirAccess = DirAccess.open(ASSET_CACHE_PATH)
 	if dir != null:
 		if directory_util_const.delete_dir_and_contents(dir, ASSET_CACHE_PATH, false) != OK:
-			printerr("Could not delete all files in cache!")
+			push_error("Could not delete all files in cache!")
 
 
 func is_whitelisted(p_url: String, p_user_content_type: int) -> bool:
@@ -85,9 +85,9 @@ func is_whitelisted(p_url: String, p_user_content_type: int) -> bool:
 			return true
 
 	if p_url.is_empty():
-		printerr("Asset is not whitelisted!")
+		push_error("Asset is not whitelisted!")
 	else:
-		printerr("Asset %s is not whitelisted!" % p_url)
+		push_error("Asset %s is not whitelisted!" % p_url)
 
 	return false
 
@@ -192,11 +192,11 @@ func make_http_request(p_request_object: Dictionary, p_bypass_whitelist: bool) -
 				_complete_request(p_request_object, ASSET_OK)
 				return request_object
 		else:
-			printerr("Could not open etag file!")
+			push_error("Could not open etag file!")
 	else:
 		var etag_file: FileAccess = FileAccess.open(etag_path, FileAccess.WRITE)
 		if etag_file == null:
-			printerr("Could not create etag file!")
+			push_error("Could not create etag file!")
 
 	var http_request: HTTPRequest = HTTPRequest.new()
 	http_request.name = "httpreq"
@@ -205,7 +205,7 @@ func make_http_request(p_request_object: Dictionary, p_bypass_whitelist: bool) -
 	add_child(http_request, true)
 
 	if http_request.request_completed.connect(self._http_request_completed.bind(request_object)) != OK:
-		printerr("Could not connect signal 'request_complete'!")
+		push_error("Could not connect signal 'request_complete'!")
 
 	register_request(request_object)
 	if http_request.request(url) == OK:
@@ -233,7 +233,7 @@ func make_local_file_request(p_request_object: Dictionary, p_bypass_whitelist: b
 
 		var file_exists: bool = FileAccess.file_exists(stripped_path)
 		if !file_exists:
-			printerr("Local asset not found: %s " % path)
+			push_error("Local asset not found: %s " % path)
 			asset_err = ASSET_NOT_FOUND
 	else:
 		asset_err = ASSET_NOT_WHITELISTED
@@ -493,14 +493,14 @@ func apply_project_settings() -> void:
 			ProjectSettings.set_setting("assets/config/game_mode_whitelist", game_mode_whitelist)
 
 		if ProjectSettings.save() != OK:
-			printerr("VSKAssetManager: could not save project settings!")
+			push_error("VSKAssetManager: could not save project settings!")
 
 
 func setup() -> void:
 	if !Engine.is_editor_hint():
 		if not DirAccess.dir_exists_absolute(ASSET_CACHE_PATH):
 			if DirAccess.make_dir_absolute(ASSET_CACHE_PATH) != OK:
-				printerr("Could not create asset cache directory!")
+				push_error("Could not create asset cache directory!")
 
 		get_project_settings()
 

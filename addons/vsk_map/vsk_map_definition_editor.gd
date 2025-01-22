@@ -39,7 +39,7 @@ func export_map_upload() -> void:
 	if node and node is Node:
 		VSKEditor.show_upload_panel(self.get_export_data, vsk_types_const.UserContentType.Map)
 	else:
-		printerr("Node is not valid!")
+		push_error("Node is not valid!")
 
 
 func edit(p_node: Node) -> void:
@@ -50,7 +50,7 @@ func error_callback(p_err: int) -> void:
 	if p_err != map_callback_const.MAP_OK:
 		var error_str: String = map_callback_const.get_error_string(p_err)
 
-		printerr(error_str)
+		push_error(error_str)
 		err_dialog.set_text(error_str)
 		err_dialog.popup_centered_clamped()
 

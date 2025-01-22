@@ -32,7 +32,7 @@ var signal_table: Array = [{"singleton": "VSKGameFlowManager", "signal": "is_qui
 func get_value(p_section: String, p_key: String, p_type: int, p_default = null):
 	var value = config.get_value(p_section, p_key, p_default)
 	if typeof(value) != p_type:
-		printerr("Invalid type {key} in {section}!".format({"key": p_key, "section": p_section}))
+		push_error("Invalid type {key} in {section}!".format({"key": p_key, "section": p_section}))
 		return p_default
 
 	return value
@@ -53,7 +53,7 @@ func set_value(p_section: String, p_key: String, p_value) -> void:
 ##
 func save_settings() -> void:
 	if config.save(SETTINGS_PATH) != OK:
-		printerr("Could not save config file!")
+		push_error("Could not save config file!")
 
 
 ##

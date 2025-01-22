@@ -90,4 +90,4 @@ func setup() -> void:
 		game_viewport.add_child(VRManager.vr_fader, true)
 
 		if FadeManager.fade_complete.connect(self._fade_complete) != OK:
-			printerr("Could not connect fade_complete")
+			push_error("Could not connect fade_complete")

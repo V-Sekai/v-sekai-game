@@ -73,14 +73,14 @@ func _refresh_controllers() -> void:
 
 	if movement_controller and is_instance_valid(movement_controller):
 		if movement_controller.action_pressed.connect(self.movement_action_pressed) != OK:
-			printerr("Could not connect 'action_pressed'!")
+			push_error("Could not connect 'action_pressed'!")
 		if movement_controller.action_released.connect(self.movement_action_released) != OK:
-			printerr("Could not connect 'action_released'!")
+			push_error("Could not connect 'action_released'!")
 	if turning_controller and is_instance_valid(turning_controller):
 		if turning_controller.action_pressed.connect(self.turning_action_pressed) != OK:
-			printerr("Could not connect 'action_pressed'!")
+			push_error("Could not connect 'action_pressed'!")
 		if turning_controller.action_released.connect(self.turning_action_released) != OK:
-			printerr("Could not connect 'action_released'!")
+			push_error("Could not connect 'action_released'!")
 
 
 func get_controller_movement_vector() -> Vector2:
@@ -195,6 +195,6 @@ func _enter_tree():
 
 func _ready():
 	if trackers_changed.connect(self._refresh_controllers) != OK:
-		printerr("Could not connect 'trackers_changed'!")
+		push_error("Could not connect 'trackers_changed'!")
 
 	_refresh_controllers()

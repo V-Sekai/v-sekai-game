@@ -66,7 +66,7 @@ func pop_view_controller(p_animated: bool) -> void:
 		if !view_controller_stack.is_empty():
 			current_view_node.add_child(get_top_view_controller(), true)
 	else:
-		printerr("Tried to pop root view controller")
+		push_error("Tried to pop root view controller")
 
 
 func clear_view_controller_stack() -> void:

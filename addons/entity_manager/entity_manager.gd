@@ -72,7 +72,7 @@ func scene_tree_execution_command(p_command: int, p_entity_instance: Node):
 func _add_entity(p_entity: Node) -> void:
 	print("Adding: " + str(p_entity))
 	if entity_reference_dictionary.has(p_entity):
-		printerr("Entity already exists in the dictionary.")
+		push_error("Entity already exists in the dictionary.")
 		return
 	entity_reference_dictionary[p_entity.get_entity_ref()] = p_entity
 
@@ -82,7 +82,7 @@ func _remove_entity(p_entity: Node) -> void:
 	var entity_ref = p_entity.get_entity_ref()
 	if entity_reference_dictionary.has(entity_ref):
 		if not entity_reference_dictionary.erase(entity_ref):
-			printerr("Failed to remove entity from the dictionary.")
+			push_error("Failed to remove entity from the dictionary.")
 			return
 	if entity_kinematic_integration_callbacks.has(p_entity):
 		entity_kinematic_integration_callbacks.erase(p_entity)
@@ -114,14 +114,14 @@ func register_kinematic_integration_callback(p_entity: RuntimeEntity) -> void:
 	if !entity_kinematic_integration_callbacks.has(p_entity):
 		entity_kinematic_integration_callbacks.push_back(p_entity)
 	else:
-		printerr("Attempted to add duplicate kinematic integration callback")
+		push_error("Attempted to add duplicate kinematic integration callback")
 
 
 func unregister_kinematic_integration_callback(p_entity: RuntimeEntity) -> void:
 	if entity_kinematic_integration_callbacks.has(p_entity):
 		entity_kinematic_integration_callbacks.erase(p_entity)
 	else:
-		printerr("Attempted to remove invalid kinematic integration callback")
+		push_error("Attempted to remove invalid kinematic integration callback")
 
 
 func _entity_ready(p_entity: RuntimeEntity) -> void:
@@ -177,16 +177,16 @@ func _create_entity_update_jobs() -> Array:
 
 func get_dependent_entity_for_dependency(p_entity_dependency: RefCounted, p_entity_dependent: RefCounted) -> RuntimeEntity:
 	if !p_entity_dependency._entity:
-		printerr("Could not get entity for dependency!")
+		push_error("Could not get entity for dependency!")
 		return null
 	if !p_entity_dependent._entity:
-		printerr("Could not get entity for dependent!")
+		push_error("Could not get entity for dependent!")
 		return null
 
 	if entity_manager_const._has_immediate_dependency_link(p_entity_dependent._entity, p_entity_dependency._entity):
 		return p_entity_dependent._entity
 	else:
-		printerr("Does not have dependency!")
+		push_error("Does not have dependency!")
 
 	return null
 
@@ -211,10 +211,10 @@ func create_strong_dependency(p_dependent: EntityRef, p_dependency: EntityRef) -
 	var dependency_entity: Node = p_dependency._entity
 
 	if !dependent_entity or !dependency_entity:
-		printerr("Could not get entity ref!")
+		push_error("Could not get entity ref!")
 		return null
 	if dependent_entity == dependency_entity:
-		printerr("Attempted to create dependency on self!")
+		push_error("Attempted to create dependency on self!")
 		return null
 
 	return StrongExclusiveEntityDependencyHandle.new(p_dependent, p_dependency)
@@ -238,7 +238,7 @@ func send_entity_message(p_source_entity: EntityRef, p_target_entity: EntityRef,
 	if check_bidirectional_dependency(p_source_entity, p_target_entity):
 		p_target_entity._entity._receive_entity_message(p_message, p_message_args)
 	else:
-		printerr("Could not send message to target entity! No dependency link!")
+		push_error("Could not send message to target entity! No dependency link!")
 
 
 static func create_entity_instance(p_packed_scene: PackedScene, p_name: String = "NetEntity", p_master_id: int = network_constants_const.SERVER_MASTER_PEER_ID) -> Node:
@@ -363,7 +363,7 @@ func apply_project_settings() -> void:
 		if !ProjectSettings.has_setting("entities/config/process_priority"):
 			ProjectSettings.set_setting("entities/config/process_priority", 0)
 			if ProjectSettings.save() != OK:
-				printerr("Could not save project settings!")
+				push_error("Could not save project settings!")
 
 
 func get_project_settings() -> void:

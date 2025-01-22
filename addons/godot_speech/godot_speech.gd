@@ -11,5 +11,5 @@ func _ready() -> void:
 		set_name.call_deferred("GodotSpeech")
 		var result = NetworkManager.peer_unregistered.connect(remove_player_audio)
 		if result != OK:
-			printerr("Failed to connect signal 'peer_unregistered' to 'remove_player_audio'.")
+			push_error("Failed to connect signal 'peer_unregistered' to 'remove_player_audio'.")
 			return

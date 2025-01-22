@@ -44,12 +44,12 @@ func execute_fade_interpolation(p_start: Color, p_end: Color, p_time: float) -> 
 	self.color = source_fade_color
 	tween = get_tree().create_tween()
 	if tween.finished.connect(self._tween_complete) != OK:
-		printerr("Failed to connect tween.finished signal.")
+		push_error("Failed to connect tween.finished signal.")
 		return
 	tween.set_ease(Tween.EASE_IN_OUT)
 	tween.set_trans(Tween.TRANS_LINEAR)
 	if tween.tween_property(self, "color", target_fade_color, p_time) == null:
-		printerr("Failed to set tween property.")
+		push_error("Failed to set tween property.")
 		return
 
 

@@ -109,7 +109,7 @@ func _destroy_loading_task(p_path) -> void:
 			push_error("Failed to erase loading task: {path}".format({"path": str(p_path)}))
 			return
 	else:
-		printerr("background_loader_destroy_loading_task: could not destroy loading task {path}".format({"path": str(p_path)}))
+		push_error("background_loader_destroy_loading_task: could not destroy loading task {path}".format({"path": str(p_path)}))
 
 
 func _get_loading_task_paths() -> Dictionary:
@@ -192,7 +192,7 @@ func _threaded_loading_method() -> void:
 							Callable(self, "_task_done").call_deferred(task_path, OK, resource)
 						else:
 							print_stack()
-							printerr("Failed to get loaded resource: %s" % loading_task.load_path)
+							push_error("Failed to get loaded resource: %s" % loading_task.load_path)
 							Callable(self, "_task_done").call_deferred(task_path, FAILED, null)
 						_destroy_loading_task(task_path)
 					ResourceLoader.THREAD_LOAD_IN_PROGRESS:
@@ -203,12 +203,12 @@ func _threaded_loading_method() -> void:
 							Callable(self, "_task_done").call_deferred(task_path, OK, resource)
 							break
 						print_stack()
-						printerr("Failed to load resource: %s, error: %s" % [loading_task.load_path, error_string(err)])
+						push_error("Failed to load resource: %s, error: %s" % [loading_task.load_path, error_string(err)])
 						Callable(self, "_task_done").call_deferred(task_path, FAILED, null)
 						_destroy_loading_task(task_path)
 					ResourceLoader.THREAD_LOAD_INVALID_RESOURCE:
 						print_stack()
-						printerr("Invalid resource: %s" % loading_task.load_path)
+						push_error("Invalid resource: %s" % loading_task.load_path)
 						Callable(self, "_task_done").call_deferred(task_path, ERR_FILE_UNRECOGNIZED, null)
 						_destroy_loading_task(task_path)
 

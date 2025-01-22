@@ -535,7 +535,7 @@ func decode_buffer(p_id: int, p_buffer: PackedByteArray) -> void:
 		elif network_rpc_manager.is_command_valid(command):
 			network_reader = network_rpc_manager.decode_remote_buffer(p_id, network_reader, command)
 		else:
-			printerr("Invalid command: {command}".format({"command": str(command)}))
+			push_error("Invalid command: {command}".format({"command": str(command)}))
 
 		if OS.is_stdout_verbose():
 			if network_reader_orig:
@@ -678,7 +678,7 @@ func setup_project_settings() -> void:
 			default_port = ProjectSettings.get_setting("network/config/default_port")
 
 			if ProjectSettings.save() != OK:
-				printerr("NetworkManager: Could not save project settings!")
+				push_error("NetworkManager: Could not save project settings!")
 
 
 func confirm_server_state_ready() -> void:

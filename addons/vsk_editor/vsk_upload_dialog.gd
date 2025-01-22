@@ -75,7 +75,7 @@ func _instance_upload_panel_child_control() -> void:
 
 			control.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE)
 		else:
-			printerr("Could ")
+			push_error("Could ")
 
 
 func _instance_info_child_control(p_string: String) -> void:
@@ -144,7 +144,7 @@ func _ready() -> void:
 		ok_button.hide()
 
 	if about_to_popup.connect(self._about_to_popup) != OK:
-		printerr("Could not connect to about_to_popup")
+		push_error("Could not connect to about_to_popup")
 
 
 func _init(p_vsk_editor: Node):

@@ -179,9 +179,9 @@ func update_trackers() -> void:
 				tracker_collection_input.right_hand_spatial = create_new_spatial_point("RightHandInput", Transform3D(Basis(), Vector3()), false)
 
 			if VRManager.xr_origin.tracker_added.connect(self._on_tracker_added) != OK:
-				printerr("Could not connect tracker_added!")
+				push_error("Could not connect tracker_added!")
 			if VRManager.xr_origin.tracker_removed.connect(self._on_tracker_removed) != OK:
-				printerr("Could not connect tracker_removed!")
+				push_error("Could not connect tracker_removed!")
 
 			update_local_transforms()
 			# Connect to the IK system

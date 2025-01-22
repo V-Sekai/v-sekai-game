@@ -91,7 +91,7 @@ func _ready() -> void:
 	exit_dialog.get_cancel_button().set_text(tr("No"))
 
 	if exit_dialog.confirmed.connect(self.quit) != OK:
-		printerr("Could not connected exit_dialog confirmed!")
+		push_error("Could not connected exit_dialog confirmed!")
 
 
 func _on_HostButton_pressed() -> void:

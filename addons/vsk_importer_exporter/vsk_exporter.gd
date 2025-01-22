@@ -53,7 +53,7 @@ func get_valid_filenames(p_filename: String, p_validator: RefCounted, p_existing
 			if instantiate != null:
 				p_existing_valid_filenames = get_valid_filenames(instantiate.get_path(), p_validator, p_existing_valid_filenames)
 		else:
-			printerr("File does not exist: %s" % p_filename)
+			push_error("File does not exist: %s" % p_filename)
 
 	return p_existing_valid_filenames
 
@@ -988,7 +988,7 @@ func create_temp_folder() -> int:
 	if !directory.dir_exists("user://temp"):
 		err = directory.make_dir("user://temp")
 		if err != OK:
-			printerr("Could not create temp directory. Error code %s" % error_string(err))
+			push_error("Could not create temp directory. Error code %s" % error_string(err))
 		else:
 			print("Created temp directory!")
 
@@ -1011,9 +1011,9 @@ func _link_vsk_editor(p_node: Node) -> void:
 
 	if vsk_editor and do_connect:
 		if vsk_editor.user_content_submission_requested.connect(self._user_content_submission_requested, CONNECT_DEFERRED) != OK:
-			printerr("Could not connect signal 'user_content_submission_requested'")
+			push_error("Could not connect signal 'user_content_submission_requested'")
 		if vsk_editor.user_content_submission_cancelled.connect(self._user_content_submission_cancelled, CONNECT_DEFERRED) != OK:
-			printerr("Could not connect signal 'user_content_submission_cancelled'")
+			push_error("Could not connect signal 'user_content_submission_cancelled'")
 
 
 func _unlink_vsk_editor() -> void:
@@ -1056,7 +1056,7 @@ func _ready():
 		_link_vsk_editor(VSKEditor)
 
 		if create_temp_folder() != OK:
-			printerr("Could not create temp folder")
+			push_error("Could not create temp folder")
 
 
 func setup() -> void:

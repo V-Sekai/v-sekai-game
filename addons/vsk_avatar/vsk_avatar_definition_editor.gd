@@ -75,7 +75,7 @@ func export_avatar_upload() -> void:
 	if node and node is Node:
 		VSKEditor.show_upload_panel(self.get_export_data, vsk_types_const.UserContentType.Avatar)
 	else:
-		printerr("Node is not valid!")
+		push_error("Node is not valid!")
 
 
 func export_hand_pose(p_is_right_hand: bool) -> void:
@@ -100,7 +100,7 @@ func error_callback(p_err: int) -> void:
 	if p_err != avatar_callback_const.AVATAR_OK:
 		var error_str: String = avatar_callback_const.get_error_str(p_err)
 
-		printerr(error_str)
+		push_error(error_str)
 		if err_dialog:
 			err_dialog.set_text(error_str)
 			err_dialog.popup_centered_clamped()

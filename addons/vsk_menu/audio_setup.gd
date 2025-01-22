@@ -51,22 +51,22 @@ func _ready() -> void:
 	flat_audio_output_button = get_node(flat_audio_output_nodepath)
 	setup_menu_button(flat_audio_output_button, flat_output_device_index, audio_output_devices)
 	if flat_audio_output_button.get_popup().connect("id_pressed", self._flat_audio_output_changed) != OK:
-		printerr("Could not connect 'id_pressed'!")
+		push_error("Could not connect 'id_pressed'!")
 
 	flat_audio_input_button = get_node(flat_audio_input_nodepath)
 	setup_menu_button(flat_audio_input_button, flat_input_device_index, audio_input_devices)
 	if flat_audio_input_button.get_popup().id_pressed.connect(self._flat_audio_input_changed) != OK:
-		printerr("Could not connect 'id_pressed'!")
+		push_error("Could not connect 'id_pressed'!")
 
 	xr_audio_output_button = get_node(xr_audio_output_nodepath)
 	setup_menu_button(xr_audio_output_button, xr_output_device_index, audio_output_devices)
 	if xr_audio_output_button.get_popup().id_pressed.connect(self._xr_audio_output_changed) != OK:
-		printerr("Could not connect 'id_pressed'!")
+		push_error("Could not connect 'id_pressed'!")
 
 	xr_audio_input_button = get_node(xr_audio_input_nodepath)
 	setup_menu_button(xr_audio_input_button, xr_input_device_index, audio_input_devices)
 	if xr_audio_input_button.get_popup().id_pressed.connect(self._xr_audio_input_changed) != OK:
-		printerr("Could not connect 'id_pressed'!")
+		push_error("Could not connect 'id_pressed'!")
 
 	var voice_output_volume: float = VSKAudioManager.get_voice_output_volume()
 	var music_output_volume: float = VSKAudioManager.get_music_output_volume()
@@ -77,35 +77,35 @@ func _ready() -> void:
 	voice_output_volume_spinbox = get_node(voice_output_volume_nodepath)
 	voice_output_volume_spinbox.max_value = MAX_VOICE_OUTPUT_RANGE
 	if voice_output_volume_spinbox.value_changed.connect(self.voice_output_volume_changed) != OK:
-		printerr("Could not connect 'value_changed' for voice_output_volume_spinbox!")
+		push_error("Could not connect 'value_changed' for voice_output_volume_spinbox!")
 		return
 	voice_output_volume_spinbox.value = round(voice_output_volume * MAX_VOICE_OUTPUT_RANGE)
 
 	music_output_volume_spinbox = get_node(music_output_volume_nodepath)
 	music_output_volume_spinbox.max_value = MAX_MUSIC_OUTPUT_RANGE
 	if music_output_volume_spinbox.value_changed.connect(self.music_output_volume_changed) != OK:
-		printerr("Could not connect 'value_changed' for music_output_volume_spinbox!")
+		push_error("Could not connect 'value_changed' for music_output_volume_spinbox!")
 		return
 	music_output_volume_spinbox.value = round(music_output_volume * MAX_MUSIC_OUTPUT_RANGE)
 
 	game_sfx_output_volume_spinbox = get_node(game_sfx_output_volume_nodepath)
 	game_sfx_output_volume_spinbox.max_value = MAX_GAME_SFX_OUTPUT_RANGE
 	if game_sfx_output_volume_spinbox.value_changed.connect(self.game_sfx_output_volume_changed) != OK:
-		printerr("Could not connect 'value_changed' for game_sfx_output_volume_spinbox!")
+		push_error("Could not connect 'value_changed' for game_sfx_output_volume_spinbox!")
 		return
 	game_sfx_output_volume_spinbox.value = round(game_sfx_output_volume * MAX_GAME_SFX_OUTPUT_RANGE)
 
 	menu_output_volume_spinbox = get_node(menu_output_volume_nodepath)
 	menu_output_volume_spinbox.max_value = MAX_MENU_OUTPUT_RANGE
 	if menu_output_volume_spinbox.value_changed.connect(self.menu_output_volume_changed) != OK:
-		printerr("Could not connect 'value_changed' for menu_output_volume_spinbox!")
+		push_error("Could not connect 'value_changed' for menu_output_volume_spinbox!")
 		return
 	menu_output_volume_spinbox.value = round(menu_output_volume * MAX_MENU_OUTPUT_RANGE)
 
 	mic_input_volume_spinbox = get_node(mic_input_volume_nodepath)
 	mic_input_volume_spinbox.max_value = MAX_MIC_INPUT_RANGE
 	if mic_input_volume_spinbox.value_changed.connect(self.mic_input_volume_changed) != OK:
-		printerr("Could not connect 'value_changed' for mic_input_volume_spinbox!")
+		push_error("Could not connect 'value_changed' for mic_input_volume_spinbox!")
 		return
 	mic_input_volume_spinbox.value = round(mic_input_volume * MAX_MIC_INPUT_RANGE)
 
@@ -116,7 +116,7 @@ func _gameflow_state_changed(_p_state) -> void:
 
 func will_appear() -> void:
 	if VSKGameFlowManager.gameflow_state_changed.connect(self._gameflow_state_changed) != OK:
-		printerr("Could not connect gameflow_state_changed!")
+		push_error("Could not connect gameflow_state_changed!")
 
 
 func will_disappear() -> void:

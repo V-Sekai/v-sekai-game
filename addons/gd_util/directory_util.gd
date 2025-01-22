@@ -12,11 +12,11 @@ static func get_files_in_directory_path(p_path: String) -> Array:
 	var files: Array = []
 	var dir: DirAccess = DirAccess.open(p_path)
 	if dir == null:
-		printerr("Failed to open directory.")
+		push_error("Failed to open directory.")
 		return files
 
 	if dir.list_dir_begin() != OK:
-		printerr("Failed to list directory.")
+		push_error("Failed to list directory.")
 		return files
 
 	while true:
@@ -32,7 +32,7 @@ static func get_files_in_directory_path(p_path: String) -> Array:
 
 static func get_files(p_directory: DirAccess, current_dir_path: String, p_search_pattern: String, p_search_options: int) -> Array:
 	if p_directory.list_dir_begin() != OK:
-		printerr("Failed to list directory.")
+		push_error("Failed to list directory.")
 		return []
 
 	var current_file_name: String = ""
@@ -60,7 +60,7 @@ static func get_files(p_directory: DirAccess, current_dir_path: String, p_search
 
 static func delete_dir_and_contents(p_directory: DirAccess, current_dir_path: String, p_delete_root: bool) -> int:
 	if p_directory.list_dir_begin() != OK:
-		printerr("Failed to list directory.")
+		push_error("Failed to list directory.")
 		return FAILED
 
 	var current_file_name: String = ""

@@ -139,20 +139,20 @@ func _update_dependencies() -> void:
 						strong_exclusive_dependencies[entity] += 1
 					else:
 						if EntityManagerFunctions.check_if_dependency_is_cyclic(self, entity, true):
-							printerr("Error: tried to create a cyclic dependency!")
+							push_error("Error: tried to create a cyclic dependency!")
 						else:
 							strong_exclusive_dependencies[entity] = 1
 							entity.strong_exclusive_dependents.push_back(self)
 				DependencyCommand.REMOVE_STRONG_EXCLUSIVE_DEPENDENCY:
 					if !strong_exclusive_dependencies.has(entity):
-						printerr("Does not have exclusive strong dependency!")
+						push_error("Does not have exclusive strong dependency!")
 					else:
 						strong_exclusive_dependencies[entity] -= 1
 						if strong_exclusive_dependencies[entity] <= 0:
 							if strong_exclusive_dependencies.erase(entity):
 								entity.strong_exclusive_dependents.erase(self)
 							else:
-								printerr("Could not erase strong exclusive dependency!")
+								push_error("Could not erase strong exclusive dependency!")
 	pending_dependency_commands.clear()
 
 
@@ -168,7 +168,7 @@ func _entity_about_to_add() -> void:
 	if network_logic_node:
 		network_logic_node._entity_about_to_add()
 	else:
-		printerr("_entity_about_to_add missing network logic node")
+		push_error("_entity_about_to_add missing network logic node")
 
 
 func _entity_ready() -> void:
@@ -178,17 +178,17 @@ func _entity_ready() -> void:
 		if simulation_logic_node and simulation_logic_node.has_method("_entity_ready"):
 			simulation_logic_node._entity_ready()
 		else:
-			printerr("_entity_ready is missing simulation logic node!")
+			push_error("_entity_ready is missing simulation logic node!")
 
 		if network_identity_node:
 			network_identity_node._entity_ready()
 		else:
-			printerr("Missing network identity node")
+			push_error("Missing network identity node")
 
 		if network_logic_node:
 			network_logic_node._entity_ready()
 		else:
-			printerr("_entity_ready is missing network logic node")
+			push_error("_entity_ready is missing network logic node")
 
 		network_identity_node.update_name()
 
@@ -199,11 +199,11 @@ func _entity_representation_process(p_delta: float) -> void:
 	if network_logic_node:
 		network_logic_node._entity_representation_process(p_delta)
 	else:
-		printerr("_entity_representation_process is missing network logic node")
+		push_error("_entity_representation_process is missing network logic node")
 	if simulation_logic_node and simulation_logic_node.has_method("_entity_representation_process"):
 		simulation_logic_node._entity_representation_process(p_delta)
 	else:
-		printerr("_entity_representation_process is missing simulation logic node!")
+		push_error("_entity_representation_process is missing simulation logic node!")
 
 	representation_process_ticks_usec = Time.get_ticks_usec() - start_ticks
 
@@ -212,7 +212,7 @@ func _entity_physics_pre_process(p_delta) -> void:
 	if simulation_logic_node and simulation_logic_node.has_method("_entity_physics_pre_process"):
 		simulation_logic_node._entity_physics_pre_process(p_delta)
 	else:
-		printerr("_entity_physics_pre_process is missing simulation logic node!")
+		push_error("_entity_physics_pre_process is missing simulation logic node!")
 
 
 func _entity_physics_process(p_delta: float) -> void:
@@ -224,11 +224,11 @@ func _entity_physics_process(p_delta: float) -> void:
 	if network_logic_node:
 		network_logic_node._entity_physics_process(p_delta)
 	else:
-		printerr("_entity_physics_process is missing network logic node")
+		push_error("_entity_physics_process is missing network logic node")
 	if simulation_logic_node and simulation_logic_node.has_method("_entity_physics_process"):
 		simulation_logic_node._entity_physics_process(p_delta)
 	else:
-		printerr("Missing simulation logic node!")
+		push_error("Missing simulation logic node!")
 
 	physics_process_ticks_usec = Time.get_ticks_usec() - start_ticks
 
@@ -237,7 +237,7 @@ func _entity_kinematic_integration_callback(p_delta: float) -> void:
 	if simulation_logic_node:
 		simulation_logic_node._entity_kinematic_integration_callback(p_delta)
 	else:
-		printerr("_entity_kinematic_integration_callback is missing simulation logic node!")
+		push_error("_entity_kinematic_integration_callback is missing simulation logic node!")
 
 
 func _entity_physics_post_process(p_delta) -> void:
@@ -440,7 +440,7 @@ func _ready() -> void:
 			add_to_group("Entities")
 
 			if self.ready.connect(_EntityManager._entity_ready.bind(self)) != OK:
-				printerr("entity: _ready could not be connected!")
+				push_error("entity: _ready could not be connected!")
 
 
 func _threaded_instance_setup(p_instance_id: int, p_network_reader: RefCounted) -> void:

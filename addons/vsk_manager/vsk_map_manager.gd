@@ -290,7 +290,7 @@ func apply_project_settings() -> void:
 			ProjectSettings.set_setting("network/config/default_map_path", default_map_path)
 
 		if ProjectSettings.save() != OK:
-			printerr("Could not save project settings!")
+			push_error("Could not save project settings!")
 
 
 func get_project_settings() -> void:
