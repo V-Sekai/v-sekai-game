@@ -610,8 +610,12 @@ func _setup_voice() -> void:
 func _entity_ready() -> void:
 	if !Engine.is_editor_hint():
 		if is_multiplayer_authority():
-			assert(VRManager.xr_mode_changed.connect(self._xr_mode_changed) == OK)
-			assert(VRManager.proportions_changed.connect(self._proportions_changed) == OK)
+			if (VRManager.xr_mode_changed.connect(self._xr_mode_changed) != OK):
+				push_error("Could not connect signal 'VRManager.xr_mode_changed'")
+				return
+			if (VRManager.proportions_changed.connect(self._proportions_changed) != OK):
+				push_error("Could not connect signal 'VRManager.proportions_changed'")
+				return
 
 	top_level = false
 	set_transform(Transform3D(AVATAR_BASIS, Vector3()))

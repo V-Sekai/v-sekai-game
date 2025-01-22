@@ -160,7 +160,9 @@ func set_session_request_pending(p_is_pending: bool) -> void:
 
 func sign_out() -> void:
 	print("VSKEditor::sign_out")
-	assert(vsk_account_manager)
+	if not (vsk_account_manager):
+		push_error("Could not find 'vsk_account_manager' at vsk_editor")
+		return
 
 	vsk_account_manager.sign_out()
 
@@ -586,8 +588,12 @@ func _node_removed(p_node: Node) -> void:
 
 func _enter_tree():
 	if Engine.is_editor_hint():
-		assert(get_tree().node_added.connect(self._node_added) == OK)
-		assert(get_tree().node_removed.connect(self._node_removed) == OK)
+		if (get_tree().node_added.connect(self._node_added) != OK):
+			push_error("Could not connect signal 'node_added' at vsk_editor")
+			return
+		if (get_tree().node_removed.connect(self._node_removed) != OK):
+			push_error("Could not connect signal 'node_removed' at vsk_editor")
+			return
 
 	_link_vsk_account_manager(VSKAccountManager)
 	_link_vsk_exporter(VSKExporter)

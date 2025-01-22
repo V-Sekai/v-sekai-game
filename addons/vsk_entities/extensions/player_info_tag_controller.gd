@@ -58,8 +58,12 @@ func _camera_mode_changed(_camera_mode: int) -> void:
 
 func _master_setup() -> void:
 	# Nametag
-	assert(VSKPlayerManager.display_name_changed.connect(self._player_name_changed) == OK)
-	assert(_camera_controller.camera_mode_changed.connect(self._camera_mode_changed) == OK)
+	if (VSKPlayerManager.display_name_changed.connect(self._player_name_changed) != OK):
+		push_error("Could not connect signal 'VSKPlayerManager.display_name_changed'")
+		return
+	if (_camera_controller.camera_mode_changed.connect(self._camera_mode_changed) != OK):
+		push_error("Could not connect signal '_camera_controller.camera_mode_changed'")
+		return
 
 	_player_display_name_updated(get_multiplayer_authority(), VSKPlayerManager.display_name)
 	###
@@ -67,7 +71,9 @@ func _master_setup() -> void:
 
 func _puppet_setup() -> void:
 	### Nametag ###
-	assert(VSKNetworkManager.player_display_name_updated.connect(self._player_display_name_updated) == OK)
+	if (VSKNetworkManager.player_display_name_updated.connect(self._player_display_name_updated) != OK):
+		push_error("Could not connect signal 'VSKNetworkManager.player_display_name_updated'")
+		return
 
 	if VSKNetworkManager.player_display_names.has(get_multiplayer_authority()):
 		_player_display_name_updated(get_multiplayer_authority(), VSKNetworkManager.player_display_names[get_multiplayer_authority()])
@@ -86,7 +92,9 @@ func setup(p_logic_node: Node) -> void:
 	else:
 		_master_setup()
 
-	assert(VSKAvatarManager.nametag_visibility_updated.connect(self._player_info_tag_visibility_updated) == OK)
+	if (VSKAvatarManager.nametag_visibility_updated.connect(self._player_info_tag_visibility_updated) != OK):
+		push_error("Could not connect signal 'VSKAvatarManager.nametag_visibility_updated'")
+		return
 
 
 func _update_download_progress() -> void:

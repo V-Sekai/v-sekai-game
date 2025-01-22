@@ -57,7 +57,9 @@ var save_option: int = SAVE_OPTION_AVATAR
 func export_avatar_local() -> void:
 	save_option = SAVE_OPTION_AVATAR
 
-	assert(save_dialog)
+	if not save_dialog:
+		push_error("Could not find 'save_dialog' at vsk_avatar_definition_editor")
+		return
 	save_dialog.add_filter("*.%s;%s" % [OUTPUT_SCENE_EXTENSION, OUTPUT_SCENE_EXTENSION.to_upper()])
 
 	save_dialog.popup_centered_ratio()
@@ -85,7 +87,9 @@ func export_hand_pose(p_is_right_hand: bool) -> void:
 		else:
 			save_option = SAVE_OPTION_LEFT_HAND_POSE
 
-		assert(save_dialog)
+		if not save_dialog:
+			push_error("Could not find 'save_dialog' at vsk_avatar_definition_editor")
+			return
 		save_dialog.add_filter("*.%s;%s" % [OUTPUT_HAND_RESOURCE_EXTENSION, OUTPUT_HAND_RESOURCE_EXTENSION.to_upper()])
 
 		save_dialog.popup_centered_ratio()

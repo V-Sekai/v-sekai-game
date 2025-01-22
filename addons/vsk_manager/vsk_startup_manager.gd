@@ -69,7 +69,8 @@ func startup() -> void:
 
 	VSKGameFlowManager.go_to_preloading()
 	if !VSKPreloadManager.request_preloading_tasks():
-		assert(false, "Could not request preloading tasks!")
+		push_error("Could not request preloading tasks!")
+		return
 
 	VSKFadeManager.execute_fade.call_deferred(self, "fade_complete")
 	await VSKPreloadManager.all_preloading_done

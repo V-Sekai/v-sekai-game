@@ -297,8 +297,12 @@ func _enter_tree() -> void:
 	godot_uro = get_node_or_null("/root/GodotUro")
 
 	if Engine.is_editor_hint():
-		assert(get_tree().node_added.connect(self._node_added) == OK)
-		assert(get_tree().node_removed.connect(self._node_removed) == OK)
+		if (get_tree().node_added.connect(self._node_added) != OK):
+			push_error("Could not connect signal 'node_added' at vsk_account_manager")
+			return
+		if (get_tree().node_removed.connect(self._node_removed) != OK):
+			push_error("Could not connect signal 'node_removed' at vsk_account_manager")
+			return
 
 	token_refresh_timer = Timer.new()
 	token_refresh_timer.set_name("TokenRefreshTimer")

@@ -28,7 +28,9 @@ func _get_plugin_name() -> String:
 
 func setup_vskeditor(viewport: Viewport, button: Button, editor_interface: EditorInterface, undo_redo: EditorUndoRedoManager) -> void:
 	var vsk_editor: Node = get_node_or_null("/root/VSKEditor")
-	assert(vsk_editor)
+	if not vsk_editor:
+		push_error("Could not find 'vsk_editor' at vsk_editor_plugin")
+		return
 
 	vsk_editor.setup_editor(editor_interface.get_editor_main_screen(), button, editor_interface)
 

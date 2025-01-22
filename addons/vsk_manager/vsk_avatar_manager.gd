@@ -128,11 +128,14 @@ func setup():
 	get_settings_values()
 
 	if connect("user_content_load_done", self._user_content_load_done) != OK:
-		assert(false, "Could not connect user_content_load_succeeded")
+		push_error("Could not connect user_content_load_succeeded")
+		return
 	if connect("user_content_background_load_stage", self._set_loading_stage) != OK:
-		assert(false, "Could not connect user_content_background_load_stage")
+		push_error("Could not connect user_content_background_load_stage")
+		return
 	if connect("user_content_background_load_stage_count", self._set_loading_stage_count) != OK:
-		assert(false, "Could not connect user_content_background_load_stage_count")
+		push_error("Could not connect user_content_background_load_stage_count")
+		return
 
 
 func _ready():

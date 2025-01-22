@@ -21,10 +21,14 @@ class PlayerSnapshot:
 
 	# Encodes and quantizes a snapshot into a byte array.
 	static func encode_player_snapshot(p_player_snapshot: PlayerSnapshot) -> PackedByteArray:
-		assert(p_player_snapshot)
-
 		var buf: PackedByteArray = PackedByteArray()
-		assert(buf.resize(PACKET_LENGTH) == OK)
+		if not (p_player_snapshot):
+			push_error("Could not find 'p_player_snapshot' while encoding PlayerSnapshot")
+			return buf
+
+		if (buf.resize(PACKET_LENGTH) != OK):
+			push_error("Failed buffer resize while encoding PlayerSnapshot")
+			return buf
 
 		buf.encode_half(0, p_player_snapshot.origin.x)
 		buf.encode_half(2, p_player_snapshot.origin.y)
