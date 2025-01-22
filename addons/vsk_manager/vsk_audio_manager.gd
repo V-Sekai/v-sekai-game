@@ -248,7 +248,9 @@ func play_oneshot_audio_stream(p_stream: AudioStream, p_bus_name: String, p_volu
 	audio_stream_player.bus = p_bus_name
 	audio_stream_player.volume_db = p_volume_db
 
-	assert(audio_stream_player.finished.connect(self._audio_stream_player_finished.bind(audio_stream_player)) == OK)
+	if (audio_stream_player.finished.connect(self._audio_stream_player_finished.bind(audio_stream_player)) != OK):
+		push_error("Could not connect signal 'audio_stream_player.finished'")
+		return
 
 	add_child(audio_stream_player, true)
 
@@ -288,7 +290,9 @@ func play_oneshot_audio_stream_3d(p_stream: AudioStream, p_bus_name: String, p_t
 		audio_stream_player_3d.bus = p_bus_name
 		audio_stream_player_3d.max_polyphony = 128
 
-		assert(audio_stream_player_3d.finished.connect(self._audio_stream_3d_player_finished.bind(audio_stream_player_3d)) == OK)
+		if (audio_stream_player_3d.finished.connect(self._audio_stream_3d_player_finished.bind(audio_stream_player_3d)) != OK):
+			push_error("Could not connect signal 'audio_stream_player_3d.finished'")
+			return
 
 		spatial_node.add_child(audio_stream_player_3d, true)
 		audio_stream_player_3d.global_transform = p_transform
@@ -553,7 +557,9 @@ func setup() -> void:
 		connection_util_const.connect_signal_table(signal_table, self)
 
 		if !Engine.is_editor_hint():
-			assert(NetworkManager.voice_packet_compressed.connect(self.voice_packet_compressed) == OK)
+			if (NetworkManager.voice_packet_compressed.connect(self.voice_packet_compressed) != OK):
+				push_error("Could not connect signal 'NetworkManager.voice_packet_compressed'")
+				return
 
 		get_settings_values()
 
@@ -564,7 +570,9 @@ func setup() -> void:
 		set_mic_input_volume(get_mic_input_volume())
 
 	if !Engine.is_editor_hint():
-		assert(VRManager.xr_mode_changed.connect(self.update_audio_devices) == OK)
+		if (VRManager.xr_mode_changed.connect(self.update_audio_devices) != OK):
+			push_error("Could not connect signal 'VRManager.xr_mode_changed' at vsk_audio_manager")
+			return
 
 	update_audio_devices()
 

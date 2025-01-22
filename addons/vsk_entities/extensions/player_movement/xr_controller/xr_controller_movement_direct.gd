@@ -34,9 +34,10 @@ func _process(_delta: float) -> void:
 
 func _ready():
 	super._ready()
-	
-	assert(_player_movement_controller)
 
+	if not _player_movement_controller:
+		push_error("Could not find '_player_movement_controller' at xr_controller_movement_direct")
+		return
 	for child in _player_movement_controller.get_children():
 		if child is player_movement_direct_const:
 			_direct_movement_node = child

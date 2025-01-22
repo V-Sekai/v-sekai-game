@@ -91,5 +91,9 @@ func _ready() -> void:
 			right_hand_controller = _add_hand_tracker("right_hand", "aim", right_hand_child_scenes)
 
 		# Tracker signals
-		assert(XRServer.connect("tracker_added", _tracker_added) == OK)
-		assert(XRServer.connect("tracker_removed", _tracker_removed) == OK)
+		if (XRServer.connect("tracker_added", _tracker_added) != OK):
+			push_error("Could not connect signal 'XRServer.tracker_added'")
+			return
+		if (XRServer.connect("tracker_removed", _tracker_removed) != OK):
+			push_error("Could not connect signal 'XRServer.tracker_removed'")
+			return

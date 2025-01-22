@@ -110,6 +110,8 @@ func _init(p_vsk_editor: Node):
 	vbox_container.offset_bottom = -MARGIN_SIZE
 	vbox_container.offset_right = -MARGIN_SIZE
 
-	assert(vsk_editor)
+	if not vsk_editor:
+		push_error("Could not find 'vsk_editor' at vsk_login_editor_control")
+		return
 	if vsk_editor.session_request_complete.connect(self._session_request_complete) != OK:
 		push_error("Could not connection signal 'session_request_complete'")

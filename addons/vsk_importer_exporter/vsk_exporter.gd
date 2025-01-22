@@ -1050,8 +1050,12 @@ func _ready():
 		if !ProjectSettings.has_setting("ugc/config/sanitize_map_export"):
 			ProjectSettings.set_setting("ugc/config/sanitize_map_export", true)
 
-		assert(get_tree().node_added.connect(self._node_added) == OK)
-		assert(get_tree().node_removed.connect(self._node_removed) == OK)
+		if (get_tree().node_added.connect(self._node_added) != OK):
+			push_error("Could not connect signal 'node_added' at vsk_exporter")
+			return
+		if (get_tree().node_removed.connect(self._node_removed) != OK):
+			push_error("Could not connect signal 'node_removed' at vsk_exporter")
+			return
 		var VSKEditor = null
 		_link_vsk_editor(VSKEditor)
 

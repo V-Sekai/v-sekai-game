@@ -12,7 +12,11 @@ var _origin: XROrigin3D = null
 @onready var _controller: XRController3D = get_parent()
 
 func _ready():
-	assert(_controller)
+	if not _controller:
+		push_error("Could not find '_controller' at xr_controller_movement_provider")
+		return
 	_origin = _controller.get_parent()
-	assert(_origin)
+	if not _origin:
+		push_error("Could not find '_origin' at xr_controller_movement_provider")
+		return
 	_player_movement_controller = _origin.player_movement_controller

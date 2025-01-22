@@ -381,7 +381,9 @@ func _destroy_request(p_request_path: String) -> void:
 				_destroy_request_internal(request_object)
 
 		if request_objects.has(p_request_path):
-			assert(request_objects.erase(p_request_path))
+			if not (request_objects.erase(p_request_path)):
+				push_error("Could not erase %s from 'request_objects'" % p_request_path)
+				return
 
 
 func _complete_request(p_request_object: Dictionary, p_response_code: int) -> void:

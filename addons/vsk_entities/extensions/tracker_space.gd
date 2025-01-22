@@ -34,4 +34,6 @@ func _process(_delta: float) -> void:
 
 func _ready() -> void:
 	# Check if the PlayerXROrigin is a sibling of this node.
-	assert(xr_origin.get_parent() == get_parent())
+	if not (xr_origin.get_parent() == get_parent()):
+		push_error("PlayerXROrigin is not a sibling at tracker_space")
+		return

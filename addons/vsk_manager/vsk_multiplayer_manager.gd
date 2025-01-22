@@ -271,10 +271,14 @@ func _attempt_to_kill_shard() -> void:
 ## the peer is still connected.
 ##
 func _auth_heartbeat_timer_timeout() -> void:
-	assert(!_is_server())
+	if not _is_server():
+		push_error("Could not send auth heartbeat timeout request: Sender is server")
+		return
 	
 	if _is_session_alive():
-		assert(get_tree().get_multiplayer().send_auth(HOST_PEER_ID, _encode_auth_message_buffer({})) == OK)
+		if (get_tree().get_multiplayer().send_auth(HOST_PEER_ID, _encode_auth_message_buffer({})) != OK):
+			push_error("Failed to send auth heartbeat timeout request")
+			return
 		_auth_heartbeat_timer.start(_auth_heartbeat_frequency)
 
 ##
@@ -359,7 +363,9 @@ func _auth_callback(p_sender_id: int, p_buffer: PackedByteArray) -> void:
 			# Simple heartbeat ping from peer. Send an empty dictionary in
 			# response.
 			if auth_dict.is_empty():
-				assert(get_tree().get_multiplayer().send_auth(p_sender_id, _encode_auth_message_buffer({})) == OK)
+				if (get_tree().get_multiplayer().send_auth(p_sender_id, _encode_auth_message_buffer({})) != OK):
+					push_error("Failed to send response to auth heartbeat ping")
+					return
 				return
 			
 			if auth_dict.has("map_path"):
@@ -368,7 +374,9 @@ func _auth_callback(p_sender_id: int, p_buffer: PackedByteArray) -> void:
 					print("Peer had loaded the correct map %s." % peer_map_path)
 					
 					_authentication_peers_state_table[p_sender_id] = AuthenticationStage.MAP_LOADED
-					assert(get_tree().get_multiplayer().send_auth(p_sender_id, _encode_auth_message_buffer(auth_dict)) == OK)
+					if (get_tree().get_multiplayer().send_auth(p_sender_id, _encode_auth_message_buffer(auth_dict)) != OK):
+						push_error("Failed to send response to auth map request")
+						return
 					
 					var result: Error = multiplayer.complete_auth(p_sender_id)
 					if result != OK:
@@ -422,14 +430,18 @@ func _get_random_spawn_point() -> Transform3D:
 func _spawn_player(p_id: int) -> void:
 	var player_instance: Node3D = PLAYER_SCENE.instantiate()
 	
-	assert(player_instance)
-	
+	if not player_instance:
+		push_error("Could not find 'player_instance' at vsk_multiplayer_manager")
+		return
+
 	player_instance.name = "Player_" + str(p_id)
 	player_instance.global_transform = _get_random_spawn_point()
 	
 	var node_to_spawn_on: Node = _player_spawner.get_node_or_null(_player_spawner.spawn_path)
-	assert(node_to_spawn_on)
-	
+	if not node_to_spawn_on:
+		push_error("Could not find 'node_to_spawn_on' at vsk_multiplayer_manager")
+		return
+
 	node_to_spawn_on.add_child(player_instance)
 	player_instance.set_multiplayer_authority(p_id)
 	
@@ -438,8 +450,10 @@ func _spawn_player(p_id: int) -> void:
 ##
 func _despawn_player(p_id: int) -> void:
 	var node_to_despawn_on: Node = _player_spawner.get_node_or_null(_player_spawner.spawn_path)
-	assert(node_to_despawn_on)
-	
+	if not node_to_despawn_on:
+		push_error("Could not find 'node_to_despawn_on' at vsk_multiplayer_manager")
+		return
+
 	var player_instance: Node3D = node_to_despawn_on.get_node_or_null("Player_" + str(p_id))
 	
 	if player_instance:
@@ -511,7 +525,9 @@ func _map_loaded() -> void:
 			"map_path":VSKMapManager.get_pending_map_path()
 		}
 		
-		assert(get_tree().get_multiplayer().send_auth(HOST_PEER_ID, _encode_auth_message_buffer(auth_dict)) == OK)
+		if (get_tree().get_multiplayer().send_auth(HOST_PEER_ID, _encode_auth_message_buffer(auth_dict)) != OK):
+			push_error("Failed to send auth map loaded request")
+			return
 		
 ##
 ## Callback function from the gameflow manager indicating that the application
@@ -534,9 +550,11 @@ func _peer_authenticating(p_peer_id: int) -> void:
 			"map_path":VSKMapManager.get_pending_map_path()
 		}
 		
-		assert(get_tree().get_multiplayer().send_auth(
+		if (get_tree().get_multiplayer().send_auth(
 			p_peer_id,
-			_encode_auth_message_buffer(auth_dict)) == OK)
+			_encode_auth_message_buffer(auth_dict)) != OK):
+			push_error("Failed to respond to peer authentication request")
+			return
 	else:
 		_auth_heartbeat_timer.start()
 			
@@ -737,7 +755,9 @@ func setup_manager(p_gameroot: Node) -> void:
 	if !use_multiplayer_manager:
 		return
 	
-	assert(p_gameroot)
+	if not p_gameroot:
+		push_error("Could not find 'p_gameroot' at vsk_multiplayer_manager")
+		return
 	_gameroot = p_gameroot
 	
 	var _player_root = Node3D.new()
@@ -760,18 +780,38 @@ func setup_manager(p_gameroot: Node) -> void:
 	# Sets the player spawner root to the gameroot node.
 	_player_spawner.spawn_path = _player_spawner.get_path_to(_player_root)
 	
-	assert(multiplayer_api.peer_authenticating.connect(self._peer_authenticating) == OK)
-	assert(multiplayer_api.peer_authentication_failed.connect(self._peer_authentication_failed) == OK)
+	if (multiplayer_api.peer_authenticating.connect(self._peer_authenticating) != OK):
+		push_error("Could not connect signal 'multiplayer_api.peer_authenticating'")
+		return
+	if (multiplayer_api.peer_authentication_failed.connect(self._peer_authentication_failed) != OK):
+		push_error("Could not connect signal 'multiplayer_api.peer_authentication_failed'")
+		return
 	
-	assert(multiplayer.connected_to_server.connect(self._on_connected_to_server) == OK)
-	assert(multiplayer.connection_failed.connect(self._on_connection_failed) == OK)
-	assert(multiplayer.peer_connected.connect(self._on_peer_connected) == OK)
-	assert(multiplayer.peer_disconnected.connect(self._on_peer_disconnected) == OK)
-	assert(multiplayer.server_disconnected.connect(self._on_server_disconnected) == OK)
+	if (multiplayer.connected_to_server.connect(self._on_connected_to_server) != OK):
+		push_error("Could not connect signal 'multiplayer.connected_to_server'")
+		return
+	if (multiplayer.connection_failed.connect(self._on_connection_failed) != OK):
+		push_error("Could not connect signal 'multiplayer.connection_failed'")
+		return
+	if (multiplayer.peer_connected.connect(self._on_peer_connected) != OK):
+		push_error("Could not connect signal 'multiplayer.peer_connected'")
+		return
+	if (multiplayer.peer_disconnected.connect(self._on_peer_disconnected) != OK):
+		push_error("Could not connect signal 'multiplayer.peer_disconnected'")
+		return
+	if (multiplayer.server_disconnected.connect(self._on_server_disconnected) != OK):
+		push_error("Could not connect signal 'multiplayer.server_disconnected'")
+		return
 	
-	assert(VSKGameFlowManager.is_quitting.connect(self._is_quitting) == OK)
-	assert(VSKGameFlowManager.map_loaded.connect(self._map_loaded) == OK)
-	assert(VSKGameFlowManager.server_hosted.connect(self._server_hosted) == OK)
+	if (VSKGameFlowManager.is_quitting.connect(self._is_quitting) != OK):
+		push_error("Could not connect signal 'VSKGameFlowManager.is_quitting'")
+		return
+	if (VSKGameFlowManager.map_loaded.connect(self._map_loaded) != OK):
+		push_error("Could not connect signal 'VSKGameFlowManager.map_loaded'")
+		return
+	if (VSKGameFlowManager.server_hosted.connect(self._server_hosted) != OK):
+		push_error("Could not connect signal 'VSKGameFlowManager.server_hosted'")
+		return
 
 ##
 ## Sets up any required variables for this manager.

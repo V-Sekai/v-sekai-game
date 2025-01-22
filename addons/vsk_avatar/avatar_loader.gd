@@ -85,9 +85,15 @@ func set_avatar_model_path(p_path: String) -> void:
 
 func load_model(p_bypass_whitelist: bool, p_skip_validation: bool) -> void:
 	if !avatar_pending:
-		assert(VSKAvatarManager.avatar_download_started.connect(self._avatar_download_started) == OK)
-		assert(VSKAvatarManager.avatar_load_callback.connect(self._avatar_load_callback) == OK)
-		assert(VSKAvatarManager.avatar_load_update.connect(self._avatar_load_update) == OK)
+		if (VSKAvatarManager.avatar_download_started.connect(self._avatar_download_started) != OK):
+			push_error("Could not connect signal 'VSKAvatarManager.avatar_download_started'")
+			return
+		if (VSKAvatarManager.avatar_load_callback.connect(self._avatar_load_callback) != OK):
+			push_error("Could not connect signal 'VSKAvatarManager.avatar_load_callback'")
+			return
+		if (VSKAvatarManager.avatar_load_update.connect(self._avatar_load_update) != OK):
+			push_error("Could not connect signal 'VSKAvatarManager.avatar_load_update'")
+			return
 
 		avatar_pending = true
 	VSKAvatarManager.call_deferred("request_avatar", avatar_path, p_bypass_whitelist, p_skip_validation)

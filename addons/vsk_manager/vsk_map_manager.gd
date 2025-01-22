@@ -159,10 +159,10 @@ func instance_map(_p_strip_all_entities: bool) -> Dictionary:
 		Thread.set_thread_safety_checks_enabled(true)
 		
 		if map_instance.get_script() != vsk_map_definition_const and map_instance.get_script() != vsk_map_definition_runtime_const:
-			assert(false, "Map does not have a map definition script at root!")
+			push_error("Map does not have a map definition script at root!")
 			map_instance.queue_free()
-
 			return {}
+
 		_set_instanced_map(map_instance)
 		print("Map instanced!")
 		
@@ -174,8 +174,12 @@ func instance_map(_p_strip_all_entities: bool) -> Dictionary:
 
 
 static func instance_embedded_map_entities(p_map_instance: Node, p_invalid_scene_paths: PackedStringArray) -> Node:
-	assert(p_map_instance)
-	assert(p_map_instance is vsk_map_definition_runtime_const)
+	if not p_map_instance:
+		push_error("Could not find 'p_map_instance' at vsk_map_manager")
+		return
+	if not (p_map_instance is vsk_map_definition_runtime_const):
+		push_error("'p_map_instance' is not a valid map instance")
+		return
 
 	for i in range(0, p_map_instance.entity_instance_list.size()):
 		var map_entity_instance_info = p_map_instance.entity_instance_list[i]
@@ -277,11 +281,14 @@ func setup() -> void:
 	VSKResourceManager.assign_get_resource_for_map_id_function(self, "get_resource_for_map_id")
 
 	if connect("user_content_load_done", self._user_content_load_done) != OK:
-		assert(false, "Could not connect _user_content_load_done")
+		push_error("Could not connect _user_content_load_done")
+		return
 	if connect("user_content_background_load_stage", self._set_loading_stage) != OK:
-		assert(false, "Could not connect user_content_background_load_stage")
+		push_error("Could not connect user_content_background_load_stage")
+		return
 	if connect("user_content_background_load_stage_count", self._set_loading_stage_count) != OK:
-		assert(false, "Could not connect user_content_background_load_stage_count")
+		push_error("Could not connect user_content_background_load_stage_count")
+		return
 
 
 func apply_project_settings() -> void:
