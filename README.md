@@ -64,8 +64,17 @@ We're happy to accept pull requests for **features** and **bug fixes**.
 You can find our issues and suggestions at the [documentation website](https://v-sekai.github.io/manuals).
 
 ## How do I help contribute? :books:
+We are looking for developers and content creators for avatar and maps.
 
+### Avatars and Maps
+1. Download latest editor
+2. Register on [V-Sekai](https://v-sekai.org/) (Required for upload)
+3. Ask on [**Discord**](https://discord.gg/H3s3PD49XC) for manual account approval and further instructions.
+
+### Game development
 V-Sekai requires our [custom Godot Engine fork](https://github.com/V-Sekai/world-godot). For information about building the Godot Engine, see the [official documentation](https://docs.godotengine.org/en/latest/contributing/development/compiling/).
+
+An overview of GDScript game code is available in [CODEBASE.md](CODEBASE.md).
 
 ## License :page_facing_up:
 
