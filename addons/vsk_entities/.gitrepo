@@ -6,7 +6,7 @@
 [subrepo]
 	remote = https://github.com/V-Sekai/vsk_entities
 	branch = main
-	commit = 8eae6122767bb294623f8e2eb15abc6e9d118ca2
-	parent = f38836d415ad4cc8ffb70d01643595e747fac203
+	commit = c351f65665fef7f52755a48149b48c5a00b1c152
+	parent = 0cf33ccdc78a02005f4da5a68286f7edb2fd3d4a
 	method = merge
-	cmdver = 0.4.6
+	cmdver = 0.4.9

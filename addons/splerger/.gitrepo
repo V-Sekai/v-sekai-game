@@ -6,7 +6,7 @@
 [subrepo]
 	remote = https://github.com/V-Sekai/godot-splerger.git
 	branch = master
-	commit = 185e931f7bd10df3cf37e15f60cac80fa2fcf8ea
-	parent = a76d1aaca32c706acdc889825be391176e2b29fc
+	commit = 199b260ca432bfd4cc08999135470ee052ac3346
+	parent = 73afdad9b63a53cb57da6a72002710ab5f83a637
 	method = merge
-	cmdver = 0.4.6
+	cmdver = 0.4.9

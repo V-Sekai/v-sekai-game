@@ -6,7 +6,7 @@
 [subrepo]
 	remote = https://github.com/V-Sekai/godot-vrm.git
 	branch = only-addon
-	commit = 651205484c35f5cd7ba56475ff636e10db8ad674
-	parent = 90f0e1dac01382ae61827f6ba9fef590076582e0
+	commit = ce4de103d7d7f7a9a47e9e439fefa28a4a7054e7
+	parent = 3688838a5b8d78d3b55365b7ea58eb4105e9076e
 	method = merge
 	cmdver = 0.4.9
