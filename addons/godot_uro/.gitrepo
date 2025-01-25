@@ -6,7 +6,7 @@
 [subrepo]
 	remote = https://github.com/V-Sekai/godot_uro
 	branch = main
-	commit = 44dabc7f539e57f243baf4ecf46a310aeee7ff8b
-	parent = 21a64ff6fa77637d30d4eb3f72ec036e65a5ce02
+	commit = 7bb119627991a15ae706bc56012fafda672bffb3
+	parent = 64fdc8ce1340cc9428001cd0da4148b7bf4c5d9a
 	method = merge
-	cmdver = 0.4.6
+	cmdver = 0.4.9
