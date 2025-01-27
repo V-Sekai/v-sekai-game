@@ -1,0 +1,148 @@
+name: Build Platform Target
+
+on:
+  workflow_dispatch:
+  repository_dispatch:
+    types: ['build-ready']
+  push:
+    branches: ['main']
+    tags:
+      - '**'
+
+env:
+  ITCH_IO_PUBLISH: 'true'
+  # Set ITCH_IO_API_KEY in Repository Secrets
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      TAG_PUSH: ${{ steps.setenv.outputs.TAG_PUSH }}
+      PRERELEASE: ${{ steps.setenv.outputs.PRERELEASE }}
+      GIT_TAG: ${{ steps.setenv.outputs.GIT_TAG }}
+      ITCH_IO_PUBLISH: ${{ steps.setenv.outputs.ITCH_IO_PUBLISH }}
+      TAG_NAME: ${{ steps.tag.outputs.TAG_NAME }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: 'true'
+
+      - name: Set env
+        id: setenv
+        run: |
+          echo "Github Action Event: ${{ github.event_name }}"
+
+          # If HEAD commit contains tag, event is tag push or manual workflow dispatch rerun
+          if [ -n "$(git tag -l --contains HEAD)" ] && \
+             [ ${{ github.event_name }} != "repository_dispatch" ]; then \
+            echo "Tagged Release"; \
+            TAG_PUSH=true; \
+            PRERELEASE=false; \
+          else \
+            echo "Rolling Release"; \
+            TAG_PUSH=false; \
+            PRERELEASE=true; \
+          fi
+
+          GIT_TAG="$( git describe --tags --abbrev=0 )"
+          GIT_TAG=${GIT_TAG:=0.0.1}
+
+          echo "TAG_PUSH=${TAG_PUSH}" >> $GITHUB_OUTPUT
+          echo "PRERELEASE=${PRERELEASE}" >> $GITHUB_OUTPUT
+          echo "GIT_TAG=${GIT_TAG}" >> $GITHUB_OUTPUT
+
+          echo "ITCH_IO_PUBLISH=${{ env.ITCH_IO_PUBLISH }}" >> $GITHUB_OUTPUT
+
+      - name: Docker build project
+        id: docker
+        uses: ./docker/build-project
+        with:
+          repo: ${{ github.repository }}
+          nightly: ${{ steps.setenv.outputs.PRERELEASE }}
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: v-sekai-release
+          path: ${{ github.workspace }}/releases
+
+      - name: Set tag name
+        id: tag
+        run: |
+          TAG_NAME="$( echo "${{ steps.docker.outputs.VERSION_TAG }}" | cut -d '-' -f1 )"
+
+          # Rolling release tag
+          if [ ${{ steps.setenv.outputs.TAG_PUSH }} == "false" ]; then \
+            TAG_DATE="$( date +"%Y-%m-%d" )"; \
+            TAG_VERSION="$( echo "${{ steps.docker.outputs.VERSION_TAG }}" | cut -d '-' -f2- )"; \
+            TAG_NAME="${TAG_NAME}-nightly-${TAG_DATE}-${TAG_VERSION}"; \
+          fi
+
+          echo "TAG_NAME=${TAG_NAME}" >> $GITHUB_OUTPUT
+
+  release:
+    runs-on: ubuntu-latest
+    needs: build
+    if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/') }}
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ needs.build.outputs.TAG_NAME }}
+          release_name: ${{ needs.build.outputs.TAG_NAME }} V-Sekai Game Release
+          draft: false
+          prerelease: ${{ needs.build.outputs.PRERELEASE }}
+
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: v-sekai-release
+          name: v-sekai-release
+
+      - name: Upload Release Asset
+        run: |
+          echo "Release Tag: ${{ needs.build.outputs.TAG_NAME }}."
+          cd v-sekai-release
+          echo "Uploading to ${{ steps.create_release.outputs.upload_url }}"
+          for file in *; do \
+            echo "Uploading $file..."; \
+            curl -L \
+              -X POST \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+              -H "Content-Type: application/octet-stream" \
+              "https://uploads.github.com/repos/${{ github.repository }}/releases/${{ steps.create_release.outputs.id }}/assets?name=${file}" \
+              -T "${file}"; \
+          done
+
+  itch-upload:
+    runs-on: ubuntu-latest
+    needs: [build]
+
+    # Publish only on v-sekai-game tag update
+    if: needs.build.outputs.ITCH_IO_PUBLISH == 'true' && needs.build.outputs.TAG_PUSH == 'true'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            ./docker/itch-io/
+
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ${{ github.workspace }}/v-sekai-release
+          name: v-sekai-release
+
+      - name: Docker Itch.io Publish
+        uses: ./docker/itch-io
+        with:
+          api_key: ${{ secrets.ITCH_IO_API_KEY }}
+          filepath: v-sekai-release
+          itchio_project: projectname
+          release_version: ${{ needs.build.outputs.GIT_TAG }}
