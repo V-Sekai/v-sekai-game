@@ -1,0 +1,10 @@
+[gd_resource type="EditorSettings" format=3]
+
+[resource]
+export/android/android_sdk_path = "~/android_sdk"
+export/android/java_sdk_path = "/usr/lib/jvm/java-1.17.0-openjdk-amd64"
+export/android/shutdown_adb_on_exit = true
+export/android/force_system_user = false
+export/android/debug_keystore = "~/debug.keystore"
+export/android/debug_keystore_user = "androiddebugkey"
+export/android/debug_keystore_pass = "android"

@@ -1,0 +1,21 @@
+name: 'itchio-publish'
+description: 'Publish release to Itch.io'
+branding:
+  icon: 'upload'
+  color: 'red'
+inputs:
+  api_key:
+    description: 'Itch.io API key'
+    required: false
+  filepath:
+    description: 'Release files folder path'
+    required: true
+  itchio_project:
+    description: 'Itch.io project name'
+    required: true
+  release_version:
+    description: 'Project version'
+    required: true
+runs:
+  using: docker
+  image: Dockerfile
