@@ -54,7 +54,8 @@ for PLATFORM in ${BUILD_PLATFORMS}; do \
     BUILD_DIR="./${BIN}"; EXT=''; \
     if [ "${PLATFORM}" == 'Windows' ]; then \
         EXT='.exe'; \
-    elif [ "${PLATFORM}" == 'QuestAndroid' ]; then \
+    elif [ "${PLATFORM}" == 'Android' ] \
+        || [ "${PLATFORM}" == 'QuestAndroid' ]; then \
         EXT='.apk'; \
     elif [ "${PLATFORM}" == 'Mac' ]; then \
         EXT='.zip'; \

@@ -10,7 +10,7 @@ ENV HOMEDIR '/root'
 
 ENV BIN 'release/bin'
 ENV BUILD_ARGS '--headless'
-ENV BUILD_PLATFORMS 'Linux Windows Mac QuestAndroid Web Linux_arm64'
+ENV BUILD_PLATFORMS 'Linux Windows Mac Android QuestAndroid Web Linux_arm64'
 ENV GODOT_REPO 'V-Sekai/world-godot'
 ENV GODOT_ZIP 'v-sekai-godot-linuxbsd.zip'
 ENV GODOT_TPZ 'v-sekai-godot-templates.zip'
