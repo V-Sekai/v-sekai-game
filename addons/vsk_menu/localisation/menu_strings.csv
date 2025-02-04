@@ -103,6 +103,7 @@ TR_MENU_STATUS_CODE_NO_PASSWORD,No password,Sin contraseña
 TR_MENU_STATUS_CODE_NO_USERNAME,No username,Sin nombre de usuario
 TR_MENU_STATUS_CODE_PENDING,Pending...,Pendiente…
 TR_MENU_UNMUTE,Unmute,Quitar silencio
+TR_MENU_VR_CAMERA_MODE,Camera Mode,Modo de cámara
 TR_MENU_VR_ENABLED,VR Enabled,VR habilitado
 TR_MENU_VR_MOVEMENT_ORIENTATION,Movement Orientation,Orientación del movimiento
 TR_MENU_VR_MOVEMENT_TYPE,Movement Type,Tipo de movimiento
