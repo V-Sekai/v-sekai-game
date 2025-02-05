@@ -16,7 +16,7 @@ var camera: Camera3D = null
 const CAMERA_FIRST_PERSON = 0
 const CAMERA_THIRD_PERSON = 1
 
-var camera_mode: int = CAMERA_FIRST_PERSON
+var camera_mode: int = VRManager.vr_user_preferences.camera_mode
 
 # Side
 var distance: float = 4.0

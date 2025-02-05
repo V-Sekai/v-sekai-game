@@ -15,6 +15,7 @@ movement_orientation_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsC
 turning_mode_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/TurningMode/TurningMode")
 custom_player_height_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/PlayerHeightContainer/PlayerHeightSpinbox")
 movement_type_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/MovementType/MovementType")
+camera_mode_nodepath = NodePath("Panel/CenterContainer/Control/ButtonsContainer/CameraMode/CameraMode")
 restart_notification_nodepath = NodePath("Panel/CenterContainer/RestartRequired")
 
 [node name="Panel" type="Panel" parent="."]
@@ -79,6 +80,21 @@ size_flags_horizontal = 3
 text = "TR_MENU_VR_TURNING_MODE"
 
 [node name="TurningMode" type="MenuButton" parent="Panel/CenterContainer/Control/ButtonsContainer/TurningMode"]
+layout_mode = 2
+size_flags_horizontal = 3
+flat = false
+
+[node name="CameraMode" type="HBoxContainer" parent="Panel/CenterContainer/Control/ButtonsContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="CameraModeLabel" type="Label" parent="Panel/CenterContainer/Control/ButtonsContainer/CameraMode"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "TR_MENU_VR_CAMERA_MODE"
+
+[node name="CameraMode" type="MenuButton" parent="Panel/CenterContainer/Control/ButtonsContainer/CameraMode"]
 layout_mode = 2
 size_flags_horizontal = 3
 flat = false

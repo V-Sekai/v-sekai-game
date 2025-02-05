@@ -119,6 +119,13 @@ var movement_type: int = movement_type_enum.MOVEMENT_TYPE_LOCOMOTION
 @export var laser_color: Color = Color(1.0, 0, 0, 0.5)
 
 
+class camera_mode_enum:
+	const CAMERA_MODE_FIRST = 0
+	const CAMERA_MODE_THIRD = 1
+
+@export var camera_mode: int = camera_mode_enum.CAMERA_MODE_FIRST
+
+
 func set_settings_values_and_save() -> void:
 	set_settings_values()
 	if save_settings_callback.is_valid():

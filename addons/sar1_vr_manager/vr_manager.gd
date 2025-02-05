@@ -26,6 +26,7 @@ const vr_hmd_mirroring_names = ["TR_VR_MANAGER_UI_NO_MIRROR", "TR_VR_MANAGER_UI_
 const vr_control_type_names = ["TR_VR_MANAGER_CONTROL_TYPE_CLASSIC", "TR_VR_MANAGER_CONTROL_TYPE_DUAL"]
 const preferred_hand_oriented_movement_hand_names = ["TR_VR_MANAGER_PREFERRED_HAND_ORIENTED_MOVEMENT_LEFT", "TR_VR_MANAGER_PREFERRED_HAND_ORIENTED_MOVEMENT_RIGHT"]
 const movement_type_names = ["TR_VR_MANAGER_MOVEMENT_TELEPORTATION", "TR_VR_MANAGER_MOVEMENT_LOCOMOTION"]
+const camera_mode_names = ["TR_VR_MANAGER_CAMERA_MODE_FIRST", "TR_VR_MANAGER_CAMERA_MODE_THIRD"]
 
 const vr_platform_const = preload("res://addons/sar1_vr_manager/vr_platform.gd")
 var vr_platform = null
