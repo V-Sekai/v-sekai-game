@@ -104,7 +104,7 @@ const NETWORK_SPAWNER_GROUP_NAME: String = "NetworkSpawnGroup"
 ##
 ## The scene representing the player controller.
 ##
-const PLAYER_SCENE: PackedScene = preload("res://addons/vsk_entities/vsk_player.tscn")
+const PLAYER_SCENE: PackedScene = preload("res://addons/vsk_entities/vsk_player_old.tscn")
 
 ##
 ## Scene representing MultiplayerSpawner responsible for spawning players.

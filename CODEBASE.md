@@ -56,9 +56,6 @@ flowchart TD
         Entities --> addon16[**vsk_entities**<hr>Game entities initialization. Contains player avatar main scene.]
             addon16 --> ctrl1{" "}
             ctrl1 --> dir1[**vsk_player_old.tscn**<hr>Current player Avatar entity instance]
-            ctrl1 --> dir2[**vsk_player.tscn** ⚠️<hr>Unused experimental player entity with a godot head and floating hands.]
-            ctrl1 --> dir3[**vsk_moving_platform.tscn** ⚠️<hr>Unused moving platform]
-        Entities --> addon17[**godot-xr-tools** ⚠️<hr>Godot XR Tools utilities]
         addon17 --> dir2
 
     classDef Category font-size:30px
@@ -73,7 +70,6 @@ flowchart TD
         Actor --> addon19[**godot_state_charts**<hr>Base class for Actor animation states]
         Actor --> addon20[**actor**<hr>Player actor state machine and camera controller]
             addon20 --> dir1["**states**<hr>Actor states(jump, fall...) for state machine"]
-            addon20 --> dir2[**senses.gd**⚠️<hr>Unused]
         Editor --> addon21[**vsk_importer_exporter**<hr>Avatar/scene import and export validation]
         Editor --> addon22[**vsk_editor**<hr>Editor plugin for uploading Maps/Avatars to Uro server]
 
@@ -96,7 +92,6 @@ flowchart TD
             ctrl2 --> addon26["**flat_viewport**<hr>Control for handling offscreen rendering (from a VR device for example)"]
             ctrl2 --> addon27[**xr_vignette**<hr>Experimental camera tunnel shader to reduce motion sickness]
         VR-XR --> Utils
-            Utils --> addon28[**sar1_mocap_manager** ⚠️<hr>Motion capture reading/recording in a custom format]
             Utils --> addon29[**sar1_screenshot_manager**<hr>Utility to capture screenshots]
 
     classDef Category font-size:30px
@@ -124,8 +119,6 @@ flowchart TD
             Utils --> addon35[**math_util**<hr>Utility math functions]
         Misc --> 3D
             3D --> ctrl1{" "}
-            ctrl1 --> addon36[**splerger** ⚠️<hr>Mesh splitting with 3d grid for Map culling or pre-upload transform]
-            ctrl1 --> addon37[**line_renderer** ⚠️<hr>Experimental line render for 3d pen writing function]
             ctrl1 --> addon38[**extended_kinematic_body**<hr>Improved CharacterBody3d with better tolerance for stairs/slopes]
         Misc --> addon39[**smoothing**<hr>Fixed timestep interpolation addon for framerate independent physics]
 
@@ -140,6 +133,3 @@ Unused code is also in addons/vsk_entities/extensions.
 
 ### smoothing
 Deprecated by native lerp, needs replacing. See https://github.com/godotengine/godot-docs/pull/10197
-
-### splerger
-Test scene is https://github.com/V-Sekai/TEST_splerger
