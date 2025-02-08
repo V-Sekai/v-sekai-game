@@ -25,7 +25,9 @@ const vsk_exporter_addon_interface_const = preload("vsk_exporter_addon_interface
 
 const avatar_lib_const = preload("res://addons/vsk_avatar/avatar_lib.gd")
 const avatar_definition_const = preload("res://addons/vsk_avatar/vsk_avatar_definition.gd")
-const avatar_definition_runtime_const = preload("res://addons/vsk_avatar/vsk_avatar_definition_runtime.gd")
+const avatar_definition_runtime_const = preload(
+	"res://addons/vsk_avatar/vsk_avatar_definition_runtime.gd"
+)
 
 var map_definition = load("res://addons/vsk_map/vsk_map_definition.gd")
 var map_definition_runtime = load("res://addons/vsk_map/vsk_map_definition_runtime.gd")
@@ -42,7 +44,9 @@ const validator_map_const = preload("res://addons/vsk_importer_exporter/vsk_map_
 const entity_node_const = preload("res://addons/entity_manager/entity.gd")
 
 
-func get_valid_filenames(p_filename: String, p_validator: RefCounted, p_existing_valid_filenames: Array) -> Array:
+func get_valid_filenames(
+	p_filename: String, p_validator: RefCounted, p_existing_valid_filenames: Array
+) -> Array:
 	if p_validator.is_path_an_entity(p_filename):
 		p_existing_valid_filenames.push_back(p_filename)
 
@@ -51,7 +55,9 @@ func get_valid_filenames(p_filename: String, p_validator: RefCounted, p_existing
 			var packed_scene: PackedScene = ResourceLoader.load(p_filename)
 			var instantiate: PackedScene = packed_scene.get_state().get_node_instance(0)
 			if instantiate != null:
-				p_existing_valid_filenames = get_valid_filenames(instantiate.get_path(), p_validator, p_existing_valid_filenames)
+				p_existing_valid_filenames = get_valid_filenames(
+					instantiate.get_path(), p_validator, p_existing_valid_filenames
+				)
 		else:
 			push_error("File does not exist: %s" % p_filename)
 
@@ -89,18 +95,28 @@ func is_valid_entity(p_node: Node, p_validator: RefCounted) -> bool:
 	return get_valid_entity_scene_id(p_node, p_validator) >= 0
 
 
-func sanitise_array(p_array: Array, p_table: Dictionary, p_visited: Dictionary, p_root: Node, p_validator: RefCounted) -> Dictionary:
+func sanitise_array(
+	p_array: Array,
+	p_table: Dictionary,
+	p_visited: Dictionary,
+	p_root: Node,
+	p_validator: RefCounted
+) -> Dictionary:
 	var new_array = []
 	if p_array:
 		for i in range(0, p_array.size()):
 			var element = p_array[i]
 			match typeof(p_array[i]):
 				TYPE_ARRAY:
-					var result: Dictionary = sanitise_array(element, p_table, p_visited, p_root, p_validator)
+					var result: Dictionary = sanitise_array(
+						element, p_table, p_visited, p_root, p_validator
+					)
 					p_visited = result["visited"]
 					new_array.push_back(result["array"])
 				TYPE_DICTIONARY:
-					var result: Dictionary = sanitise_dictionary(element, p_table, p_visited, p_root, p_validator)
+					var result: Dictionary = sanitise_dictionary(
+						element, p_table, p_visited, p_root, p_validator
+					)
 					p_visited = result["visited"]
 					new_array.push_back(result["dictionary"])
 				TYPE_OBJECT:
@@ -110,13 +126,20 @@ func sanitise_array(p_array: Array, p_table: Dictionary, p_visited: Dictionary, 
 							var duplicated_subobject: Object = p_table[subobject]
 							if subobject is Resource:
 								# If the resource isn't valid for this validator, remove it
-								if !p_validator.is_resource_type_valid(subobject) or !p_validator.is_script_valid_for_resource(subobject.get_script()):
+								if (
+									!p_validator.is_resource_type_valid(subobject)
+									or !p_validator.is_script_valid_for_resource(
+										subobject.get_script()
+									)
+								):
 									print("property array index %s is invalid" % str(i))
 									duplicated_subobject = null
 							subobject = duplicated_subobject
 
 						if subobject != null and p_visited["visited_nodes"].find(subobject) == -1:
-							p_visited = sanitise_object(subobject, p_table, p_visited, p_root, p_validator)
+							p_visited = sanitise_object(
+								subobject, p_table, p_visited, p_root, p_validator
+							)
 
 						# Set the new object
 						new_array.push_back(subobject)
@@ -126,7 +149,13 @@ func sanitise_array(p_array: Array, p_table: Dictionary, p_visited: Dictionary, 
 	return {"visited": p_visited, "array": new_array}
 
 
-func sanitise_dictionary(p_dictionary: Dictionary, p_table: Dictionary, p_visited: Dictionary, p_root: Node, p_validator: RefCounted) -> Dictionary:
+func sanitise_dictionary(
+	p_dictionary: Dictionary,
+	p_table: Dictionary,
+	p_visited: Dictionary,
+	p_root: Node,
+	p_validator: RefCounted
+) -> Dictionary:
 	var new_dictionary: Dictionary = {}
 	if p_dictionary:
 		for key in p_dictionary.keys():
@@ -138,11 +167,15 @@ func sanitise_dictionary(p_dictionary: Dictionary, p_table: Dictionary, p_visite
 			# Sanitize the key
 			match typeof(key):
 				TYPE_ARRAY:
-					var result: Dictionary = sanitise_array(key, p_table, p_visited, p_root, p_validator)
+					var result: Dictionary = sanitise_array(
+						key, p_table, p_visited, p_root, p_validator
+					)
 					p_visited = result["visited"]
 					new_key = key
 				TYPE_DICTIONARY:
-					var result: Dictionary = sanitise_dictionary(key, p_table, p_visited, p_root, p_validator)
+					var result: Dictionary = sanitise_dictionary(
+						key, p_table, p_visited, p_root, p_validator
+					)
 					p_visited = result["visited"]
 					new_key = key
 				TYPE_OBJECT:
@@ -152,13 +185,20 @@ func sanitise_dictionary(p_dictionary: Dictionary, p_table: Dictionary, p_visite
 							var duplicated_subobject: Object = p_table[subobject]
 							if subobject is Resource:
 								# If the resource isn't valid for this validator, remove it
-								if !p_validator.is_resource_type_valid(subobject) or !p_validator.is_script_valid_for_resource(subobject.get_script()):
+								if (
+									!p_validator.is_resource_type_valid(subobject)
+									or !p_validator.is_script_valid_for_resource(
+										subobject.get_script()
+									)
+								):
 									print("property dictionary key '%s' is invalid" % str(key))
 									duplicated_subobject = null
 							subobject = duplicated_subobject
 
 						if subobject != null and p_visited["visited_nodes"].find(subobject) == -1:
-							p_visited = sanitise_object(subobject, p_table, p_visited, p_root, p_validator)
+							p_visited = sanitise_object(
+								subobject, p_table, p_visited, p_root, p_validator
+							)
 
 						# Set the new object
 						new_key = subobject
@@ -168,11 +208,15 @@ func sanitise_dictionary(p_dictionary: Dictionary, p_table: Dictionary, p_visite
 			# Sanitize the value
 			match typeof(value):
 				TYPE_ARRAY:
-					var result: Dictionary = sanitise_array(value, p_table, p_visited, p_root, p_validator)
+					var result: Dictionary = sanitise_array(
+						value, p_table, p_visited, p_root, p_validator
+					)
 					p_visited = result["visited"]
 					new_value = result["array"]
 				TYPE_DICTIONARY:
-					var result: Dictionary = sanitise_dictionary(value, p_table, p_visited, p_root, p_validator)
+					var result: Dictionary = sanitise_dictionary(
+						value, p_table, p_visited, p_root, p_validator
+					)
 					p_visited = result["visited"]
 					new_value = result["dictionary"]
 				TYPE_OBJECT:
@@ -182,13 +226,20 @@ func sanitise_dictionary(p_dictionary: Dictionary, p_table: Dictionary, p_visite
 							var duplicated_subobject: Object = p_table[subobject]
 							if subobject is Resource:
 								# If the resource isn't valid for this validator, remove it
-								if !p_validator.is_resource_type_valid(subobject) or !p_validator.is_script_valid_for_resource(subobject.get_script()):
+								if (
+									!p_validator.is_resource_type_valid(subobject)
+									or !p_validator.is_script_valid_for_resource(
+										subobject.get_script()
+									)
+								):
 									print("property dictionary value '%s' is invalid" % str(value))
 									duplicated_subobject = null
 							subobject = duplicated_subobject
 
 						if subobject != null and p_visited["visited_nodes"].find(subobject) == -1:
-							p_visited = sanitise_object(subobject, p_table, p_visited, p_root, p_validator)
+							p_visited = sanitise_object(
+								subobject, p_table, p_visited, p_root, p_validator
+							)
 
 						# Set the new object
 						new_value = subobject
@@ -200,7 +251,13 @@ func sanitise_dictionary(p_dictionary: Dictionary, p_table: Dictionary, p_visite
 	return {"visited": p_visited, "dictionary": new_dictionary}
 
 
-func sanitise_object(p_object: Object, p_table: Dictionary, p_visited: Dictionary, p_root: Node, p_validator: RefCounted) -> Dictionary:
+func sanitise_object(
+	p_object: Object,
+	p_table: Dictionary,
+	p_visited: Dictionary,
+	p_root: Node,
+	p_validator: RefCounted
+) -> Dictionary:
 	if p_object:
 		p_visited["visited_nodes"].push_back(p_object)
 
@@ -211,14 +268,18 @@ func sanitise_object(p_object: Object, p_table: Dictionary, p_visited: Dictionar
 				TYPE_ARRAY:
 					var array = p_object.get(property["name"])
 					if typeof(array) == TYPE_ARRAY:
-						var result: Dictionary = sanitise_array(array, p_table, p_visited, p_root, p_validator)
+						var result: Dictionary = sanitise_array(
+							array, p_table, p_visited, p_root, p_validator
+						)
 						p_visited = result["visited"]
 
 						p_object.set(property["name"], result["array"])
 				TYPE_DICTIONARY:
 					var dictionary = p_object.get(property["name"])
 					if typeof(dictionary) == TYPE_DICTIONARY:
-						var result: Dictionary = sanitise_dictionary(dictionary, p_table, p_visited, p_root, p_validator)
+						var result: Dictionary = sanitise_dictionary(
+							dictionary, p_table, p_visited, p_root, p_validator
+						)
 						p_visited = result["visited"]
 						p_object.set(property["name"], result["dictionary"])
 				TYPE_OBJECT:
@@ -230,25 +291,36 @@ func sanitise_object(p_object: Object, p_table: Dictionary, p_visited: Dictionar
 								if p_object is Node:
 									# Check if the script works in this node's context
 									if p_object == p_root:
-										if !p_validator.is_script_valid_for_root(subobject, p_object.get_class()):
+										if !p_validator.is_script_valid_for_root(
+											subobject, p_object.get_class()
+										):
 											duplicated_subobject = null
 									else:
 										if is_valid_entity(p_object, p_validator):
 											if !p_validator.is_valid_entity_script(subobject):
 												duplicated_subobject = null
 										else:
-											if !p_validator.is_script_valid_for_children(subobject, p_object.get_class()):
+											if !p_validator.is_script_valid_for_children(
+												subobject, p_object.get_class()
+											):
 												duplicated_subobject = null
 
 							elif subobject is Resource:
 								# If the resource isn't valid for this validator, remove it
-								if !p_validator.is_resource_type_valid(subobject) or !p_validator.is_script_valid_for_resource(subobject.get_script()):
+								if (
+									!p_validator.is_resource_type_valid(subobject)
+									or !p_validator.is_script_valid_for_resource(
+										subobject.get_script()
+									)
+								):
 									print("property %s is invalid" % property["name"])
 									duplicated_subobject = null
 							subobject = duplicated_subobject
 
 						if subobject != null and p_visited["visited_nodes"].find(subobject) == -1:
-							p_visited = sanitise_object(subobject, p_table, p_visited, p_root, p_validator)
+							p_visited = sanitise_object(
+								subobject, p_table, p_visited, p_root, p_validator
+							)
 
 						# Save all the existing properties just in case replacing
 						# a resource erases other ones (creating a new mesh
@@ -257,7 +329,9 @@ func sanitise_object(p_object: Object, p_table: Dictionary, p_visited: Dictionar
 						for property_to_save in property_list:
 							if property_to_save["type"] == TYPE_OBJECT:
 								if property_to_save["name"] != property["name"]:
-									saved_properties[property_to_save["name"]] = p_object.get(property_to_save["name"])
+									saved_properties[property_to_save["name"]] = p_object.get(
+										property_to_save["name"]
+									)
 
 						# Set the new object
 						p_object.set(property["name"], subobject)
@@ -269,7 +343,14 @@ func sanitise_object(p_object: Object, p_table: Dictionary, p_visited: Dictionar
 	return p_visited
 
 
-func sanitise_instance(p_duplicate_node: Node, p_reference_node: Node, p_duplicate_root: Node, p_reference_root: Node, p_visited: Dictionary, p_validator: RefCounted) -> Dictionary:
+func sanitise_instance(
+	p_duplicate_node: Node,
+	p_reference_node: Node,
+	p_duplicate_root: Node,
+	p_reference_root: Node,
+	p_visited: Dictionary,
+	p_validator: RefCounted
+) -> Dictionary:
 	print("Sanitising Instance: %s" % p_duplicate_node.get_name())
 
 	# Check if this node is deriving an entity scene
@@ -296,7 +377,12 @@ func sanitise_instance(p_duplicate_node: Node, p_reference_node: Node, p_duplica
 						child_reference_node = p_reference_node.get_child(i)
 
 				if is_valid_entity(child_duplicate_node, p_validator):
-					sanitise_owner(child_duplicate_node, child_reference_node, p_duplicate_root, p_reference_root)
+					sanitise_owner(
+						child_duplicate_node,
+						child_reference_node,
+						p_duplicate_root,
+						p_reference_root
+					)
 					entity_scene_id = get_valid_entity_scene_id(child_duplicate_node, p_validator)
 					if entity_scene_id >= 0:
 						assign_filename_for_entity_scene_id(child_duplicate_node, entity_scene_id)
@@ -312,7 +398,9 @@ func sanitise_instance(p_duplicate_node: Node, p_reference_node: Node, p_duplica
 	return p_visited
 
 
-func sanitise_owner(p_duplicate_node: Node, p_reference_node: Node, p_duplicate_root: Node, _p_reference_root: Node) -> void:
+func sanitise_owner(
+	p_duplicate_node: Node, p_reference_node: Node, p_duplicate_root: Node, _p_reference_root: Node
+) -> void:
 	var reassign_owner: bool = false
 
 	if p_reference_node == null:
@@ -325,10 +413,28 @@ func sanitise_owner(p_duplicate_node: Node, p_reference_node: Node, p_duplicate_
 		p_duplicate_node.set_owner(p_duplicate_root)
 
 
-func sanitise_entity_children(p_duplicate_root: Node, p_reference_root: Node, p_table: Dictionary, p_visited: Dictionary, p_duplicate_node: Node, p_reference_node: Node, p_validator: RefCounted, p_entity_root: Node) -> Dictionary:
+func sanitise_entity_children(
+	p_duplicate_root: Node,
+	p_reference_root: Node,
+	p_table: Dictionary,
+	p_visited: Dictionary,
+	p_duplicate_node: Node,
+	p_reference_node: Node,
+	p_validator: RefCounted,
+	p_entity_root: Node
+) -> Dictionary:
 	if p_reference_node.get_owner() != p_entity_root:
 		if is_valid_entity(p_duplicate_root, p_validator):
-			p_visited = sanitise_node(p_duplicate_node, p_reference_node, p_table, p_visited, p_duplicate_root, p_reference_root, p_validator, false)
+			p_visited = sanitise_node(
+				p_duplicate_node,
+				p_reference_node,
+				p_table,
+				p_visited,
+				p_duplicate_root,
+				p_reference_root,
+				p_validator,
+				false
+			)
 		else:
 			p_duplicate_root.queue_free()
 			if p_duplicate_root.get_parent():
@@ -341,19 +447,44 @@ func sanitise_entity_children(p_duplicate_root: Node, p_reference_root: Node, p_
 			if p_reference_node:
 				if i < p_reference_node.get_child_count():
 					child_reference_node = p_reference_node.get_child(i)
-			p_visited = sanitise_entity_children(p_duplicate_root, p_reference_root, p_table, p_visited, p_duplicate_node, child_reference_node, p_validator, p_entity_root)
+			p_visited = sanitise_entity_children(
+				p_duplicate_root,
+				p_reference_root,
+				p_table,
+				p_visited,
+				p_duplicate_node,
+				child_reference_node,
+				p_validator,
+				p_entity_root
+			)
 
 	return p_visited
 
 
-func sanitise_node(p_duplicate_node: Node, p_reference_node: Node, p_table: Dictionary, p_visited: Dictionary, p_duplicate_root: Node, p_reference_root: Node, p_validator: RefCounted, p_is_canvas: bool) -> Dictionary:
+func sanitise_node(
+	p_duplicate_node: Node,
+	p_reference_node: Node,
+	p_table: Dictionary,
+	p_visited: Dictionary,
+	p_duplicate_root: Node,
+	p_reference_root: Node,
+	p_validator: RefCounted,
+	p_is_canvas: bool
+) -> Dictionary:
 	print("Sanitising node '%s'" % p_duplicate_root.get_path_to(p_duplicate_node))
 
 	if !p_validator.is_node_type_valid(p_duplicate_node, p_is_canvas):
 		p_duplicate_node = p_validator.sanitise_node(p_duplicate_node)
 
 	p_visited = sanitise_object(p_duplicate_node, p_table, p_visited, p_duplicate_root, p_validator)
-	p_visited = sanitise_instance(p_duplicate_node, p_reference_node, p_duplicate_root, p_reference_root, p_visited, p_validator)
+	p_visited = sanitise_instance(
+		p_duplicate_node,
+		p_reference_node,
+		p_duplicate_root,
+		p_reference_root,
+		p_visited,
+		p_validator
+	)
 
 	# If this node is an entity, delete all the non-explicitly associated_nodes
 	if p_visited["entity_nodes"].has(p_duplicate_node):
@@ -365,10 +496,39 @@ func sanitise_node(p_duplicate_node: Node, p_reference_node: Node, p_table: Dict
 				if i < p_reference_node.get_child_count():
 					child_reference_node = p_reference_node.get_child(i)
 
-			p_visited = sanitise_entity_children(p_duplicate_root, p_reference_root, p_table, p_visited, child_duplicate_node, child_reference_node, p_validator, p_reference_node)
+			p_visited = sanitise_entity_children(
+				p_duplicate_root,
+				p_reference_root,
+				p_table,
+				p_visited,
+				child_duplicate_node,
+				child_reference_node,
+				p_validator,
+				p_reference_node
+			)
 	else:
-		var is_canvas: bool = p_is_canvas or (p_duplicate_node.get_script() != null and p_validator.is_valid_canvas_3d(p_duplicate_node.get_script(), p_duplicate_node.get_class()))
-		print(str(is_canvas) + "," + str(p_duplicate_node.get_script()) + "," + str(p_duplicate_node.get_class()) + "," + str(p_reference_node.get_script()) + "," + str(p_reference_node.get_class()))
+		var is_canvas: bool = (
+			p_is_canvas
+			or (
+				p_duplicate_node.get_script() != null
+				and p_validator.is_valid_canvas_3d(
+					p_duplicate_node.get_script(), p_duplicate_node.get_class()
+				)
+			)
+		)
+		print(
+			(
+				str(is_canvas)
+				+ ","
+				+ str(p_duplicate_node.get_script())
+				+ ","
+				+ str(p_duplicate_node.get_class())
+				+ ","
+				+ str(p_reference_node.get_script())
+				+ ","
+				+ str(p_reference_node.get_class())
+			)
+		)
 		for i in range(0, p_duplicate_node.get_child_count()):
 			var child_duplicate_node = p_duplicate_node.get_child(i)
 			var child_reference_node = null
@@ -377,12 +537,23 @@ func sanitise_node(p_duplicate_node: Node, p_reference_node: Node, p_table: Dict
 				if i < p_reference_node.get_child_count():
 					child_reference_node = p_reference_node.get_child(i)
 
-			p_visited = sanitise_node(child_duplicate_node, child_reference_node, p_table, p_visited, p_duplicate_root, p_reference_root, p_validator, is_canvas)
+			p_visited = sanitise_node(
+				child_duplicate_node,
+				child_reference_node,
+				p_table,
+				p_visited,
+				p_duplicate_root,
+				p_reference_root,
+				p_validator,
+				is_canvas
+			)
 
 	return p_visited
 
 
-func convert_object(p_table: Dictionary, p_subobject: Object, p_root: Node, p_validator: RefCounted) -> Dictionary:
+func convert_object(
+	p_table: Dictionary, p_subobject: Object, p_root: Node, p_validator: RefCounted
+) -> Dictionary:
 	if p_subobject is CompressedTexture2D:
 		print("Texture2D %s processing..." % p_subobject.resource_path)
 		var image: Image = p_subobject.get_image()
@@ -408,7 +579,13 @@ func convert_object(p_table: Dictionary, p_subobject: Object, p_root: Node, p_va
 			image.setup_local_to_scene()
 
 			if i == 0:
-				new_tex_array.create(p_subobject.get_width(), p_subobject.get_height(), p_subobject.get_depth(), p_subobject.get_format(), p_subobject.flags)
+				new_tex_array.create(
+					p_subobject.get_width(),
+					p_subobject.get_height(),
+					p_subobject.get_depth(),
+					p_subobject.get_format(),
+					p_subobject.flags
+				)
 			new_tex_array.set_layer_data(image, i)
 
 		p_table[p_subobject] = new_tex_array
@@ -428,14 +605,20 @@ func convert_object(p_table: Dictionary, p_subobject: Object, p_root: Node, p_va
 	return create_object_duplication_table_for_object(p_subobject, p_table, p_root, p_validator)
 
 
-func create_object_duplication_table_for_array(p_array: Array, p_table: Dictionary, p_root: Node, p_validator: RefCounted) -> Dictionary:
+func create_object_duplication_table_for_array(
+	p_array: Array, p_table: Dictionary, p_root: Node, p_validator: RefCounted
+) -> Dictionary:
 	if p_array:
 		for element in p_array:
 			match typeof(element):
 				TYPE_ARRAY:
-					p_table = create_object_duplication_table_for_array(element, p_table, p_root, p_validator)
+					p_table = create_object_duplication_table_for_array(
+						element, p_table, p_root, p_validator
+					)
 				TYPE_DICTIONARY:
-					p_table = create_object_duplication_table_for_dictionary(element, p_table, p_root, p_validator)
+					p_table = create_object_duplication_table_for_dictionary(
+						element, p_table, p_root, p_validator
+					)
 				TYPE_OBJECT:
 					var subobject: Object = element
 					if !p_table.has(subobject):
@@ -444,7 +627,9 @@ func create_object_duplication_table_for_array(p_array: Array, p_table: Dictiona
 	return p_table
 
 
-func create_object_duplication_table_for_dictionary(p_dictionary: Dictionary, p_table: Dictionary, p_root: Node, p_validator: RefCounted) -> Dictionary:
+func create_object_duplication_table_for_dictionary(
+	p_dictionary: Dictionary, p_table: Dictionary, p_root: Node, p_validator: RefCounted
+) -> Dictionary:
 	if p_dictionary:
 		for key in p_dictionary.keys():
 			var value = p_dictionary[key]
@@ -452,9 +637,13 @@ func create_object_duplication_table_for_dictionary(p_dictionary: Dictionary, p_
 			for element in [key, value]:
 				match typeof(element):
 					TYPE_ARRAY:
-						p_table = create_object_duplication_table_for_array(element, p_table, p_root, p_validator)
+						p_table = create_object_duplication_table_for_array(
+							element, p_table, p_root, p_validator
+						)
 					TYPE_DICTIONARY:
-						p_table = create_object_duplication_table_for_dictionary(element, p_table, p_root, p_validator)
+						p_table = create_object_duplication_table_for_dictionary(
+							element, p_table, p_root, p_validator
+						)
 					TYPE_OBJECT:
 						var subobject: Object = element
 						if !p_table.has(subobject):
@@ -484,17 +673,23 @@ static func clone_resource(p_resource: Resource) -> Resource:
 		return null
 
 
-func create_object_duplication_table_for_object(p_object: Object, p_table: Dictionary, p_root: Node, p_validator: RefCounted) -> Dictionary:
+func create_object_duplication_table_for_object(
+	p_object: Object, p_table: Dictionary, p_root: Node, p_validator: RefCounted
+) -> Dictionary:
 	for property in p_object.get_property_list():
 		match property["type"]:
 			TYPE_ARRAY:
 				var array = p_object.get(property["name"])
 				if typeof(array) == TYPE_ARRAY:
-					p_table = create_object_duplication_table_for_array(array, p_table, p_root, p_validator)
+					p_table = create_object_duplication_table_for_array(
+						array, p_table, p_root, p_validator
+					)
 			TYPE_DICTIONARY:
 				var dictionary = p_object.get(property["name"])
 				if typeof(dictionary) == TYPE_DICTIONARY:
-					p_table = create_object_duplication_table_for_dictionary(dictionary, p_table, p_root, p_validator)
+					p_table = create_object_duplication_table_for_dictionary(
+						dictionary, p_table, p_root, p_validator
+					)
 			TYPE_OBJECT:
 				var subobject: Object = p_object.get(property["name"])
 				if subobject:
@@ -503,7 +698,9 @@ func create_object_duplication_table_for_object(p_object: Object, p_table: Dicti
 						if subobject is Script:
 							if p_object is Node:
 								if p_object == p_root:
-									if !p_validator.is_script_valid_for_root(subobject, p_object.get_class()):
+									if !p_validator.is_script_valid_for_root(
+										subobject, p_object.get_class()
+									):
 										p_table[subobject] = null
 									else:
 										print("Valid script!")
@@ -514,7 +711,9 @@ func create_object_duplication_table_for_object(p_object: Object, p_table: Dicti
 										else:
 											print("Valid entity script!")
 									else:
-										if !p_validator.is_script_valid_for_children(subobject, p_object.get_class()):
+										if !p_validator.is_script_valid_for_children(
+											subobject, p_object.get_class()
+										):
 											p_table[subobject] = null
 										else:
 											print("Valid script!")
@@ -530,7 +729,9 @@ func create_object_duplication_table_for_object(p_object: Object, p_table: Dicti
 	return p_table
 
 
-func create_object_duplication_table_for_node(p_node: Node, p_table: Dictionary, p_root: Node, p_validator: RefCounted) -> Dictionary:
+func create_object_duplication_table_for_node(
+	p_node: Node, p_table: Dictionary, p_root: Node, p_validator: RefCounted
+) -> Dictionary:
 	p_table = create_object_duplication_table_for_object(p_node, p_table, p_root, p_validator)
 
 	for node in p_node.get_children():
@@ -556,7 +757,9 @@ func create_sanitised_duplication(p_node: Node, p_validator: RefCounted) -> Dict
 	duplicate_node = get_export_addon_interface().preprocess_scene(duplicate_node, p_validator)
 
 	print("Creating duplication table...")
-	var duplication_table: Dictionary = create_object_duplication_table_for_node(duplicate_node, {}, duplicate_node, p_validator)
+	var duplication_table: Dictionary = create_object_duplication_table_for_node(
+		duplicate_node, {}, duplicate_node, p_validator
+	)
 	print("Duplication table complete!")
 	print("Sanitising nodes...")
 
@@ -564,7 +767,16 @@ func create_sanitised_duplication(p_node: Node, p_validator: RefCounted) -> Dict
 	visited["visited_nodes"] = []
 	visited["entity_nodes"] = []
 
-	visited = sanitise_node(duplicate_node, reference_node, duplication_table, visited, duplicate_node, reference_node, p_validator, false)
+	visited = sanitise_node(
+		duplicate_node,
+		reference_node,
+		duplication_table,
+		visited,
+		duplicate_node,
+		reference_node,
+		p_validator,
+		false
+	)
 
 	print("Node sanitisation complete!")
 
@@ -573,16 +785,22 @@ func create_sanitised_duplication(p_node: Node, p_validator: RefCounted) -> Dict
 	return {"node": duplicate_node, "entity_nodes": visited["entity_nodes"]}
 
 
-static func get_offset_from_bone(p_global_transform: Transform3D, p_skeleton: Skeleton3D, p_bone_name: String) -> Transform3D:
+static func get_offset_from_bone(
+	p_global_transform: Transform3D, p_skeleton: Skeleton3D, p_bone_name: String
+) -> Transform3D:
 	var bone_id: int = p_skeleton.find_bone(p_bone_name)
 	if bone_id != -1:
-		var bone_global_rest_transfrom: Transform3D = bone_lib_const.get_bone_global_rest_transform(bone_id, p_skeleton)
+		var bone_global_rest_transfrom: Transform3D = bone_lib_const.get_bone_global_rest_transform(
+			bone_id, p_skeleton
+		)
 		return p_global_transform * bone_global_rest_transfrom.inverse()
 
 	return Transform3D()
 
 
-static func evaluate_meta_spatial(p_root: Node3D, p_skeleton: Node3D, p_meta: Node3D, p_humanoid_bone_name: String) -> int:
+static func evaluate_meta_spatial(
+	p_root: Node3D, p_skeleton: Node3D, p_meta: Node3D, p_humanoid_bone_name: String
+) -> int:
 	if p_meta and p_skeleton:
 		if p_root.is_ancestor_of(p_meta):
 			if p_meta != p_skeleton and p_meta != p_root:
@@ -615,22 +833,40 @@ static func _fix_humanoid_skeleton(p_root: Node, p_node: Node) -> Dictionary:
 			eye_node.get_parent().add_child(mouth_node, true)
 			mouth_node.transform = eye_node.transform
 			p_node.mouth_transform_node_path = p_node.get_path_to(mouth_node)
-		mouth_head_id = evaluate_meta_spatial(p_node, p_node._skeleton_node, mouth_node, "head_bone_name")
-		eye_head_id = evaluate_meta_spatial(p_node, p_node._skeleton_node, eye_node, "head_bone_name")
+		mouth_head_id = evaluate_meta_spatial(
+			p_node, p_node._skeleton_node, mouth_node, "head_bone_name"
+		)
+		eye_head_id = evaluate_meta_spatial(
+			p_node, p_node._skeleton_node, eye_node, "head_bone_name"
+		)
 
-		var skeleton_gt: Transform3D = node_util_const.get_relative_global_transform(p_root, p_node._skeleton_node)
+		var skeleton_gt: Transform3D = node_util_const.get_relative_global_transform(
+			p_root, p_node._skeleton_node
+		)
 
 		if eye_head_id != -1:
-			var meta_gt: Transform3D = node_util_const.get_relative_global_transform(p_root, eye_node)
-			var bone_gt: Transform3D = skeleton_gt * bone_lib_const.get_bone_global_rest_transform(eye_head_id, p_node._skeleton_node)
+			var meta_gt: Transform3D = node_util_const.get_relative_global_transform(
+				p_root, eye_node
+			)
+			var bone_gt: Transform3D = (
+				skeleton_gt
+				* bone_lib_const.get_bone_global_rest_transform(eye_head_id, p_node._skeleton_node)
+			)
 
 			eye_offset_transform = bone_gt.affine_inverse() * meta_gt
 			eye_spatial = Marker3D.new()
 
 			eye_node.free()
 		if mouth_head_id != -1:
-			var meta_gt: Transform3D = node_util_const.get_relative_global_transform(p_root, mouth_node)
-			var bone_gt: Transform3D = skeleton_gt * bone_lib_const.get_bone_global_rest_transform(mouth_head_id, p_node._skeleton_node)
+			var meta_gt: Transform3D = node_util_const.get_relative_global_transform(
+				p_root, mouth_node
+			)
+			var bone_gt: Transform3D = (
+				skeleton_gt
+				* bone_lib_const.get_bone_global_rest_transform(
+					mouth_head_id, p_node._skeleton_node
+				)
+			)
 
 			mouth_offset_transform = bone_gt.affine_inverse() * meta_gt
 			mouth_spatial = Marker3D.new()
@@ -662,7 +898,9 @@ static func _fix_humanoid_skeleton(p_root: Node, p_node: Node) -> Dictionary:
 
 	# Create and assign new eye and mouth reference nodes
 	if err == avatar_callback_const.AVATAR_OK:
-		var skeleton_gt: Transform3D = node_util_const.get_relative_global_transform(p_root, p_node._skeleton_node)
+		var skeleton_gt: Transform3D = node_util_const.get_relative_global_transform(
+			p_root, p_node._skeleton_node
+		)
 		if eye_spatial:
 			print("Assigning Eye...")
 			eye_spatial.set_name("Eye")
@@ -670,9 +908,14 @@ static func _fix_humanoid_skeleton(p_root: Node, p_node: Node) -> Dictionary:
 			eye_spatial.owner = p_node
 			p_node.eye_transform_node_path = p_node.get_path_to(eye_spatial)
 
-			var bone_gt: Transform3D = skeleton_gt * bone_lib_const.get_bone_global_rest_transform(eye_head_id, p_node._skeleton_node)
+			var bone_gt: Transform3D = (
+				skeleton_gt
+				* bone_lib_const.get_bone_global_rest_transform(eye_head_id, p_node._skeleton_node)
+			)
 
-			node_util_const.set_relative_global_transform(p_node, eye_spatial, bone_gt * eye_offset_transform)
+			node_util_const.set_relative_global_transform(
+				p_node, eye_spatial, bone_gt * eye_offset_transform
+			)
 
 		if mouth_spatial:
 			print("Assigning Mouth...")
@@ -681,9 +924,16 @@ static func _fix_humanoid_skeleton(p_root: Node, p_node: Node) -> Dictionary:
 			mouth_spatial.owner = p_node
 			p_node.mouth_transform_node_path = p_node.get_path_to(mouth_spatial)
 
-			var bone_gt: Transform3D = skeleton_gt * bone_lib_const.get_bone_global_rest_transform(mouth_head_id, p_node._skeleton_node)
+			var bone_gt: Transform3D = (
+				skeleton_gt
+				* bone_lib_const.get_bone_global_rest_transform(
+					mouth_head_id, p_node._skeleton_node
+				)
+			)
 
-			node_util_const.set_relative_global_transform(p_node, mouth_spatial, bone_gt * mouth_offset_transform)
+			node_util_const.set_relative_global_transform(
+				p_node, mouth_spatial, bone_gt * mouth_offset_transform
+			)
 
 	return {"node": p_node, "err": err}
 
@@ -743,7 +993,9 @@ func create_packed_scene_for_avatar(p_root: Node, p_node: Node) -> Dictionary:
 	var duplicate_node: Node = null
 	if ProjectSettings.get_setting("ugc/config/sanitize_avatar_export"):
 		print("Creating sanitised duplicate...")
-		var dictionary: Dictionary = create_sanitised_duplication(p_node, validator_avatar_const.new())
+		var dictionary: Dictionary = create_sanitised_duplication(
+			p_node, validator_avatar_const.new()
+		)
 
 		duplicate_node = dictionary["node"]
 	else:
@@ -753,7 +1005,9 @@ func create_packed_scene_for_avatar(p_root: Node, p_node: Node) -> Dictionary:
 		p_root.add_child(duplicate_node, true)
 
 		# Replace the node with lighter script with the metadata removed
-		duplicate_node = vsk_exporter_const.convert_to_runtime_user_content(duplicate_node, avatar_definition_runtime_const)
+		duplicate_node = vsk_exporter_const.convert_to_runtime_user_content(
+			duplicate_node, avatar_definition_runtime_const
+		)
 
 		var has_humanoid_skeleton: bool = false
 
@@ -761,7 +1015,9 @@ func create_packed_scene_for_avatar(p_root: Node, p_node: Node) -> Dictionary:
 			has_humanoid_skeleton = true
 
 		if has_humanoid_skeleton:
-			var humanoid_skeleton_dict: Dictionary = vsk_exporter_const._fix_humanoid_skeleton(p_root, duplicate_node)
+			var humanoid_skeleton_dict: Dictionary = vsk_exporter_const._fix_humanoid_skeleton(
+				p_root, duplicate_node
+			)
 			err = humanoid_skeleton_dict["err"]
 			duplicate_node = humanoid_skeleton_dict["node"]
 		else:
@@ -769,7 +1025,12 @@ func create_packed_scene_for_avatar(p_root: Node, p_node: Node) -> Dictionary:
 
 		if err == avatar_callback_const.AVATAR_OK:
 			if err == avatar_callback_const.AVATAR_OK:
-				var mesh_instances: Array = avatar_lib_const.find_mesh_instances_for_avatar_skeleton(duplicate_node, duplicate_node._skeleton_node, [])
+				var mesh_instances: Array = (
+					avatar_lib_const
+					. find_mesh_instances_for_avatar_skeleton(
+						duplicate_node, duplicate_node._skeleton_node, []
+					)
+				)
 				var skins: Array = []
 
 				for mesh_instance in mesh_instances:
@@ -845,12 +1106,16 @@ func create_packed_scene_for_map(_p_root, p_node) -> Dictionary:
 		packed_scene_export = PackedScene.new()
 
 		print("Converting to runtime user content...")
-		duplicate_node = vsk_exporter_const.convert_to_runtime_user_content(duplicate_node, map_definition_runtime)
+		duplicate_node = vsk_exporter_const.convert_to_runtime_user_content(
+			duplicate_node, map_definition_runtime
+		)
 		duplicate_node.map_resources = entity_resource_array
 
 		print("Add entity nodes to instantiate list...")
 		for _i in range(0, dictionary["entity_nodes"].size()):
-			var map_entity_instance_record: VSKMapEntityInstanceRecord = VSKMapEntityInstanceRecord.new()
+			var map_entity_instance_record: VSKMapEntityInstanceRecord = (
+				VSKMapEntityInstanceRecord.new()
+			)
 			map_entity_instance_record.resource_local_to_scene = true
 			map_entity_instance_record.resource_path = ""
 			duplicate_node.entity_instance_list.push_back(map_entity_instance_record)
@@ -864,7 +1129,9 @@ func create_packed_scene_for_map(_p_root, p_node) -> Dictionary:
 			# Assign the entity instances
 			duplicate_node.entity_instance_list[i].parent_id = entity_parent_index
 			duplicate_node.entity_instance_list[i].transform = entity.get_transform()
-			var valid_filenames: Array = get_valid_filenames(entity.get_scene_file_path(), validator, [])
+			var valid_filenames: Array = get_valid_filenames(
+				entity.get_scene_file_path(), validator, []
+			)
 			var entity_scene_index: int = find_entity_scene_id_from_filenames(valid_filenames)
 
 			duplicate_node.entity_instance_list[i].scene_id = entity_scene_index
@@ -873,7 +1140,9 @@ func create_packed_scene_for_map(_p_root, p_node) -> Dictionary:
 			var nodepath: NodePath = entity.get("simulation_logic_node_path")
 			var simulation_logic_node: Node = entity.get_node_or_null(nodepath)
 			if simulation_logic_node:
-				var property_list: Array = entity_node_const.get_custom_logic_node_properties(simulation_logic_node)
+				var property_list: Array = entity_node_const.get_custom_logic_node_properties(
+					simulation_logic_node
+				)
 				for property in property_list:
 					var prop = simulation_logic_node.get(property["name"])
 					if prop is Resource:
@@ -1010,9 +1279,19 @@ func _link_vsk_editor(p_node: Node) -> void:
 	vsk_editor = p_node
 
 	if vsk_editor and do_connect:
-		if vsk_editor.user_content_submission_requested.connect(self._user_content_submission_requested, CONNECT_DEFERRED) != OK:
+		if (
+			vsk_editor.user_content_submission_requested.connect(
+				self._user_content_submission_requested, CONNECT_DEFERRED
+			)
+			!= OK
+		):
 			push_error("Could not connect signal 'user_content_submission_requested'")
-		if vsk_editor.user_content_submission_cancelled.connect(self._user_content_submission_cancelled, CONNECT_DEFERRED) != OK:
+		if (
+			vsk_editor.user_content_submission_cancelled.connect(
+				self._user_content_submission_cancelled, CONNECT_DEFERRED
+			)
+			!= OK
+		):
 			push_error("Could not connect signal 'user_content_submission_cancelled'")
 
 
@@ -1050,10 +1329,10 @@ func _ready():
 		if !ProjectSettings.has_setting("ugc/config/sanitize_map_export"):
 			ProjectSettings.set_setting("ugc/config/sanitize_map_export", true)
 
-		if (get_tree().node_added.connect(self._node_added) != OK):
+		if get_tree().node_added.connect(self._node_added) != OK:
 			push_error("Could not connect signal 'node_added' at vsk_exporter")
 			return
-		if (get_tree().node_removed.connect(self._node_removed) != OK):
+		if get_tree().node_removed.connect(self._node_removed) != OK:
 			push_error("Could not connect signal 'node_removed' at vsk_exporter")
 			return
 		var VSKEditor = null
