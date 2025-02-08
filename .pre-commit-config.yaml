@@ -9,7 +9,6 @@ repos:
         files: ^addons/godot_uro/(godot_uro_helper|http_pool)\.gd$
         types: [gdscript]
 
-      # vsk_importer_exporter is ignored due to broken code.
       # VRM and godot_state_charts are ignored because upstream changes are complicated
       - id: gdformat
         name: gdformat
@@ -19,7 +18,6 @@ repos:
         types: [gdscript]
         exclude: |
           (?x)^(
-            addons/vsk_importer_exporter/.*|
             addons/godot_state_charts/.* |
             addons/vrm/.* |
             addons/Godot-MToon-Shader/.* 

@@ -7,16 +7,22 @@
 extends "res://addons/vsk_importer_exporter/vsk_validator.gd"
 
 const avatar_definition_const = preload("res://addons/vsk_avatar/vsk_avatar_definition.gd")
-const avatar_definition_runtime_const = preload("res://addons/vsk_avatar/vsk_avatar_definition_runtime.gd")
+const avatar_definition_runtime_const = preload(
+	"res://addons/vsk_avatar/vsk_avatar_definition_runtime.gd"
+)
 
 # Support for VRM physics
 const avatar_physics_const = preload("res://addons/vsk_avatar/avatar_physics.gd")
-const avatar_collidergroup_const = preload("res://addons/vsk_avatar/physics/avatar_collidergroup.gd")
+const avatar_collidergroup_const = preload(
+	"res://addons/vsk_avatar/physics/avatar_collidergroup.gd"
+)
 const avatar_springbone_const = preload("res://addons/vsk_avatar/physics/avatar_springbone.gd")
 
 const vsk_pipeline_const = preload("res://addons/vsk_importer_exporter/vsk_pipeline.gd")
 
-const vsk_avatar_validator_const = preload("res://addons/vsk_importer_exporter/vsk_avatar_validator.gd")
+const vsk_avatar_validator_const = preload(
+	"res://addons/vsk_importer_exporter/vsk_avatar_validator.gd"
+)
 
 var valid_node_whitelist = {
 	"AnimatedSprite3D": AnimatedSprite3D,
@@ -146,7 +152,12 @@ const valid_resource_script_whitelist = [avatar_collidergroup_const, avatar_spri
 
 static func check_if_script_type_is_valid(p_script: Script, p_node_class: String) -> bool:
 	# FIXME: dictionary cannot be const????
-	var script_type_table = {avatar_physics_const: ["Marker3D", "Node3D"], avatar_definition_const: ["Marker3D", "Node3D"], avatar_definition_runtime_const: ["Marker3D", "Node3D"], vsk_pipeline_const: ["Node"]}
+	var script_type_table = {
+		avatar_physics_const: ["Marker3D", "Node3D"],
+		avatar_definition_const: ["Marker3D", "Node3D"],
+		avatar_definition_runtime_const: ["Marker3D", "Node3D"],
+		vsk_pipeline_const: ["Node"]
+	}
 	if typeof(script_type_table.get(p_script)) != TYPE_NIL:
 		var valid_classes: Array = script_type_table.get(p_script)
 		for class_str in valid_classes:
