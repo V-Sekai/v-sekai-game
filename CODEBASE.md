@@ -124,7 +124,6 @@ flowchart TD
             Utils --> addon35[**math_util**<hr>Utility math functions]
         Misc --> 3D
             3D --> ctrl1{" "}
-            ctrl1 --> addon36[**splerger** ⚠️<hr>Mesh splitting with 3d grid for Map culling or pre-upload transform]
             ctrl1 --> addon37[**line_renderer** ⚠️<hr>Experimental line render for 3d pen writing function]
             ctrl1 --> addon38[**extended_kinematic_body**<hr>Improved CharacterBody3d with better tolerance for stairs/slopes]
         Misc --> addon39[**smoothing**<hr>Fixed timestep interpolation addon for framerate independent physics]
