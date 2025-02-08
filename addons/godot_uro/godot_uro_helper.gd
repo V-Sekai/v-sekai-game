@@ -7,36 +7,6 @@
 extends RefCounted
 
 enum UroUserContentType { UNKNOWN, AVATAR, MAP, PROP }
-
-const LOCALHOST_HOST = "127.0.0.1"
-const LOCALHOST_PORT = 4000
-
-const DEFAULT_URO_HOST = LOCALHOST_HOST
-const DEFAULT_URO_PORT = LOCALHOST_PORT
-
-const API_PATH = "/api"
-const API_VERSION = "/v1"
-
-const SHOW_PATH = "/show"
-const NEW_PATH = "/new"
-const RENEW_PATH = "/renew"
-
-const PROFILE_PATH = "/profile"
-const SESSION_PATH = "/session"
-const REGISTRATION_PATH = "/registration"
-const IDENTITY_PROOFS_PATH = "/identity_proofs"
-const AVATARS_PATH = "/avatars"
-const MAPS_PATH = "/maps"
-const SHARDS_PATH = "/shards"
-const DASHBOARD_PATH = "/dashboard"
-
-const DEFAULT_ACCOUNT_ID = "UNKNOWN_ID"
-const DEFAULT_ACCOUNT_USERNAME = "UNKNOWN_USERNAME"
-const DEFAULT_ACCOUNT_DISPLAY_NAME = "UNKNOWN_DISPLAY_NAME"
-
-const UNTITLED_SHARD = "UNTITLED_SHARD"
-const UNKNOWN_MAP = "UNKNOWN_MAP"
-
 enum RequesterCode {
 	OK = 0,
 	CANCELLED,
@@ -57,6 +27,29 @@ enum RequesterCode {
 	FAILED_TO_CONNECT,
 	POLL_ERROR,
 }
+
+const LOCALHOST_HOST = "127.0.0.1"
+const LOCALHOST_PORT = 4000
+const DEFAULT_URO_HOST = LOCALHOST_HOST
+const DEFAULT_URO_PORT = LOCALHOST_PORT
+const API_PATH = "/api"
+const API_VERSION = "/v1"
+const SHOW_PATH = "/show"
+const NEW_PATH = "/new"
+const RENEW_PATH = "/renew"
+const PROFILE_PATH = "/profile"
+const SESSION_PATH = "/session"
+const REGISTRATION_PATH = "/registration"
+const IDENTITY_PROOFS_PATH = "/identity_proofs"
+const AVATARS_PATH = "/avatars"
+const MAPS_PATH = "/maps"
+const SHARDS_PATH = "/shards"
+const DASHBOARD_PATH = "/dashboard"
+const DEFAULT_ACCOUNT_ID = "UNKNOWN_ID"
+const DEFAULT_ACCOUNT_USERNAME = "UNKNOWN_USERNAME"
+const DEFAULT_ACCOUNT_DISPLAY_NAME = "UNKNOWN_DISPLAY_NAME"
+const UNTITLED_SHARD = "UNTITLED_SHARD"
+const UNKNOWN_MAP = "UNKNOWN_MAP"
 
 
 static func get_string_for_requester_code(p_requester_code: int) -> String:
@@ -108,7 +101,8 @@ static func get_full_requester_error_string(p_requester: Dictionary) -> String:
 				p_requester["generic_code"]
 			]
 		)
-	elif p_requester["requester_code"] == RequesterCode.HTTP_RESPONSE_NOT_OK:
+
+	if p_requester["requester_code"] == RequesterCode.HTTP_RESPONSE_NOT_OK:
 		return (
 			"%s (error code: %s)"
 			% [
@@ -116,7 +110,8 @@ static func get_full_requester_error_string(p_requester: Dictionary) -> String:
 				p_requester["response_code"]
 			]
 		)
-	elif p_requester["requester_code"] == RequesterCode.POLL_ERROR:
+
+	if p_requester["requester_code"] == RequesterCode.POLL_ERROR:
 		return (
 			"%s (error code: %s)"
 			% [
@@ -124,25 +119,19 @@ static func get_full_requester_error_string(p_requester: Dictionary) -> String:
 				p_requester["generic_code"]
 			]
 		)
-	else:
-		return get_string_for_requester_code(p_requester["requester_code"])
+
+	return get_string_for_requester_code(p_requester["requester_code"])
 
 
 static func requester_result_is_ok(p_result) -> bool:
-	if p_result["requester_code"] == RequesterCode.OK:
-		return true
-	else:
-		return false
+	return p_result["requester_code"] == RequesterCode.OK
 
 
 static func requester_result_has_response(p_result) -> bool:
-	if (
+	return (
 		p_result["requester_code"] == RequesterCode.OK
 		or p_result["requester_code"] == RequesterCode.HTTP_RESPONSE_NOT_OK
-	):
-		return true
-	else:
-		return false
+	)
 
 
 static func populate_query(p_query_name: String, p_query_dictionary: Dictionary) -> Dictionary:
@@ -162,8 +151,7 @@ static func get_value_of_type(p_data: Dictionary, p_key: String, p_type: int, p_
 	var value = p_data.get(p_key, p_default_value)
 	if typeof(value) == p_type:
 		return value
-	else:
-		return p_default_value
+	return p_default_value
 
 
 static func process_user_privilege_ruleset(p_data) -> Dictionary:
@@ -236,33 +224,32 @@ static func process_session_json(p_input: Dictionary) -> Dictionary:
 				"message": "Malformed response data!",
 			}
 
-		else:
-			var output = p_input.get("output")
-			if output is Dictionary:
-				var error = output.get("error")
-				if error is Dictionary:
-					var message = error.get("message")
-					if message is String:
-						return {
-							"requester_code": p_input["requester_code"],
-							"generic_code": p_input["generic_code"],
-							"response_code": p_input["response_code"],
-							"message": message
-						}
+		var output = p_input.get("output")
+		if output is Dictionary:
+			var error = output.get("error")
+			if error is Dictionary:
+				var message = error.get("message")
+				if message is String:
+					return {
+						"requester_code": p_input["requester_code"],
+						"generic_code": p_input["generic_code"],
+						"response_code": p_input["response_code"],
+						"message": message
+					}
 
-			return {
-				"requester_code": RequesterCode.MALFORMED_RESPONSE_DATA,
-				"generic_code": p_input["generic_code"],
-				"response_code": p_input["response_code"],
-				"message": get_full_requester_error_string(p_input)
-			}
-	else:
 		return {
-			"requester_code": p_input["requester_code"],
+			"requester_code": RequesterCode.MALFORMED_RESPONSE_DATA,
 			"generic_code": p_input["generic_code"],
 			"response_code": p_input["response_code"],
 			"message": get_full_requester_error_string(p_input)
 		}
+
+	return {
+		"requester_code": p_input["requester_code"],
+		"generic_code": p_input["generic_code"],
+		"response_code": p_input["response_code"],
+		"message": get_full_requester_error_string(p_input)
+	}
 
 
 static func process_shards_json(p_input: Dictionary) -> Dictionary:
