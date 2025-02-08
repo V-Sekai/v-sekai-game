@@ -21,13 +21,31 @@ static func _incremental_mocap_file_path(p_info: Dictionary) -> Dictionary:
 
 	var mocap_number: int = 0
 	var mocap_path_and_prefix: String = _get_mocap_path_and_prefix(mocap_directory)
-	var file: FileAccess = FileAccess.open(mocap_path_and_prefix + str(mocap_number).pad_zeros(mocap_constants_const.INCREMENTAL_DIGET_LENGTH) + mocap_constants_const.MOCAP_EXT, FileAccess.READ)
+	var file: FileAccess = FileAccess.open(
+		(
+			mocap_path_and_prefix
+			+ str(mocap_number).pad_zeros(mocap_constants_const.INCREMENTAL_DIGET_LENGTH)
+			+ mocap_constants_const.MOCAP_EXT
+		),
+		FileAccess.READ
+	)
 	while file:
 		mocap_number += 1
-		file = (FileAccess.open(mocap_path_and_prefix + str(mocap_number).pad_zeros(mocap_constants_const.INCREMENTAL_DIGET_LENGTH) + mocap_constants_const.MOCAP_EXT, FileAccess.READ))
+		file = (FileAccess.open(
+			(
+				mocap_path_and_prefix
+				+ str(mocap_number).pad_zeros(mocap_constants_const.INCREMENTAL_DIGET_LENGTH)
+				+ mocap_constants_const.MOCAP_EXT
+			),
+			FileAccess.READ
+		))
 
 	if mocap_number <= mocap_constants_const.MAX_INCREMENTAL_FILES:
-		path = (mocap_path_and_prefix + str(mocap_number).pad_zeros(mocap_constants_const.INCREMENTAL_DIGET_LENGTH) + mocap_constants_const.MOCAP_EXT)
+		path = (
+			mocap_path_and_prefix
+			+ str(mocap_number).pad_zeros(mocap_constants_const.INCREMENTAL_DIGET_LENGTH)
+			+ mocap_constants_const.MOCAP_EXT
+		)
 	else:
 		err = FAILED
 
@@ -96,11 +114,15 @@ static func create_scene_for_mocap_recording(p_mocap_recording: MocapRecording) 
 
 		for transform in frame:
 			if current_idx < animation.get_track_count():
-				var _pos_key_idx: int = animation.position_track_insert_key(current_idx, current_time, transform.origin)
+				var _pos_key_idx: int = animation.position_track_insert_key(
+					current_idx, current_time, transform.origin
+				)
 				current_idx += 1
 				# Error
 				var quat: Quaternion = transform.basis.orthonormalized().get_rotation_quaternion()
-				var _rot_key_idx: int = animation.rotation_track_insert_key(current_idx, current_time, quat)
+				var _rot_key_idx: int = animation.rotation_track_insert_key(
+					current_idx, current_time, quat
+				)
 				#current_idx += 1
 				#var _sca_key_idx: int = animation.scale_track_insert_key(current_idx, current_time, Vector3(1.0, 1.0, 1.0))
 				current_idx += 1
@@ -114,7 +136,9 @@ static func create_scene_for_mocap_recording(p_mocap_recording: MocapRecording) 
 	return mocap_scene
 
 
-static func create_packed_scene_for_mocap_recording(p_mocap_recording: MocapRecording) -> PackedScene:
+static func create_packed_scene_for_mocap_recording(
+	p_mocap_recording: MocapRecording
+) -> PackedScene:
 	var mocap_scene: Node3D = create_scene_for_mocap_recording(p_mocap_recording)
 	if mocap_scene:
 		var packed_scene: PackedScene = PackedScene.new()
@@ -125,7 +149,9 @@ static func create_packed_scene_for_mocap_recording(p_mocap_recording: MocapReco
 	return null
 
 
-static func save_packed_scene_for_mocap_recording_at_path(p_save_path: String, p_mocap_recording: MocapRecording) -> int:
+static func save_packed_scene_for_mocap_recording_at_path(
+	p_save_path: String, p_mocap_recording: MocapRecording
+) -> int:
 	var packed_scene: PackedScene = create_packed_scene_for_mocap_recording(p_mocap_recording)
 	if packed_scene:
 		var err: int = ResourceSaver.save(packed_scene, p_save_path)

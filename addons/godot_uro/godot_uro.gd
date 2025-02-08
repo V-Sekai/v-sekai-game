@@ -63,7 +63,9 @@ func using_ssl() -> bool:
 func create_requester():  # godot_uro_request_const
 	var host_and_port: Dictionary = get_host_and_port()
 
-	var new_requester = godot_uro_request_const.new(http_pool, host_and_port.host, host_and_port.port, using_ssl())
+	var new_requester = godot_uro_request_const.new(
+		http_pool, host_and_port.host, host_and_port.port, using_ssl()
+	)
 
 	return new_requester
 

@@ -5,7 +5,9 @@
 
 extends "res://addons/sar1_vr_manager/components/vr_component.gd"  # vr_component.gd
 
-var vr_teleport_action_const = load("res://addons/sar1_vr_manager/components/actions/vr_teleport_action.tscn")
+var vr_teleport_action_const = load(
+	"res://addons/sar1_vr_manager/components/actions/vr_teleport_action.tscn"
+)
 
 var can_teleport_funcref: Callable = Callable()
 var teleport_callback_funcref: Callable = Callable()
@@ -28,7 +30,10 @@ func tracker_added(p_tracker: XRController3D) -> void:  # vr_controller_tracker_
 	super.tracker_added(p_tracker)
 
 	var tracker_hand: int = p_tracker.get_tracker_hand()
-	if tracker_hand == XRPositionalTracker.TRACKER_HAND_LEFT or tracker_hand == XRPositionalTracker.TRACKER_HAND_RIGHT:
+	if (
+		tracker_hand == XRPositionalTracker.TRACKER_HAND_LEFT
+		or tracker_hand == XRPositionalTracker.TRACKER_HAND_RIGHT
+	):
 		var action: Node3D = vr_teleport_action_const.instantiate()
 
 		### Assign callsbacks ###

@@ -39,7 +39,9 @@ func _instance_login_child_control() -> void:
 
 		add_child(control, true)
 
-		control.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE)
+		control.set_anchors_and_offsets_preset(
+			Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE
+		)
 
 
 func _instance_profile_child_control() -> void:
@@ -56,7 +58,9 @@ func _instance_profile_child_control() -> void:
 
 		add_child(control, true)
 
-		control.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE)
+		control.set_anchors_and_offsets_preset(
+			Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE
+		)
 
 
 func _instance_child_control() -> void:

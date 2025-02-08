@@ -20,14 +20,28 @@ var movement_type_button: MenuButton = null
 @export var camera_mode_nodepath: NodePath = NodePath()
 var camera_mode_button: MenuButton = null
 
+
 func _ready() -> void:
 	movement_orientation_button = get_node_or_null(movement_orientation_nodepath)
-	setup_menu_button(movement_orientation_button, VRManager.vr_user_preferences.movement_orientation, VRManager.movement_orientation_names)
-	if movement_orientation_button.get_popup().connect("id_pressed", self._on_movement_orientation_changed) != OK:
+	setup_menu_button(
+		movement_orientation_button,
+		VRManager.vr_user_preferences.movement_orientation,
+		VRManager.movement_orientation_names
+	)
+	if (
+		movement_orientation_button.get_popup().connect(
+			"id_pressed", self._on_movement_orientation_changed
+		)
+		!= OK
+	):
 		push_error("Could not connect 'id_pressed'!")
 
 	turning_mode_button = get_node_or_null(turning_mode_nodepath)
-	setup_menu_button(turning_mode_button, VRManager.vr_user_preferences.turning_mode, VRManager.turning_mode_names)
+	setup_menu_button(
+		turning_mode_button,
+		VRManager.vr_user_preferences.turning_mode,
+		VRManager.turning_mode_names
+	)
 	if turning_mode_button.get_popup().id_pressed.connect(self._on_turning_mode_changed) != OK:
 		push_error("Could not connect 'id_pressed'!")
 
@@ -35,12 +49,18 @@ func _ready() -> void:
 	custom_player_height.value = VRManager.vr_user_preferences.custom_player_height
 
 	movement_type_button = get_node_or_null(movement_type_nodepath)
-	setup_menu_button(movement_type_button, VRManager.vr_user_preferences.movement_type, VRManager.movement_type_names)
+	setup_menu_button(
+		movement_type_button,
+		VRManager.vr_user_preferences.movement_type,
+		VRManager.movement_type_names
+	)
 	if movement_type_button.get_popup().id_pressed.connect(self._on_movement_type_changed) != OK:
 		push_error("Could not connect 'id_pressed'!")
 
 	camera_mode_button = get_node_or_null(camera_mode_nodepath)
-	setup_menu_button(camera_mode_button, VRManager.vr_user_preferences.camera_mode, VRManager.camera_mode_names)
+	setup_menu_button(
+		camera_mode_button, VRManager.vr_user_preferences.camera_mode, VRManager.camera_mode_names
+	)
 	if camera_mode_button.get_popup().id_pressed.connect(self._on_camera_mode_changed) != OK:
 		push_error("Could not connect 'id_pressed'!")
 
@@ -63,12 +83,20 @@ func will_disappear() -> void:
 
 func _on_movement_orientation_changed(p_id: int) -> void:
 	VRManager.vr_user_preferences.movement_orientation = p_id
-	update_menu_button_text(movement_orientation_button, VRManager.vr_user_preferences.movement_orientation, VRManager.movement_orientation_names)
+	update_menu_button_text(
+		movement_orientation_button,
+		VRManager.vr_user_preferences.movement_orientation,
+		VRManager.movement_orientation_names
+	)
 
 
 func _on_turning_mode_changed(p_id: int) -> void:
 	VRManager.vr_user_preferences.turning_mode = p_id
-	update_menu_button_text(turning_mode_button, VRManager.vr_user_preferences.turning_mode, VRManager.turning_mode_names)
+	update_menu_button_text(
+		turning_mode_button,
+		VRManager.vr_user_preferences.turning_mode,
+		VRManager.turning_mode_names
+	)
 
 
 func _on_PlayerHeightSpinbox_value_changed(p_value: float) -> void:
@@ -77,7 +105,11 @@ func _on_PlayerHeightSpinbox_value_changed(p_value: float) -> void:
 
 func _on_movement_type_changed(p_id: int) -> void:
 	VRManager.vr_user_preferences.movement_type = p_id
-	update_menu_button_text(movement_type_button, VRManager.vr_user_preferences.movement_type, VRManager.movement_type_names)
+	update_menu_button_text(
+		movement_type_button,
+		VRManager.vr_user_preferences.movement_type,
+		VRManager.movement_type_names
+	)
 
 
 func _on_VREnabled_pressed():
@@ -86,7 +118,9 @@ func _on_VREnabled_pressed():
 
 func _on_camera_mode_changed(p_id: int) -> void:
 	VRManager.vr_user_preferences.camera_mode = p_id
-	update_menu_button_text(camera_mode_button, VRManager.vr_user_preferences.camera_mode, VRManager.camera_mode_names)
+	update_menu_button_text(
+		camera_mode_button, VRManager.vr_user_preferences.camera_mode, VRManager.camera_mode_names
+	)
 
 
 func save_changes() -> void:

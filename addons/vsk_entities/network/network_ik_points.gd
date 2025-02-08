@@ -42,7 +42,9 @@ static func read_head_transform(p_reader: Object) -> Dictionary:
 	var origin_y: float = math_funcs_const.sanitise_float(p_reader.get_float())
 	var rotation: Quaternion = math_funcs_const.sanitise_quat(p_reader.get_quat())
 
-	return {"reader": p_reader, "transform": Transform3D(Basis(rotation), Vector3(0.0, origin_y, 0.0))}
+	return {
+		"reader": p_reader, "transform": Transform3D(Basis(rotation), Vector3(0.0, origin_y, 0.0))
+	}
 
 
 func on_serialize(p_writer: Object, _p_initial_state: bool) -> Object:  # network_writer_const
@@ -79,25 +81,39 @@ func on_serialize(p_writer: Object, _p_initial_state: bool) -> Object:  # networ
 
 		# Write transforms
 		if ik_space.tracker_collection_output.head_spatial:
-			p_writer = write_point_transform(p_writer, ik_space.tracker_collection_output.head_spatial.transform)
+			p_writer = write_point_transform(
+				p_writer, ik_space.tracker_collection_output.head_spatial.transform
+			)
 
 		if ik_space.tracker_collection_output.left_hand_spatial:
-			p_writer = write_point_transform(p_writer, ik_space.tracker_collection_output.left_hand_spatial.transform)
+			p_writer = write_point_transform(
+				p_writer, ik_space.tracker_collection_output.left_hand_spatial.transform
+			)
 
 		if ik_space.tracker_collection_output.right_hand_spatial:
-			p_writer = write_point_transform(p_writer, ik_space.tracker_collection_output.right_hand_spatial.transform)
+			p_writer = write_point_transform(
+				p_writer, ik_space.tracker_collection_output.right_hand_spatial.transform
+			)
 
 		if ik_space.tracker_collection_output.left_foot_spatial:
-			p_writer = write_point_transform(p_writer, ik_space.tracker_collection_output.left_foot_spatial.transform)
+			p_writer = write_point_transform(
+				p_writer, ik_space.tracker_collection_output.left_foot_spatial.transform
+			)
 
 		if ik_space.tracker_collection_output.right_foot_spatial:
-			p_writer = write_point_transform(p_writer, ik_space.tracker_collection_output.right_foot_spatial.transform)
+			p_writer = write_point_transform(
+				p_writer, ik_space.tracker_collection_output.right_foot_spatial.transform
+			)
 
 		if ik_space.tracker_collection_output.hips_spatial:
-			p_writer = write_point_transform(p_writer, ik_space.tracker_collection_output.hips_spatial.transform)
+			p_writer = write_point_transform(
+				p_writer, ik_space.tracker_collection_output.hips_spatial.transform
+			)
 
 		if ik_space.tracker_collection_output.chest_spatial:
-			p_writer = write_point_transform(p_writer, ik_space.tracker_collection_output.chest_spatial.transform)
+			p_writer = write_point_transform(
+				p_writer, ik_space.tracker_collection_output.chest_spatial.transform
+			)
 
 	return p_writer
 

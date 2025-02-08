@@ -7,7 +7,9 @@
 class_name NetworkPhysics extends NetworkLogic
 
 const math_funcs_const = preload("res://addons/math_util/math_funcs.gd")
-const network_entity_manager_const = preload("res://addons/network_manager/network_entity_manager.gd")
+const network_entity_manager_const = preload(
+	"res://addons/network_manager/network_entity_manager.gd"
+)
 
 
 func on_serialize(p_writer: Object, p_initial_state: bool) -> Object:  # network_writer_const:

@@ -18,11 +18,15 @@ static func xform_plane(p_transform: Transform3D, p_plane: Plane) -> Plane:
 	return Plane(normal, d)
 
 
-var matrix: PackedFloat64Array = PackedFloat64Array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+var matrix: PackedFloat64Array = PackedFloat64Array(
+	[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+)
 
 
 func set_identity() -> void:
-	matrix = PackedFloat64Array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+	matrix = PackedFloat64Array(
+		[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+	)
 
 
 static func get_fovy(p_fovx: float, p_aspect: float) -> float:
@@ -31,16 +35,48 @@ static func get_fovy(p_fovx: float, p_aspect: float) -> float:
 
 func get_endpoints() -> PackedVector3Array:
 	# Near Plane
-	var near_plane: Plane = Plane(matrix[3] + matrix[2], matrix[7] + matrix[6], matrix[11] + matrix[10], -matrix[15] - matrix[14]).normalized()
+	var near_plane: Plane = (
+		Plane(
+			matrix[3] + matrix[2],
+			matrix[7] + matrix[6],
+			matrix[11] + matrix[10],
+			-matrix[15] - matrix[14]
+		)
+		. normalized()
+	)
 
 	# Far Plane
-	var far_plane: Plane = Plane(matrix[2] - matrix[3], matrix[6] - matrix[7], matrix[10] - matrix[11], matrix[15] - matrix[14]).normalized()
+	var far_plane: Plane = (
+		Plane(
+			matrix[2] - matrix[3],
+			matrix[6] - matrix[7],
+			matrix[10] - matrix[11],
+			matrix[15] - matrix[14]
+		)
+		. normalized()
+	)
 
 	# Right Plane
-	var right_plane: Plane = Plane(matrix[0] - matrix[3], matrix[4] - matrix[7], matrix[8] - matrix[11], -matrix[15] + matrix[12]).normalized()
+	var right_plane: Plane = (
+		Plane(
+			matrix[0] - matrix[3],
+			matrix[4] - matrix[7],
+			matrix[8] - matrix[11],
+			-matrix[15] + matrix[12]
+		)
+		. normalized()
+	)
 
 	# Top Plane
-	var top_plane: Plane = Plane(matrix[1] - matrix[3], matrix[5] - matrix[7], matrix[9] - matrix[11], -matrix[15] + matrix[13]).normalized()
+	var top_plane: Plane = (
+		Plane(
+			matrix[1] - matrix[3],
+			matrix[5] - matrix[7],
+			matrix[9] - matrix[11],
+			-matrix[15] + matrix[13]
+		)
+		. normalized()
+	)
 
 	var near_endpoint: Vector3 = near_plane.intersect_3(right_plane, top_plane)
 	var far_endpoint: Vector3 = far_plane.intersect_3(right_plane, top_plane)
@@ -64,7 +100,12 @@ func get_projection_planes(p_transform: Transform3D) -> Array:
 	var new_plane: Plane
 
 	# Near Plane
-	new_plane = Plane(matrix[3] + matrix[2], matrix[7] + matrix[6], matrix[11] + matrix[10], matrix[15] + matrix[14])
+	new_plane = Plane(
+		matrix[3] + matrix[2],
+		matrix[7] + matrix[6],
+		matrix[11] + matrix[10],
+		matrix[15] + matrix[14]
+	)
 
 	new_plane.normal = -new_plane.normal
 	new_plane = new_plane.normalized()
@@ -72,7 +113,12 @@ func get_projection_planes(p_transform: Transform3D) -> Array:
 	planes.push_back(xform_plane(p_transform, new_plane))
 
 	# Far Plane
-	new_plane = Plane(matrix[3] - matrix[2], matrix[7] - matrix[6], matrix[11] - matrix[10], matrix[15] - matrix[14])
+	new_plane = Plane(
+		matrix[3] - matrix[2],
+		matrix[7] - matrix[6],
+		matrix[11] - matrix[10],
+		matrix[15] - matrix[14]
+	)
 
 	new_plane.normal = -new_plane.normal
 	new_plane = new_plane.normalized()
@@ -80,7 +126,12 @@ func get_projection_planes(p_transform: Transform3D) -> Array:
 	planes.push_back(xform_plane(p_transform, new_plane))
 
 	# Left Plane
-	new_plane = Plane(matrix[3] + matrix[0], matrix[7] + matrix[4], matrix[11] + matrix[8], matrix[15] + matrix[12])
+	new_plane = Plane(
+		matrix[3] + matrix[0],
+		matrix[7] + matrix[4],
+		matrix[11] + matrix[8],
+		matrix[15] + matrix[12]
+	)
 
 	new_plane.normal = -new_plane.normal
 	new_plane = new_plane.normalized()
@@ -88,7 +139,12 @@ func get_projection_planes(p_transform: Transform3D) -> Array:
 	planes.push_back(xform_plane(p_transform, new_plane))
 
 	# Top Plane
-	new_plane = Plane(matrix[3] - matrix[1], matrix[7] - matrix[5], matrix[11] - matrix[9], matrix[15] - matrix[13])
+	new_plane = Plane(
+		matrix[3] - matrix[1],
+		matrix[7] - matrix[5],
+		matrix[11] - matrix[9],
+		matrix[15] - matrix[13]
+	)
 
 	new_plane.normal = -new_plane.normal
 	new_plane = new_plane.normalized()
@@ -96,7 +152,12 @@ func get_projection_planes(p_transform: Transform3D) -> Array:
 	planes.push_back(xform_plane(p_transform, new_plane))
 
 	# Right Plane
-	new_plane = Plane(matrix[3] - matrix[0], matrix[7] - matrix[4], matrix[11] - matrix[8], matrix[15] - matrix[12])
+	new_plane = Plane(
+		matrix[3] - matrix[0],
+		matrix[7] - matrix[4],
+		matrix[11] - matrix[8],
+		matrix[15] - matrix[12]
+	)
 
 	new_plane.normal = -new_plane.normal
 	new_plane = new_plane.normalized()
@@ -104,7 +165,12 @@ func get_projection_planes(p_transform: Transform3D) -> Array:
 	planes.push_back(xform_plane(p_transform, new_plane))
 
 	# Bottom Plane
-	new_plane = Plane(matrix[3] + matrix[1], matrix[7] + matrix[5], matrix[11] + matrix[9], matrix[15] + matrix[13])
+	new_plane = Plane(
+		matrix[3] + matrix[1],
+		matrix[7] + matrix[5],
+		matrix[11] + matrix[9],
+		matrix[15] + matrix[13]
+	)
 
 	new_plane.normal = -new_plane.normal
 	new_plane = new_plane.normalized()
@@ -114,7 +180,9 @@ func get_projection_planes(p_transform: Transform3D) -> Array:
 	return planes
 
 
-func set_perspective(p_fovy_degrees: float, p_aspect: float, p_z_near: float, p_z_far: float, p_flip_fov: float) -> void:
+func set_perspective(
+	p_fovy_degrees: float, p_aspect: float, p_z_near: float, p_z_far: float, p_flip_fov: float
+) -> void:
 	if p_flip_fov:
 		p_fovy_degrees = get_fovy(p_fovy_degrees, 1.0 / p_aspect)
 
@@ -141,7 +209,9 @@ func set_perspective(p_fovy_degrees: float, p_aspect: float, p_z_near: float, p_
 	matrix[15] = 0
 
 
-func set_orthogonal(p_left: float, p_right: float, p_bottom: float, p_top: float, p_znear: float, p_zfar: float) -> void:
+func set_orthogonal(
+	p_left: float, p_right: float, p_bottom: float, p_top: float, p_znear: float, p_zfar: float
+) -> void:
 	set_identity()
 
 	matrix[0] = 2.0 / (p_right - p_left)

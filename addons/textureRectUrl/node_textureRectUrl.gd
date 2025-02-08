@@ -65,10 +65,15 @@ func _loadImage(p_cache_only):
 	file_ext = ext[ext.size() - 1].to_lower()
 
 	if not file_ext.is_empty():
-		var doFileExists = FileAccess.file_exists(str("user://image_cache/", file_name.sha256_text() + "." + file_ext))
+		var doFileExists = FileAccess.file_exists(
+			str("user://image_cache/", file_name.sha256_text() + "." + file_ext)
+		)
 		if doFileExists:
 			var _image = Image.new()
-			if _image.load(str("user://image_cache/", file_name.sha256_text() + "." + file_ext)) == OK:
+			if (
+				_image.load(str("user://image_cache/", file_name.sha256_text() + "." + file_ext))
+				== OK
+			):
 				var _texture = ImageTexture.create_from_image(_image)
 
 				texture = _texture
@@ -84,7 +89,9 @@ func _loadImage(p_cache_only):
 			var dir: DirAccess = DirAccess.open("user://")
 			var _err = dir.make_dir("image_cache")
 
-			http.download_file = str("user://image_cache/", file_name.sha256_text() + "." + file_ext)
+			http.download_file = str(
+				"user://image_cache/", file_name.sha256_text() + "." + file_ext
+			)
 
 		if !p_cache_only:
 			_downloadImage()
@@ -149,7 +156,9 @@ func _adjustProgress():
 			progress_texture.position.y = progressbarRect.position.y
 
 
-func _on_HTTPRequest_request_completed(result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray):
+func _on_HTTPRequest_request_completed(
+	result: int, response_code: int, _headers: PackedStringArray, body: PackedByteArray
+):
 	var this_url = self.request_in_progress
 	self.request_in_progress = ""
 	if response_code == 200:
@@ -166,7 +175,16 @@ func _on_HTTPRequest_request_completed(result: int, response_code: int, _headers
 
 			set_process(false)
 			if image_error == OK:
-				print("Request completed successfully for " + this_url + ": " + str(image.get_width()) + "x" + str(image.get_height()))
+				print(
+					(
+						"Request completed successfully for "
+						+ this_url
+						+ ": "
+						+ str(image.get_width())
+						+ "x"
+						+ str(image.get_height())
+					)
+				)
 				# An error did not occur while trying to display the image
 
 				var _texture = ImageTexture.create_from_image(image)
@@ -180,11 +198,27 @@ func _on_HTTPRequest_request_completed(result: int, response_code: int, _headers
 				# Assign a downloaded texture
 				texture = _texture
 			else:
-				print("Request completed but failed to parse for " + this_url + " ext " + str(file_ext))
+				print(
+					(
+						"Request completed but failed to parse for "
+						+ this_url
+						+ " ext "
+						+ str(file_ext)
+					)
+				)
 		else:
 			_loadImage(true)
 	else:
-		print("Request failed for " + this_url + " with result " + str(result) + " and code " + str(response_code))
+		print(
+			(
+				"Request failed for "
+				+ this_url
+				+ " with result "
+				+ str(result)
+				+ " and code "
+				+ str(response_code)
+			)
+		)
 
 
 func _process(_delta):

@@ -21,7 +21,10 @@ static func test_aabb_with_planes(p_aabb: AABB, p_planes: Array) -> bool:
 
 
 static func get_cylinder_boundings_box(p_pos: Vector3, p_cylinder: CylinderShape3D) -> AABB:
-	return AABB(p_pos, Vector3(p_cylinder.get_radius(), p_cylinder.get_height() * 0.5, p_cylinder.get_radius()))
+	return AABB(
+		p_pos,
+		Vector3(p_cylinder.get_radius(), p_cylinder.get_height() * 0.5, p_cylinder.get_radius())
+	)
 
 
 static func get_sphere_boundings_box(p_pos: Vector3, p_sphere: SphereShape3D) -> AABB:

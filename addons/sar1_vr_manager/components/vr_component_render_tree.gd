@@ -16,7 +16,10 @@ func tracker_added(p_tracker: XRController3D) -> void:  # vr_controller_tracker_
 	super.tracker_added(p_tracker)
 
 	var tracker_hand: int = p_tracker.get_tracker_hand()
-	if tracker_hand != XRPositionalTracker.TRACKER_HAND_LEFT and tracker_hand != XRPositionalTracker.TRACKER_HAND_RIGHT:
+	if (
+		tracker_hand != XRPositionalTracker.TRACKER_HAND_LEFT
+		and tracker_hand != XRPositionalTracker.TRACKER_HAND_RIGHT
+	):
 		return
 
 	var vr_render_tree_action: Node3D = vr_render_tree_action_const.new()

@@ -10,7 +10,12 @@ extends EditorPlugin
 func _enter_tree():
 	# Initialization of the plugin goes here
 	# Add the new type with a name, a parent type, a script and an icon
-	add_custom_type("TextureRectUrl", "TextureRect", preload("node_textureRectUrl.gd"), load("res://addons/textureRectUrl/icon.png"))
+	add_custom_type(
+		"TextureRectUrl",
+		"TextureRect",
+		preload("node_textureRectUrl.gd"),
+		load("res://addons/textureRectUrl/icon.png")
+	)
 
 
 func _exit_tree():

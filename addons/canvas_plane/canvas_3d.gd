@@ -77,9 +77,17 @@ var mouse_mask: int = 0
 
 func _update_aabb() -> void:
 	if mesh and mesh_instance:
-		if material is BaseMaterial3D and material.billboard_mode == BaseMaterial3D.BILLBOARD_DISABLED:
+		if (
+			material is BaseMaterial3D
+			and material.billboard_mode == BaseMaterial3D.BILLBOARD_DISABLED
+		):
 			var longest_axis_size: float = mesh.get_aabb().get_longest_axis_size()
-			mesh_instance.set_custom_aabb(AABB(mesh.get_aabb().position, Vector3(longest_axis_size, longest_axis_size, longest_axis_size)))
+			mesh_instance.set_custom_aabb(
+				AABB(
+					mesh.get_aabb().position,
+					Vector3(longest_axis_size, longest_axis_size, longest_axis_size)
+				)
+			)
 		else:
 			mesh_instance.set_custom_aabb(AABB())
 
@@ -89,7 +97,10 @@ func _update() -> void:
 
 	var scaled_canvas_size: Vector2 = canvas_size * canvas_utils_const.UI_PIXELS_TO_METER
 
-	var canvas_offset: Vector2 = Vector2((scaled_canvas_size.x * 0.5) - (scaled_canvas_size.x * offset_ratio.x), -(scaled_canvas_size.y * 0.5) + (scaled_canvas_size.y * offset_ratio.y))
+	var canvas_offset: Vector2 = Vector2(
+		(scaled_canvas_size.x * 0.5) - (scaled_canvas_size.x * offset_ratio.x),
+		-(scaled_canvas_size.y * 0.5) + (scaled_canvas_size.y * offset_ratio.y)
+	)
 
 	if mesh:
 		mesh.set_size(scaled_canvas_size * canvas_scale)
@@ -142,7 +153,9 @@ func _setup_canvas_item() -> void:
 			return
 
 	original_canvas_rid = control_root.get_canvas()
-	RenderingServer.canvas_item_set_parent(control_root.get_canvas_item(), viewport.find_world_2d().get_canvas())
+	RenderingServer.canvas_item_set_parent(
+		control_root.get_canvas_item(), viewport.find_world_2d().get_canvas()
+	)
 
 
 func _set_mesh_material(p_material: Material) -> void:
@@ -161,7 +174,9 @@ func _find_control_root() -> void:
 			if control_root:
 				if control_root.resized.is_connected(self._resized):
 					control_root.resized.disconnect(self._resized)
-					RenderingServer.canvas_item_set_parent(control_root.get_canvas_item(), original_canvas_rid)
+					RenderingServer.canvas_item_set_parent(
+						control_root.get_canvas_item(), original_canvas_rid
+					)
 
 			# Assign the new control rool and give
 			control_root = new_control_root
@@ -271,7 +286,9 @@ func _ready() -> void:
 	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	viewport.set_name("SubViewport")
 	if Engine.is_editor_hint():
-		RenderingServer.viewport_attach_canvas(get_viewport().get_viewport_rid(), viewport.find_world_2d().get_canvas())
+		RenderingServer.viewport_attach_canvas(
+			get_viewport().get_viewport_rid(), viewport.find_world_2d().get_canvas()
+		)
 	else:
 		_find_control_root()
 

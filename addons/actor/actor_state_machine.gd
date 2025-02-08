@@ -116,6 +116,16 @@ func update(p_delta: float) -> void:
 func start() -> void:
 	super.start()
 	if !Engine.is_editor_hint():
-		states_map = {"Spawned": get_node_or_null("Spawned"), "Idle": get_node_or_null("Idle"), "Locomotion": get_node_or_null("Locomotion"), "Falling": get_node_or_null("Falling"), "Stop": get_node_or_null("Stop"), "Landed": get_node_or_null("Landed"), "Pre-Jump": get_node_or_null("Pre-Jump"), "Networked": get_node_or_null("Networked"), "Noclip": get_node_or_null("Noclip")}
+		states_map = {
+			"Spawned": get_node_or_null("Spawned"),
+			"Idle": get_node_or_null("Idle"),
+			"Locomotion": get_node_or_null("Locomotion"),
+			"Falling": get_node_or_null("Falling"),
+			"Stop": get_node_or_null("Stop"),
+			"Landed": get_node_or_null("Landed"),
+			"Pre-Jump": get_node_or_null("Pre-Jump"),
+			"Networked": get_node_or_null("Networked"),
+			"Noclip": get_node_or_null("Noclip")
+		}
 
 		actor_controller = get_node_or_null(actor_controller_path)

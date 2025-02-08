@@ -34,7 +34,11 @@ static func generate_test_image() -> Dictionary:
 	var new_image: Image = Image.new()
 	new_image.resize(128, 128, Image.INTERPOLATE_NEAREST)
 
-	return {"filename": "autogen.png", "content_type": "image/png", "data": new_image.save_png_to_buffer()}
+	return {
+		"filename": "autogen.png",
+		"content_type": "image/png",
+		"data": new_image.save_png_to_buffer()
+	}
 
 
 static func generate_test_binary_data() -> Dictionary:
@@ -45,6 +49,13 @@ static func generate_test_binary_data() -> Dictionary:
 
 func _on_TestUploadButton_pressed():
 	if GodotUro.godot_uro_api:
-		var result = await (GodotUro.godot_uro_api.dashboard_create_avatar_async({"name": "test_avatar", "description": "test_avatar_description", "user_content_data": generate_test_binary_data(), "user_content_preview": generate_test_image()}))
+		var result = await (GodotUro.godot_uro_api.dashboard_create_avatar_async(
+			{
+				"name": "test_avatar",
+				"description": "test_avatar_description",
+				"user_content_data": generate_test_binary_data(),
+				"user_content_preview": generate_test_image()
+			}
+		))
 
 		print(result)

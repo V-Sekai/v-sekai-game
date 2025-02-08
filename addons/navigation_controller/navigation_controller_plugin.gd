@@ -6,7 +6,9 @@
 @tool
 extends EditorPlugin
 
-const navigation_controller_const = preload("res://addons/navigation_controller/navigation_controller.gd")
+const navigation_controller_const = preload(
+	"res://addons/navigation_controller/navigation_controller.gd"
+)
 const view_controller_const = preload("res://addons/navigation_controller/view_controller.gd")
 
 

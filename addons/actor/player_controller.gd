@@ -39,7 +39,8 @@ var _collider: CollisionShape3D = null
 @export_flags_3d_physics var local_player_collision: int = 1
 @export_flags_3d_physics var other_player_collision: int = 1
 
-@onready var physics_fps: int = ProjectSettings.get_setting("physics/common/physics_ticks_per_second")
+@onready
+var physics_fps: int = ProjectSettings.get_setting("physics/common/physics_ticks_per_second")
 
 @export var ik_space_path: NodePath = NodePath()
 var _ik_space: Node3D = null
@@ -138,7 +139,10 @@ func _master_movement(p_delta: float) -> void:
 
 func update_origin() -> void:
 	# There is a slight delay in the movement, but this allows framerate independent movement
-	if entity_node.hierarchy_component_node and entity_node.hierarchy_component_node.get_entity_parent():
+	if (
+		entity_node.hierarchy_component_node
+		and entity_node.hierarchy_component_node.get_entity_parent()
+	):
 		current_origin = entity_node.global_transform.origin
 	else:
 		current_origin = entity_node.transform.origin
@@ -192,7 +196,9 @@ func _on_transform_changed() -> void:
 
 
 func _get_desired_direction() -> Basis:
-	var camera_controller_yaw_basis = Basis().rotated(Vector3(0, 1, 0), _camera_controller_node.rotation_yaw)
+	var camera_controller_yaw_basis = Basis().rotated(
+		Vector3(0, 1, 0), _camera_controller_node.rotation_yaw
+	)
 
 	var basis: Basis = camera_controller_yaw_basis
 
@@ -201,15 +207,35 @@ func _get_desired_direction() -> Basis:
 		match VRManager.vr_user_preferences.movement_orientation:
 			VRManager.vr_user_preferences_const.movement_orientation_enum.HEAD_ORIENTED_MOVEMENT:
 				basis = camera_controller_yaw_basis * _camera_controller_node.camera.transform.basis
-			VRManager.vr_user_preferences_const.movement_orientation_enum.PLAYSPACE_ORIENTED_MOVEMENT:
+			(
+				VRManager
+				. vr_user_preferences_const
+				. movement_orientation_enum
+				. PLAYSPACE_ORIENTED_MOVEMENT
+			):
 				basis = camera_controller_yaw_basis
 			VRManager.vr_user_preferences_const.movement_orientation_enum.HAND_ORIENTED_MOVEMENT:
-				basis = camera_controller_yaw_basis * _player_input.vr_locomotion_component.get_controller_direction()
+				basis = (
+					camera_controller_yaw_basis
+					* _player_input.vr_locomotion_component.get_controller_direction()
+				)
 
 	if using_flight_controls():
-		return Basis(Vector3(-cos(basis.get_euler().y), 0.0, sin(basis.get_euler().y)), Vector3(), Vector3(sin(basis.get_euler().y) * cos(basis.get_euler().x), sin(basis.get_euler().x), cos(basis.get_euler().y) * cos(basis.get_euler().x)))
+		return Basis(
+			Vector3(-cos(basis.get_euler().y), 0.0, sin(basis.get_euler().y)),
+			Vector3(),
+			Vector3(
+				sin(basis.get_euler().y) * cos(basis.get_euler().x),
+				sin(basis.get_euler().x),
+				cos(basis.get_euler().y) * cos(basis.get_euler().x)
+			)
+		)
 	else:
-		return Basis(Vector3(-cos(basis.get_euler().y), 0.0, sin(basis.get_euler().y)), Vector3(), Vector3(sin(basis.get_euler().y), 0.0, cos(basis.get_euler().y)))
+		return Basis(
+			Vector3(-cos(basis.get_euler().y), 0.0, sin(basis.get_euler().y)),
+			Vector3(),
+			Vector3(sin(basis.get_euler().y), 0.0, cos(basis.get_euler().y))
+		)
 
 
 func _on_touched_by_body(p_body) -> void:
@@ -249,7 +275,9 @@ func _setup_target() -> void:
 
 
 func _update_master_transform() -> void:
-	var camera_controller_yaw_basis = Basis().rotated(Vector3(0, 1, 0), _camera_controller_node.rotation_yaw)
+	var camera_controller_yaw_basis = Basis().rotated(
+		Vector3(0, 1, 0), _camera_controller_node.rotation_yaw
+	)
 
 	set_transform(Transform3D(camera_controller_yaw_basis, get_origin()))
 
@@ -287,7 +315,10 @@ func _entity_physics_process(p_delta: float) -> void:
 	update_origin()
 
 	# There is a slight delay in the movement, but this allows framerate independent movement
-	if entity_node.hierarchy_component_node and entity_node.hierarchy_component_node.get_entity_parent():
+	if (
+		entity_node.hierarchy_component_node
+		and entity_node.hierarchy_component_node.get_entity_parent()
+	):
 		current_origin = entity_node.global_transform.origin
 	else:
 		current_origin = entity_node.transform.origin
@@ -361,7 +392,12 @@ func _puppet_ready() -> void:
 	_state_machine.start_state = NodePath("Networked")
 
 	### Avatar ###
-	if VSKNetworkManager.player_avatar_path_updated.connect(self._player_network_avatar_path_updated) != OK:
+	if (
+		VSKNetworkManager.player_avatar_path_updated.connect(
+			self._player_network_avatar_path_updated
+		)
+		!= OK
+	):
 		push_error("Failed to connect player_avatar_path_updated signal.")
 		return
 	if VSKNetworkManager.player_avatar_paths.has(get_multiplayer_authority()):

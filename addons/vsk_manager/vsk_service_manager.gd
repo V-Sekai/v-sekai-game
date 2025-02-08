@@ -19,9 +19,13 @@ func setup_configuration() -> void:
 		services = ProjectSettings.get_setting("services/services/services")
 
 	if !ProjectSettings.has_setting("services/services/required_host_notify_services"):
-		ProjectSettings.set_setting("services/services/required_host_notify_services", required_host_notify_services)
+		ProjectSettings.set_setting(
+			"services/services/required_host_notify_services", required_host_notify_services
+		)
 	else:
-		required_host_notify_services = ProjectSettings.get_setting("services/services/required_host_notify_services")
+		required_host_notify_services = ProjectSettings.get_setting(
+			"services/services/required_host_notify_services"
+		)
 
 
 func is_required_host_notify_service(p_service: String) -> bool:

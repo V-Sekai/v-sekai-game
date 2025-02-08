@@ -28,7 +28,9 @@ func service_update_editor(_delta: float) -> void:
 	pass
 
 
-func service_game_server_hosted(p_port: int, p_max_users: int, p_map: String, p_advertise: bool) -> String:
+func service_game_server_hosted(
+	p_port: int, p_max_users: int, p_map: String, p_advertise: bool
+) -> String:
 	if p_advertise:
 		var result = await GodotUro.godot_uro_api.create_shard(p_port, p_map, p_max_users)
 		shard_id = result

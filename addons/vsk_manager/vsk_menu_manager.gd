@@ -72,7 +72,9 @@ func menu_gui_input(p_event: InputEvent) -> void:
 	if menu_canvas_pivot_instance != null and menu_canvas_pivot_instance.is_inside_tree():
 		var plane: Node3D = menu_canvas_pivot_instance.get_canvas_plane()
 		if p_event is InputEventMouse:
-			p_event.position *= (Vector2(plane.canvas_width, plane.canvas_height) / Vector2(get_viewport().size))
+			p_event.position *= (
+				Vector2(plane.canvas_width, plane.canvas_height) / Vector2(get_viewport().size)
+			)
 			plane.viewport.push_input(p_event)
 
 
@@ -101,7 +103,13 @@ func menu_button_pressed() -> void:
 
 
 func update_vr_flat_menu_visibility():
-	if outgame_root_vr_instance.is_inside_tree() and (VRManager.vr_user_preferences.vr_hmd_mirroring == VRManager.vr_user_preferences.vr_hmd_mirroring_enum.HMD_MIRROR_FLAT_UI):
+	if (
+		outgame_root_vr_instance.is_inside_tree()
+		and (
+			VRManager.vr_user_preferences.vr_hmd_mirroring
+			== VRManager.vr_user_preferences.vr_hmd_mirroring_enum.HMD_MIRROR_FLAT_UI
+		)
+	):
 		FlatViewport.texture_rect_menu.show()
 	else:
 		FlatViewport.texture_rect_menu.hide()
@@ -217,7 +225,9 @@ func setup_vr_viewport() -> void:
 			if menu_root:
 				control_root.add_child(menu_root, true)
 
-			FlatViewport.texture_rect_menu.texture = menu_canvas_pivot_instance.get_menu_viewport().get_texture()
+			FlatViewport.texture_rect_menu.texture = (
+				menu_canvas_pivot_instance.get_menu_viewport().get_texture()
+			)
 			if FlatViewport.menu_gui_input.connect(self.menu_gui_input) != OK:
 				push_error("Could could connect gui_input signal!")
 
@@ -266,21 +276,29 @@ func setup_outgame() -> void:
 
 func setup_preloading_screen() -> void:
 	if menu_root:
-		menu_root.push_view_controller(preloading_screen_const.instantiate() as ViewController, false)
+		menu_root.push_view_controller(
+			preloading_screen_const.instantiate() as ViewController, false
+		)
 
 
 func setup_title_screen() -> void:
 	if menu_root:
-		menu_root.push_view_controller(title_screen_packed_scene.instantiate() as ViewController, false)
+		menu_root.push_view_controller(
+			title_screen_packed_scene.instantiate() as ViewController, false
+		)
 
 
 func setup_loading_screen() -> void:
 	if menu_root:
-		menu_root.push_view_controller(loading_screen_packed_scene.instantiate() as ViewController, false)
+		menu_root.push_view_controller(
+			loading_screen_packed_scene.instantiate() as ViewController, false
+		)
 
 
 func play_menu_sfx(p_stream: AudioStream) -> void:
-	VSKAudioManager.play_oneshot_audio_stream(p_stream, VSKAudioManager.MENU_OUTPUT_BUS_NAME, linear_to_db(0.1))
+	VSKAudioManager.play_oneshot_audio_stream(
+		p_stream, VSKAudioManager.MENU_OUTPUT_BUS_NAME, linear_to_db(0.1)
+	)
 
 
 func assign_resource(p_resource: Resource, p_resource_id: int) -> void:
@@ -297,10 +315,18 @@ func assign_resource(p_resource: Resource, p_resource_id: int) -> void:
 
 func get_preload_tasks() -> Dictionary:
 	var preloading_tasks: Dictionary = {}
-	preloading_tasks["res://addons/vsk_menu/main_menu/title_screen.tscn"] = {"target": self, "method": "assign_resource", "args": [RESOURCE_ID_TITLE_SCREEN]}
-	preloading_tasks["res://addons/vsk_menu/main_menu/loading_screen.tscn"] = {"target": self, "method": "assign_resource", "args": [RESOURCE_ID_LOADING_SCREEN]}
-	preloading_tasks["res://addons/vsk_menu/main_menu/ingame_menu_screen.tscn"] = {"target": self, "method": "assign_resource", "args": [RESOURCE_ID_INGAME_MENU_SCREEN]}
-	preloading_tasks["res://addons/vsk_menu/ingame_menu/ingame_gui.tscn"] = {"target": self, "method": "assign_resource", "args": [RESOURCE_ID_INGAME_GUI]}
+	preloading_tasks["res://addons/vsk_menu/main_menu/title_screen.tscn"] = {
+		"target": self, "method": "assign_resource", "args": [RESOURCE_ID_TITLE_SCREEN]
+	}
+	preloading_tasks["res://addons/vsk_menu/main_menu/loading_screen.tscn"] = {
+		"target": self, "method": "assign_resource", "args": [RESOURCE_ID_LOADING_SCREEN]
+	}
+	preloading_tasks["res://addons/vsk_menu/main_menu/ingame_menu_screen.tscn"] = {
+		"target": self, "method": "assign_resource", "args": [RESOURCE_ID_INGAME_MENU_SCREEN]
+	}
+	preloading_tasks["res://addons/vsk_menu/ingame_menu/ingame_gui.tscn"] = {
+		"target": self, "method": "assign_resource", "args": [RESOURCE_ID_INGAME_GUI]
+	}
 
 	return preloading_tasks
 
@@ -343,7 +369,9 @@ func setup() -> void:
 	flat_fader = ColorRect.new()
 	flat_fader.set_color(Color(0.0, 0.0, 0.0, 0.0))
 	flat_fader.set_name("Fader")
-	flat_fader.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE, 0)
+	flat_fader.set_anchors_and_offsets_preset(
+		Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE, 0
+	)
 	flat_fader.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 	if FadeManager.color_changed.connect(self._fade_color_changed) != OK:

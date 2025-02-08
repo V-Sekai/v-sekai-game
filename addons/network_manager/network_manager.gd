@@ -12,7 +12,10 @@ const NETWORK_PROTOCOL_NAME = "sar1"
 
 
 static func get_network_version_string() -> String:
-	return "%s_v%s.%s" % [NETWORK_PROTOCOL_NAME, str(NETWORK_MAJOR_VERSION), str(NETWORK_MINOR_VERSION)]
+	return (
+		"%s_v%s.%s"
+		% [NETWORK_PROTOCOL_NAME, str(NETWORK_MAJOR_VERSION), str(NETWORK_MINOR_VERSION)]
+	)
 
 
 const network_writer_const = preload("network_writer.gd")
@@ -41,7 +44,9 @@ var kill_flag: bool = false
 const network_replication_manager_const = preload("network_replication_manager.gd")
 const network_state_manager_const = preload("network_state_manager.gd")
 const network_voice_manager_const = preload("network_voice_manager.gd")
-const network_entity_manager_const = preload("res://addons/network_manager/network_entity_manager.gd")
+const network_entity_manager_const = preload(
+	"res://addons/network_manager/network_entity_manager.gd"
+)
 const network_flow_manager_const = preload("network_flow_manager.gd")
 const network_handshake_manager_const = preload("network_handshake_manager.gd")
 const network_rpc_manager_const = preload("network_rpc_manager.gd")
@@ -126,7 +131,9 @@ signal server_state_ready
 signal voice_packet_compressed(p_peer_id, p_sequence_id, p_buffer)
 
 
-func emit_voice_packet_compressedx(p_peer_id: int, p_sequence_id: int, p_buffer: PackedByteArray) -> void:
+func emit_voice_packet_compressedx(
+	p_peer_id: int, p_sequence_id: int, p_buffer: PackedByteArray
+) -> void:
 	voice_packet_compressed.emit(p_peer_id, p_sequence_id, p_buffer)
 
 
@@ -191,11 +198,22 @@ func _peer_packet(p_id: int, p_packet: PackedByteArray) -> void:
 
 
 func has_active_peer() -> bool:
-	return get_tree() and get_tree().get_multiplayer() and get_tree().get_multiplayer().has_multiplayer_peer() and (get_tree().get_multiplayer().multiplayer_peer.get_connection_status() != MultiplayerPeer.CONNECTION_DISCONNECTED)
+	return (
+		get_tree()
+		and get_tree().get_multiplayer()
+		and get_tree().get_multiplayer().has_multiplayer_peer()
+		and (
+			get_tree().get_multiplayer().multiplayer_peer.get_connection_status()
+			!= MultiplayerPeer.CONNECTION_DISCONNECTED
+		)
+	)
 
 
 func is_server() -> bool:
-	return (get_tree() and !has_active_peer()) or (get_tree() and get_tree().get_multiplayer().is_server())
+	return (
+		(get_tree() and !has_active_peer())
+		or (get_tree() and get_tree().get_multiplayer().is_server())
+	)
 
 
 func is_session_master() -> bool:
@@ -225,7 +243,10 @@ func set_relay(p_is_relay: bool) -> void:
 
 
 func is_rpc_sender_id_server() -> bool:
-	return get_tree().get_multiplayer().get_remote_sender_id() == network_constants_const.SERVER_MASTER_PEER_ID
+	return (
+		get_tree().get_multiplayer().get_remote_sender_id()
+		== network_constants_const.SERVER_MASTER_PEER_ID
+	)
 
 
 # Returns the number of connected (not just active) peers
@@ -242,7 +263,9 @@ func get_peer_count(p_inclusive: bool) -> int:
 	return peer_count
 
 
-func host_game(p_port: int, p_max_players: int, p_dedicated: bool, p_relay: bool = true, p_retry_max: int = 0) -> bool:
+func host_game(
+	p_port: int, p_max_players: int, p_dedicated: bool, p_relay: bool = true, p_retry_max: int = 0
+) -> bool:
 	if has_active_peer():
 		NetworkLogger.error("Network peer already established!")
 		return false
@@ -268,7 +291,11 @@ func host_game(p_port: int, p_max_players: int, p_dedicated: bool, p_relay: bool
 	var retry_count: int = 0
 	while net.create_server(active_port, max_players) != OK:
 		if (retry_count % 10) == 0:
-			NetworkLogger.printl("Cannot create a server on port {port}! (Try {try}/{trymax})".format({"port": str(active_port), "try": str(retry_count), "trymax": str(p_retry_max)}))
+			NetworkLogger.printl(
+				"Cannot create a server on port {port}! (Try {try}/{trymax})".format(
+					{"port": str(active_port), "try": str(retry_count), "trymax": str(p_retry_max)}
+				)
+			)
 		retry_count += 1
 		if retry_count > p_retry_max:
 			return false
@@ -301,7 +328,11 @@ func join_game(p_ip: String, p_port: int) -> bool:
 		return false
 
 	if net.create_client(p_ip, p_port) != OK:
-		NetworkLogger.printl("Cannot create a client on ip {ip} & port {port}!".format({"ip": p_ip, "port": str(p_port)}))
+		NetworkLogger.printl(
+			"Cannot create a client on ip {ip} & port {port}!".format(
+				{"ip": p_ip, "port": str(p_port)}
+			)
+		)
 		return false
 
 	active_ip = p_ip
@@ -461,17 +492,20 @@ func emit_entity_network_id_unregistered(p_network_id: int) -> void:
 	entity_network_id_unregistered.emit(p_network_id)
 
 
-@rpc("any_peer") func send_create_server_info() -> void:
+@rpc("any_peer")
+func send_create_server_info() -> void:
 	NetworkLogger.printl("create_server_info...")
 	create_server_info.emit()
 
 
-@rpc("any_peer") func send_create_server_state() -> void:
+@rpc("any_peer")
+func send_create_server_state() -> void:
 	NetworkLogger.printl("create_server_state...")
 	create_server_state.emit()
 
 
-@rpc("any_peer") func peer_validation_state_error() -> void:
+@rpc("any_peer")
+func peer_validation_state_error() -> void:
 	NetworkLogger.printl("peer_validation_state_error...")
 	if is_server():
 		rpc("peer_validation_state_error")
@@ -485,10 +519,15 @@ func emit_entity_network_id_unregistered(p_network_id: int) -> void:
 
 func confirm_client_ready_for_sync(p_network_id: int) -> void:
 	NetworkLogger.printl("confirm_client_ready_for_sync...")
-	if peer_data[p_network_id].validation_state != network_constants_const.validation_state_enum.VALIDATION_STATE_STATE_SENT:
+	if (
+		peer_data[p_network_id].validation_state
+		!= network_constants_const.validation_state_enum.VALIDATION_STATE_STATE_SENT
+	):
 		peer_validation_state_error()
 	else:
-		received_peer_validation_state_update(p_network_id, network_constants_const.validation_state_enum.VALIDATION_STATE_SYNCED)
+		received_peer_validation_state_update(
+			p_network_id, network_constants_const.validation_state_enum.VALIDATION_STATE_SYNCED
+		)
 
 		active_peers.push_back(p_network_id)
 
@@ -525,13 +564,21 @@ func decode_buffer(p_id: int, p_buffer: PackedByteArray) -> void:
 		var start_position: int = network_reader.get_position()
 
 		if network_replication_manager.is_command_valid(command):
-			network_reader = network_replication_manager.decode_replication_buffer(p_id, network_reader, command)
+			network_reader = network_replication_manager.decode_replication_buffer(
+				p_id, network_reader, command
+			)
 		elif network_state_manager.is_command_valid(command):
-			network_reader = network_state_manager.decode_state_buffer(p_id, network_reader, command)
+			network_reader = network_state_manager.decode_state_buffer(
+				p_id, network_reader, command
+			)
 		elif network_voice_manager.is_command_valid(command):
-			network_reader = network_voice_manager.decode_voice_buffer(p_id, network_reader, command)
+			network_reader = network_voice_manager.decode_voice_buffer(
+				p_id, network_reader, command
+			)
 		elif network_handshake_manager.is_command_valid(command):
-			network_reader = network_handshake_manager.decode_handshake_buffer(p_id, network_reader, command)
+			network_reader = network_handshake_manager.decode_handshake_buffer(
+				p_id, network_reader, command
+			)
 		elif network_rpc_manager.is_command_valid(command):
 			network_reader = network_rpc_manager.decode_remote_buffer(p_id, network_reader, command)
 		else:
@@ -543,7 +590,11 @@ func decode_buffer(p_id: int, p_buffer: PackedByteArray) -> void:
 				var command_string: String = network_constants_const.get_string_for_command(command)
 				var command_size: int = end_position - start_position
 
-				print("Processed {command_string}: {command_size} bytes".format({"command_string": command_string, "command_size": str(command_size)}))
+				print(
+					"Processed {command_string}: {command_size} bytes".format(
+						{"command_string": command_string, "command_size": str(command_size)}
+					)
+				)
 			else:
 				NetworkLogger.printl("Processed NULL")
 
@@ -556,7 +607,11 @@ func decode_buffer(p_id: int, p_buffer: PackedByteArray) -> void:
 
 	if OS.is_stdout_verbose() and network_reader_orig:
 		var size: int = network_reader_orig.get_position()
-		print("--- Finished processing packet {count} from peer {id}, packet size: {size} ---".format({"count": received_packet_buffer_count[p_id], "id": p_id, "size": size}))
+		print(
+			"--- Finished processing packet {count} from peer {id}, packet size: {size} ---".format(
+				{"count": received_packet_buffer_count[p_id], "id": p_id, "size": size}
+			)
+		)
 
 	received_packet_buffer_count[p_id] += 1
 
@@ -578,7 +633,13 @@ func _process(p_delta: float) -> void:
 							continue
 						peer_data[peer]["time_since_last_update_received"] += p_delta
 
-				if is_server() or client_state == network_constants_const.validation_state_enum.VALIDATION_STATE_SYNCED:
+				if (
+					is_server()
+					or (
+						client_state
+						== network_constants_const.validation_state_enum.VALIDATION_STATE_SYNCED
+					)
+				):
 					network_process.emit(get_tree().get_multiplayer().get_unique_id(), p_delta)
 
 				network_flow_manager.process_network_packets(p_delta)
@@ -619,12 +680,16 @@ func get_network_scene_paths() -> Array:
 
 func client_request_server_info(p_client_info: Dictionary) -> void:
 	requesting_server_info.emit()
-	network_handshake_manager.rpc_id(network_constants_const.SERVER_MASTER_PEER_ID, &"requested_server_info", p_client_info)
+	network_handshake_manager.rpc_id(
+		network_constants_const.SERVER_MASTER_PEER_ID, &"requested_server_info", p_client_info
+	)
 
 
 func client_request_server_state(_client_state: Dictionary) -> void:
 	requesting_server_state.emit()
-	network_handshake_manager.rpc_id(network_constants_const.SERVER_MASTER_PEER_ID, &"requested_server_state", {})
+	network_handshake_manager.rpc_id(
+		network_constants_const.SERVER_MASTER_PEER_ID, &"requested_server_state", {}
+	)
 
 
 func server_send_server_info(p_network_id: int, p_server_info: Dictionary) -> void:
@@ -635,12 +700,20 @@ func server_send_server_state(p_network_id: int, p_server_state: Dictionary) -> 
 	network_handshake_manager.rpc_id(p_network_id, &"received_server_state", p_server_state)
 
 
-func server_send_client_info(p_network_id: int, p_client_id: int, p_client_info: Dictionary) -> void:
-	network_handshake_manager.rpc_id(p_network_id, &"received_client_info", p_client_id, p_client_info)
+func server_send_client_info(
+	p_network_id: int, p_client_id: int, p_client_info: Dictionary
+) -> void:
+	network_handshake_manager.rpc_id(
+		p_network_id, &"received_client_info", p_client_id, p_client_info
+	)
 
 
 func register_peer(p_id) -> void:
-	peer_data[p_id] = {"validation_state": network_constants_const.validation_state_enum.VALIDATION_STATE_NONE, "time_since_last_update_received": 0.0, "time_since_last_update_sent": 0.0}
+	peer_data[p_id] = {
+		"validation_state": network_constants_const.validation_state_enum.VALIDATION_STATE_NONE,
+		"time_since_last_update_received": 0.0,
+		"time_since_last_update_sent": 0.0
+	}
 
 	NetworkLogger.printl("peer_registered:{id}".format({"id": str(p_id)}))
 	peer_registered.emit(p_id)
@@ -668,7 +741,9 @@ func setup_project_settings() -> void:
 			ProjectSettings.set_setting("network/config/network_fps", network_fps)
 
 		if ProjectSettings.has_setting("network/config/entity_root_node"):
-			entity_root_node_path = NodePath(ProjectSettings.get_setting("network/config/entity_root_node"))
+			entity_root_node_path = NodePath(
+				ProjectSettings.get_setting("network/config/entity_root_node")
+			)
 		else:
 			ProjectSettings.set_setting("network/config/entity_root_node", entity_root_node_path)
 
@@ -697,8 +772,17 @@ func _ready():
 	if !Engine.is_editor_hint():
 		network_process_frame_timeslice = 1.0 / network_fps
 		for current_signal in multiplayer_signal_table:
-			if get_tree().get_multiplayer().connect(current_signal["signal"], Callable(self, current_signal.method)) != 0:
-				NetworkLogger.error("NetworkManager: {signal} could not be connected!".format({"signal": str(current_signal["signal"])}))
+			if (
+				get_tree().get_multiplayer().connect(
+					current_signal["signal"], Callable(self, current_signal.method)
+				)
+				!= 0
+			):
+				NetworkLogger.error(
+					"NetworkManager: {signal} could not be connected!".format(
+						{"signal": str(current_signal["signal"])}
+					)
+				)
 
 
 func _enter_tree() -> void:

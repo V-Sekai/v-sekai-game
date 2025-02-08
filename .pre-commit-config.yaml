@@ -1,0 +1,18 @@
+repos:
+  - repo: local
+    hooks:
+      # vsk_importer_exporter is ignored due to broken code.
+      # VRM and godot_state_charts are ignored because upstream changes are complicated
+      - id: gdformat
+        name: gdformat
+        entry: gdformat
+        language: python
+        additional_dependencies: [gdtoolkit==4.3.3]
+        types: [gdscript]
+        exclude: |
+          (?x)^(
+            addons/vsk_importer_exporter/.*|
+            addons/godot_state_charts/.* |
+            addons/vrm/.* |
+            addons/Godot-MToon-Shader/.* 
+          )$

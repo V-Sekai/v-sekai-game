@@ -8,7 +8,9 @@ extends "res://addons/vsk_menu/menu_view_controller.gd"  # menu_view_controller.
 @export var restart_notification_nodepath: NodePath = NodePath()
 
 
-static func update_menu_button_text(p_menu_button: MenuButton, p_value: int, p_names: PackedStringArray):
+static func update_menu_button_text(
+	p_menu_button: MenuButton, p_value: int, p_names: PackedStringArray
+):
 	if p_value < p_names.size() and p_value >= 0:
 		p_menu_button.set_text(p_names[p_value])
 	else:

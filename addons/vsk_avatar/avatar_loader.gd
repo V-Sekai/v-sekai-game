@@ -85,24 +85,28 @@ func set_avatar_model_path(p_path: String) -> void:
 
 func load_model(p_bypass_whitelist: bool, p_skip_validation: bool) -> void:
 	if !avatar_pending:
-		if (VSKAvatarManager.avatar_download_started.connect(self._avatar_download_started) != OK):
+		if VSKAvatarManager.avatar_download_started.connect(self._avatar_download_started) != OK:
 			push_error("Could not connect signal 'VSKAvatarManager.avatar_download_started'")
 			return
-		if (VSKAvatarManager.avatar_load_callback.connect(self._avatar_load_callback) != OK):
+		if VSKAvatarManager.avatar_load_callback.connect(self._avatar_load_callback) != OK:
 			push_error("Could not connect signal 'VSKAvatarManager.avatar_load_callback'")
 			return
-		if (VSKAvatarManager.avatar_load_update.connect(self._avatar_load_update) != OK):
+		if VSKAvatarManager.avatar_load_update.connect(self._avatar_load_update) != OK:
 			push_error("Could not connect signal 'VSKAvatarManager.avatar_load_update'")
 			return
 
 		avatar_pending = true
-	VSKAvatarManager.call_deferred("request_avatar", avatar_path, p_bypass_whitelist, p_skip_validation)
+	VSKAvatarManager.call_deferred(
+		"request_avatar", avatar_path, p_bypass_whitelist, p_skip_validation
+	)
 
 
 func load_error_avatar(p_err: int) -> void:
 	avatar_cleared.emit()
 
-	var error_avatar_path: String = VSKAssetManager.get_error_path(VSKAssetManager.user_content_type.USER_CONTENT_AVATAR, p_err)
+	var error_avatar_path: String = VSKAssetManager.get_error_path(
+		VSKAssetManager.user_content_type.USER_CONTENT_AVATAR, p_err
+	)
 
 	set_avatar_model_path(error_avatar_path)
 	load_model(true, true)

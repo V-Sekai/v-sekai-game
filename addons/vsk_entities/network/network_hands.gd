@@ -33,7 +33,10 @@ func _update_hand_pose() -> void:
 
 func on_serialize(p_writer: Object, _p_initial_state: bool) -> Object:  # network_writer_const:
 	if hand_controller_node:
-		hand_pose_id = (hand_controller_node.left_hand_gesture_id & 0x7 | (hand_controller_node.right_hand_gesture_id & 0x7) << 3)
+		hand_pose_id = (
+			hand_controller_node.left_hand_gesture_id & 0x7
+			| (hand_controller_node.right_hand_gesture_id & 0x7) << 3
+		)
 
 	p_writer.put_8(hand_pose_id)
 

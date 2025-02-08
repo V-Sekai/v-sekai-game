@@ -40,7 +40,19 @@ const DEFAULT_FONT_COLOR_SELECTION = EMOTE_PRIMARY_COLOR
 const DEFAULT_FONT_COLOR_HIGHLIGHT = EMOTE_PRIMARY_COLOR
 
 
-static func make_stylebox(p_texture, p_left, p_top, p_right, p_botton, p_scale, p_margin_left = -1, p_margin_top = -1, p_margin_right = -1, p_margin_botton = -1, p_draw_center = true) -> StyleBoxTexture:
+static func make_stylebox(
+	p_texture,
+	p_left,
+	p_top,
+	p_right,
+	p_botton,
+	p_scale,
+	p_margin_left = -1,
+	p_margin_top = -1,
+	p_margin_right = -1,
+	p_margin_botton = -1,
+	p_draw_center = true
+) -> StyleBoxTexture:
 	var style = StyleBoxTexture.new()
 	style.set_texture(p_texture)
 	style.content_margin_left = p_left * p_scale
@@ -51,7 +63,9 @@ static func make_stylebox(p_texture, p_left, p_top, p_right, p_botton, p_scale, 
 	return style
 
 
-static func make_empty_stylebox(p_scale, p_margin_left = -1, p_margin_top = -1, p_margin_right = -1, p_margin_bottom = -1) -> StyleBoxEmpty:
+static func make_empty_stylebox(
+	p_scale, p_margin_left = -1, p_margin_top = -1, p_margin_right = -1, p_margin_bottom = -1
+) -> StyleBoxEmpty:
 	var style = StyleBoxEmpty.new()
 	style.content_margin_left = p_margin_left * p_scale
 	style.content_margin_right = p_margin_right * p_scale
@@ -60,7 +74,14 @@ static func make_empty_stylebox(p_scale, p_margin_left = -1, p_margin_top = -1, 
 	return style
 
 
-static func make_flat_stylebox(p_color: Color, p_scale: float, p_margin_left: float = -1.0, p_margin_top: float = -1.0, p_margin_right: float = -1.0, p_margin_bottom: float = -1.0) -> StyleBoxFlat:
+static func make_flat_stylebox(
+	p_color: Color,
+	p_scale: float,
+	p_margin_left: float = -1.0,
+	p_margin_top: float = -1.0,
+	p_margin_right: float = -1.0,
+	p_margin_bottom: float = -1.0
+) -> StyleBoxFlat:
 	var style: StyleBoxFlat = StyleBoxFlat.new()
 	style.set_bg_color(p_color)
 	style.content_margin_left = p_margin_left * p_scale
@@ -70,7 +91,13 @@ static func make_flat_stylebox(p_color: Color, p_scale: float, p_margin_left: fl
 	return style
 
 
-static func make_line_stylebox(p_color: Color, p_scale: float, p_thickness: float = 1.0, p_grow: float = 1.0, p_vertical: bool = false) -> StyleBoxLine:
+static func make_line_stylebox(
+	p_color: Color,
+	p_scale: float,
+	p_thickness: float = 1.0,
+	p_grow: float = 1.0,
+	p_vertical: bool = false
+) -> StyleBoxLine:
 	var style = StyleBoxLine.new()
 	style.set_color(p_color)
 	style.set_grow_begin(p_grow)
@@ -97,12 +124,19 @@ static func create_font(p_data: Font, p_scale: float, p_fallback: Array = []) ->
 
 
 static func generate_color(base_color: Color, multiplier: float) -> Color:
-	var new_color = Color(clamp(base_color.r * multiplier, 0, 1), clamp(base_color.g * multiplier, 0, 1), clamp(base_color.b * multiplier, 0, 1), base_color.a)
+	var new_color = Color(
+		clamp(base_color.r * multiplier, 0, 1),
+		clamp(base_color.g * multiplier, 0, 1),
+		clamp(base_color.b * multiplier, 0, 1),
+		base_color.a
+	)
 	return new_color
 
 
 static func register_font(p_theme: Theme, p_scale: float) -> Font:
-	var default_regular_font_data: Font = load("res://addons/emote_theme/fonts/roboto_mono_regular.ttf")
+	var default_regular_font_data: Font = load(
+		"res://addons/emote_theme/fonts/roboto_mono_regular.ttf"
+	)
 
 	var default_regular_font: Font = create_font(default_regular_font_data, p_scale)
 	p_theme.set_default_font(default_regular_font)
@@ -123,50 +157,130 @@ func generate_emote_theme(p_theme_class, p_scale: float) -> Theme:
 	var icon_empty = load_scaled_image("res://addons/emote_theme/icons/icon_empty.svg", 1.0)
 
 	var icon_add = load_scaled_image("res://addons/emote_theme/icons/icon_add.svg", p_scale)
-	var icon_arrow_left = load_scaled_image("res://addons/emote_theme/icons/icon_arrow_left.svg", p_scale)
-	var icon_arrow_right = load_scaled_image("res://addons/emote_theme/icons/icon_arrow_right.svg", p_scale)
-	var icon_arrow_up = load_scaled_image("res://addons/emote_theme/icons/icon_arrow_up.svg", p_scale)
-	var icon_color_pick = load_scaled_image("res://addons/emote_theme/icons/icon_color_pick.svg", p_scale)
+	var icon_arrow_left = load_scaled_image(
+		"res://addons/emote_theme/icons/icon_arrow_left.svg", p_scale
+	)
+	var icon_arrow_right = load_scaled_image(
+		"res://addons/emote_theme/icons/icon_arrow_right.svg", p_scale
+	)
+	var icon_arrow_up = load_scaled_image(
+		"res://addons/emote_theme/icons/icon_arrow_up.svg", p_scale
+	)
+	var icon_color_pick = load_scaled_image(
+		"res://addons/emote_theme/icons/icon_color_pick.svg", p_scale
+	)
 	var icon_folder = load_scaled_image("res://addons/emote_theme/icons/icon_folder.svg", p_scale)
-	var icon_snap_grid = load_scaled_image("res://addons/emote_theme/icons/icon_snap_grid.svg", p_scale)
-	var icon_zoom_less = load_scaled_image("res://addons/emote_theme/icons/icon_zoom_less.svg", p_scale)
-	var icon_zoom_more = load_scaled_image("res://addons/emote_theme/icons/icon_zoom_more.svg", p_scale)
-	var icon_zoom_reset = load_scaled_image("res://addons/emote_theme/icons/icon_zoom_reset.svg", p_scale)
+	var icon_snap_grid = load_scaled_image(
+		"res://addons/emote_theme/icons/icon_snap_grid.svg", p_scale
+	)
+	var icon_zoom_less = load_scaled_image(
+		"res://addons/emote_theme/icons/icon_zoom_less.svg", p_scale
+	)
+	var icon_zoom_more = load_scaled_image(
+		"res://addons/emote_theme/icons/icon_zoom_more.svg", p_scale
+	)
+	var icon_zoom_reset = load_scaled_image(
+		"res://addons/emote_theme/icons/icon_zoom_reset.svg", p_scale
+	)
 
-	var icon_gui_option_arrow = load_scaled_image("res://addons/emote_theme/icons/icon_gui_option_arrow.svg", p_scale)
-	var icon_gui_toggle_on = load_scaled_image("res://addons/emote_theme/icons/icon_gui_toggle_on.svg", p_scale)
-	var icon_gui_toggle_off = load_scaled_image("res://addons/emote_theme/icons/icon_gui_toggle_off.svg", p_scale)
-	var icon_gui_tab_menu = load_scaled_image("res://addons/emote_theme/icons/icon_gui_tab_menu.svg", p_scale)
-	var icon_gui_close = load_scaled_image("res://addons/emote_theme/icons/icon_gui_close.svg", p_scale)
-	var icon_gui_close_customizable = load_scaled_image("res://addons/emote_theme/icons/icon_gui_close_customizable.svg", p_scale)
-	var icon_gui_checked = load_scaled_image("res://addons/emote_theme/icons/icon_gui_checked.svg", p_scale)
-	var icon_gui_unchecked = load_scaled_image("res://addons/emote_theme/icons/icon_gui_unchecked.svg", p_scale)
-	var icon_gui_radio_checked = load_scaled_image("res://addons/emote_theme/icons/icon_gui_radio_checked.svg", p_scale)
-	var icon_gui_radio_unchecked = load_scaled_image("res://addons/emote_theme/icons/icon_gui_radio_unchecked.svg", p_scale)
-	var icon_gui_scroll_arrow_right = load_scaled_image("res://addons/emote_theme/icons/icon_gui_scroll_arrow_right.svg", p_scale)
-	var icon_gui_scroll_arrow_left = load_scaled_image("res://addons/emote_theme/icons/icon_gui_scroll_arrow_left.svg", p_scale)
+	var icon_gui_option_arrow = load_scaled_image(
+		"res://addons/emote_theme/icons/icon_gui_option_arrow.svg", p_scale
+	)
+	var icon_gui_toggle_on = load_scaled_image(
+		"res://addons/emote_theme/icons/icon_gui_toggle_on.svg", p_scale
+	)
+	var icon_gui_toggle_off = load_scaled_image(
+		"res://addons/emote_theme/icons/icon_gui_toggle_off.svg", p_scale
+	)
+	var icon_gui_tab_menu = load_scaled_image(
+		"res://addons/emote_theme/icons/icon_gui_tab_menu.svg", p_scale
+	)
+	var icon_gui_close = load_scaled_image(
+		"res://addons/emote_theme/icons/icon_gui_close.svg", p_scale
+	)
+	var icon_gui_close_customizable = load_scaled_image(
+		"res://addons/emote_theme/icons/icon_gui_close_customizable.svg", p_scale
+	)
+	var icon_gui_checked = load_scaled_image(
+		"res://addons/emote_theme/icons/icon_gui_checked.svg", p_scale
+	)
+	var icon_gui_unchecked = load_scaled_image(
+		"res://addons/emote_theme/icons/icon_gui_unchecked.svg", p_scale
+	)
+	var icon_gui_radio_checked = load_scaled_image(
+		"res://addons/emote_theme/icons/icon_gui_radio_checked.svg", p_scale
+	)
+	var icon_gui_radio_unchecked = load_scaled_image(
+		"res://addons/emote_theme/icons/icon_gui_radio_unchecked.svg", p_scale
+	)
+	var icon_gui_scroll_arrow_right = load_scaled_image(
+		"res://addons/emote_theme/icons/icon_gui_scroll_arrow_right.svg", p_scale
+	)
+	var icon_gui_scroll_arrow_left = load_scaled_image(
+		"res://addons/emote_theme/icons/icon_gui_scroll_arrow_left.svg", p_scale
+	)
 	var icon_gui_tab = load_scaled_image("res://addons/emote_theme/icons/icon_gui_tab.svg", p_scale)
-	var icon_gui_spinbox_updown = load_scaled_image("res://addons/emote_theme/icons/icon_gui_spinbox_updown.svg", p_scale)
-	var icon_gui_vsplit_bg = load_scaled_image("res://addons/emote_theme/icons/icon_gui_vsplit_bg.svg", p_scale)
-	var icon_gui_hsplit_bg = load_scaled_image("res://addons/emote_theme/icons/icon_gui_hsplit_bg.svg", p_scale)
-	var icon_gui_slider_grabber = load_scaled_image("res://addons/emote_theme/icons/icon_gui_slider_grabber.svg", p_scale)
-	var icon_gui_slider_grabber_hl = load_scaled_image("res://addons/emote_theme/icons/icon_gui_slider_grabber_hl.svg", p_scale)
-	var icon_gui_tree_arrow_down = load_scaled_image("res://addons/emote_theme/icons/icon_gui_tree_arrow_down.svg", p_scale)
-	var icon_gui_tree_arrow_right = load_scaled_image("res://addons/emote_theme/icons/icon_gui_tree_arrow_right.svg", p_scale)
-	var icon_gui_vsplitter = load_scaled_image("res://addons/emote_theme/icons/icon_gui_vsplitter.svg", p_scale)
-	var icon_gui_hsplitter = load_scaled_image("res://addons/emote_theme/icons/icon_gui_hsplitter.svg", p_scale)
-	var icon_gui_graph_node_port = load_scaled_image("res://addons/emote_theme/icons/icon_gui_graph_node_port.svg", p_scale)
-	var icon_gui_mini_checkerboard = load_scaled_image("res://addons/emote_theme/icons/icon_gui_mini_checkerboard.svg", p_scale)
-	var icon_gui_resizer = load_scaled_image("res://addons/emote_theme/icons/icon_gui_resizer.svg", p_scale)
-	var icon_gui_visibility_hidden = load_scaled_image("res://addons/emote_theme/icons/icon_gui_visibility_hidden.svg", p_scale)
-	var icon_gui_visibility_visible = load_scaled_image("res://addons/emote_theme/icons/icon_gui_visibility_visible.svg", p_scale)
-	var icon_gui_visibility_xray = load_scaled_image("res://addons/emote_theme/icons/icon_gui_visibility_xray.svg", p_scale)
-	var icon_gui_tree_updown = load_scaled_image("res://addons/emote_theme/icons/icon_gui_tree_updown.svg", p_scale)
-	var icon_gui_tree_option = load_scaled_image("res://addons/emote_theme/icons/icon_gui_tree_option.svg", p_scale)
-	var icon_gui_dropdown = load_scaled_image("res://addons/emote_theme/icons/icon_gui_dropdown.svg", p_scale)
+	var icon_gui_spinbox_updown = load_scaled_image(
+		"res://addons/emote_theme/icons/icon_gui_spinbox_updown.svg", p_scale
+	)
+	var icon_gui_vsplit_bg = load_scaled_image(
+		"res://addons/emote_theme/icons/icon_gui_vsplit_bg.svg", p_scale
+	)
+	var icon_gui_hsplit_bg = load_scaled_image(
+		"res://addons/emote_theme/icons/icon_gui_hsplit_bg.svg", p_scale
+	)
+	var icon_gui_slider_grabber = load_scaled_image(
+		"res://addons/emote_theme/icons/icon_gui_slider_grabber.svg", p_scale
+	)
+	var icon_gui_slider_grabber_hl = load_scaled_image(
+		"res://addons/emote_theme/icons/icon_gui_slider_grabber_hl.svg", p_scale
+	)
+	var icon_gui_tree_arrow_down = load_scaled_image(
+		"res://addons/emote_theme/icons/icon_gui_tree_arrow_down.svg", p_scale
+	)
+	var icon_gui_tree_arrow_right = load_scaled_image(
+		"res://addons/emote_theme/icons/icon_gui_tree_arrow_right.svg", p_scale
+	)
+	var icon_gui_vsplitter = load_scaled_image(
+		"res://addons/emote_theme/icons/icon_gui_vsplitter.svg", p_scale
+	)
+	var icon_gui_hsplitter = load_scaled_image(
+		"res://addons/emote_theme/icons/icon_gui_hsplitter.svg", p_scale
+	)
+	var icon_gui_graph_node_port = load_scaled_image(
+		"res://addons/emote_theme/icons/icon_gui_graph_node_port.svg", p_scale
+	)
+	var icon_gui_mini_checkerboard = load_scaled_image(
+		"res://addons/emote_theme/icons/icon_gui_mini_checkerboard.svg", p_scale
+	)
+	var icon_gui_resizer = load_scaled_image(
+		"res://addons/emote_theme/icons/icon_gui_resizer.svg", p_scale
+	)
+	var icon_gui_visibility_hidden = load_scaled_image(
+		"res://addons/emote_theme/icons/icon_gui_visibility_hidden.svg", p_scale
+	)
+	var icon_gui_visibility_visible = load_scaled_image(
+		"res://addons/emote_theme/icons/icon_gui_visibility_visible.svg", p_scale
+	)
+	var icon_gui_visibility_xray = load_scaled_image(
+		"res://addons/emote_theme/icons/icon_gui_visibility_xray.svg", p_scale
+	)
+	var icon_gui_tree_updown = load_scaled_image(
+		"res://addons/emote_theme/icons/icon_gui_tree_updown.svg", p_scale
+	)
+	var icon_gui_tree_option = load_scaled_image(
+		"res://addons/emote_theme/icons/icon_gui_tree_option.svg", p_scale
+	)
+	var icon_gui_dropdown = load_scaled_image(
+		"res://addons/emote_theme/icons/icon_gui_dropdown.svg", p_scale
+	)
 
-	var icon_gui_v_tick = load_scaled_image("res://addons/emote_theme/icons/icon_gui_v_tick.svg", p_scale)
-	var icon_gui_h_tick = load_scaled_image("res://addons/emote_theme/icons/icon_gui_h_tick.svg", p_scale)
+	var icon_gui_v_tick = load_scaled_image(
+		"res://addons/emote_theme/icons/icon_gui_v_tick.svg", p_scale
+	)
+	var icon_gui_h_tick = load_scaled_image(
+		"res://addons/emote_theme/icons/icon_gui_h_tick.svg", p_scale
+	)
 
 	var border_width = 2 * p_scale
 
@@ -180,8 +294,12 @@ func generate_emote_theme(p_theme_class, p_scale: float) -> Theme:
 
 	var background_color = dark_color_2
 
-	var contrast_color_1 = DEFAULT_BASE_COLOR.lerp(mono_color, max(DEFAULT_CONTRAST, DEFAULT_CONTRAST))
-	var contrast_color_2 = DEFAULT_BASE_COLOR.lerp(mono_color, max(DEFAULT_CONTRAST * 1.5, DEFAULT_CONTRAST * 1.5))
+	var contrast_color_1 = DEFAULT_BASE_COLOR.lerp(
+		mono_color, max(DEFAULT_CONTRAST, DEFAULT_CONTRAST)
+	)
+	var contrast_color_2 = DEFAULT_BASE_COLOR.lerp(
+		mono_color, max(DEFAULT_CONTRAST * 1.5, DEFAULT_CONTRAST * 1.5)
+	)
 
 	var success_color = DEFAULT_ACCENT_COLOR.lerp(Color(0.2, 1, 0.2), 0.6) * 1.2
 	var warning_color = DEFAULT_ACCENT_COLOR.lerp(Color(1, 1, 0), 0.7) * 1.2
@@ -189,7 +307,12 @@ func generate_emote_theme(p_theme_class, p_scale: float) -> Theme:
 
 	# 2d grid color
 	var grid_minor_color = mono_color * Color(1.0, 1.0, 1.0, 0.07)
-	var grid_major_color = Color(DEFAULT_FONT_COLOR_DISABLED.r, DEFAULT_FONT_COLOR_DISABLED.g, DEFAULT_FONT_COLOR_DISABLED.b, 0.15)
+	var grid_major_color = Color(
+		DEFAULT_FONT_COLOR_DISABLED.r,
+		DEFAULT_FONT_COLOR_DISABLED.g,
+		DEFAULT_FONT_COLOR_DISABLED.b,
+		0.15
+	)
 	theme.set_color("grid_major_color", "Editor", grid_major_color)
 	theme.set_color("grid_minor_color", "Editor", grid_minor_color)
 
@@ -201,8 +324,16 @@ func generate_emote_theme(p_theme_class, p_scale: float) -> Theme:
 
 	var shadow_color = Color(0, 0, 0, 0.6)
 
-	var style_default = make_flat_stylebox(DEFAULT_BASE_COLOR, DEFAULT_MARGIN_SIZE, DEFAULT_MARGIN_SIZE, DEFAULT_MARGIN_SIZE, DEFAULT_MARGIN_SIZE)
-	var style_empty_widget = make_empty_stylebox(p_scale, 0, DEFAULT_MARGIN_SIZE, 0, DEFAULT_MARGIN_SIZE)
+	var style_default = make_flat_stylebox(
+		DEFAULT_BASE_COLOR,
+		DEFAULT_MARGIN_SIZE,
+		DEFAULT_MARGIN_SIZE,
+		DEFAULT_MARGIN_SIZE,
+		DEFAULT_MARGIN_SIZE
+	)
+	var style_empty_widget = make_empty_stylebox(
+		p_scale, 0, DEFAULT_MARGIN_SIZE, 0, DEFAULT_MARGIN_SIZE
+	)
 
 	style_default.set_name("StyleDefault")
 	style_default.set_border_width_all(border_width)
@@ -232,7 +363,14 @@ func generate_emote_theme(p_theme_class, p_scale: float) -> Theme:
 
 	var style_widget_pressed = style_widget.duplicate()
 	style_widget_pressed.set_name("StyleWidgetPressed")
-	style_widget_pressed.set_bg_color(Color(DEFAULT_WIDGET_COLOR_INVERSE.r, DEFAULT_WIDGET_COLOR_INVERSE.g, DEFAULT_WIDGET_COLOR_INVERSE.b, 0.5))
+	style_widget_pressed.set_bg_color(
+		Color(
+			DEFAULT_WIDGET_COLOR_INVERSE.r,
+			DEFAULT_WIDGET_COLOR_INVERSE.g,
+			DEFAULT_WIDGET_COLOR_INVERSE.b,
+			0.5
+		)
+	)
 	style_widget_pressed.set_border_color(DEFAULT_WIDGET_BORDER_COLOR)
 
 	var style_widget_hover = style_widget.duplicate()
@@ -292,7 +430,17 @@ func generate_emote_theme(p_theme_class, p_scale: float) -> Theme:
 
 	# Editor background
 
-	theme.set_stylebox("Background", "EditorStyles", make_flat_stylebox(background_color, DEFAULT_MARGIN_SIZE, DEFAULT_MARGIN_SIZE, DEFAULT_MARGIN_SIZE, DEFAULT_MARGIN_SIZE))
+	theme.set_stylebox(
+		"Background",
+		"EditorStyles",
+		make_flat_stylebox(
+			background_color,
+			DEFAULT_MARGIN_SIZE,
+			DEFAULT_MARGIN_SIZE,
+			DEFAULT_MARGIN_SIZE,
+			DEFAULT_MARGIN_SIZE
+		)
+	)
 
 	# Focus
 
@@ -313,7 +461,11 @@ func generate_emote_theme(p_theme_class, p_scale: float) -> Theme:
 
 	# Script Editor
 
-	theme.set_stylebox("ScriptEditorPanel", "EditorStyles", make_empty_stylebox(DEFAULT_MARGIN_SIZE, 0, DEFAULT_MARGIN_SIZE, DEFAULT_MARGIN_SIZE))
+	theme.set_stylebox(
+		"ScriptEditorPanel",
+		"EditorStyles",
+		make_empty_stylebox(DEFAULT_MARGIN_SIZE, 0, DEFAULT_MARGIN_SIZE, DEFAULT_MARGIN_SIZE)
+	)
 	theme.set_stylebox("ScriptEditor", "EditorStyles", make_empty_stylebox(0, 0, 0, 0))
 
 	# Play button group
@@ -332,12 +484,30 @@ func generate_emote_theme(p_theme_class, p_scale: float) -> Theme:
 	theme.set_font_size("font_size", "Button", DEFAULT_FONT_SIZE)
 
 	theme.set_color("font_color", "Button", DEFAULT_WIDGET_FONT_COLOR)
-	theme.set_color("font_hover_color", "Button", Color(DEFAULT_WIDGET_FONT_COLOR_INVERSE.r * 0.75, DEFAULT_WIDGET_FONT_COLOR_INVERSE.b * 0.75, DEFAULT_WIDGET_FONT_COLOR_INVERSE.g * 0.75, 1.0))
+	theme.set_color(
+		"font_hover_color",
+		"Button",
+		Color(
+			DEFAULT_WIDGET_FONT_COLOR_INVERSE.r * 0.75,
+			DEFAULT_WIDGET_FONT_COLOR_INVERSE.b * 0.75,
+			DEFAULT_WIDGET_FONT_COLOR_INVERSE.g * 0.75,
+			1.0
+		)
+	)
 	theme.set_color("font_focus_color", "Button", DEFAULT_WIDGET_FONT_COLOR)
 	theme.set_color("font_pressed_color", "Button", DEFAULT_WIDGET_FONT_COLOR)
 	theme.set_color("font_disabled_color", "Button", DEFAULT_FONT_COLOR_DISABLED)
 
-	theme.set_color("icon_color_hover", "Button", Color(DEFAULT_WIDGET_FONT_COLOR_INVERSE.r * 0.75, DEFAULT_WIDGET_FONT_COLOR_INVERSE.b * 0.75, DEFAULT_WIDGET_FONT_COLOR_INVERSE.g * 0.75, 1.0))
+	theme.set_color(
+		"icon_color_hover",
+		"Button",
+		Color(
+			DEFAULT_WIDGET_FONT_COLOR_INVERSE.r * 0.75,
+			DEFAULT_WIDGET_FONT_COLOR_INVERSE.b * 0.75,
+			DEFAULT_WIDGET_FONT_COLOR_INVERSE.g * 0.75,
+			1.0
+		)
+	)
 
 	theme.set_color("icon_color_pressed", "Button", DEFAULT_WIDGET_FONT_COLOR)
 
@@ -556,8 +726,12 @@ func generate_emote_theme(p_theme_class, p_scale: float) -> Theme:
 	var scroll_stylebox = make_flat_stylebox(DEFAULT_BASE_COLOR, p_scale, 5.0, 5.0, 5.0, 5.0)
 	var scroll_focus_stylebox = make_flat_stylebox(DEFAULT_BASE_COLOR, p_scale, 5.0, 5.0, 5.0, 5.0)
 	var grabber_stylebox = make_flat_stylebox(EMOTE_PRIMARY_COLOR, p_scale, 5.0, 5.0, 5.0, 5.0)
-	var grabber_highlight_stylebox = make_flat_stylebox(EMOTE_PRIMARY_COLOR_BRIGHT, p_scale, 5.0, 5.0, 5.0, 5.0)
-	var grabber_pressed_stylebox = make_flat_stylebox(EMOTE_PRIMARY_COLOR_DARK, p_scale, 5.0, 5.0, 5.0, 5.0)
+	var grabber_highlight_stylebox = make_flat_stylebox(
+		EMOTE_PRIMARY_COLOR_BRIGHT, p_scale, 5.0, 5.0, 5.0, 5.0
+	)
+	var grabber_pressed_stylebox = make_flat_stylebox(
+		EMOTE_PRIMARY_COLOR_DARK, p_scale, 5.0, 5.0, 5.0, 5.0
+	)
 
 	# HScrollBar
 	theme.set_stylebox("scroll", "HScrollBar", scroll_stylebox)
@@ -589,18 +763,38 @@ func generate_emote_theme(p_theme_class, p_scale: float) -> Theme:
 	theme.set_icon("grabber", "HSlider", icon_gui_slider_grabber)
 	theme.set_icon("grabber_highlight", "HSlider", icon_gui_slider_grabber_hl)
 	theme.set_icon("tick", "HSlider", icon_gui_h_tick)
-	theme.set_stylebox("slider", "HSlider", make_flat_stylebox(EMOTE_SECONDARY_COLOR, p_scale, 2.0, 2.0, 2.0, 2.0))
-	theme.set_stylebox("grabber_area", "HSlider", make_flat_stylebox(EMOTE_PRIMARY_COLOR, p_scale, 2.0, 2.0, 2.0, 2.0))
-	theme.set_stylebox("grabber_area_highlight", "HSlider", make_flat_stylebox(EMOTE_PRIMARY_COLOR_BRIGHT, p_scale, 2.0, 2.0, 2.0, 2.0))
+	theme.set_stylebox(
+		"slider", "HSlider", make_flat_stylebox(EMOTE_SECONDARY_COLOR, p_scale, 2.0, 2.0, 2.0, 2.0)
+	)
+	theme.set_stylebox(
+		"grabber_area",
+		"HSlider",
+		make_flat_stylebox(EMOTE_PRIMARY_COLOR, p_scale, 2.0, 2.0, 2.0, 2.0)
+	)
+	theme.set_stylebox(
+		"grabber_area_highlight",
+		"HSlider",
+		make_flat_stylebox(EMOTE_PRIMARY_COLOR_BRIGHT, p_scale, 2.0, 2.0, 2.0, 2.0)
+	)
 
 	# VSlider
 
 	theme.set_icon("grabber", "VSlider", icon_gui_slider_grabber)
 	theme.set_icon("grabber_highlight", "VSlider", icon_gui_slider_grabber_hl)
 	theme.set_icon("tick", "VSlider", icon_gui_v_tick)
-	theme.set_stylebox("slider", "VSlider", make_flat_stylebox(EMOTE_SECONDARY_COLOR, p_scale, 2.0, 2.0, 2.0, 2.0))
-	theme.set_stylebox("grabber_area", "VSlider", make_flat_stylebox(EMOTE_PRIMARY_COLOR, p_scale, 2.0, 2.0, 2.0, 2.0))
-	theme.set_stylebox("grabber_area_highlight", "VSlider", make_flat_stylebox(EMOTE_PRIMARY_COLOR_BRIGHT, p_scale, 2.0, 2.0, 2.0, 2.0))
+	theme.set_stylebox(
+		"slider", "VSlider", make_flat_stylebox(EMOTE_SECONDARY_COLOR, p_scale, 2.0, 2.0, 2.0, 2.0)
+	)
+	theme.set_stylebox(
+		"grabber_area",
+		"VSlider",
+		make_flat_stylebox(EMOTE_PRIMARY_COLOR, p_scale, 2.0, 2.0, 2.0, 2.0)
+	)
+	theme.set_stylebox(
+		"grabber_area_highlight",
+		"VSlider",
+		make_flat_stylebox(EMOTE_PRIMARY_COLOR_BRIGHT, p_scale, 2.0, 2.0, 2.0, 2.0)
+	)
 	# SpinBox
 	theme.set_icon("updown", "SpinBox", icon_gui_spinbox_updown)
 
@@ -805,15 +999,21 @@ func generate_emote_theme(p_theme_class, p_scale: float) -> Theme:
 
 	# Separators
 	theme.set_stylebox("separator", "HSeparator", make_line_stylebox(separator_color, border_width))
-	theme.set_stylebox("separator", "VSeparator", make_line_stylebox(separator_color, border_width, 0, true))
+	theme.set_stylebox(
+		"separator", "VSeparator", make_line_stylebox(separator_color, border_width, 0, true)
+	)
 
 	theme.set_icon("close", "Icons", icon_gui_close)
 	theme.set_font("normal", "Fonts", default_font)
 	theme.set_font("large", "Fonts", large_font)
 
 	# H/VSplitContainer
-	theme.set_stylebox("bg", "VSplitContainer", make_stylebox(icon_gui_vsplit_bg, 1, 1, 1, 1, p_scale))
-	theme.set_stylebox("bg", "HSplitContainer", make_stylebox(icon_gui_hsplit_bg, 1, 1, 1, 1, p_scale))
+	theme.set_stylebox(
+		"bg", "VSplitContainer", make_stylebox(icon_gui_vsplit_bg, 1, 1, 1, 1, p_scale)
+	)
+	theme.set_stylebox(
+		"bg", "HSplitContainer", make_stylebox(icon_gui_hsplit_bg, 1, 1, 1, 1, p_scale)
+	)
 
 	theme.set_icon("grabber", "VSplitContainer", icon_gui_vsplitter)
 	theme.set_icon("grabber", "HSplitContainer", icon_gui_hsplitter)
@@ -864,7 +1064,9 @@ func generate_emote_theme(p_theme_class, p_scale: float) -> Theme:
 	style_tooltip.set_border_width_all(border_width)
 	style_tooltip.set_border_color(mono_color)
 	theme.set_color("font_color", "TooltipLabel", DEFAULT_FONT_COLOR.inverted())
-	theme.set_color("font_color_shadow", "TooltipLabel", mono_color.inverted() * Color(1, 1, 1, 0.1))
+	theme.set_color(
+		"font_color_shadow", "TooltipLabel", mono_color.inverted() * Color(1, 1, 1, 0.1)
+	)
 	theme.set_stylebox("panel", "TooltipPanel", style_tooltip)
 	theme.set_font("font", "TooltipLabel", default_font)
 
@@ -889,15 +1091,23 @@ func generate_emote_theme(p_theme_class, p_scale: float) -> Theme:
 	var graphsb = make_flat_stylebox(Color(mv, mv, mv, 0.7), gn_margin_side, 24, gn_margin_side, 5)
 	graphsb.set_border_width_all(border_width)
 	graphsb.set_border_color(Color(mv2, mv2, mv2, 0.9))
-	var graphsbselected = make_flat_stylebox(Color(mv, mv, mv, 0.9), gn_margin_side, 24, gn_margin_side, 5)
+	var graphsbselected = make_flat_stylebox(
+		Color(mv, mv, mv, 0.9), gn_margin_side, 24, gn_margin_side, 5
+	)
 	graphsbselected.set_border_width_all(border_width)
-	graphsbselected.set_border_color(Color(DEFAULT_ACCENT_COLOR.r, DEFAULT_ACCENT_COLOR.g, DEFAULT_ACCENT_COLOR.b, 0.9))
+	graphsbselected.set_border_color(
+		Color(DEFAULT_ACCENT_COLOR.r, DEFAULT_ACCENT_COLOR.g, DEFAULT_ACCENT_COLOR.b, 0.9)
+	)
 	graphsbselected.set_shadow_size(8 * p_scale)
 	graphsbselected.set_shadow_color(shadow_color)
-	var graphsbcomment = make_flat_stylebox(Color(mv, mv, mv, 0.3), gn_margin_side, 24, gn_margin_side, 5)
+	var graphsbcomment = make_flat_stylebox(
+		Color(mv, mv, mv, 0.3), gn_margin_side, 24, gn_margin_side, 5
+	)
 	graphsbcomment.set_border_width_all(border_width)
 	graphsbcomment.set_border_color(Color(mv2, mv2, mv2, 0.9))
-	var graphsbcommentselected = make_flat_stylebox(Color(mv, mv, mv, 0.4), gn_margin_side, 24, gn_margin_side, 5)
+	var graphsbcommentselected = make_flat_stylebox(
+		Color(mv, mv, mv, 0.4), gn_margin_side, 24, gn_margin_side, 5
+	)
 	graphsbcommentselected.set_border_width_all(border_width)
 	graphsbcommentselected.set_border_color(Color(mv2, mv2, mv2, 0.9))
 	var graphsbbreakpoint = graphsbselected.duplicate()

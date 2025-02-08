@@ -58,10 +58,15 @@ func global_to_viewport(p_origin: Vector3) -> Vector2:
 	print(canvas_width)
 	print(canvas_height)
 	print(canvas_scale)
-	var transform_scale: Vector2 = Vector2(global_transform.basis.get_scale().x, global_transform.basis.get_scale().y)
+	var transform_scale: Vector2 = Vector2(
+		global_transform.basis.get_scale().x, global_transform.basis.get_scale().y
+	)
 	var inverse_transform: Vector2 = Vector2(1.0, 1.0) / transform_scale
 	var point: Vector2 = Vector2(p_origin.x, p_origin.y) * inverse_transform * inverse_transform
-	var ratio: Vector2 = Vector2(0.5, 0.5) + (point / canvas_scale) / ((Vector2(canvas_width, canvas_height) * canvas_scale) * 0.5)
+	var ratio: Vector2 = (
+		Vector2(0.5, 0.5)
+		+ (point / canvas_scale) / ((Vector2(canvas_width, canvas_height) * canvas_scale) * 0.5)
+	)
 	ratio.y = 1.0 - ratio.y  # Flip the Y-axis
 	var canvas_position: Vector2 = ratio * Vector2(canvas_width, canvas_height)
 	print(canvas_position)
@@ -69,8 +74,12 @@ func global_to_viewport(p_origin: Vector3) -> Vector2:
 
 
 func _update() -> void:
-	var canvas_width_offset: float = (canvas_width * 0.5 * 0.5) - (canvas_width * 0.5 * canvas_anchor_x)
-	var canvas_height_offset: float = -(canvas_height * 0.5 * 0.5) + (canvas_height * 0.5 * canvas_anchor_y)
+	var canvas_width_offset: float = (
+		(canvas_width * 0.5 * 0.5) - (canvas_width * 0.5 * canvas_anchor_x)
+	)
+	var canvas_height_offset: float = (
+		-(canvas_height * 0.5 * 0.5) + (canvas_height * 0.5 * canvas_anchor_y)
+	)
 
 	if mesh:
 		mesh.set_size(Vector2(canvas_width, canvas_height) * 0.5)

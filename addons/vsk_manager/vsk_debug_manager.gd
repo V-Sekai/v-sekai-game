@@ -24,11 +24,15 @@ func toggle_noclip() -> void:
 
 
 func set_settings_values():
-	VSKUserPreferencesManager.set_value(USER_PREFERENCES_SECTION_NAME, "developer_mode", developer_mode)
+	VSKUserPreferencesManager.set_value(
+		USER_PREFERENCES_SECTION_NAME, "developer_mode", developer_mode
+	)
 
 
 func get_settings_values() -> void:
-	developer_mode = VSKUserPreferencesManager.get_value(USER_PREFERENCES_SECTION_NAME, "developer_mode", TYPE_BOOL, developer_mode)
+	developer_mode = VSKUserPreferencesManager.get_value(
+		USER_PREFERENCES_SECTION_NAME, "developer_mode", TYPE_BOOL, developer_mode
+	)
 
 
 func set_settings_values_and_save() -> void:

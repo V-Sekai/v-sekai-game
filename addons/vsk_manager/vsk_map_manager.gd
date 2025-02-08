@@ -7,8 +7,12 @@
 extends "res://addons/vsk_manager/vsk_user_content_manager.gd"
 
 const vsk_map_definition_const = preload("res://addons/vsk_map/vsk_map_definition.gd")
-const vsk_map_definition_runtime_const = preload("res://addons/vsk_map/vsk_map_definition_runtime.gd")
-const vsk_map_entity_instance_record_const = preload("res://addons/vsk_map/vsk_map_entity_instance_record.gd")
+const vsk_map_definition_runtime_const = preload(
+	"res://addons/vsk_map/vsk_map_definition_runtime.gd"
+)
+const vsk_map_entity_instance_record_const = preload(
+	"res://addons/vsk_map/vsk_map_entity_instance_record.gd"
+)
 
 const network_constants_const = preload("res://addons/network_manager/network_constants.gd")
 
@@ -52,15 +56,19 @@ const validator_map_const = preload("res://addons/vsk_importer_exporter/vsk_map_
 var validator_map = validator_map_const.new()
 
 
-func _user_content_load_done(p_url: String, p_err: int, p_packed_scene: PackedScene, p_skip_validation: bool) -> void:
+func _user_content_load_done(
+	p_url: String, p_err: int, p_packed_scene: PackedScene, p_skip_validation: bool
+) -> void:
 	if p_url == _pending_map_path:
 		var _mutex_lock: mutex_lock_const = mutex_lock_const.new(_instance_map_mutex)
-		
+
 		var validated_packed_scene: PackedScene = null
 
 		if p_packed_scene:
 			if !p_skip_validation:
-				var result_dictionary: Dictionary = vsk_importer_const.sanitise_packed_scene_for_map(p_packed_scene)
+				var result_dictionary: Dictionary = (
+					vsk_importer_const.sanitise_packed_scene_for_map(p_packed_scene)
+				)
 				var validation_result: Dictionary = result_dictionary["result"]
 				validated_packed_scene = result_dictionary["packed_scene"]
 
@@ -94,7 +102,11 @@ func _set_loading_stage_count(p_url: String, p_stage_count: int):
 
 func _set_loading_stage(p_url: String, p_stage: int):
 	if p_url == _pending_map_path:
-		print("Loading map {stage}/{stage_count}".format({"stage": str(p_stage), "stage_count": str(_loading_stage_count)}))
+		print(
+			"Loading map {stage}/{stage_count}".format(
+				{"stage": str(p_stage), "stage_count": str(_loading_stage_count)}
+			)
+		)
 
 		map_load_update.emit(p_stage, _loading_stage_count)
 
@@ -140,9 +152,9 @@ func _set_instanced_map(p_map: Node) -> void:
 
 func instance_map(_p_strip_all_entities: bool) -> Dictionary:
 	print("Instance map...")
-	
+
 	var _mutex_lock: mutex_lock_const = mutex_lock_const.new(_instance_map_mutex)
-	
+
 	# Destroy old current scene
 	if _instanced_map:
 		_instanced_map.queue_free()
@@ -150,30 +162,35 @@ func instance_map(_p_strip_all_entities: bool) -> Dictionary:
 	if _current_map_packed:
 		# Add new current scene
 		print("Instancing map...")
-		
+
 		# It should be okay to disable safety checks for this
 		# thread since all operations on the instantiated node
 		# occur outside the scene tree.
 		Thread.set_thread_safety_checks_enabled(false)
 		var map_instance: Node = _current_map_packed.instantiate()
 		Thread.set_thread_safety_checks_enabled(true)
-		
-		if map_instance.get_script() != vsk_map_definition_const and map_instance.get_script() != vsk_map_definition_runtime_const:
+
+		if (
+			map_instance.get_script() != vsk_map_definition_const
+			and map_instance.get_script() != vsk_map_definition_runtime_const
+		):
 			push_error("Map does not have a map definition script at root!")
 			map_instance.queue_free()
 			return {}
 
 		_set_instanced_map(map_instance)
 		print("Map instanced!")
-		
+
 		_instanced_map_path = _loaded_map_path
-		
-		return {"node":map_instance, "path":_instanced_map_path}
+
+		return {"node": map_instance, "path": _instanced_map_path}
 
 	return {}
 
 
-static func instance_embedded_map_entities(p_map_instance: Node, p_invalid_scene_paths: PackedStringArray) -> Node:
+static func instance_embedded_map_entities(
+	p_map_instance: Node, p_invalid_scene_paths: PackedStringArray
+) -> Node:
 	if not p_map_instance:
 		push_error("Could not find 'p_map_instance' at vsk_map_manager")
 		return
@@ -185,27 +202,47 @@ static func instance_embedded_map_entities(p_map_instance: Node, p_invalid_scene
 		var map_entity_instance_info = p_map_instance.entity_instance_list[i]
 		if map_entity_instance_info is vsk_map_entity_instance_record_const:
 			if map_entity_instance_info.parent_id != -1:
-				push_warning("Map entity id %s: parented entities are not currently supported" % str(i))
+				push_warning(
+					"Map entity id %s: parented entities are not currently supported" % str(i)
+				)
 				continue
 
-			if p_map_instance.entity_instance_properties_list.size() <= map_entity_instance_info.properties_id:
+			if (
+				p_map_instance.entity_instance_properties_list.size()
+				<= map_entity_instance_info.properties_id
+			):
 				push_warning("Map entity id %s: invalid property info" % str(i))
 				continue
 
-			var _properties: Dictionary = p_map_instance.entity_instance_properties_list[map_entity_instance_info.properties_id]
+			var _properties: Dictionary = p_map_instance.entity_instance_properties_list[
+				map_entity_instance_info.properties_id
+			]
 
-			var scene_path: String = NetworkManager.network_replication_manager.get_scene_path_for_scene_id(map_entity_instance_info.scene_id)
+			var scene_path: String = (
+				NetworkManager
+				. network_replication_manager
+				. get_scene_path_for_scene_id(map_entity_instance_info.scene_id)
+			)
 			if p_invalid_scene_paths.has(scene_path):
-				push_warning("Map entity id %s: invalid entity '%s' embedded in map data" % [str(i), scene_path])
+				push_warning(
+					(
+						"Map entity id %s: invalid entity '%s' embedded in map data"
+						% [str(i), scene_path]
+					)
+				)
 				continue
 
 			if not scene_path.is_empty():
-				var packed_scene: PackedScene = NetworkManager.network_replication_manager.get_packed_scene_for_path(scene_path)
+				var packed_scene: PackedScene = (
+					NetworkManager.network_replication_manager.get_packed_scene_for_path(scene_path)
+				)
 				if not packed_scene:
 					continue
 
 				var map_entity_instance: Node = packed_scene.instantiate()
-				var logic_node: Node = map_entity_instance.get_node_or_null(map_entity_instance.simulation_logic_node_path)
+				var logic_node: Node = map_entity_instance.get_node_or_null(
+					map_entity_instance.simulation_logic_node_path
+				)
 				if not logic_node:
 					continue
 
@@ -223,10 +260,19 @@ func destroy_map() -> void:
 	unload_current_map()
 
 
-func request_map_load(p_map_path: String, p_bypass_whitelist: bool, p_skip_validation: bool) -> void:
+func request_map_load(
+	p_map_path: String, p_bypass_whitelist: bool, p_skip_validation: bool
+) -> void:
 	_pending_map_path = p_map_path
 
-	await (super.request_user_content_load(p_map_path, VSKAssetManager.user_content_type.USER_CONTENT_MAP, p_bypass_whitelist, p_skip_validation, validator_map.valid_external_path_whitelist, validator_map.valid_resource_whitelist))
+	await (super.request_user_content_load(
+		p_map_path,
+		VSKAssetManager.user_content_type.USER_CONTENT_MAP,
+		p_bypass_whitelist,
+		p_skip_validation,
+		validator_map.valid_external_path_whitelist,
+		validator_map.valid_resource_whitelist
+	))
 
 
 func cancel_map_load() -> void:
@@ -237,18 +283,24 @@ func cancel_map_load() -> void:
 func get_pending_map_path() -> String:
 	return _pending_map_path
 
+
 func get_loaded_map_path() -> String:
 	return _loaded_map_path
-	
+
+
 func get_instanced_map_path() -> String:
 	return _instanced_map_path
-	
+
+
 func get_current_map_path() -> String:
 	return _current_map_path
 
+
 func get_request_data_progress() -> Dictionary:
 	if _pending_map_path:
-		var request_data_progress: Dictionary = VSKAssetManager.get_request_data_progress(_pending_map_path)
+		var request_data_progress: Dictionary = VSKAssetManager.get_request_data_progress(
+			_pending_map_path
+		)
 		return request_data_progress
 
 	return {}
@@ -303,8 +355,10 @@ func apply_project_settings() -> void:
 func get_project_settings() -> void:
 	default_map_path = ProjectSettings.get_setting("network/config/default_map_path")
 
+
 func setup_manager(p_gameroot: Node) -> void:
 	_gameroot = p_gameroot
+
 
 func _ready() -> void:
 	apply_project_settings()

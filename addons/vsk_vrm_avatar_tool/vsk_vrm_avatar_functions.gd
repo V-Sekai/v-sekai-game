@@ -9,14 +9,18 @@ extends Node
 const vrm_toplevel_const = preload("res://addons/vrm/vrm_toplevel.gd")
 
 const vsk_avatar_definition_const = preload("res://addons/vsk_avatar/vsk_avatar_definition.gd")
-const vsk_avatar_definition_runtime_const = preload("res://addons/vsk_avatar/vsk_avatar_definition_runtime.gd")
+const vsk_avatar_definition_runtime_const = preload(
+	"res://addons/vsk_avatar/vsk_avatar_definition_runtime.gd"
+)
 
 const node_util_const = preload("res://addons/gd_util/node_util.gd")
 const bone_lib_const = preload("res://addons/vsk_avatar/bone_lib.gd")
 
 const avatar_physics_const = preload("res://addons/vsk_avatar/avatar_physics.gd")
 const avatar_springbone_const = preload("res://addons/vsk_avatar/physics/avatar_springbone.gd")
-const avatar_collidergroup_const = preload("res://addons/vsk_avatar/physics/avatar_collidergroup.gd")
+const avatar_collidergroup_const = preload(
+	"res://addons/vsk_avatar/physics/avatar_collidergroup.gd"
+)
 
 
 static func recursively_reassign_owner(p_instance: Node, p_owner: Node) -> void:
@@ -39,7 +43,9 @@ static func get_fallback_eye_offset(p_skeleton: Skeleton3D, eye_offset: Vector3)
 		var left_eye = p_skeleton.find_bone("LeftEye")
 		var right_eye = p_skeleton.find_bone("RightEye")
 		if left_eye != -1 and right_eye != -1:
-			var interp: Vector3 = p_skeleton.get_bone_global_rest(left_eye).origin.lerp(p_skeleton.get_bone_global_rest(right_eye).origin, 0.5)
+			var interp: Vector3 = p_skeleton.get_bone_global_rest(left_eye).origin.lerp(
+				p_skeleton.get_bone_global_rest(right_eye).origin, 0.5
+			)
 			interp.z += 0.5 * interp.distance_to(eye_offset)
 			return interp
 	return eye_offset
@@ -94,7 +100,9 @@ static func convert_vrm_instance(p_vrm_instance: Node3D) -> Node3D:
 					if has_collider_groups:
 						for collider_group in secondary.collider_groups:
 							var vsk_collider_group: Resource = avatar_collidergroup_const.new()
-							vsk_collider_group.skeleton_or_node = avatar_physics.get_path_to(skeleton)
+							vsk_collider_group.skeleton_or_node = avatar_physics.get_path_to(
+								skeleton
+							)
 							vsk_collider_group.bone = collider_group.bone
 							vsk_collider_group.sphere_colliders = collider_group.sphere_colliders
 							collider_group_map[collider_group] = vsk_collider_group
@@ -128,7 +136,9 @@ static func convert_vrm_instance(p_vrm_instance: Node3D) -> Node3D:
 					avatar_physics.collider_groups = collider_group_map.values()
 					avatar_physics.spring_bones = spring_bone_map.values()
 
-					vsk_avatar_root.avatar_physics_path = vsk_avatar_root.get_path_to(avatar_physics)
+					vsk_avatar_root.avatar_physics_path = vsk_avatar_root.get_path_to(
+						avatar_physics
+					)
 
 				if skeleton:
 					var look_offset: Node3D = skeleton.find_child("LookOffset", true, false)
@@ -140,10 +150,14 @@ static func convert_vrm_instance(p_vrm_instance: Node3D) -> Node3D:
 					mouth_node.set_name("MouthPosition")
 					mouth_node.set_owner(vsk_avatar_root)
 					var head_bone_id: int = skeleton.find_bone("Head")
-					var mouth_offset: Vector3 = look_offset.get_transform().origin * Vector3(0.25, 0.25, 0.25)
+					var mouth_offset: Vector3 = (
+						look_offset.get_transform().origin * Vector3(0.25, 0.25, 0.25)
+					)
 					# quarter of the way between head (throat) and eyes? Maybe should be adjustable.
 					mouth_node.transform *= Transform3D(Basis.IDENTITY, mouth_offset)
-					vsk_avatar_root.set_mouth_transform_path(vsk_avatar_root.get_path_to(mouth_node))
+					vsk_avatar_root.set_mouth_transform_path(
+						vsk_avatar_root.get_path_to(mouth_node)
+					)
 
 				# Use the VRM preview texture if it exists
 				if vrm_meta.thumbnail_image:

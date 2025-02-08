@@ -35,6 +35,7 @@ enum FadeState {
 	FADE_IN,
 }
 
+
 ##
 ## Callback function which emitted when a crossfade is completed.
 ## Emits the fade_complete signal and disables the input blocker on
@@ -81,7 +82,9 @@ func setup() -> void:
 		var vr_fader: ColorRect = VRManager.vr_fader
 		vr_fader.set_color(Color(0.0, 0.0, 0.0, 0.0))
 		vr_fader.set_name("Fader")
-		vr_fader.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE, 0)
+		vr_fader.set_anchors_and_offsets_preset(
+			Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE, 0
+		)
 		vr_fader.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 		if VRManager.vr_fader.is_inside_tree():

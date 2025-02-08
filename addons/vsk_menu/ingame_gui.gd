@@ -77,9 +77,13 @@ func _resize() -> void:
 func _process(_delta):
 	if should_resize:
 		if audio_icon:
-			var texture_size: Vector2 = audio_icon_state.texture.get_size() * SPRITE_SCALE * HALF_SCALE
+			var texture_size: Vector2 = (
+				audio_icon_state.texture.get_size() * SPRITE_SCALE * HALF_SCALE
+			)
 
-			audio_icon.position = Vector2(get_rect().size.x - texture_size.x - MARGIN_SCALE, texture_size.y + MARGIN_SCALE)
+			audio_icon.position = Vector2(
+				get_rect().size.x - texture_size.x - MARGIN_SCALE, texture_size.y + MARGIN_SCALE
+			)
 
 			audio_icon.scale = Vector2(SPRITE_SCALE, SPRITE_SCALE)
 
@@ -87,7 +91,9 @@ func _process(_delta):
 
 	if VSKAudioManager.should_send_audio() and VSKAudioManager.loudness > MINIMAL_THRESHOLD:
 		if abs(targeted_loudness - VSKAudioManager.loudness) > STUTTER_THRESHOLD:
-			var audio_scale: float = 1.0 + loudness_visualisation_curve.sample(VSKAudioManager.loudness)
+			var audio_scale: float = (
+				1.0 + loudness_visualisation_curve.sample(VSKAudioManager.loudness)
+			)
 			audio_icon_loudness.scale = Vector2(audio_scale, audio_scale)
 
 		targeted_loudness = VSKAudioManager.loudness

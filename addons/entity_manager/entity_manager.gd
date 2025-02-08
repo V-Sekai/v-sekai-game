@@ -17,7 +17,9 @@ var _NetworkManager: Node = null
 const network_constants_const = preload("res://addons/network_manager/network_constants.gd")
 const entity_manager_const = preload("res://addons/entity_manager/entity_manager.gd")
 
-const scene_tree_execution_table_const: Object = preload("res://addons/entity_manager/scene_tree_execution_table.gd")
+const scene_tree_execution_table_const: Object = preload(
+	"res://addons/entity_manager/scene_tree_execution_table.gd"
+)
 var scene_tree_execution_table: Object = scene_tree_execution_table_const.new()
 
 
@@ -135,15 +137,21 @@ func _entity_deleting(p_entity: RuntimeEntity) -> void:
 	entity_removed.emit(p_entity)
 
 
-static func _has_immediate_dependency_link(p_dependent_entity: Node, p_dependency_entity: RuntimeEntity) -> bool:
+static func _has_immediate_dependency_link(
+	p_dependent_entity: Node, p_dependency_entity: RuntimeEntity
+) -> bool:
 	if p_dependent_entity.strong_exclusive_dependencies.has(p_dependency_entity):
 		return true
 
 	return false
 
 
-static func check_if_dependency_is_cyclic(p_root_entity: Node, p_current_enity: Node, p_is_root: bool) -> bool:
-	return EntityManagerFunctions.check_if_dependency_is_cyclic(p_root_entity, p_current_enity, p_is_root)
+static func check_if_dependency_is_cyclic(
+	p_root_entity: Node, p_current_enity: Node, p_is_root: bool
+) -> bool:
+	return EntityManagerFunctions.check_if_dependency_is_cyclic(
+		p_root_entity, p_current_enity, p_is_root
+	)
 
 
 static func _get_job_for_entity(p_entity: Node):
@@ -175,7 +183,9 @@ func _create_entity_update_jobs() -> Array:
 	return jobs
 
 
-func get_dependent_entity_for_dependency(p_entity_dependency: RefCounted, p_entity_dependent: RefCounted) -> RuntimeEntity:
+func get_dependent_entity_for_dependency(
+	p_entity_dependency: RefCounted, p_entity_dependent: RefCounted
+) -> RuntimeEntity:
 	if !p_entity_dependency._entity:
 		push_error("Could not get entity for dependency!")
 		return null
@@ -183,7 +193,9 @@ func get_dependent_entity_for_dependency(p_entity_dependency: RefCounted, p_enti
 		push_error("Could not get entity for dependent!")
 		return null
 
-	if entity_manager_const._has_immediate_dependency_link(p_entity_dependent._entity, p_entity_dependency._entity):
+	if entity_manager_const._has_immediate_dependency_link(
+		p_entity_dependent._entity, p_entity_dependency._entity
+	):
 		return p_entity_dependent._entity
 	else:
 		push_error("Does not have dependency!")
@@ -191,19 +203,27 @@ func get_dependent_entity_for_dependency(p_entity_dependency: RefCounted, p_enti
 	return null
 
 
-func check_bidirectional_dependency(p_entity_dependency: RefCounted, p_entity_dependent: RefCounted) -> bool:
+func check_bidirectional_dependency(
+	p_entity_dependency: RefCounted, p_entity_dependent: RefCounted
+) -> bool:
 	if !p_entity_dependency._entity or !p_entity_dependent._entity:
 		return false
 
-	if entity_manager_const._has_immediate_dependency_link(p_entity_dependency._entity, p_entity_dependent._entity):
+	if entity_manager_const._has_immediate_dependency_link(
+		p_entity_dependency._entity, p_entity_dependent._entity
+	):
 		return true
-	if entity_manager_const._has_immediate_dependency_link(p_entity_dependent._entity, p_entity_dependency._entity):
+	if entity_manager_const._has_immediate_dependency_link(
+		p_entity_dependent._entity, p_entity_dependency._entity
+	):
 		return true
 
 	return false
 
 
-func create_strong_dependency(p_dependent: EntityRef, p_dependency: EntityRef) -> StrongExclusiveEntityDependencyHandle:
+func create_strong_dependency(
+	p_dependent: EntityRef, p_dependency: EntityRef
+) -> StrongExclusiveEntityDependencyHandle:
 	if !p_dependent or !p_dependency:
 		return null
 
@@ -234,15 +254,28 @@ func get_entity_last_transform_safe(p_target_entity: EntityRef) -> String:
 		return ""
 
 
-func send_entity_message(p_source_entity: EntityRef, p_target_entity: EntityRef, p_message: String, p_message_args: Dictionary) -> void:
+func send_entity_message(
+	p_source_entity: EntityRef,
+	p_target_entity: EntityRef,
+	p_message: String,
+	p_message_args: Dictionary
+) -> void:
 	if check_bidirectional_dependency(p_source_entity, p_target_entity):
 		p_target_entity._entity._receive_entity_message(p_message, p_message_args)
 	else:
 		push_error("Could not send message to target entity! No dependency link!")
 
 
-static func create_entity_instance(p_packed_scene: PackedScene, p_name: String = "NetEntity", p_master_id: int = network_constants_const.SERVER_MASTER_PEER_ID) -> Node:
-	print_debug("Creating entity instantiate {name} of type {type}".format({"name": p_name, "type": p_packed_scene.resource_path}))
+static func create_entity_instance(
+	p_packed_scene: PackedScene,
+	p_name: String = "NetEntity",
+	p_master_id: int = network_constants_const.SERVER_MASTER_PEER_ID
+) -> Node:
+	print_debug(
+		"Creating entity instantiate {name} of type {type}".format(
+			{"name": p_name, "type": p_packed_scene.resource_path}
+		)
+	)
 	var instantiate: Node = p_packed_scene.instantiate()
 	instantiate.set_name(p_name)
 	instantiate.set_multiplayer_authority(p_master_id)
@@ -250,8 +283,15 @@ static func create_entity_instance(p_packed_scene: PackedScene, p_name: String =
 	return instantiate
 
 
-func instantiate_entity_and_setup(p_packed_scene: PackedScene, p_properties: Dictionary = {}, p_name: String = "NetEntity", p_master_id: int = network_constants_const.SERVER_MASTER_PEER_ID) -> Node:
-	var instantiate: Node = entity_manager_const.create_entity_instance(p_packed_scene, p_name, p_master_id)
+func instantiate_entity_and_setup(
+	p_packed_scene: PackedScene,
+	p_properties: Dictionary = {},
+	p_name: String = "NetEntity",
+	p_master_id: int = network_constants_const.SERVER_MASTER_PEER_ID
+) -> Node:
+	var instantiate: Node = entity_manager_const.create_entity_instance(
+		p_packed_scene, p_name, p_master_id
+	)
 
 	instantiate._entity_cache()
 	for key in p_properties.keys():
@@ -259,7 +299,9 @@ func instantiate_entity_and_setup(p_packed_scene: PackedScene, p_properties: Dic
 
 	if _NetworkManager == null:
 		_NetworkManager = $"/root/NetworkManager"
-	instantiate._threaded_instance_setup(_NetworkManager.network_entity_manager.NULL_NETWORK_INSTANCE_ID, null)
+	instantiate._threaded_instance_setup(
+		_NetworkManager.network_entity_manager.NULL_NETWORK_INSTANCE_ID, null
+	)
 
 	return instantiate
 
@@ -272,8 +314,15 @@ func instantiate_entity_and_setup(p_packed_scene: PackedScene, p_properties: Dic
 ##
 ## Return an EntityRef handle for the instantiate.
 ##
-func spawn_entity(p_packed_scene: PackedScene, p_properties: Dictionary = {}, p_name: String = "NetEntity", p_master_id: int = network_constants_const.SERVER_MASTER_PEER_ID) -> EntityRef:
-	var instantiate: Node = instantiate_entity_and_setup(p_packed_scene, p_properties, p_name, p_master_id)
+func spawn_entity(
+	p_packed_scene: PackedScene,
+	p_properties: Dictionary = {},
+	p_name: String = "NetEntity",
+	p_master_id: int = network_constants_const.SERVER_MASTER_PEER_ID
+) -> EntityRef:
+	var instantiate: Node = instantiate_entity_and_setup(
+		p_packed_scene, p_properties, p_name, p_master_id
+	)
 	if instantiate:
 		self.scene_tree_execution_command(scene_tree_execution_table.ADD_ENTITY, instantiate)
 		return instantiate.get_entity_ref()
@@ -287,7 +336,9 @@ func _reparent_unsafe(p_entity: Node, p_entity_parent_ref: EntityRef, p_attachme
 	p_entity.get_parent().remove_child(p_entity)
 	if p_entity_parent_ref:
 		var attachment_node = p_entity_parent_ref._entity.get_attachment_node(p_attachment_id)
-		var relative_transform = attachment_node.get_global_transform().affine_inverse() * global_transform
+		var relative_transform = (
+			attachment_node.get_global_transform().affine_inverse() * global_transform
+		)
 		p_entity.set_transform(relative_transform)
 		attachment_node.add_child(p_entity, true)
 	else:
@@ -297,7 +348,11 @@ func _reparent_unsafe(p_entity: Node, p_entity_parent_ref: EntityRef, p_attachme
 
 func _process_reparenting() -> void:
 	for entity in reparent_pending:
-		_reparent_unsafe(entity, entity.hierarchy_component_node.pending_entity_parent_ref, entity.hierarchy_component_node.pending_attachment_id)
+		_reparent_unsafe(
+			entity,
+			entity.hierarchy_component_node.pending_entity_parent_ref,
+			entity.hierarchy_component_node.pending_attachment_id
+		)
 
 	reparent_pending.clear()
 
@@ -309,7 +364,9 @@ func _process(p_delta: float) -> void:
 			push_error("Found a null entity in _process")
 		else:
 			entity._entity_representation_process(p_delta)
-	last_representation_process_usec = Time.get_ticks_usec() - all_entities_representation_process_usec_start
+	last_representation_process_usec = (
+		Time.get_ticks_usec() - all_entities_representation_process_usec_start
+	)
 
 	process_complete.emit(p_delta)
 

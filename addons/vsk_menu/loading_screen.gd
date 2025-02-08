@@ -35,11 +35,29 @@ func _map_load_update(p_stage: int, p_stage_count: int) -> void:
 	state = StateTypes.RESOURCE_LOAD
 
 	if p_stage_count > 0:
-		set_progress(VSKAssetManager.DOWNLOAD_PROGRESS_BAR_RATIO + (VSKAssetManager.BACKGROUND_LOAD_PROGRESS_BAR_RATIO * (float(p_stage) / float(p_stage_count))))
-		set_loading_status("{loading_asset}: {stage}/{stage_count}".format({"loading_asset": tr("TR_MENU_LOADING_ASSET"), "stage": str(p_stage), "stage_count": str(p_stage_count)}))
+		set_progress(
+			(
+				VSKAssetManager.DOWNLOAD_PROGRESS_BAR_RATIO
+				+ (
+					VSKAssetManager.BACKGROUND_LOAD_PROGRESS_BAR_RATIO
+					* (float(p_stage) / float(p_stage_count))
+				)
+			)
+		)
+		set_loading_status(
+			"{loading_asset}: {stage}/{stage_count}".format(
+				{
+					"loading_asset": tr("TR_MENU_LOADING_ASSET"),
+					"stage": str(p_stage),
+					"stage_count": str(p_stage_count)
+				}
+			)
+		)
 	else:
 		set_progress(0.0)
-		set_loading_status("{loading_asset}: ERROR".format({"loading_asset": tr("TR_MENU_LOADING_ASSET")}))
+		set_loading_status(
+			"{loading_asset}: ERROR".format({"loading_asset": tr("TR_MENU_LOADING_ASSET")})
+		)
 
 
 func _map_load_callback(_callback: int, _callback_dictionary: Dictionary) -> void:
@@ -108,10 +126,16 @@ func will_appear() -> void:
 		if VSKNetworkManager.requesting_server_state.connect(self._requesting_server_state) != OK:
 			push_error("Could not connect requesting_server_state")
 
-		if VSKNetworkManager.host_creating_server_info.connect(self._host_creating_server_info) != OK:
+		if (
+			VSKNetworkManager.host_creating_server_info.connect(self._host_creating_server_info)
+			!= OK
+		):
 			push_error("Could not connect host_creating_server_info")
 
-		if VSKNetworkManager.host_creating_server_state.connect(self._host_creating_server_state) != OK:
+		if (
+			VSKNetworkManager.host_creating_server_state.connect(self._host_creating_server_state)
+			!= OK
+		):
 			push_error("Could not connect host_creating_server_state")
 
 		if VSKNetworkManager.server_state_ready.connect(self._server_state_ready) != OK:
@@ -131,17 +155,33 @@ func will_disappear() -> void:
 	if VSKNetworkManager.registering_shard.is_connected(self._registering_shard):
 		VSKNetworkManager.registering_shard.disconnect(self._registering_shard)
 
-	if VSKNetworkManager.is_connected("requesting_server_info", Callable(self, "_requesting_server_info")):
-		VSKNetworkManager.disconnect("requesting_server_info", Callable(self, "_requesting_server_info"))
+	if VSKNetworkManager.is_connected(
+		"requesting_server_info", Callable(self, "_requesting_server_info")
+	):
+		VSKNetworkManager.disconnect(
+			"requesting_server_info", Callable(self, "_requesting_server_info")
+		)
 
-	if VSKNetworkManager.is_connected("requesting_server_state", Callable(self, "_requesting_server_state")):
-		VSKNetworkManager.disconnect("requesting_server_state", Callable(self, "_requesting_server_state"))
+	if VSKNetworkManager.is_connected(
+		"requesting_server_state", Callable(self, "_requesting_server_state")
+	):
+		VSKNetworkManager.disconnect(
+			"requesting_server_state", Callable(self, "_requesting_server_state")
+		)
 
-	if VSKNetworkManager.is_connected("host_creating_server_info", Callable(self, "_host_creating_server_info")):
-		VSKNetworkManager.disconnect("host_creating_server_info", Callable(self, "_host_creating_server_info"))
+	if VSKNetworkManager.is_connected(
+		"host_creating_server_info", Callable(self, "_host_creating_server_info")
+	):
+		VSKNetworkManager.disconnect(
+			"host_creating_server_info", Callable(self, "_host_creating_server_info")
+		)
 
-	if VSKNetworkManager.is_connected("host_creating_server_state", Callable(self, "_host_creating_server_state")):
-		VSKNetworkManager.disconnect("host_creating_server_state", Callable(self, "_host_creating_server_state"))
+	if VSKNetworkManager.is_connected(
+		"host_creating_server_state", Callable(self, "_host_creating_server_state")
+	):
+		VSKNetworkManager.disconnect(
+			"host_creating_server_state", Callable(self, "_host_creating_server_state")
+		)
 
 	if VSKNetworkManager.is_connected("server_state_ready", Callable(self, "_server_state_ready")):
 		VSKNetworkManager.disconnect("server_state_ready", Callable(self, "_server_state_ready"))
@@ -172,7 +212,15 @@ func peer_list_changed() -> void:
 
 		var myself = peer_list_tree.create_item(root)
 
-		myself.set_text(0, "{peer}_{current_peer_id} (me)".format({"peer": tr("TR_MENU_PEER"), "current_peer_id": str(NetworkManager.get_current_peer_id())}))
+		myself.set_text(
+			0,
+			"{peer}_{current_peer_id} (me)".format(
+				{
+					"peer": tr("TR_MENU_PEER"),
+					"current_peer_id": str(NetworkManager.get_current_peer_id())
+				}
+			)
+		)
 
 		for peer_id in players:
 			var child = peer_list_tree.create_item(root)
@@ -181,7 +229,9 @@ func peer_list_changed() -> void:
 
 func _on_Disconnect_pressed() -> void:
 	VSKGameFlowManager.cancel_map_load()
-	var skipped: bool = await VSKFadeManager.execute_fade(VSKFadeManager.FadeState.FADE_OUT).fade_complete
+	var skipped: bool = await (
+		VSKFadeManager.execute_fade(VSKFadeManager.FadeState.FADE_OUT).fade_complete
+	)
 	await VSKGameFlowManager.go_to_title(skipped)
 
 
@@ -199,14 +249,28 @@ func _update_data_progress() -> void:
 		downloaded_bytes = data_progress["downloaded_bytes"]
 		body_size = data_progress["body_size"]
 
-	var download_progress_string: String = VSKAssetManager.get_download_progress_string(downloaded_bytes, body_size)
+	var download_progress_string: String = VSKAssetManager.get_download_progress_string(
+		downloaded_bytes, body_size
+	)
 
 	if body_size != 0:
-		set_progress((float(downloaded_bytes) / float(body_size)) * VSKAssetManager.DOWNLOAD_PROGRESS_BAR_RATIO)
+		set_progress(
+			(
+				(float(downloaded_bytes) / float(body_size))
+				* VSKAssetManager.DOWNLOAD_PROGRESS_BAR_RATIO
+			)
+		)
 	else:
 		set_progress(0.0)
 
-	set_loading_status("{downloading_map}: {download_progress_string}".format({"downloading_map": tr("TR_MENU_DOWNLOADING_MAP"), "download_progress_string": download_progress_string}))
+	set_loading_status(
+		"{downloading_map}: {download_progress_string}".format(
+			{
+				"downloading_map": tr("TR_MENU_DOWNLOADING_MAP"),
+				"download_progress_string": download_progress_string
+			}
+		)
+	)
 
 
 func _process(_delta: float) -> void:

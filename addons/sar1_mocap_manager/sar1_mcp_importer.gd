@@ -57,7 +57,9 @@ func _import(source_file, save_path, options, platform_variants, gen_files) -> E
 		mocap_recording.parse_file()
 		mocap_recording.close_file()
 
-		var packed_scene: PackedScene = mocap_functions_const.create_packed_scene_for_mocap_recording(mocap_recording)
+		var packed_scene: PackedScene = (
+			mocap_functions_const.create_packed_scene_for_mocap_recording(mocap_recording)
+		)
 		if packed_scene:
 			var filename: String = save_path + "." + _get_save_extension()
 			ResourceSaver.save(packed_scene, filename)

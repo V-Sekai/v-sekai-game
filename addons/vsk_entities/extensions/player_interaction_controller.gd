@@ -49,7 +49,10 @@ func cast_flat_interaction_ray() -> Dictionary:
 		source_global_transform = _camera_controller_node.camera.global_transform
 
 	var start: Vector3 = source_global_transform.origin
-	var end: Vector3 = source_global_transform.origin + source_global_transform.basis * (Vector3(0.0, 0.0, -interaction_distance))
+	var end: Vector3 = (
+		source_global_transform.origin
+		+ source_global_transform.basis * (Vector3(0.0, 0.0, -interaction_distance))
+	)
 	var param: PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.new()
 	param.from = start
 	param.to = end
@@ -108,6 +111,8 @@ func update(p_entity: Entity, _delta: float) -> void:
 		if new_entity_ref:
 			is_interactable = is_interactable_entity_type(new_entity_ref)
 			if is_interactable:
-				var tmp: StrongExclusiveEntityDependencyHandle = p_entity.create_strong_exclusive_dependency_for(new_entity_ref)
+				var tmp: StrongExclusiveEntityDependencyHandle = (
+					p_entity.create_strong_exclusive_dependency_for(new_entity_ref)
+				)
 				strong_dependent_link = tmp
 				target_entity_ref = new_entity_ref

@@ -17,6 +17,7 @@ var right_hand_controller: XRController3D = null
 @export var left_hand_child_scenes: Array[PackedScene] = []
 @export var right_hand_child_scenes: Array[PackedScene] = []
 
+
 ##
 ## Adds an XRCamera3D node as a child and returns it.
 ## p_packed_scenes is an array of PackedScenes which will be added as children
@@ -29,8 +30,9 @@ func _add_xr_camera(p_packed_scenes: Array[PackedScene]) -> XRCamera3D:
 		new_xr_camera.add_child(packed_scene.instantiate())
 
 	add_child(new_xr_camera)
-	
+
 	return new_xr_camera
+
 
 ##
 ## Adds an XRController3D node as a child and returns it.
@@ -39,7 +41,9 @@ func _add_xr_camera(p_packed_scenes: Array[PackedScene]) -> XRCamera3D:
 ## p_packed_scenes is an array of PackedScenes which will be added as children
 ## to the newly instantiated tracker.
 ##
-func _add_hand_tracker(p_tracker_name: String, p_pose: String, p_packed_scenes: Array[PackedScene]) -> XRController3D:
+func _add_hand_tracker(
+	p_tracker_name: String, p_pose: String, p_packed_scenes: Array[PackedScene]
+) -> XRController3D:
 	var new_hand_controller: XRController3D = XRController3D.new()
 	new_hand_controller.tracker = p_tracker_name
 	new_hand_controller.pose = p_pose
@@ -49,8 +53,9 @@ func _add_hand_tracker(p_tracker_name: String, p_pose: String, p_packed_scenes: 
 		new_hand_controller.add_child(packed_scene.instantiate())
 
 	add_child(new_hand_controller)
-	
+
 	return new_hand_controller
+
 
 ##
 ## Callback to the tracker_added signal in XRServer.
@@ -63,7 +68,10 @@ func _tracker_added(p_tracker_name: String, p_type: int) -> void:
 				left_hand_controller = _add_hand_tracker("left_hand", "aim", left_hand_child_scenes)
 		if p_tracker_name == "right_hand":
 			if not right_hand_controller:
-				right_hand_controller = _add_hand_tracker("right_hand", "aim", right_hand_child_scenes)
+				right_hand_controller = _add_hand_tracker(
+					"right_hand", "aim", right_hand_child_scenes
+				)
+
 
 ##
 ## Callback to the tracker_removed signal in XRServer.
@@ -81,6 +89,7 @@ func _tracker_removed(p_tracker_name: String, p_type: int) -> void:
 				remove_child(right_hand_controller)
 				right_hand_controller = null
 
+
 func _ready() -> void:
 	if is_multiplayer_authority():
 		# Hands
@@ -91,9 +100,9 @@ func _ready() -> void:
 			right_hand_controller = _add_hand_tracker("right_hand", "aim", right_hand_child_scenes)
 
 		# Tracker signals
-		if (XRServer.connect("tracker_added", _tracker_added) != OK):
+		if XRServer.connect("tracker_added", _tracker_added) != OK:
 			push_error("Could not connect signal 'XRServer.tracker_added'")
 			return
-		if (XRServer.connect("tracker_removed", _tracker_removed) != OK):
+		if XRServer.connect("tracker_removed", _tracker_removed) != OK:
 			push_error("Could not connect signal 'XRServer.tracker_removed'")
 			return

@@ -42,7 +42,9 @@ var origin_offset: Vector3 = Vector3()
 signal camera_mode_changed(p_camera_mode)
 
 
-func test_collision_point(p_ds: PhysicsDirectSpaceState3D, p_distance: float, p_start: Vector3, p_end: Vector3) -> float:
+func test_collision_point(
+	p_ds: PhysicsDirectSpaceState3D, p_distance: float, p_start: Vector3, p_end: Vector3
+) -> float:
 	var param: PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.new()
 	param.from = p_start
 	param.to = p_end
@@ -85,7 +87,9 @@ func get_camera_clip_distance(_camera) -> float:
 
 func update() -> void:
 	if InputManager.is_ingame_action_just_pressed("toggle_camera_mode"):
-		camera_mode = CAMERA_THIRD_PERSON if camera_mode == CAMERA_FIRST_PERSON else CAMERA_FIRST_PERSON
+		camera_mode = (
+			CAMERA_THIRD_PERSON if camera_mode == CAMERA_FIRST_PERSON else CAMERA_FIRST_PERSON
+		)
 		camera_mode_changed.emit(camera_mode)
 
 	var corrected_pitch: float = 0.0
@@ -93,7 +97,9 @@ func update() -> void:
 		corrected_pitch = clamp(rotation_pitch, rotation_pitch_min, rotation_pitch_max)
 
 	var pitch_basis: Basis = Basis().rotated(Vector3(-1.0, 0.0, 0.0), corrected_pitch)
-	var yaw_basis: Basis = Basis().rotated(Vector3(0.0, 1.0, 0.0), rotation_yaw + rotation_yaw_snap_offset - PI)
+	var yaw_basis: Basis = Basis().rotated(
+		Vector3(0.0, 1.0, 0.0), rotation_yaw + rotation_yaw_snap_offset - PI
+	)
 
 	transform.origin = Vector3()
 	transform.basis = yaw_basis

@@ -31,7 +31,13 @@ var load_stage: int = LOAD_STAGE_DONE
 
 func _player_info_tag_visibility_updated() -> void:
 	if _player_info_tag:
-		if (VSKAvatarManager.show_nametags or load_stage != LOAD_STAGE_DONE) and (!logic_node.is_entity_master() or (_camera_controller.camera_mode == _camera_controller.CAMERA_THIRD_PERSON)):
+		if (
+			(VSKAvatarManager.show_nametags or load_stage != LOAD_STAGE_DONE)
+			and (
+				!logic_node.is_entity_master()
+				or (_camera_controller.camera_mode == _camera_controller.CAMERA_THIRD_PERSON)
+			)
+		):
 			_player_info_tag.show()
 		else:
 			_player_info_tag.hide()
@@ -58,10 +64,10 @@ func _camera_mode_changed(_camera_mode: int) -> void:
 
 func _master_setup() -> void:
 	# Nametag
-	if (VSKPlayerManager.display_name_changed.connect(self._player_name_changed) != OK):
+	if VSKPlayerManager.display_name_changed.connect(self._player_name_changed) != OK:
 		push_error("Could not connect signal 'VSKPlayerManager.display_name_changed'")
 		return
-	if (_camera_controller.camera_mode_changed.connect(self._camera_mode_changed) != OK):
+	if _camera_controller.camera_mode_changed.connect(self._camera_mode_changed) != OK:
 		push_error("Could not connect signal '_camera_controller.camera_mode_changed'")
 		return
 
@@ -71,12 +77,18 @@ func _master_setup() -> void:
 
 func _puppet_setup() -> void:
 	### Nametag ###
-	if (VSKNetworkManager.player_display_name_updated.connect(self._player_display_name_updated) != OK):
+	if (
+		VSKNetworkManager.player_display_name_updated.connect(self._player_display_name_updated)
+		!= OK
+	):
 		push_error("Could not connect signal 'VSKNetworkManager.player_display_name_updated'")
 		return
 
 	if VSKNetworkManager.player_display_names.has(get_multiplayer_authority()):
-		_player_display_name_updated(get_multiplayer_authority(), VSKNetworkManager.player_display_names[get_multiplayer_authority()])
+		_player_display_name_updated(
+			get_multiplayer_authority(),
+			VSKNetworkManager.player_display_names[get_multiplayer_authority()]
+		)
 	###
 
 
@@ -92,7 +104,12 @@ func setup(p_logic_node: Node) -> void:
 	else:
 		_master_setup()
 
-	if (VSKAvatarManager.nametag_visibility_updated.connect(self._player_info_tag_visibility_updated) != OK):
+	if (
+		VSKAvatarManager.nametag_visibility_updated.connect(
+			self._player_info_tag_visibility_updated
+		)
+		!= OK
+	):
 		push_error("Could not connect signal 'VSKAvatarManager.nametag_visibility_updated'")
 		return
 

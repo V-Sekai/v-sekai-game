@@ -119,18 +119,27 @@ func tracker_added(p_tracker: XRController3D) -> void:
 	super.tracker_added(p_tracker)
 
 	var tracker_hand: int = p_tracker.get_tracker_hand()
-	if tracker_hand == XRPositionalTracker.TRACKER_HAND_LEFT or tracker_hand == XRPositionalTracker.TRACKER_HAND_RIGHT:
+	if (
+		tracker_hand == XRPositionalTracker.TRACKER_HAND_LEFT
+		or tracker_hand == XRPositionalTracker.TRACKER_HAND_RIGHT
+	):
 		var vr_hand_pose_action: Node3D = vr_hand_pose_action_const.new()
 		p_tracker.add_component_action(vr_hand_pose_action)
 		match tracker_hand:
 			XRPositionalTracker.TRACKER_HAND_LEFT:
 				left_hand_pose_action = vr_hand_pose_action
-				if left_hand_pose_action.hand_pose_changed.connect(self.left_hand_pose_updated) != OK:
+				if (
+					left_hand_pose_action.hand_pose_changed.connect(self.left_hand_pose_updated)
+					!= OK
+				):
 					push_error("Failed to connect left_hand_pose_changed signal")
 					return
 			XRPositionalTracker.TRACKER_HAND_RIGHT:
 				right_hand_pose_action = vr_hand_pose_action
-				if right_hand_pose_action.hand_pose_changed.connect(self.right_hand_pose_updated) != OK:
+				if (
+					right_hand_pose_action.hand_pose_changed.connect(self.right_hand_pose_updated)
+					!= OK
+				):
 					push_error("Failed to connect right_hand_pose_changed signal")
 					return
 

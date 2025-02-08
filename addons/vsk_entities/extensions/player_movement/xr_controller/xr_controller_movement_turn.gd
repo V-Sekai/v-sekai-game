@@ -10,9 +10,10 @@ const player_movement_turn_const = preload("../player_movement_turn.gd")
 ##
 ## Input action for movement direction
 ##
-@export var input_action : String = "primary"
+@export var input_action: String = "primary"
 
 var _turn_movement_node: Node
+
 
 func _process(_delta: float) -> void:
 	if !_controller.get_is_active():
@@ -20,9 +21,10 @@ func _process(_delta: float) -> void:
 
 	_turn_movement_node.input -= _controller.get_vector2(input_action).x
 
+
 func _ready():
 	super._ready()
-	
+
 	if not _player_movement_controller:
 		push_error("Could not find '_player_movement_controller' at xr_controller_movement_turn")
 		return

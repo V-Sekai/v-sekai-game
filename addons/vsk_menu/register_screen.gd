@@ -53,7 +53,9 @@ func will_disappear() -> void:
 
 
 func set_status_by_code(p_status_code: int) -> void:
-	var string: String = TranslationServer.translate(status_codes_const.STATUS_STRING_MAP[p_status_code])
+	var string: String = TranslationServer.translate(
+		status_codes_const.STATUS_STRING_MAP[p_status_code]
+	)
 	if status_label:
 		print(string)
 		status_label.set_text(string)
@@ -65,7 +67,9 @@ func set_status_by_server_message(p_message: String) -> void:
 		status_label.set_text(p_message)
 
 
-func check_if_registration_input_valid(p_username: String, p_email, p_password: String, p_password_confirmation: String) -> bool:
+func check_if_registration_input_valid(
+	p_username: String, p_email, p_password: String, p_password_confirmation: String
+) -> bool:
 	if p_username.length() == 0:
 		set_status_by_code(status_codes_const.STATUS_CODE_NO_USERNAME)
 		return false
@@ -89,13 +93,21 @@ func registration_submission_complete(p_result, p_message) -> void:
 	set_status_by_server_message(p_message)
 
 
-func attempt_registration(p_username: String, p_email, p_password: String, p_password_confirmation: String, p_email_notifications) -> void:
+func attempt_registration(
+	p_username: String,
+	p_email,
+	p_password: String,
+	p_password_confirmation: String,
+	p_email_notifications
+) -> void:
 	if check_if_registration_input_valid(p_username, p_email, p_password, p_password_confirmation):
 		pending_registration = true
 		set_status_by_code(status_codes_const.STATUS_CODE_PENDING)
 		update_registration_button()
 
-		await VSKAccountManager.register(p_username, p_email, p_password, p_password_confirmation, p_email_notifications)
+		await VSKAccountManager.register(
+			p_username, p_email, p_password, p_password_confirmation, p_email_notifications
+		)
 
 
 func cancel_registration() -> void:
@@ -106,7 +118,12 @@ func cancel_registration() -> void:
 
 
 func update_registration_button() -> void:
-	if username.length() > 0 and email.length() > 0 and password.length() > 0 and password_confirmation.length() > 0:
+	if (
+		username.length() > 0
+		and email.length() > 0
+		and password.length() > 0
+		and password_confirmation.length() > 0
+	):
 		register_cancel_button.disabled = false
 	else:
 		register_cancel_button.disabled = true
@@ -139,7 +156,9 @@ func _on_PasswordConfirmationInput_text_changed(p_text):
 
 func _on_RegisterCancelButton_pressed():
 	if !pending_registration:
-		await attempt_registration(username, email, password, password_confirmation, email_notifications)
+		await attempt_registration(
+			username, email, password, password_confirmation, email_notifications
+		)
 	else:
 		cancel_registration()
 

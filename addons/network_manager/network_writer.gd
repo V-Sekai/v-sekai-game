@@ -10,7 +10,9 @@ var stream_peer_buffer: StreamPeerBuffer = StreamPeerBuffer.new()
 
 
 static func encode_24_bit_value(p_value: int) -> PackedByteArray:
-	return PackedByteArray([p_value & 0x000000ff, (p_value & 0x0000ff00) >> 8, (p_value & 0x00ff0000) >> 16])
+	return PackedByteArray(
+		[p_value & 0x000000ff, (p_value & 0x0000ff00) >> 8, (p_value & 0x00ff0000) >> 16]
+	)
 
 
 func get_raw_data(p_size: int = 0) -> PackedByteArray:

@@ -2,38 +2,35 @@
 class_name XRToolsHand
 extends Node3D
 
-
 ## XR Tools Hand Script
 ##
 ## This script manages a godot-xr-tools hand. It animates the hand blending
-## grip and trigger animations based on controller input. Additionally the 
+## grip and trigger animations based on controller input. Additionally the
 ## hand script detects world-scale changes in the XRServer and re-scales the
 ## hand appropriately so the hand stays scaled to the physical hand of the
 ## user.
 
-
 ## Signal emitted when the hand scale changes
 signal hand_scale_changed(scale)
 
-
 ## Name of the Grip action in the OpenXR Action Map.
-@export var grip_action : String = "grip"
+@export var grip_action: String = "grip"
 
 ## Name of the Trigger action in the OpenXR Action Map.
-@export var trigger_action : String = "trigger"
+@export var trigger_action: String = "trigger"
 
 ## Override the hand material
-@export var hand_material_override : Material = null : set = set_hand_material_override
+@export var hand_material_override: Material = null:
+	set = set_hand_material_override
 
 ## World scale - used for scaling hands
-var _world_scale : float = 1.0
-
+var _world_scale: float = 1.0
 
 ## Initial hand transform (from controller) - used for scaling hands
-@onready var _transform : Transform3D
+@onready var _transform: Transform3D
 
 ## Hand mesh
-var _hand_mesh : MeshInstance3D
+var _hand_mesh: MeshInstance3D
 
 
 ## Called when the node enters the scene tree for the first time.
@@ -58,7 +55,7 @@ func _process(_delta: float) -> void:
 		emit_signal("hand_scale_changed", _world_scale)
 
 	# Animate the hand mesh with the controller inputs
-	var controller : XRController3D = get_parent()
+	var controller: XRController3D = get_parent()
 	if controller:
 		var grip = controller.get_float(grip_action)
 		var trigger = controller.get_float(trigger_action)
@@ -68,7 +65,7 @@ func _process(_delta: float) -> void:
 
 
 ## Set the hand material override
-func set_hand_material_override(material : Material) -> void:
+func set_hand_material_override(material: Material) -> void:
 	hand_material_override = material
 	if is_inside_tree():
 		_update_hand_material_override()

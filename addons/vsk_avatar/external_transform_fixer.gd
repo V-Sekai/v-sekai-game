@@ -10,7 +10,9 @@ const avatar_callback_const = preload("avatar_callback.gd")
 const bone_lib = preload("bone_lib.gd")
 
 
-static func fix_external_transform(p_root: Node, p_skeleton: Skeleton3D, _p_undo_redo: UndoRedo) -> int:
+static func fix_external_transform(
+	p_root: Node, p_skeleton: Skeleton3D, _p_undo_redo: UndoRedo
+) -> int:
 	print("---Running ExternalTransform3DFixer---")
 
 	var err: int = avatar_callback_const.generic_error_check(p_root, p_skeleton)

@@ -18,7 +18,9 @@ const connection_util_const = preload("res://addons/gd_util/connection_util.gd")
 var config: ConfigFile = ConfigFile.new()
 const SETTINGS_PATH = "user://settings.cfg"
 
-var signal_table: Array = [{"singleton": "VSKGameFlowManager", "signal": "is_quitting", "method": "save_settings"}]
+var signal_table: Array = [
+	{"singleton": "VSKGameFlowManager", "signal": "is_quitting", "method": "save_settings"}
+]
 
 
 ##

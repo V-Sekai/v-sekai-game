@@ -42,7 +42,9 @@ func service_shutdown_game() -> void:
 	pass
 
 
-func service_game_server_hosted(_port: int, _max_users: int, _map: String, _advertise: bool) -> String:
+func service_game_server_hosted(
+	_port: int, _max_users: int, _map: String, _advertise: bool
+) -> String:
 	completed.emit()
 	return ""
 

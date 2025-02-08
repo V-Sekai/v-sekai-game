@@ -50,7 +50,10 @@ func _ready() -> void:
 
 	flat_audio_output_button = get_node(flat_audio_output_nodepath)
 	setup_menu_button(flat_audio_output_button, flat_output_device_index, audio_output_devices)
-	if flat_audio_output_button.get_popup().connect("id_pressed", self._flat_audio_output_changed) != OK:
+	if (
+		flat_audio_output_button.get_popup().connect("id_pressed", self._flat_audio_output_changed)
+		!= OK
+	):
 		push_error("Could not connect 'id_pressed'!")
 
 	flat_audio_input_button = get_node(flat_audio_input_nodepath)
@@ -90,7 +93,10 @@ func _ready() -> void:
 
 	game_sfx_output_volume_spinbox = get_node(game_sfx_output_volume_nodepath)
 	game_sfx_output_volume_spinbox.max_value = MAX_GAME_SFX_OUTPUT_RANGE
-	if game_sfx_output_volume_spinbox.value_changed.connect(self.game_sfx_output_volume_changed) != OK:
+	if (
+		game_sfx_output_volume_spinbox.value_changed.connect(self.game_sfx_output_volume_changed)
+		!= OK
+	):
 		push_error("Could not connect 'value_changed' for game_sfx_output_volume_spinbox!")
 		return
 	game_sfx_output_volume_spinbox.value = round(game_sfx_output_volume * MAX_GAME_SFX_OUTPUT_RANGE)

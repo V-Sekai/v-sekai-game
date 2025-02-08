@@ -23,7 +23,9 @@ var recording_enabled: bool = false
 
 static func start_recording(p_fps: int) -> MocapRecording:
 	var mocap_recording: MocapRecording = null
-	var dict: Dictionary = mocap_functions_const._incremental_mocap_file_path({"mocap_directory": "user://" + mocap_constants_const.MOCAP_DIR})
+	var dict: Dictionary = mocap_functions_const._incremental_mocap_file_path(
+		{"mocap_directory": "user://" + mocap_constants_const.MOCAP_DIR}
+	)
 	if dict["error"] == OK:
 		mocap_recording = MocapRecording.new(dict["path"])
 		if mocap_recording.open_file_write() == OK:
@@ -47,7 +49,9 @@ func set_settings_values():
 
 func get_settings_value(p_key: String, p_type: int, p_default):
 	if get_settings_value_callback.is_valid():
-		return get_settings_value_callback.call(USER_PREFERENCES_SECTION_NAME, p_key, p_type, p_default)
+		return get_settings_value_callback.call(
+			USER_PREFERENCES_SECTION_NAME, p_key, p_type, p_default
+		)
 	else:
 		return p_default
 

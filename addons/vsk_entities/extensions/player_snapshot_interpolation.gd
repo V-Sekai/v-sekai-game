@@ -26,19 +26,23 @@ class PlayerSnapshot:
 			push_error("Could not find 'p_player_snapshot' while encoding PlayerSnapshot")
 			return buf
 
-		if (buf.resize(PACKET_LENGTH) != OK):
+		if buf.resize(PACKET_LENGTH) != OK:
 			push_error("Failed buffer resize while encoding PlayerSnapshot")
 			return buf
 
 		buf.encode_half(0, p_player_snapshot.origin.x)
 		buf.encode_half(2, p_player_snapshot.origin.y)
 		buf.encode_half(4, p_player_snapshot.origin.z)
-		buf.encode_s16(6, quantization_const.quantize_euler_angle_to_s16_angle(p_player_snapshot.y_rotation))
+		buf.encode_s16(
+			6, quantization_const.quantize_euler_angle_to_s16_angle(p_player_snapshot.y_rotation)
+		)
 
 		return buf
 
 	# Decodes and dequantizes a snapshot from a byte array.
-	static func decode_player_snapshot(p_player_snapshot_byte_array: PackedByteArray) -> PlayerSnapshot:
+	static func decode_player_snapshot(
+		p_player_snapshot_byte_array: PackedByteArray
+	) -> PlayerSnapshot:
 		var new_player_snapshot: PlayerSnapshot = PlayerSnapshot.new()
 
 		if p_player_snapshot_byte_array.size() == PACKET_LENGTH:
@@ -59,7 +63,9 @@ class PlayerSnapshot:
 
 # Syncs snapshot to the actual player node.
 func _sync_values() -> void:
-	_player_controller_node.network_transform_update(target_player_snapshot.origin, target_player_snapshot.y_rotation)
+	_player_controller_node.network_transform_update(
+		target_player_snapshot.origin, target_player_snapshot.y_rotation
+	)
 
 
 # This value encodes/decodes and quantizes the player's origin and y rotation
@@ -96,7 +102,10 @@ func _ready() -> void:
 
 	if (
 		multiplayer.has_multiplayer_peer()
-		and multiplayer.multiplayer_peer.get_connection_status() == MultiplayerPeer.CONNECTION_CONNECTED
+		and (
+			multiplayer.multiplayer_peer.get_connection_status()
+			== MultiplayerPeer.CONNECTION_CONNECTED
+		)
 		and !is_multiplayer_authority()
 		and _player_controller_node
 	):

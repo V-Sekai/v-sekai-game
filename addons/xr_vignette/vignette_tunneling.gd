@@ -30,8 +30,12 @@ var iris_depth_mat_inst: ShaderMaterial
 
 func _init():
 	var iris_mesh_const: Mesh = load("res://addons/xr_vignette/iris_extruded.obj") as Mesh
-	var iris_color_mat_const: ShaderMaterial = load("res://addons/xr_vignette/iris_gradient_mat.tres") as ShaderMaterial
-	var iris_depth_mat_const: ShaderMaterial = load("res://addons/xr_vignette/iris_depth_mat.tres") as ShaderMaterial
+	var iris_color_mat_const: ShaderMaterial = (
+		load("res://addons/xr_vignette/iris_gradient_mat.tres") as ShaderMaterial
+	)
+	var iris_depth_mat_const: ShaderMaterial = (
+		load("res://addons/xr_vignette/iris_depth_mat.tres") as ShaderMaterial
+	)
 
 	iris_color_mat_inst = iris_color_mat_const.duplicate() as ShaderMaterial
 	iris_depth_mat_inst = iris_depth_mat_const.duplicate() as ShaderMaterial

@@ -57,13 +57,18 @@ func calculate_pivot(p_delta) -> void:
 			target_origin = Vector3(camera.transform.origin.x, 0.0, camera.transform.origin.z)
 
 			if !first_transform_has_occured:
-				if current_rotation.dot(target_rotation) < 1.0 or current_origin.distance_to(target_origin) > 0.0:
+				if (
+					current_rotation.dot(target_rotation) < 1.0
+					or current_origin.distance_to(target_origin) > 0.0
+				):
 					current_rotation = target_rotation
 					current_origin = target_origin
 					first_transform_has_occured = true
 			else:
 				if is_transforming:
-					current_rotation = current_rotation.slerp(target_rotation, p_delta * SPEED_MULTIPLIER)
+					current_rotation = current_rotation.slerp(
+						target_rotation, p_delta * SPEED_MULTIPLIER
+					)
 					current_origin = current_origin.lerp(target_origin, p_delta * SPEED_MULTIPLIER)
 					var dot: float = current_rotation.dot(target_rotation)
 					var distance: float = current_origin.distance_to(target_origin)
