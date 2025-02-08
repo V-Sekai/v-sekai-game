@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://fw50jktro3bx"]
 
-[ext_resource type="Script" path="res://addons/vsk_editor/vsk_progress_dialog_body.gd" id="1"]
+[ext_resource type="Script" uid="uid://go20b43ni6ba" path="res://addons/vsk_editor/vsk_progress_dialog_body.gd" id="1"]
 
 [node name="ProgressDialogBody" type="MarginContainer"]
 anchors_preset = 15

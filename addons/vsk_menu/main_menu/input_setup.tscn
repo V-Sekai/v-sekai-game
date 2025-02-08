@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://efewungq1gv8" path="res://addons/vsk_menu/labelled_slider.tscn" id="1"]
 [ext_resource type="PackedScene" uid="uid://cogvc7mlmr810" path="res://addons/vsk_menu/vsk_button.tscn" id="2"]
-[ext_resource type="Script" path="res://addons/vsk_menu/input_setup.gd" id="3"]
+[ext_resource type="Script" uid="uid://fgbh5sim7inr" path="res://addons/vsk_menu/input_setup.gd" id="3"]
 
 [node name="InputSetup" type="Control"]
 layout_mode = 3

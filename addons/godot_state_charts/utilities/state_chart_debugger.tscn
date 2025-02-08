@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bcwkugn6v3oy7"]
 
-[ext_resource type="Script" path="res://addons/godot_state_charts/utilities/state_chart_debugger.gd" id="1_i74os"]
+[ext_resource type="Script" uid="uid://bx5d31nuuwl16" path="res://addons/godot_state_charts/utilities/state_chart_debugger.gd" id="1_i74os"]
 
 [node name="StateChartDebugger" type="MarginContainer"]
 anchors_preset = 15

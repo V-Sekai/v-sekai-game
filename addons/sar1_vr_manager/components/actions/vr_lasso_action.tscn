@@ -1,8 +1,8 @@
 [gd_scene load_steps=8 format=3 uid="uid://4r6ao13ste61"]
 
-[ext_resource type="Script" path="res://addons/sar1_vr_manager/components/actions/vr_lasso_action.gd" id="1_lbith"]
+[ext_resource type="Script" uid="uid://c7dwrogkj7ftq" path="res://addons/sar1_vr_manager/components/actions/vr_lasso_action.gd" id="1_lbith"]
 [ext_resource type="Material" uid="uid://dceqxufojv3q8" path="res://addons/sar1_vr_manager/materials/curved_laser.tres" id="3"]
-[ext_resource type="Shader" path="res://addons/sar1_vr_manager/materials/circle.gdshader" id="4"]
+[ext_resource type="Shader" uid="uid://8sqo7x4sh2ja" path="res://addons/sar1_vr_manager/materials/circle.gdshader" id="4"]
 [ext_resource type="Texture2D" uid="uid://cjg0fyr6ipms8" path="res://addons/sar1_vr_manager/components/actions/snap_circle.svg" id="5_wun48"]
 
 [sub_resource type="PlaneMesh" id="1"]

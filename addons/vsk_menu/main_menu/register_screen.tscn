@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://de7nu7nu2k10u"]
 
-[ext_resource type="Script" path="res://addons/vsk_menu/register_screen.gd" id="1"]
+[ext_resource type="Script" uid="uid://f5s6wlvrtwrk" path="res://addons/vsk_menu/register_screen.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://qrrk0xuopfpw" path="res://addons/vsk_menu/password_input.tscn" id="2"]
 
 [node name="RegisterScreen" type="Control"]

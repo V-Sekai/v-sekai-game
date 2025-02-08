@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=5 format=3 uid="uid://bs3hntywrux67"]
 
 [ext_resource type="PackedScene" uid="uid://smepoujc3fj" path="res://vsk_default/test/test_scene/data/static_cube.tscn" id="1"]
 

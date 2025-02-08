@@ -2,8 +2,8 @@
 
 [ext_resource type="PackedScene" uid="uid://cehyoeokgdutf" path="res://addons/vsk_avatar/import/animations/xbot_animations.gltf" id="1"]
 [ext_resource type="AnimationNodeBlendTree" uid="uid://ctxvockyck2j8" path="res://addons/vsk_avatar/animation/default_avatar_tree.tres" id="2"]
-[ext_resource type="Script" path="res://addons/vsk_avatar/avatar_default_driver.gd" id="3"]
-[ext_resource type="Script" path="res://addons/vsk_avatar/vsk_avatar_definition.gd" id="5"]
+[ext_resource type="Script" uid="uid://cehnxi1ykr5ms" path="res://addons/vsk_avatar/avatar_default_driver.gd" id="3"]
+[ext_resource type="Script" uid="uid://s0ylrajsxn2o" path="res://addons/vsk_avatar/vsk_avatar_definition.gd" id="5"]
 
 [sub_resource type="Animation" id="Animation_qsjud"]
 resource_name = "DefaultPose"
@@ -51,17 +51,17 @@ length = 0.001
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_lg05d"]
 _data = {
-"DefaultPose": SubResource("Animation_qsjud"),
-"Fist": SubResource("Animation_wq07x"),
-"Gun": SubResource("Animation_cvg6v"),
-"MiddleFinger": SubResource("Animation_awxox"),
-"Neutral": SubResource("Animation_tjvgy"),
-"OKSign": SubResource("Animation_a81n0"),
-"Open": SubResource("Animation_pjs70"),
-"Point": SubResource("Animation_t3m4b"),
-"RockAndRoll": SubResource("Animation_5x3s4"),
-"ThumbsUp": SubResource("Animation_xxeid"),
-"Victory": SubResource("Animation_cjjii")
+&"DefaultPose": SubResource("Animation_qsjud"),
+&"Fist": SubResource("Animation_wq07x"),
+&"Gun": SubResource("Animation_cvg6v"),
+&"MiddleFinger": SubResource("Animation_awxox"),
+&"Neutral": SubResource("Animation_tjvgy"),
+&"OKSign": SubResource("Animation_a81n0"),
+&"Open": SubResource("Animation_pjs70"),
+&"Point": SubResource("Animation_t3m4b"),
+&"RockAndRoll": SubResource("Animation_5x3s4"),
+&"ThumbsUp": SubResource("Animation_xxeid"),
+&"Victory": SubResource("Animation_cjjii")
 }
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id="2"]

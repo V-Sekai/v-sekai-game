@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://b852i0g1n05bn" path="res://vsk_default/scenes/prefabs/beachball.tscn" id="2"]
 [ext_resource type="PackedScene" uid="uid://cr4xerufsmv43" path="res://vsk_default/art/sky_celebration/main_room.gltf" id="2_u22pi"]
 [ext_resource type="PackedScene" uid="uid://dwpdq1n745bmn" path="res://vsk_default/scenes/prefabs/basketball.tscn" id="4"]
-[ext_resource type="Script" path="res://addons/vsk_map/vsk_map_definition.gd" id="5"]
+[ext_resource type="Script" uid="uid://4uan0ubc4sy0" path="res://addons/vsk_map/vsk_map_definition.gd" id="5"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4eapr"]
 metallic = 1.0

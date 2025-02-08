@@ -1,9 +1,9 @@
 [gd_scene load_steps=9 format=3 uid="uid://dlshluheia2u4"]
 
-[ext_resource type="Script" path="res://addons/sar1_vr_manager/vr_origin.gd" id="1"]
-[ext_resource type="Script" path="res://addons/sar1_vr_manager/camera_mesh_plane.gd" id="2"]
+[ext_resource type="Script" uid="uid://bq1u8whw64lvc" path="res://addons/sar1_vr_manager/vr_origin.gd" id="1"]
+[ext_resource type="Script" uid="uid://ddombyg0hrsbp" path="res://addons/sar1_vr_manager/camera_mesh_plane.gd" id="2"]
 [ext_resource type="CameraAttributesPhysical" uid="uid://c0mt4c1lplajv" path="res://vsk_default/environments/default_env.tres" id="2_27wiq"]
-[ext_resource type="Script" path="res://addons/xr_vignette/vignette_controller.gd" id="7_imwy0"]
+[ext_resource type="Script" uid="uid://d321qwdrbua6t" path="res://addons/xr_vignette/vignette_controller.gd" id="7_imwy0"]
 
 [sub_resource type="PhysicalSkyMaterial" id="PhysicalSkyMaterial_snjxd"]
 

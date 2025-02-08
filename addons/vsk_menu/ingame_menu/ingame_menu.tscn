@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://d4dwhcdhb5unf"]
 
-[ext_resource type="Script" path="res://addons/vsk_menu/ingame_menu.gd" id="1"]
+[ext_resource type="Script" uid="uid://c6rn8hqh2w3vj" path="res://addons/vsk_menu/ingame_menu.gd" id="1"]
 [ext_resource type="FontVariation" uid="uid://b11gux52nvdc1" path="res://addons/vsk_menu/fonts/ingame_menu_font.tres" id="2"]
 
 [node name="IngameMenu" type="Control"]

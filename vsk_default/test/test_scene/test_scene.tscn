@@ -1,10 +1,9 @@
-[gd_scene load_steps=11 format=3 uid="uid://sw5yp8o0wvjj"]
+[gd_scene load_steps=10 format=3 uid="uid://sw5yp8o0wvjj"]
 
-[ext_resource type="PackedScene" path="res://vsk_default/test/test_scene/data/world_geometry.tscn" id="1"]
-[ext_resource type="Script" path="res://addons/network_manager/network_spawn.gd" id="3"]
-[ext_resource type="PackedScene" uid="uid://dxea25i6pditl" path="res://vsk_default/scenes/prefabs/test_ball_animation.tscn" id="5"]
-[ext_resource type="Script" path="res://addons/vsk_importer_exporter/vsk_uro_pipeline.gd" id="5_gsr6m"]
-[ext_resource type="Script" path="res://addons/vsk_map/vsk_map_definition.gd" id="6"]
+[ext_resource type="PackedScene" uid="uid://bs3hntywrux67" path="res://vsk_default/test/test_scene/data/world_geometry.tscn" id="1"]
+[ext_resource type="Script" uid="uid://0efx4qvikmai" path="res://addons/network_manager/network_spawn.gd" id="3"]
+[ext_resource type="Script" uid="uid://drw8k82200dm0" path="res://addons/vsk_importer_exporter/vsk_uro_pipeline.gd" id="5_gsr6m"]
+[ext_resource type="Script" uid="uid://4uan0ubc4sy0" path="res://addons/vsk_map/vsk_map_definition.gd" id="6"]
 
 [sub_resource type="PhysicalSkyMaterial" id="PhysicalSkyMaterial_minwc"]
 
@@ -75,7 +74,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.58593, 2.15742, 6.00067)
 mesh = SubResource("3")
 surface_material_override/0 = SubResource("StandardMaterial3D_0s7q7")
 
-[node name="TestBallAnimation" parent="." instance=ExtResource("5")]
+[node name="TestBallAnimation" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 5)
 
 [node name="PreviewCamera3D" type="Camera3D" parent="."]
