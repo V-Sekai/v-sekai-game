@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://donfbhh5giyfy"]
 
-[ext_resource type="Script" path="res://addons/godot_state_charts/utilities/editor_debugger/editor_debugger.gd" id="1_ia1de"]
+[ext_resource type="Script" uid="uid://fekldwl844wg" path="res://addons/godot_state_charts/utilities/editor_debugger/editor_debugger.gd" id="1_ia1de"]
 
 [node name="State Charts" type="VBoxContainer"]
 anchors_preset = 15

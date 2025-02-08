@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://dq1rpnb1np3sf"]
 
-[ext_resource type="Script" path="res://addons/vsk_menu/menu_canvas_pivot.gd" id="1"]
-[ext_resource type="Script" path="res://addons/canvas_plane/canvas_plane.gd" id="2"]
+[ext_resource type="Script" uid="uid://yv22v5ln4s7q" path="res://addons/vsk_menu/menu_canvas_pivot.gd" id="1"]
+[ext_resource type="Script" uid="uid://q5rhgc8bebfh" path="res://addons/canvas_plane/canvas_plane.gd" id="2"]
 
 [node name="MenuCanvasPivot" type="Node3D"]
 script = ExtResource("1")

@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://dgofpc1yktx74"]
 
-[ext_resource type="Script" path="res://addons/vsk_menu/audio_setup.gd" id="1"]
+[ext_resource type="Script" uid="uid://caj0bhpho8b0y" path="res://addons/vsk_menu/audio_setup.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://cogvc7mlmr810" path="res://addons/vsk_menu/vsk_button.tscn" id="2"]
 
 [node name="AudioSetup" type="Control"]

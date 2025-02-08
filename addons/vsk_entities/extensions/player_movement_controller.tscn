@@ -1,11 +1,11 @@
 [gd_scene load_steps=7 format=3 uid="uid://cfngp8rd4ii47"]
 
-[ext_resource type="Script" path="res://addons/vsk_entities/extensions/player_movement_controller.gd" id="1_24qaq"]
-[ext_resource type="Script" path="res://addons/vsk_entities/extensions/player_movement/player_movement_head_offset.gd" id="2_2sqgw"]
-[ext_resource type="Script" path="res://addons/vsk_entities/extensions/player_movement/player_movement_turn.gd" id="3_lmyyb"]
-[ext_resource type="Script" path="res://addons/vsk_entities/extensions/player_movement/player_movement_direct.gd" id="4_ngprk"]
-[ext_resource type="Script" path="res://addons/vsk_entities/extensions/player_movement/player_movement_pitch.gd" id="5_i6pea"]
-[ext_resource type="Script" path="res://addons/vsk_entities/extensions/player_movement/player_movement_jump.gd" id="6_kax7c"]
+[ext_resource type="Script" uid="uid://c584fqxj5diio" path="res://addons/vsk_entities/extensions/player_movement_controller.gd" id="1_24qaq"]
+[ext_resource type="Script" uid="uid://cec6hf4lt44re" path="res://addons/vsk_entities/extensions/player_movement/player_movement_head_offset.gd" id="2_2sqgw"]
+[ext_resource type="Script" uid="uid://nrei66fpb178" path="res://addons/vsk_entities/extensions/player_movement/player_movement_turn.gd" id="3_lmyyb"]
+[ext_resource type="Script" uid="uid://byt6e1gk8djk1" path="res://addons/vsk_entities/extensions/player_movement/player_movement_direct.gd" id="4_ngprk"]
+[ext_resource type="Script" uid="uid://bdfv16lbbea2n" path="res://addons/vsk_entities/extensions/player_movement/player_movement_pitch.gd" id="5_i6pea"]
+[ext_resource type="Script" uid="uid://c55juj88fyj7x" path="res://addons/vsk_entities/extensions/player_movement/player_movement_jump.gd" id="6_kax7c"]
 
 [node name="PlayerMovementController" type="Node"]
 editor_description = "The PlayerMovementController is responsible for calculate basic kinematic movement which is then fed into the CharacterBody3D. It will run its child nodes which derive from the player_movement_provider class in order to calculate what movement will be required for next physics frame.

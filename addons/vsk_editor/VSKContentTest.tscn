@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://pobtbmj276u7"]
 
-[ext_resource type="Script" path="res://addons/vsk_editor/vsk_user_content_test.gd" id="1"]
+[ext_resource type="Script" uid="uid://bm5veyl7qyv14" path="res://addons/vsk_editor/vsk_user_content_test.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://cl2v14xq56f3o" path="res://addons/vsk_menu/vsk_user_content_grid.tscn" id="2_g0h1e"]
 
 [node name="VSKButtonDialogTest" type="Control"]

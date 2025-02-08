@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://ds2r4hq5v74pk"]
 
 [ext_resource type="PackedScene" uid="uid://dt2r4f1bcuxma" path="res://addons/vsk_avatar/import/error_handlers/avatar_not_found.glb" id="1"]
-[ext_resource type="Script" path="res://addons/vsk_avatar/vsk_avatar_definition.gd" id="2"]
+[ext_resource type="Script" uid="uid://s0ylrajsxn2o" path="res://addons/vsk_avatar/vsk_avatar_definition.gd" id="2"]
 
 [node name="Avatar" type="Node3D"]
 script = ExtResource("2")

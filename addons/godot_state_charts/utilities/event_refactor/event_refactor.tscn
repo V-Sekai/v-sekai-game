@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://cvlabg8e2qbk3"]
 
-[ext_resource type="Script" path="res://addons/godot_state_charts/utilities/event_refactor/event_refactor.gd" id="1_hh1x6"]
+[ext_resource type="Script" uid="uid://uakg72re2qil" path="res://addons/godot_state_charts/utilities/event_refactor/event_refactor.gd" id="1_hh1x6"]
 
 [node name="event_refactor" type="ConfirmationDialog"]
 initial_position = 1

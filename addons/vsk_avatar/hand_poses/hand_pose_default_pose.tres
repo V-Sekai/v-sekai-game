@@ -1,9 +1,9 @@
 [gd_resource type="Resource" load_steps=2 format=3 uid="uid://b2tfx20l2i43i"]
 
-[ext_resource type="Script" path="res://addons/vsk_avatar/hand_pose.gd" id="1"]
+[ext_resource type="Script" uid="uid://d1up2wpm0ikb" path="res://addons/vsk_avatar/hand_pose.gd" id="1"]
 
 [resource]
-script = ExtResource( "1" )
+script = ExtResource("1")
 thumb_proximal = Transform3D(1, 1.3411e-07, -3.57628e-07, -1.3411e-07, 1, 8.94072e-08, 3.57628e-07, -8.94072e-08, 1, 0, 0, 0)
 thumb_intermediate = Transform3D(1, -2.28613e-12, -5.45697e-12, 2.28613e-12, 1, -1.36424e-12, 5.45697e-12, 1.36424e-12, 1, 0, 0, 0)
 thumb_distal = Transform3D(1, 3.32219e-13, -4.26326e-14, -3.32219e-13, 1, -6.82122e-13, 4.26326e-14, 6.82122e-13, 1, 0, 0, 0)

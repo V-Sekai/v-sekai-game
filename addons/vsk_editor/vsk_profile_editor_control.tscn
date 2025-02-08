@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://drtdslcxgyc37"]
 
-[ext_resource type="Script" path="res://addons/vsk_editor/vsk_profile_editor_control.gd" id="1"]
+[ext_resource type="Script" uid="uid://bsiiueil7iuqv" path="res://addons/vsk_editor/vsk_profile_editor_control.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://cl2v14xq56f3o" path="res://addons/vsk_menu/vsk_user_content_grid.tscn" id="2"]
 
 [node name="ProfileEditorControl" type="Control"]

@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://b6whr3bh7v2m5"]
 
-[ext_resource type="Script" path="res://addons/vsk_editor/vsk_upload_dialog_test.gd" id="1"]
+[ext_resource type="Script" uid="uid://d3kuitf4e6lff" path="res://addons/vsk_editor/vsk_upload_dialog_test.gd" id="1"]
 
 [node name="VSKButtonDialogTest" type="Control"]
 layout_mode = 3

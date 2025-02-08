@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://db4etefs2jvrc"]
 
-[ext_resource type="Script" path="res://addons/vsk_menu/login_screen.gd" id="1"]
+[ext_resource type="Script" uid="uid://dm3jcrijbloge" path="res://addons/vsk_menu/login_screen.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://qrrk0xuopfpw" path="res://addons/vsk_menu/password_input.tscn" id="2"]
 
 [node name="LoginScreen" type="Control"]

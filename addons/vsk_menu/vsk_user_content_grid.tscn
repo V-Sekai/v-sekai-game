@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://cl2v14xq56f3o"]
 
-[ext_resource type="Script" path="res://addons/vsk_menu/vsk_user_content_grid.gd" id="1_8qdge"]
-[ext_resource type="Script" path="res://addons/vsk_menu/vsk_responsive_grid_container.gd" id="2_1x1gg"]
+[ext_resource type="Script" uid="uid://81vx2p7lhxrb" path="res://addons/vsk_menu/vsk_user_content_grid.gd" id="1_8qdge"]
+[ext_resource type="Script" uid="uid://cr5vsa1xahidy" path="res://addons/vsk_menu/vsk_responsive_grid_container.gd" id="2_1x1gg"]
 
 [node name="UserContentGrid" type="Control"]
 layout_mode = 3

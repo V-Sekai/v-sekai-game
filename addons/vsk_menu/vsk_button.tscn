@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://cogvc7mlmr810"]
 
-[ext_resource type="Script" path="res://addons/vsk_menu/vsk_menu_audio.gd" id="2"]
+[ext_resource type="Script" uid="uid://b427ep046njyo" path="res://addons/vsk_menu/vsk_menu_audio.gd" id="2"]
 [ext_resource type="AudioStream" uid="uid://cna2b0skj0pkg" path="res://addons/kenney_ui_audio/switch8.wav" id="3"]
 [ext_resource type="AudioStream" uid="uid://b52fwfkbnysgd" path="res://addons/kenney_ui_audio/rollover2.wav" id="4"]
 

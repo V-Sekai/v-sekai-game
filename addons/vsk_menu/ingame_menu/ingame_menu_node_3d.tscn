@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://doby74fiwn7xh"]
 
-[ext_resource type="Script" path="res://addons/canvas_plane/canvas_plane.gd" id="1"]
-[ext_resource type="Script" path="res://addons/vsk_manager/outside_game_root_vr.gd" id="2"]
+[ext_resource type="Script" uid="uid://q5rhgc8bebfh" path="res://addons/canvas_plane/canvas_plane.gd" id="1"]
+[ext_resource type="Script" uid="uid://et5kf2utxjvh" path="res://addons/vsk_manager/outside_game_root_vr.gd" id="2"]
 [ext_resource type="PackedScene" uid="uid://d4dwhcdhb5unf" path="res://addons/vsk_menu/ingame_menu/ingame_menu.tscn" id="3"]
 
 [node name="SpatialIngameMenu" type="Node3D"]

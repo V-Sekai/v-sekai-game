@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://efewungq1gv8"]
 
-[ext_resource type="Script" path="res://addons/vsk_menu/labelled_slider.gd" id="1"]
+[ext_resource type="Script" uid="uid://b3pynk3g60x87" path="res://addons/vsk_menu/labelled_slider.gd" id="1"]
 
 [node name="LabelledSlider" type="HBoxContainer"]
 offset_right = 330.0

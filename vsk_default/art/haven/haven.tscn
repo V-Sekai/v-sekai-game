@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://mutjc1fjx2ns"]
 
-[ext_resource type="Script" path="res://addons/vsk_map/vsk_map_definition.gd" id="1_coprv"]
+[ext_resource type="Script" uid="uid://4uan0ubc4sy0" path="res://addons/vsk_map/vsk_map_definition.gd" id="1_coprv"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_qqa8l"]
 size = Vector3(40, 0.1, 40)

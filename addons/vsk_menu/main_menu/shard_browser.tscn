@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://s44dpwqo6eya"]
 
-[ext_resource type="Script" path="res://addons/vsk_menu/shard_browser.gd" id="1"]
+[ext_resource type="Script" uid="uid://810st3kdqh37" path="res://addons/vsk_menu/shard_browser.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://cogvc7mlmr810" path="res://addons/vsk_menu/vsk_button.tscn" id="2"]
 
 [node name="ShardBrowser" type="Control"]

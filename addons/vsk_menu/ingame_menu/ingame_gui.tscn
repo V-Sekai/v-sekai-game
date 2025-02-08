@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=3 uid="uid://db6rccxe80ibn"]
 
-[ext_resource type="Script" path="res://addons/vsk_menu/ingame_gui.gd" id="1"]
+[ext_resource type="Script" uid="uid://jrn5xesx4kqr" path="res://addons/vsk_menu/ingame_gui.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://cvea7vaqbfmfe" path="res://addons/vsk_menu/textures/mic_muted.svg" id="2"]
 [ext_resource type="Texture2D" uid="uid://chco5kfbc02sf" path="res://addons/vsk_menu/textures/mic_on.svg" id="3"]
 [ext_resource type="Texture2D" uid="uid://dq1xor4m23klh" path="res://addons/vsk_menu/textures/mic_off.svg" id="4"]
