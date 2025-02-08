@@ -19,6 +19,7 @@ filters = ["Armature/Skeleton3D:Index_Distal_R", "Armature/Skeleton3D:Index_Inte
 
 [resource]
 graph_offset = Vector2(-364.926, -35.3379)
+nodes/output/position = Vector2(600, 140)
 nodes/Default/node = SubResource("1")
 nodes/Default/position = Vector2(-200, 100)
 nodes/Fist/node = SubResource("2")
@@ -29,5 +30,4 @@ nodes/Grip/node = SubResource("4")
 nodes/Grip/position = Vector2(240, 40)
 nodes/Trigger/node = SubResource("5")
 nodes/Trigger/position = Vector2(20, 40)
-nodes/output/position = Vector2(600, 140)
-node_connections = [&"Grip", 0, &"Trigger", &"Grip", 1, &"Fist2", &"Trigger", 0, &"Default", &"Trigger", 1, &"Fist", &"output", 0, &"Grip"]
+node_connections = [&"output", 0, &"Grip", &"Grip", 0, &"Trigger", &"Grip", 1, &"Fist2", &"Trigger", 0, &"Default", &"Trigger", 1, &"Fist"]

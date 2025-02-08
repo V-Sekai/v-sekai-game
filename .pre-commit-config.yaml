@@ -6,7 +6,7 @@ repos:
         entry: gdlint
         language: python
         additional_dependencies: [gdtoolkit==4.3.3]       
-        files: ^addons/godot_uro/godot_uro_helper\.gd$
+        files: ^addons/godot_uro/(godot_uro_helper|http_pool)\.gd$
         types: [gdscript]
 
       # vsk_importer_exporter is ignored due to broken code.

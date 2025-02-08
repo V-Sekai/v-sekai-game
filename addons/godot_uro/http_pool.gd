@@ -5,10 +5,7 @@
 
 extends Node
 
-
-class Future:
-	signal completed(http: HTTPClient)
-
+signal http_tick
 
 var next_request: int = 0
 var pending_requests: Dictionary = {}  # int -> Future
@@ -16,10 +13,16 @@ var pending_requests: Dictionary = {}  # int -> Future
 var http_client_pool: Array[HTTPClient]
 var total_http_clients: int = 0
 
-signal http_tick
+
+class Future:
+	signal completed(http: HTTPClient)
 
 
 class HTTPState:
+	signal connection_finished(http_client: HTTPClient)
+	signal request_finished(success: bool)
+	signal download_progressed(bytes: int, total_bytes: int)
+
 	const YIELD_PERIOD_MS = 50
 
 	var out_path: String = ""
@@ -41,11 +44,6 @@ class HTTPState:
 	var bytes: int
 	var total_bytes: int
 
-	signal _connection_finished(http_client: HTTPClient)
-	signal _request_finished(success: bool)
-
-	signal download_progressed(bytes: int, total_bytes: int)
-
 	func _init(p_http_pool: Node, p_http_client: HTTPClient):
 		self.http = p_http_client
 		self.http_pool = p_http_pool
@@ -65,121 +63,127 @@ class HTTPState:
 		http.close()
 		http = HTTPClient.new()
 
-	func http_tick() -> void:
-		if not sent_request:
-			if terminated:
-				if file:
-					file.close()
-				_connection_finished.emit(null)
-				return
-
-			if cancelled:
-				if file:
-					file.close()
-				cancelled = false
-				busy = false
-				http.close()
-				_connection_finished.emit(null)
-				return
-
-			var _poll_error: int = http.poll()
-			status = http.get_status()
-
-			if (
-				status == HTTPClient.STATUS_CONNECTED
-				or status == HTTPClient.STATUS_REQUESTING
-				or status == HTTPClient.STATUS_BODY
-			):
-				_connection_finished.emit(http)
-				return
-			if (
-				status != HTTPClient.STATUS_CONNECTING
-				and status != HTTPClient.STATUS_RESOLVING
-				and status != HTTPClient.STATUS_CONNECTED
-			):
-				busy = false
-				push_error(
-					(
-						"GodotUroRequester: could not connect to host: status = %s"
-						% [str(http.get_status())]
-					)
-				)
-				_connection_finished.emit(null)
-				return
-			return
-
-		status = http.get_status()
+	func handle_connection_tick() -> void:
 		if terminated:
 			if file:
 				file.close()
-			_request_finished.emit(false)
+			connection_finished.emit(null)
 			return
 
-		if status != HTTPClient.STATUS_REQUESTING and status != HTTPClient.STATUS_BODY:
-			_request_finished.emit(false)
+		var poll_error: int = http.poll()
+		status = http.get_status()
+
+		if (
+			status == HTTPClient.STATUS_CONNECTED
+			or status == HTTPClient.STATUS_REQUESTING
+			or status == HTTPClient.STATUS_BODY
+		):
+			connection_finished.emit(http)
 			return
 
-		if cancelled:
+		if (
+			status != HTTPClient.STATUS_CONNECTING
+			and status != HTTPClient.STATUS_RESOLVING
+			and status != HTTPClient.STATUS_CONNECTED
+		):
+			busy = false
+			push_error(
+				(
+					"GodotUroRequester: could not connect to host: status = %s"
+					% [str(http.get_status())]
+				)
+			)
+			connection_finished.emit(null)
+			return
+
+	func handle_request_tick() -> void:
+		var exit_result = null  # Can be true, false, or null (not exiting)
+
+		status = http.get_status()
+
+		if terminated:
+			if file:
+				file.close()
+			exit_result = false
+		elif status != HTTPClient.STATUS_REQUESTING and status != HTTPClient.STATUS_BODY:
+			exit_result = false
+		elif cancelled:
 			if file:
 				file.close()
 			cancelled = false
 			busy = false
 			http.close()
-			_request_finished.emit(false)
+			exit_result = false
+		else:
+			if status == HTTPClient.STATUS_REQUESTING:
+				http.poll()
+				if status == HTTPClient.STATUS_BODY:
+					response_code = http.get_response_code()
+					response_headers = http.get_response_headers_as_dictionary()
+
+					bytes = 0
+					if response_headers.has("Content-Length"):
+						total_bytes = int(response_headers["Content-Length"])
+					else:
+						total_bytes = -1
+					if not out_path.is_empty():
+						file = FileAccess.open(out_path, FileAccess.WRITE)
+						if file.is_null():
+							busy = false
+							status = HTTPClient.STATUS_CONNECTED
+							exit_result = false
+
+			# Only proceed if no exit yet
+			if exit_result == null:
+				var last_yield = Time.get_ticks_msec()
+				var time: int = 0
+				var should_yield := false
+
+				while status == HTTPClient.STATUS_BODY and exit_result == null:
+					var poll_error: int = http.poll()
+
+					var chunk = http.read_response_body_chunk()
+					response_code = http.get_response_code()
+
+					if file:
+						file.store_buffer(chunk)
+					else:
+						response_body.append_array(chunk)
+					bytes += chunk.size()
+					self.download_progressed.emit(bytes, total_bytes)
+
+					time = Time.get_ticks_msec()
+
+					status = http.get_status()
+					if status == HTTPClient.STATUS_CONNECTION_ERROR and !terminated and !cancelled:
+						if file:
+							file.close()
+						busy = false
+						exit_result = false
+					else:
+						if status != HTTPClient.STATUS_BODY:
+							busy = false
+							exit_result = true
+							if file:
+								file.close()
+						else:
+							if time - last_yield > YIELD_PERIOD_MS:
+								should_yield = true
+								break
+
+				if should_yield:
+					return  # Yield without finishing
+
+		# Emit result and exit if needed
+		if exit_result != null:
+			request_finished.emit(exit_result)
 			return
 
-		if status == HTTPClient.STATUS_REQUESTING:
-			http.poll()
-			if status == HTTPClient.STATUS_BODY:
-				response_code = http.get_response_code()
-				response_headers = http.get_response_headers_as_dictionary()
-
-				bytes = 0
-				if response_headers.has("Content-Length"):
-					total_bytes = int(response_headers["Content-Length"])
-				else:
-					total_bytes = -1
-				if not out_path.is_empty():
-					file = FileAccess.open(out_path, FileAccess.WRITE)
-					if file.is_null():
-						busy = false
-						status = HTTPClient.STATUS_CONNECTED  # failed to write to file
-						_request_finished.emit(false)
-						return
-
-		var last_yield = Time.get_ticks_msec()
-		while status == HTTPClient.STATUS_BODY:
-			var _poll_error: int = http.poll()
-
-			var chunk = http.read_response_body_chunk()
-			response_code = http.get_response_code()
-
-			if file:
-				file.store_buffer(chunk)
-			else:
-				response_body.append_array(chunk)
-			bytes += chunk.size()
-			self.download_progressed.emit(bytes, total_bytes)
-
-			var time = Time.get_ticks_msec()
-
-			status = http.get_status()
-			if status == HTTPClient.STATUS_CONNECTION_ERROR and !terminated and !cancelled:
-				if file:
-					file.close()
-				busy = false
-				_request_finished.emit(false)
-				return
-
-			if status != HTTPClient.STATUS_BODY:
-				busy = false
-				_request_finished.emit(true)
-				if file:
-					file.close()
-				return
-
-			if time - last_yield > YIELD_PERIOD_MS:
-				return
+	func http_tick() -> void:
+		if not sent_request:
+			handle_connection_tick()
+		else:
+			handle_request_tick()
 
 	func connect_http(hostname: String, port: int, use_ssl: bool) -> HTTPClient:
 		sent_request = false
@@ -228,25 +232,23 @@ class HTTPState:
 				return null
 
 		http_pool.http_tick.connect(self.http_tick)
-		var ret = await self._connection_finished
+		var ret = await self.connection_finished
 		http_pool.http_tick.disconnect(self.http_tick)
 		return ret
 
 	func wait_for_request():
 		sent_request = true
 		http_pool.http_tick.connect(self.http_tick)
-		var ret = await self._request_finished
+		var ret = await self.request_finished
 		call_deferred("release")
 		return ret
 
 	func release():
 		if not http_pool:
 			return
-		#print("Do release")
 		if http_pool.http_tick.is_connected(self.http_tick):
 			http_pool.http_tick.disconnect(self.http_tick)
 		if self.http_pool != null and self.http != null:
-			#print("Release http")
 			self.http_pool._release_client(self.http)
 			self.http_pool = null
 			self.http = null
@@ -270,6 +272,11 @@ func _init(p_http_client_limit: int = 5):
 		http_client_pool.push_back(HTTPClient.new())
 
 
+func new_http_state() -> HTTPState:
+	var http_client: HTTPClient = await _acquire_client()
+	return HTTPState.new(self, http_client)
+
+
 func _acquire_client() -> HTTPClient:
 	if not http_client_pool.is_empty():
 		return http_client_pool.pop_back()
@@ -289,8 +296,3 @@ func _release_client(http: HTTPClient):
 		f.completed.emit(http)
 	else:
 		http_client_pool.push_back(http)
-
-
-func new_http_state() -> HTTPState:
-	var http_client: HTTPClient = await _acquire_client()
-	return HTTPState.new(self, http_client)
