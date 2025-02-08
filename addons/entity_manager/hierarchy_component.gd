@@ -55,7 +55,9 @@ func _ready():
 		if entity_parent:
 			var current_entity_node: Entity = get_entity_node()
 			pending_entity_parent_ref = entity_parent.get_entity_ref()
-			entity_parent.hierarchy_component_node.cached_entity_children.push_back(current_entity_node)
+			entity_parent.hierarchy_component_node.cached_entity_children.push_back(
+				current_entity_node
+			)
 
 		entity_parent_changed.emit()
 

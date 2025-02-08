@@ -75,9 +75,22 @@ static func get_largest_unit_type(p_data_unit_block: Dictionary) -> int:
 	return unit_types.BYTES
 
 
-static func get_string_for_unit_data_block(p_data_unit_block: Dictionary, p_largest_unit: int) -> String:
+static func get_string_for_unit_data_block(
+	p_data_unit_block: Dictionary, p_largest_unit: int
+) -> String:
 	if p_largest_unit != int(unit_types.BYTES):
-		return "%s.%s" % [str(p_data_unit_block[p_largest_unit]), str(p_data_unit_block[p_largest_unit - 1] / (DATA_UNIT_SIZE_EXPONENTIAL / DATA_UNIT_DECIMAL_MAX_SIZE))]
+		return (
+			"%s.%s"
+			% [
+				str(p_data_unit_block[p_largest_unit]),
+				str(
+					(
+						p_data_unit_block[p_largest_unit - 1]
+						/ (DATA_UNIT_SIZE_EXPONENTIAL / DATA_UNIT_DECIMAL_MAX_SIZE)
+					)
+				)
+			]
+		)
 
 	return str(p_data_unit_block[unit_types.BYTES])
 

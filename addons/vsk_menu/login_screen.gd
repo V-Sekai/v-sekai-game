@@ -25,7 +25,9 @@ const status_codes_const = preload("status_codes.gd")
 
 
 func set_status_by_code(p_status_code: int) -> void:
-	var string: String = TranslationServer.translate(status_codes_const.STATUS_STRING_MAP[p_status_code])
+	var string: String = TranslationServer.translate(
+		status_codes_const.STATUS_STRING_MAP[p_status_code]
+	)
 	if status_label:
 		print(string)
 		status_label.set_text(string)
@@ -48,7 +50,9 @@ func check_if_login_input_valid(p_username_or_email: String, p_password: String)
 	return true
 
 
-func _session_request_complete(p_code: GodotUro.godot_uro_helper_const.RequesterCode, p_message: String) -> void:
+func _session_request_complete(
+	p_code: GodotUro.godot_uro_helper_const.RequesterCode, p_message: String
+) -> void:
 	pending_login = false
 	update_login_button()
 	set_status_by_server_message(p_message)

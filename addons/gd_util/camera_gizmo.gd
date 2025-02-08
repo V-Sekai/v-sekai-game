@@ -12,7 +12,9 @@ var camera: Node = null
 var material: StandardMaterial3D = null
 
 
-static func _find_closest_angle_to_half_pi_arc(p_from: Vector3, p_to: Vector3, p_arc_radius: float, p_arc_xform: Transform3D) -> float:
+static func _find_closest_angle_to_half_pi_arc(
+	p_from: Vector3, p_to: Vector3, p_arc_radius: float, p_arc_xform: Transform3D
+) -> float:
 	var arc_test_points: int = 64
 	var min_d: int = 1e20
 	var min_p: Vector3
@@ -23,7 +25,9 @@ static func _find_closest_angle_to_half_pi_arc(p_from: Vector3, p_to: Vector3, p
 		var p: Vector3 = Vector3(cos(a), 0, -sin(a)) * p_arc_radius
 		var n: Vector3 = Vector3(cos(an), 0, -sin(an)) * p_arc_radius
 
-		var r: PackedVector3Array = Geometry3D.get_closest_points_between_segments(p, n, p_from, p_to)
+		var r: PackedVector3Array = Geometry3D.get_closest_points_between_segments(
+			p, n, p_from, p_to
+		)
 		var ra: Vector3 = r[0]
 		var rb: Vector3 = r[1]
 
@@ -72,7 +76,9 @@ func commit_handle(p_idx: int, p_restore: bool, p_cancel: bool = false) -> void:
 	camera.property_list_changed_notify()
 
 
-func add_triangle(p_lines: PackedVector3Array, m_a: Vector3, m_b: Vector3, m_c: Vector3) -> PackedVector3Array:
+func add_triangle(
+	p_lines: PackedVector3Array, m_a: Vector3, m_b: Vector3, m_c: Vector3
+) -> PackedVector3Array:
 	p_lines.push_back(m_a)
 	p_lines.push_back(m_b)
 	p_lines.push_back(m_b)

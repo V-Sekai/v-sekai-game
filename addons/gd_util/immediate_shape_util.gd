@@ -148,7 +148,9 @@ static func immediate_cube(p_aabb: AABB, p_immediate_geometry: StubImmediateGeom
 	p_immediate_geometry._commit_arraymesh()
 
 
-static func immediate_camera_frustum(p_camera_matrix: RefCounted, p_immediate_geometry: StubImmediateGeometry3D) -> void:
+static func immediate_camera_frustum(
+	p_camera_matrix: RefCounted, p_immediate_geometry: StubImmediateGeometry3D
+) -> void:
 	var end_points: PackedVector3Array = p_camera_matrix.get_endpoints()
 
 	p_immediate_geometry.begin(Mesh.PRIMITIVE_LINES)

@@ -38,7 +38,9 @@ func _ready() -> void:
 		texture_rect_ingame.material = hack
 
 		add_child(texture_rect_ingame, true)
-		texture_rect_ingame.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE, 0)
+		texture_rect_ingame.set_anchors_and_offsets_preset(
+			Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE, 0
+		)
 
 		##
 		texture_rect_menu = TextureRect.new()
@@ -54,4 +56,6 @@ func _ready() -> void:
 			push_error("Could could connect gui_input signal!")
 
 		add_child(texture_rect_menu, true)
-		texture_rect_menu.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE, 0)
+		texture_rect_menu.set_anchors_and_offsets_preset(
+			Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE, 0
+		)

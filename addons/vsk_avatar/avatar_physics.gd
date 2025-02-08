@@ -41,7 +41,9 @@ class CachedSkeletonPolyfill:
 			overrides[i] = Transform3D.IDENTITY
 			override_weights[i] = 0.0
 
-	func set_bone_global_pose_override(bone_idx: int, transform: Transform3D, weight: float, _overide_persistent: bool = false) -> void:
+	func set_bone_global_pose_override(
+		bone_idx: int, transform: Transform3D, weight: float, _overide_persistent: bool = false
+	) -> void:
 		# persistent makes no sense - it seems to reset weight unless it is true
 		# so we ignore the default and always pass true in.
 		skel.set_bone_global_pose_override(bone_idx, transform, weight, true)
@@ -54,7 +56,10 @@ class CachedSkeletonPolyfill:
 		if override_weights[bone_idx] == 1.0:
 			return overrides[bone_idx]
 		var transform: Transform3D = skel.get_bone_pose(bone_idx)
-		transform = (transform * (1.0 - override_weights[bone_idx]) + overrides[bone_idx] * override_weights[bone_idx])
+		transform = (
+			transform * (1.0 - override_weights[bone_idx])
+			+ overrides[bone_idx] * override_weights[bone_idx]
+		)
 		var par_bone: int = skel.get_bone_parent(bone_idx)
 		if par_bone == -1:
 			return transform
@@ -63,7 +68,9 @@ class CachedSkeletonPolyfill:
 	func get_bone_children(bone_idx) -> Array[int]:
 		return self.bone_to_children.get(bone_idx, [])
 
-	func get_bone_global_pose_without_override(bone_idx: int, _force_update: bool = false) -> Transform3D:
+	func get_bone_global_pose_without_override(
+		bone_idx: int, _force_update: bool = false
+	) -> Transform3D:
 		var par_bone: int = bone_idx
 		var transform: Transform3D = skel.get_bone_pose(par_bone)
 		var par: int = skel.get_bone_parent(bone_idx)

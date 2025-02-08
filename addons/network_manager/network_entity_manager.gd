@@ -52,7 +52,9 @@ func _get_network_identity_for_instance_id_unsafe(p_network_instance_id: int) ->
 # Writes the index id for the p_entity's base scene as defined in the list
 # of p_networked_scenes to the p_writer. The index byte length is determined
 # by the number of network scenes. Returns the p_writer
-static func write_entity_scene_id(p_entity: Object, p_networked_scenes: Array, p_writer: Object) -> Object:
+static func write_entity_scene_id(
+	p_entity: Object, p_networked_scenes: Array, p_writer: Object
+) -> Object:
 	var network_identity_node = p_entity.network_identity_node
 	if p_networked_scenes.size() > 0xff:
 		p_writer.put_u16(network_identity_node.network_scene_id)
@@ -151,7 +153,11 @@ func get_next_network_id() -> int:
 func register_network_instance_id(p_network_instance_id: int, p_network_identity: Node) -> void:
 	var _mutex_lock: RefCounted = mutex_lock_const.new(_mutex)
 
-	NetworkLogger.printl("Attempting to register network instance_id {network_instance_id}".format({"network_instance_id": str(p_network_instance_id)}))
+	NetworkLogger.printl(
+		"Attempting to register network instance_id {network_instance_id}".format(
+			{"network_instance_id": str(p_network_instance_id)}
+		)
+	)
 
 	if network_instance_ids.size() > max_networked_entities:
 		NetworkLogger.error("EXCEEDED MAXIMUM ALLOWED INSTANCE IDS!")
@@ -168,10 +174,18 @@ func register_network_instance_id(p_network_instance_id: int, p_network_identity
 func unregister_network_instance_id(p_network_instance_id: int) -> void:
 	var _mutex_lock: RefCounted = mutex_lock_const.new(_mutex)
 
-	NetworkLogger.printl("Attempting to unregister network instance_id {network_instance_id}".format({"network_instance_id": str(p_network_instance_id)}))
+	NetworkLogger.printl(
+		"Attempting to unregister network instance_id {network_instance_id}".format(
+			{"network_instance_id": str(p_network_instance_id)}
+		)
+	)
 
 	if !network_instance_ids.erase(p_network_instance_id):
-		NetworkLogger.error("Could not unregister network instantiate id: {network_instance_id}".format({"network_instance_id": str(p_network_instance_id)}))
+		NetworkLogger.error(
+			"Could not unregister network instantiate id: {network_instance_id}".format(
+				{"network_instance_id": str(p_network_instance_id)}
+			)
+		)
 	network_manager.emit_entity_network_id_unregistered(p_network_instance_id)
 
 
@@ -201,7 +215,12 @@ func _ready() -> void:
 	if !ProjectSettings.has_setting("network/config/networked_scenes"):
 		ProjectSettings.set_setting("network/config/networked_scenes", PackedStringArray())
 
-	var networked_objects_property_info: Dictionary = {"name": "network/config/networked_scenes", "type": TYPE_PACKED_STRING_ARRAY, "hint": PROPERTY_HINT_FILE, "hint_string": ""}
+	var networked_objects_property_info: Dictionary = {
+		"name": "network/config/networked_scenes",
+		"type": TYPE_PACKED_STRING_ARRAY,
+		"hint": PROPERTY_HINT_FILE,
+		"hint_string": ""
+	}
 
 	ProjectSettings.add_property_info(networked_objects_property_info)
 
@@ -212,7 +231,9 @@ func _ready() -> void:
 		else:
 			networked_scenes = Array(network_scenes_config)
 
-		max_networked_entities = ProjectSettings.get_setting("network/config/max_networked_entities")
+		max_networked_entities = ProjectSettings.get_setting(
+			"network/config/max_networked_entities"
+		)
 
 	if !ProjectSettings.has_setting("network/config/max_networked_entities"):
 		ProjectSettings.set_setting("network/config/max_networked_entities", max_networked_entities)

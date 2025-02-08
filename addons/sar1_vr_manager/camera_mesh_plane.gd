@@ -40,7 +40,9 @@ static func get_endpoints_for_camera(p_camera: Camera3D) -> PackedVector2Array:
 	var near_endpoint: Vector3 = near_plane.intersect_3(right_plane, top_plane)
 	var far_endpoint: Vector3 = far_plane.intersect_3(right_plane, top_plane)
 
-	return PackedVector2Array([Vector2(near_endpoint.x, near_endpoint.y), Vector2(far_endpoint.x, far_endpoint.y)])
+	return PackedVector2Array(
+		[Vector2(near_endpoint.x, near_endpoint.y), Vector2(far_endpoint.x, far_endpoint.y)]
+	)
 
 
 func update_plane(p_lerp: float) -> void:
@@ -58,7 +60,14 @@ func update_plane(p_lerp: float) -> void:
 
 			var lerp_position: float = lerpf(z_near, z_far, p_lerp)
 
-			set_transform(Transform3D(Basis.from_euler(Vector3(PI * 0.5, 0.0, 0.0)).scaled(Vector3(lerped_size.x, lerped_size.y, 1.0)), Vector3(0.0, 0.0, -lerp_position)))
+			set_transform(
+				Transform3D(
+					Basis.from_euler(Vector3(PI * 0.5, 0.0, 0.0)).scaled(
+						Vector3(lerped_size.x, lerped_size.y, 1.0)
+					),
+					Vector3(0.0, 0.0, -lerp_position)
+				)
+			)
 
 
 func set_distance(p_distance: float) -> void:

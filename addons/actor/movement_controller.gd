@@ -44,7 +44,9 @@ func get_character_body() -> CharacterBody3D:
 func set_direction_normal(p_normal: Vector3) -> void:
 	if p_normal == Vector3():
 		return
-	set_global_transform(get_global_transform().looking_at(get_global_origin() + p_normal, Vector3(0, 1, 0)))
+	set_global_transform(
+		get_global_transform().looking_at(get_global_origin() + p_normal, Vector3(0, 1, 0))
+	)
 
 
 func get_direction_normal() -> Vector3:
@@ -57,7 +59,9 @@ func move(p_target_velocity: Vector3) -> void:
 			_character_body.velocity = p_target_velocity
 			_character_body.move_and_slide()
 			motion_vector = _character_body.velocity
-		set_global_transform(Transform3D(get_global_transform().basis, _character_body.global_transform.origin))
+		set_global_transform(
+			Transform3D(get_global_transform().basis, _character_body.global_transform.origin)
+		)
 
 
 func set_movement_vector(p_target_velocity: Vector3) -> void:

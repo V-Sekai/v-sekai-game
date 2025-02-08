@@ -44,12 +44,18 @@ func set_connection_failure_message(p_string: String) -> void:
 
 
 func update_from_response(p_response: int) -> void:
-	if p_response == GodotUro.godot_uro_helper_const.RequesterCode.OK and VSKAccountManager.is_signed_in():
+	if (
+		p_response == GodotUro.godot_uro_helper_const.RequesterCode.OK
+		and VSKAccountManager.is_signed_in()
+	):
 		get_node(sign_in_container_nodepath).hide()
 		get_node(sign_out_container_nodepath).show()
 		get_node(reconnect_container_nodepath).hide()
 		get_node(session_info_nodepath).show()
-		get_node(session_info_nodepath).text = str(TranslationServer.translate("TR_MENU_SESSION_SIGNED_IN_AS")).format({"display_name": display_name})
+		get_node(session_info_nodepath).text = (
+			str(TranslationServer.translate("TR_MENU_SESSION_SIGNED_IN_AS"))
+			. format({"display_name": display_name})
+		)
 	elif p_response == GodotUro.godot_uro_helper_const.RequesterCode.CANT_CONNECT:
 		set_connection_failure_message("TR_MENU_SESSION_CANT_CONNECT")
 	elif p_response == GodotUro.godot_uro_helper_const.RequesterCode.CANT_RESOLVE:
@@ -73,7 +79,9 @@ func set_pending(p_pending: bool) -> void:
 		get_node(sign_out_container_nodepath).hide()
 		get_node(reconnect_container_nodepath).hide()
 		get_node(session_info_nodepath).show()
-		get_node(session_info_nodepath).text = TranslationServer.translate("TR_MENU_SESSION_PENDING")
+		get_node(session_info_nodepath).text = TranslationServer.translate(
+			"TR_MENU_SESSION_PENDING"
+		)
 	else:
 		update_from_response(response_code)
 

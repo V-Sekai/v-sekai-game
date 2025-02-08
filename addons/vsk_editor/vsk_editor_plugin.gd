@@ -26,7 +26,12 @@ func _get_plugin_name() -> String:
 	return "VSKEditor"
 
 
-func setup_vskeditor(viewport: Viewport, button: Button, editor_interface: EditorInterface, undo_redo: EditorUndoRedoManager) -> void:
+func setup_vskeditor(
+	viewport: Viewport,
+	button: Button,
+	editor_interface: EditorInterface,
+	undo_redo: EditorUndoRedoManager
+) -> void:
 	var vsk_editor: Node = get_node_or_null("/root/VSKEditor")
 	if not vsk_editor:
 		push_error("Could not find 'vsk_editor' at vsk_editor_plugin")
@@ -50,7 +55,9 @@ func _enter_tree() -> void:
 
 	add_control_to_container(CONTAINER_TOOLBAR, uro_button)
 
-	VSKEditor.setup_editor(get_editor_interface().get_editor_main_screen(), uro_button, editor_interface)
+	VSKEditor.setup_editor(
+		get_editor_interface().get_editor_main_screen(), uro_button, editor_interface
+	)
 
 	uro_button.call_deferred("set_disabled", false)  # What keeps disabling this button?!
 

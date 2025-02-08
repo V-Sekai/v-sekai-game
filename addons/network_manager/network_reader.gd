@@ -12,7 +12,11 @@ var stream_peer_buffer: StreamPeerBuffer = null
 
 static func decode_24_bit_value(p_buffer: PackedByteArray) -> int:
 	var integer: int = 0
-	integer = (p_buffer[0] & 0x000000ff | (p_buffer[1] << 8) & 0x0000ff00 | (p_buffer[2] << 16) & 0x00ff0000)
+	integer = (
+		p_buffer[0] & 0x000000ff
+		| (p_buffer[1] << 8) & 0x0000ff00
+		| (p_buffer[2] << 16) & 0x00ff0000
+	)
 	return integer
 
 
@@ -64,7 +68,9 @@ func get_24() -> int:
 		eof_reached = true
 		return 0
 
-	var value_buffer = PackedByteArray([stream_peer_buffer.get_8(), stream_peer_buffer.get_8(), stream_peer_buffer.get_8()])
+	var value_buffer = PackedByteArray(
+		[stream_peer_buffer.get_8(), stream_peer_buffer.get_8(), stream_peer_buffer.get_8()]
+	)
 	if stream_peer_buffer.big_endian:
 		value_buffer.reverse()
 

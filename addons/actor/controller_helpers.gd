@@ -10,7 +10,9 @@ static func get_direction_to(p_start: Vector3, p_end: Vector3) -> Vector3:
 
 
 static func convert_euler_to_normal(p_euler: Vector3) -> Vector3:
-	return Vector3(cos(p_euler.x) * sin(p_euler.y), -sin(p_euler.x), cos(p_euler.y) * cos(p_euler.x))
+	return Vector3(
+		cos(p_euler.x) * sin(p_euler.y), -sin(p_euler.x), cos(p_euler.y) * cos(p_euler.x)
+	)
 
 
 static func convert_normal_to_euler(p_normal: Vector3) -> Vector2:
@@ -26,7 +28,9 @@ static func get_absolute_basis(p_basis: Basis) -> Basis:
 	return m
 
 
-static func get_spatial_relative_movement_velocity(p_spatial: Node3D, p_input_direction: Vector2) -> Vector3:
+static func get_spatial_relative_movement_velocity(
+	p_spatial: Node3D, p_input_direction: Vector2
+) -> Vector3:
 	var new_direction: Vector3 = Vector3()
 
 	if p_spatial:

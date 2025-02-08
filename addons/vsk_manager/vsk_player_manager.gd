@@ -13,7 +13,9 @@ extends Node
 const connection_util_const = preload("res://addons/gd_util/connection_util.gd")
 const USER_PREFERENCES_SECTION_NAME = "player"
 
-var signal_table: Array = [{"singleton": "VSKGameFlowManager", "signal": "is_quitting", "method": "set_settings_values"}]
+var signal_table: Array = [
+	{"singleton": "VSKGameFlowManager", "signal": "is_quitting", "method": "set_settings_values"}
+]
 
 signal display_name_changed(p_name)
 signal avatar_path_changed(p_path)
@@ -60,8 +62,12 @@ func set_settings_values() -> void:
 
 
 func get_settings_values() -> void:
-	display_name = VSKUserPreferencesManager.get_value(USER_PREFERENCES_SECTION_NAME, "display_name", TYPE_STRING, display_name)
-	avatar_path = VSKUserPreferencesManager.get_value(USER_PREFERENCES_SECTION_NAME, "avatar_path", TYPE_STRING, avatar_path)
+	display_name = VSKUserPreferencesManager.get_value(
+		USER_PREFERENCES_SECTION_NAME, "display_name", TYPE_STRING, display_name
+	)
+	avatar_path = VSKUserPreferencesManager.get_value(
+		USER_PREFERENCES_SECTION_NAME, "avatar_path", TYPE_STRING, avatar_path
+	)
 
 
 func set_settings_values_and_save() -> void:

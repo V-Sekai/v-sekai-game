@@ -39,12 +39,16 @@ func get_request_data_progress(p_avatar_path: String) -> Dictionary:
 	return VSKAssetManager.get_request_data_progress(p_avatar_path)
 
 
-func _user_content_load_done(p_url: String, p_err: int, p_packed_scene: PackedScene, p_skip_validation: bool) -> void:
+func _user_content_load_done(
+	p_url: String, p_err: int, p_packed_scene: PackedScene, p_skip_validation: bool
+) -> void:
 	var validator_blocked: bool = false
 	var validated_packed_scene: PackedScene = null
 
 	if !p_skip_validation:
-		var result_dictionary: Dictionary = VSKImporter.sanitise_packed_scene_for_avatar(p_packed_scene)
+		var result_dictionary: Dictionary = VSKImporter.sanitise_packed_scene_for_avatar(
+			p_packed_scene
+		)
 		var validation_result: Dictionary = result_dictionary["result"]
 		validated_packed_scene = result_dictionary["packed_scene"]
 
@@ -58,13 +62,19 @@ func _user_content_load_done(p_url: String, p_err: int, p_packed_scene: PackedSc
 	match p_err:
 		VSKAssetManager.ASSET_OK:
 			if validator_blocked:
-				avatar_load_callback.emit(p_url, VSKAssetManager.ASSET_FORBIDDEN, validated_packed_scene)
+				avatar_load_callback.emit(
+					p_url, VSKAssetManager.ASSET_FORBIDDEN, validated_packed_scene
+				)
 			else:
 				if validated_packed_scene:
 					print("Emit ok for url " + str(p_url))
-					avatar_load_callback.emit(p_url, VSKAssetManager.ASSET_OK, validated_packed_scene)
+					avatar_load_callback.emit(
+						p_url, VSKAssetManager.ASSET_OK, validated_packed_scene
+					)
 				else:
-					avatar_load_callback.emit(p_url, VSKAssetManager.ASSET_INVALID, validated_packed_scene)
+					avatar_load_callback.emit(
+						p_url, VSKAssetManager.ASSET_INVALID, validated_packed_scene
+					)
 		_:
 			avatar_load_callback.emit(p_url, p_err, validated_packed_scene)
 
@@ -80,7 +90,11 @@ func _set_loading_stage_count(p_url: String, p_stage_count: int):
 
 
 func _set_loading_stage(p_url: String, p_stage: int):
-	print("Loading avatar {stage}/{stage_count}".format({"stage": str(p_stage), "stage_count": str(avatar_stage_map[p_url])}))
+	print(
+		"Loading avatar {stage}/{stage_count}".format(
+			{"stage": str(p_stage), "stage_count": str(avatar_stage_map[p_url])}
+		)
+	)
 
 	avatar_load_update.emit(p_url, p_stage, avatar_stage_map[p_url])
 
@@ -89,19 +103,43 @@ func cancel_avatar(p_avatar_path: String) -> void:
 	super.cancel_user_content(p_avatar_path)
 
 
-func request_avatar(p_avatar_path: String, p_bypass_whitelist: bool, p_skip_validation: bool) -> void:
-	await request_user_content_load(VSKAssetManager.loading_avatar_path, VSKAssetManager.user_content_type.USER_CONTENT_AVATAR, true, true, {}, {})
-	await request_user_content_load(p_avatar_path, VSKAssetManager.user_content_type.USER_CONTENT_AVATAR, p_bypass_whitelist, p_skip_validation, validator_avatar.valid_external_path_whitelist, validator_avatar.valid_resource_whitelist)
+func request_avatar(
+	p_avatar_path: String, p_bypass_whitelist: bool, p_skip_validation: bool
+) -> void:
+	await request_user_content_load(
+		VSKAssetManager.loading_avatar_path,
+		VSKAssetManager.user_content_type.USER_CONTENT_AVATAR,
+		true,
+		true,
+		{},
+		{}
+	)
+	await request_user_content_load(
+		p_avatar_path,
+		VSKAssetManager.user_content_type.USER_CONTENT_AVATAR,
+		p_bypass_whitelist,
+		p_skip_validation,
+		validator_avatar.valid_external_path_whitelist,
+		validator_avatar.valid_resource_whitelist
+	)
 
 
 func set_settings_values():
-	VSKUserPreferencesManager.set_value(USER_PREFERENCES_SECTION_NAME, "use_avatar_physics", use_avatar_physics)
-	VSKUserPreferencesManager.set_value(USER_PREFERENCES_SECTION_NAME, "show_nametags", show_nametags)
+	VSKUserPreferencesManager.set_value(
+		USER_PREFERENCES_SECTION_NAME, "use_avatar_physics", use_avatar_physics
+	)
+	VSKUserPreferencesManager.set_value(
+		USER_PREFERENCES_SECTION_NAME, "show_nametags", show_nametags
+	)
 
 
 func get_settings_values() -> void:
-	use_avatar_physics = VSKUserPreferencesManager.get_value(USER_PREFERENCES_SECTION_NAME, "use_avatar_physics", TYPE_BOOL, use_avatar_physics)
-	show_nametags = VSKUserPreferencesManager.get_value(USER_PREFERENCES_SECTION_NAME, "show_nametags", TYPE_BOOL, show_nametags)
+	use_avatar_physics = VSKUserPreferencesManager.get_value(
+		USER_PREFERENCES_SECTION_NAME, "use_avatar_physics", TYPE_BOOL, use_avatar_physics
+	)
+	show_nametags = VSKUserPreferencesManager.get_value(
+		USER_PREFERENCES_SECTION_NAME, "show_nametags", TYPE_BOOL, show_nametags
+	)
 
 
 func set_settings_values_and_save() -> void:

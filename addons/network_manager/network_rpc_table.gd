@@ -28,7 +28,11 @@ func nm_rpc_called(p_sender_id: int, p_method_id: int, p_arg_array: Array):
 		elif rpc_mode == MultiplayerAPI.RPC_MODE_AUTHORITY:
 			callv("method_name", p_arg_array)
 		else:
-			NetworkLogger.error("Cannot call {method_name} from peer {sender_id}!".format({"method_name": method_name, "sender_id": str(p_sender_id)}))
+			NetworkLogger.error(
+				"Cannot call {method_name} from peer {sender_id}!".format(
+					{"method_name": method_name, "sender_id": str(p_sender_id)}
+				)
+			)
 	else:
 		NetworkLogger.error("Cannot find method for id %s!" % str(p_method_id))
 
@@ -49,7 +53,11 @@ func nm_rset_called(p_sender_id: int, p_property_id: int, p_value):
 			if p_sender_id == get_multiplayer_authority():
 				set(property_name, p_value)
 			else:
-				NetworkLogger.error("Cannot set {property_name} from peer {sender_id}!".format({"property_name": property_name, "sender_id": str(p_sender_id)}))
+				NetworkLogger.error(
+					"Cannot set {property_name} from peer {sender_id}!".format(
+						{"property_name": property_name, "sender_id": str(p_sender_id)}
+					)
+				)
 	else:
 		NetworkLogger.error("Cannot find property for id %s!" % str(p_property_id))
 
@@ -68,9 +76,13 @@ func _nm_rpcp(p_peer_id: int, p_unreliable: bool, p_method: String, p_arg_array:
 
 	if method_id >= 0:
 		if p_unreliable:
-			NetworkManager.network_rpc_manager.queue_unreliable_rpc_call(get_entity_node(), p_peer_id, method_id, p_arg_array)
+			NetworkManager.network_rpc_manager.queue_unreliable_rpc_call(
+				get_entity_node(), p_peer_id, method_id, p_arg_array
+			)
 		else:
-			NetworkManager.network_rpc_manager.queue_reliable_rpc_call(get_entity_node(), p_peer_id, method_id, p_arg_array)
+			NetworkManager.network_rpc_manager.queue_reliable_rpc_call(
+				get_entity_node(), p_peer_id, method_id, p_arg_array
+			)
 	else:
 		NetworkLogger.error("Could not find method id for %s!" % p_method)
 
@@ -87,9 +99,13 @@ func _nm_rsetp(p_peer_id: int, p_unreliable: bool, p_property: String, p_value):
 
 	if property_id >= 0:
 		if p_unreliable:
-			NetworkManager.network_rpc_manager.queue_unreliable_rset_call(get_entity_node(), p_peer_id, property_id, p_value)
+			NetworkManager.network_rpc_manager.queue_unreliable_rset_call(
+				get_entity_node(), p_peer_id, property_id, p_value
+			)
 		else:
-			NetworkManager.network_rpc_manager.queue_reliable_rset_call(get_entity_node(), p_peer_id, property_id, p_value)
+			NetworkManager.network_rpc_manager.queue_reliable_rset_call(
+				get_entity_node(), p_peer_id, property_id, p_value
+			)
 	else:
 		NetworkLogger.error("Could not find property id for %s!" % p_property)
 

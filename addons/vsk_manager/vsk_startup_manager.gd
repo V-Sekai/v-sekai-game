@@ -24,6 +24,7 @@ var max_retries = VSKMultiplayerManager.DEFAULT_MAX_RETRIES
 var test_audio = ""
 var display_name_override = ""
 
+
 ##
 ## Called once all the startup function is complete. Sets up the ingame gui,
 ## then executes a crossfade and yields. After it's complete, it will either
@@ -41,14 +42,39 @@ func _startup_complete() -> void:
 			map = VSKMapManager.get_default_map_path()
 
 		if !map.is_empty():
-			await VSKGameFlowManager.host_server(server_name, map, game_mode, port, max_players, is_dedicated, is_public, max_retries)
+			await VSKGameFlowManager.host_server(
+				server_name, map, game_mode, port, max_players, is_dedicated, is_public, max_retries
+			)
 		else:
-			var skipped_fade: bool = await VSKFadeManager.execute_fade(VSKFadeManager.FadeState.FADE_OUT).fade_complete
+			var skipped_fade: bool = await (
+				VSKFadeManager.execute_fade(VSKFadeManager.FadeState.FADE_OUT).fade_complete
+			)
 			VSKGameFlowManager.go_to_title(skipped_fade)
 
 
 func setup_vsk_singletons() -> void:
-	for singleton in [VSKUserPreferencesManager, VSKDebugManager, VSKGameFlowManager, VSKMenuManager, VSKNetworkManager, VSKMapManager, VSKMultiplayerManager, VSKPlayerManager, VSKAssetManager, VSKExporter, VSKImporter, VSKAudioManager, VSKAvatarManager, VSKServiceManager, VSKShardManager, VSKPreloadManager, VSKFadeManager, VSKResourceManager, VSKCreditsManager, VSKAccountManager]:
+	for singleton in [
+		VSKUserPreferencesManager,
+		VSKDebugManager,
+		VSKGameFlowManager,
+		VSKMenuManager,
+		VSKNetworkManager,
+		VSKMapManager,
+		VSKMultiplayerManager,
+		VSKPlayerManager,
+		VSKAssetManager,
+		VSKExporter,
+		VSKImporter,
+		VSKAudioManager,
+		VSKAvatarManager,
+		VSKServiceManager,
+		VSKShardManager,
+		VSKPreloadManager,
+		VSKFadeManager,
+		VSKResourceManager,
+		VSKCreditsManager,
+		VSKAccountManager
+	]:
 		singleton.setup()
 
 	if !display_name_override.is_empty():
@@ -78,7 +104,9 @@ func startup() -> void:
 
 
 func parse_commandline_args() -> void:
-	var commandline_argument_dictionary = commandline_arguments_const.parse_commandline_arguments(OS.get_cmdline_args())
+	var commandline_argument_dictionary = commandline_arguments_const.parse_commandline_arguments(
+		OS.get_cmdline_args()
+	)
 	display_name_override = ""
 	if Engine.is_editor_hint():
 		return
@@ -96,10 +124,14 @@ func parse_commandline_args() -> void:
 		display_name_override = commandline_argument_dictionary["display_name"]
 
 	if commandline_argument_dictionary.has("use_flat"):
-		VRManager.vr_user_preferences.vr_mode_override = VRManager.vr_user_preferences.vr_mode_override_enum.VR_MODE_USE_FLAT
+		VRManager.vr_user_preferences.vr_mode_override = (
+			VRManager.vr_user_preferences.vr_mode_override_enum.VR_MODE_USE_FLAT
+		)
 
 	if commandline_argument_dictionary.has("use_vr"):
-		VRManager.vr_user_preferences.vr_mode_override = VRManager.vr_user_preferences.vr_mode_override_enum.VR_MODE_USE_VR
+		VRManager.vr_user_preferences.vr_mode_override = (
+			VRManager.vr_user_preferences.vr_mode_override_enum.VR_MODE_USE_VR
+		)
 
 	is_dedicated = commandline_argument_dictionary.has("dedicated")
 	is_public = commandline_argument_dictionary.has("public")

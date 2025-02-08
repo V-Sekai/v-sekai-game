@@ -37,7 +37,9 @@ var xr_camera_current: Vector3 = Vector3()
 func _ready():
 	if !Engine.is_editor_hint() and is_multiplayer_authority():
 		if VRManager.xr_origin:
-			vr_locomotion_component = VRManager.xr_origin.get_component_by_name("LocomotionComponent")
+			vr_locomotion_component = VRManager.xr_origin.get_component_by_name(
+				"LocomotionComponent"
+			)
 		else:
 			push_error("Could not access xr_origin!")
 
@@ -49,7 +51,9 @@ func update_movement_input(p_target_basis: Basis) -> void:
 	vertical_movement = clamp(InputManager.axes_values["move_vertical"], -1.0, 1.0)
 
 	input_direction = p_target_basis.x * horizontal_movement + p_target_basis.z * vertical_movement
-	input_magnitude = clamp(Vector2(horizontal_movement, vertical_movement).length_squared(), 0.0, 1.0)
+	input_magnitude = clamp(
+		Vector2(horizontal_movement, vertical_movement).length_squared(), 0.0, 1.0
+	)
 
 
 func update_vr_camera_state():
@@ -62,8 +66,13 @@ func update_vr_camera_state():
 
 # Return the origin offset translated by the entity orientation
 func transform_origin_offset(p_offset: Vector3) -> Vector3:
-	var camera_yaw_basis: Basis = Basis.from_euler(Vector3(0.0, _camera_controller_node.transform.basis.get_euler().y, 0.0))
-	var offset_accumulator_transformed: Vector3 = (camera_yaw_basis.z * Vector3(p_offset.z, 0.0, p_offset.z)) + (camera_yaw_basis.x * Vector3(p_offset.x, 0.0, p_offset.x))
+	var camera_yaw_basis: Basis = Basis.from_euler(
+		Vector3(0.0, _camera_controller_node.transform.basis.get_euler().y, 0.0)
+	)
+	var offset_accumulator_transformed: Vector3 = (
+		(camera_yaw_basis.z * Vector3(p_offset.z, 0.0, p_offset.z))
+		+ (camera_yaw_basis.x * Vector3(p_offset.x, 0.0, p_offset.x))
+	)
 
 	return offset_accumulator_transformed
 
@@ -111,18 +120,29 @@ func update_physics_input() -> void:
 func update_representation_input(p_delta: float) -> void:
 	var mouse_turning_vector: Vector2 = Vector2()
 	if InputManager.ingame_input_enabled():
-		mouse_turning_vector = (Vector2(InputManager.axes_values["mouse_x"], InputManager.axes_values["mouse_y"]))
+		mouse_turning_vector = (Vector2(
+			InputManager.axes_values["mouse_x"], InputManager.axes_values["mouse_y"]
+		))
 
-	var controller_turning_vector: Vector2 = Vector2(InputManager.axes_values["look_horizontal"], InputManager.axes_values["look_vertical"])
+	var controller_turning_vector: Vector2 = Vector2(
+		InputManager.axes_values["look_horizontal"], InputManager.axes_values["look_vertical"]
+	)
 
-	var input_x: float = (controller_turning_vector.x + mouse_turning_vector.x) * InputManager.look_x_direction
-	var input_y: float = (controller_turning_vector.y + mouse_turning_vector.y) * InputManager.look_y_direction
+	var input_x: float = (
+		(controller_turning_vector.x + mouse_turning_vector.x) * InputManager.look_x_direction
+	)
+	var input_y: float = (
+		(controller_turning_vector.y + mouse_turning_vector.y) * InputManager.look_y_direction
+	)
 
 	if _camera_controller_node:
 		# Get snap turning mode
 		var snap_turning_enabled: bool = false
 		if VRManager.is_xr_active() and VRManager.vr_user_preferences != null:
-			if VRManager.vr_user_preferences.turning_mode != VRManager.vr_user_preferences.TURNING_MODE_SMOOTH:
+			if (
+				VRManager.vr_user_preferences.turning_mode
+				!= VRManager.vr_user_preferences.TURNING_MODE_SMOOTH
+			):
 				snap_turning_enabled = true
 
 		var rotation_yaw: float = _camera_controller_node.rotation_yaw

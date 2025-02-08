@@ -25,7 +25,8 @@ signal uro_id_selected(p_id)
 var content_dictionary: Dictionary = {}
 
 @export var public_content: bool = true
-@export_enum("Avatars", "Maps") var content_type: int = vsk_user_content_selector_const.ContentType.CONTENT_AVATARS
+@export_enum("Avatars", "Maps")
+var content_type: int = vsk_user_content_selector_const.ContentType.CONTENT_AVATARS
 
 
 func refresh() -> void:
@@ -93,7 +94,12 @@ func _parse_avatars_result(p_result: Dictionary) -> Dictionary:
 		if avatar.has("user_content_data"):
 			item_data_url = GodotUro.get_base_url() + avatar["user_content_data"]
 
-		content_dictionary[id] = {"name": item_name, "description": item_description, "user_content_preview_url": item_data_url, "user_content_data_url": item_preview_url}
+		content_dictionary[id] = {
+			"name": item_name,
+			"description": item_description,
+			"user_content_preview_url": item_data_url,
+			"user_content_data_url": item_preview_url
+		}
 
 		get_node(grid_path).add_item(id, item_name, item_preview_url)
 
@@ -136,7 +142,12 @@ func _parse_maps_result(p_result: Dictionary) -> Dictionary:
 		if map.has("user_content_data"):
 			item_data_url = GodotUro.get_base_url() + map["user_content_data"]
 
-		content_dictionary[id] = {"name": item_name, "description": item_description, "user_content_preview_url": item_data_url, "user_content_data_url": item_preview_url}
+		content_dictionary[id] = {
+			"name": item_name,
+			"description": item_description,
+			"user_content_preview_url": item_data_url,
+			"user_content_data_url": item_preview_url
+		}
 
 		get_node(grid_path).add_item(id, item_name, item_preview_url)
 
@@ -151,7 +162,9 @@ func _reload_public_avatars() -> Dictionary:
 		return_dict = _parse_avatars_result(async_result)
 	else:
 		return_dict["error"] = FAILED
-		return_dict["message"] = GodotUro.godot_uro_helper_const.get_full_requester_error_string(async_result)
+		return_dict["message"] = GodotUro.godot_uro_helper_const.get_full_requester_error_string(
+			async_result
+		)
 
 	return return_dict
 
@@ -164,7 +177,9 @@ func _reload_public_maps() -> Dictionary:
 		return_dict = _parse_maps_result(async_result)
 	else:
 		return_dict["error"] = FAILED
-		return_dict["message"] = GodotUro.godot_uro_helper_const.get_full_requester_error_string(async_result)
+		return_dict["message"] = GodotUro.godot_uro_helper_const.get_full_requester_error_string(
+			async_result
+		)
 
 	return return_dict
 
@@ -182,7 +197,9 @@ func _reload_dashboard_avatars() -> Dictionary:
 		return_dict = _parse_avatars_result(async_result)
 	else:
 		return_dict["error"] = FAILED
-		return_dict["message"] = GodotUro.godot_uro_helper_const.get_full_requester_error_string(async_result)
+		return_dict["message"] = GodotUro.godot_uro_helper_const.get_full_requester_error_string(
+			async_result
+		)
 
 	return return_dict
 
@@ -200,7 +217,9 @@ func _reload_dashboard_maps() -> Dictionary:
 		return_dict = _parse_maps_result(async_result)
 	else:
 		return_dict["error"] = FAILED
-		return_dict["message"] = GodotUro.godot_uro_helper_const.get_full_requester_error_string(async_result)
+		return_dict["message"] = GodotUro.godot_uro_helper_const.get_full_requester_error_string(
+			async_result
+		)
 
 	return return_dict
 

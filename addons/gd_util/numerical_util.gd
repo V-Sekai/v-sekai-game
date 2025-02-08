@@ -7,7 +7,9 @@
 extends Node
 
 
-static func get_string_for_integer_with_group_seperator(p_integer: int, p_seperator: String, p_grouping_size: int) -> String:
+static func get_string_for_integer_with_group_seperator(
+	p_integer: int, p_seperator: String, p_grouping_size: int
+) -> String:
 	var formatted_string: String = str(p_integer)
 	var formatted_string_length: int = formatted_string.length()
 	var grouping_counter: int = 0

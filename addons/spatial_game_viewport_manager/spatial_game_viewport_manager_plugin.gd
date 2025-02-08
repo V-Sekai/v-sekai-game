@@ -25,7 +25,10 @@ func _get_plugin_name() -> String:
 
 func _enter_tree() -> void:
 	editor_interface = get_editor_interface()
-	add_autoload_singleton("SpatialGameViewportManager", "res://addons/spatial_game_viewport_manager/spatial_game_viewport_manager.gd")
+	add_autoload_singleton(
+		"SpatialGameViewportManager",
+		"res://addons/spatial_game_viewport_manager/spatial_game_viewport_manager.gd"
+	)
 
 
 func _exit_tree() -> void:

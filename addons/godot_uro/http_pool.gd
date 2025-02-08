@@ -85,12 +85,25 @@ class HTTPState:
 			var _poll_error: int = http.poll()
 			status = http.get_status()
 
-			if status == HTTPClient.STATUS_CONNECTED or status == HTTPClient.STATUS_REQUESTING or status == HTTPClient.STATUS_BODY:
+			if (
+				status == HTTPClient.STATUS_CONNECTED
+				or status == HTTPClient.STATUS_REQUESTING
+				or status == HTTPClient.STATUS_BODY
+			):
 				_connection_finished.emit(http)
 				return
-			if status != HTTPClient.STATUS_CONNECTING and status != HTTPClient.STATUS_RESOLVING and status != HTTPClient.STATUS_CONNECTED:
+			if (
+				status != HTTPClient.STATUS_CONNECTING
+				and status != HTTPClient.STATUS_RESOLVING
+				and status != HTTPClient.STATUS_CONNECTED
+			):
 				busy = false
-				push_error("GodotUroRequester: could not connect to host: status = %s" % [str(http.get_status())])
+				push_error(
+					(
+						"GodotUroRequester: could not connect to host: status = %s"
+						% [str(http.get_status())]
+					)
+				)
 				_connection_finished.emit(null)
 				return
 			return
@@ -176,14 +189,23 @@ class HTTPState:
 			if connection is StreamPeerTLS:
 				var underlying: StreamPeer = connection.get_stream()
 				if underlying is StreamPeerTCP:
-					if status == HTTPClient.STATUS_CONNECTED and underlying.get_connected_host() == hostname and underlying.get_connected_port() == port:
+					if (
+						status == HTTPClient.STATUS_CONNECTED
+						and underlying.get_connected_host() == hostname
+						and underlying.get_connected_port() == port
+					):
 						return http
 				else:
 					if status == HTTPClient.STATUS_CONNECTED:
 						return http
 		elif not use_ssl and status == HTTPClient.STATUS_CONNECTED:
 			if connection is StreamPeerTCP:
-				if (not (connection is StreamPeerTLS)) and status == HTTPClient.STATUS_CONNECTED and connection.get_connected_host() == hostname and connection.get_connected_port() == port:
+				if (
+					(not (connection is StreamPeerTLS))
+					and status == HTTPClient.STATUS_CONNECTED
+					and connection.get_connected_host() == hostname
+					and connection.get_connected_port() == port
+				):
 					return http
 
 		status = http.get_status()
@@ -195,7 +217,12 @@ class HTTPState:
 			var tls_options: TLSOptions = TLSOptions.client(null)
 			connect_err = http.connect_to_host(hostname, port, tls_options)
 			if connect_err != OK:
-				push_error("GodotUroRequester: could not connect to host: returned error %s" % str(connect_err))
+				push_error(
+					(
+						"GodotUroRequester: could not connect to host: returned error %s"
+						% str(connect_err)
+					)
+				)
 				http.close()
 				http = HTTPClient.new()
 				return null
@@ -241,6 +268,7 @@ func _init(p_http_client_limit: int = 5):
 	total_http_clients = p_http_client_limit
 	for i in range(total_http_clients):
 		http_client_pool.push_back(HTTPClient.new())
+
 
 func _acquire_client() -> HTTPClient:
 	if not http_client_pool.is_empty():

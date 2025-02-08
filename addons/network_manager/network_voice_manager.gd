@@ -28,11 +28,27 @@ func _init(p_network_manager):
 
 
 var signal_table: Array = [
-	{"singleton": "NetworkManager", "signal": "network_process", "method": "_network_manager_process"},
+	{
+		"singleton": "NetworkManager",
+		"signal": "network_process",
+		"method": "_network_manager_process"
+	},
 	{"singleton": "NetworkManager", "signal": "game_hosted", "method": "_game_hosted"},
-	{"singleton": "NetworkManager", "signal": "connection_succeeded", "method": "_connected_to_server"},
-	{"singleton": "NetworkManager", "signal": "server_peer_connected", "method": "_server_peer_connected"},
-	{"singleton": "NetworkManager", "signal": "server_peer_disconnected", "method": "_server_peer_disconnected"},
+	{
+		"singleton": "NetworkManager",
+		"signal": "connection_succeeded",
+		"method": "_connected_to_server"
+	},
+	{
+		"singleton": "NetworkManager",
+		"signal": "server_peer_connected",
+		"method": "_server_peer_connected"
+	},
+	{
+		"singleton": "NetworkManager",
+		"signal": "server_peer_disconnected",
+		"method": "_server_peer_disconnected"
+	},
 ]
 
 ##
@@ -40,7 +56,13 @@ var signal_table: Array = [
 ##
 
 
-func encode_voice_packet(p_packet_sender_id: int, p_network_writer: Object, p_sequence_id: int, p_voice_buffer: Dictionary, p_encode_id: bool) -> Object:
+func encode_voice_packet(
+	p_packet_sender_id: int,
+	p_network_writer: Object,
+	p_sequence_id: int,
+	p_voice_buffer: Dictionary,
+	p_encode_id: bool
+) -> Object:
 	var voice_buffer_size: int = p_voice_buffer["buffer_size"]
 
 	if p_encode_id:
@@ -62,7 +84,10 @@ func decode_voice_command(p_packet_sender_id: int, p_network_reader: Object) -> 
 	if p_network_reader.is_eof():
 		return null
 
-	if !network_manager.is_relay() and p_packet_sender_id == network_constants_const.SERVER_MASTER_PEER_ID:
+	if (
+		!network_manager.is_relay()
+		and p_packet_sender_id == network_constants_const.SERVER_MASTER_PEER_ID
+	):
 		sender_id = p_network_reader.get_u32()
 		if p_network_reader.is_eof():
 			return null
@@ -104,14 +129,24 @@ func decode_voice_command(p_packet_sender_id: int, p_network_reader: Object) -> 
 				encoded_voice["buffer_size"] = encoded_voice_byte_array.size()
 
 				# Voice commands
-				network_writer_state = encode_voice_buffer(sender_id, network_writer_state, encoded_sequence_id, encoded_voice, true)
+				network_writer_state = encode_voice_buffer(
+					sender_id, network_writer_state, encoded_sequence_id, encoded_voice, true
+				)
 
 				if network_writer_state.get_position() > 0:
-					var raw_data: PackedByteArray = network_writer_state.get_raw_data(network_writer_state.get_position())
-					network_manager.network_flow_manager.queue_packet_for_send(ref_pool_const.new(raw_data), synced_peer, MultiplayerPeer.TRANSFER_MODE_UNRELIABLE)
+					var raw_data: PackedByteArray = network_writer_state.get_raw_data(
+						network_writer_state.get_position()
+					)
+					network_manager.network_flow_manager.queue_packet_for_send(
+						ref_pool_const.new(raw_data),
+						synced_peer,
+						MultiplayerPeer.TRANSFER_MODE_UNRELIABLE
+					)
 
 	if not network_manager.server_dedicated:
-		network_manager.voice_packet_compressed.emit(sender_id, encoded_sequence_id, encoded_voice_byte_array)
+		network_manager.voice_packet_compressed.emit(
+			sender_id, encoded_sequence_id, encoded_voice_byte_array
+		)
 
 	return p_network_reader
 
@@ -142,22 +177,47 @@ func _network_manager_process(p_id: int, _delta: float) -> void:
 				network_writer_state.seek(0)
 
 				# Voice commands
-				network_writer_state = encode_voice_buffer(p_id, network_writer_state, sequence_id, voice_buffer, !network_manager.is_relay() and (synced_peer != network_constants_const.SERVER_MASTER_PEER_ID))
+				network_writer_state = encode_voice_buffer(
+					p_id,
+					network_writer_state,
+					sequence_id,
+					voice_buffer,
+					(
+						!network_manager.is_relay()
+						and (synced_peer != network_constants_const.SERVER_MASTER_PEER_ID)
+					)
+				)
 
 				if network_writer_state.get_position() > 0:
-					var raw_data: PackedByteArray = network_writer_state.get_raw_data(network_writer_state.get_position())
-					network_manager.network_flow_manager.queue_packet_for_send(ref_pool_const.new(raw_data), synced_peer, MultiplayerPeer.TRANSFER_MODE_UNRELIABLE)
+					var raw_data: PackedByteArray = network_writer_state.get_raw_data(
+						network_writer_state.get_position()
+					)
+					network_manager.network_flow_manager.queue_packet_for_send(
+						ref_pool_const.new(raw_data),
+						synced_peer,
+						MultiplayerPeer.TRANSFER_MODE_UNRELIABLE
+					)
 			sequence_id += 1
 
 
-func encode_voice_buffer(p_packet_sender_id: int, p_network_writer: Object, p_index: int, p_voice_buffer: Dictionary, p_encode_id: bool) -> Object:
+func encode_voice_buffer(
+	p_packet_sender_id: int,
+	p_network_writer: Object,
+	p_index: int,
+	p_voice_buffer: Dictionary,
+	p_encode_id: bool
+) -> Object:
 	p_network_writer.put_u8(network_constants_const.VOICE_COMMAND)
-	p_network_writer = encode_voice_packet(p_packet_sender_id, p_network_writer, p_index, p_voice_buffer, p_encode_id)
+	p_network_writer = encode_voice_packet(
+		p_packet_sender_id, p_network_writer, p_index, p_voice_buffer, p_encode_id
+	)
 
 	return p_network_writer
 
 
-func decode_voice_buffer(p_packet_sender_id: int, p_network_reader: Object, p_command: int) -> Object:
+func decode_voice_buffer(
+	p_packet_sender_id: int, p_network_reader: Object, p_command: int
+) -> Object:
 	match p_command:
 		network_constants_const.VOICE_COMMAND:
 			p_network_reader = decode_voice_command(p_packet_sender_id, p_network_reader)

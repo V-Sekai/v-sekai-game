@@ -39,11 +39,37 @@ var map_whitelist: PackedStringArray = []
 var prop_whitelist: PackedStringArray = []
 var game_mode_whitelist: PackedStringArray = []
 
-enum { ASSET_OK, ASSET_UNKNOWN_FAILURE, ASSET_UNAUTHORIZED, ASSET_FORBIDDEN, ASSET_NOT_FOUND, ASSET_INVALID, ASSET_I_AM_A_TEAPOT, ASSET_UNAVAILABLE_FOR_LEGAL_REASONS, ASSET_NOT_WHITELISTED, ASSET_FAILED_VALIDATION_CHECK, ASSET_RESOURCE_LOAD_FAILED }
+enum {
+	ASSET_OK,
+	ASSET_UNKNOWN_FAILURE,
+	ASSET_UNAUTHORIZED,
+	ASSET_FORBIDDEN,
+	ASSET_NOT_FOUND,
+	ASSET_INVALID,
+	ASSET_I_AM_A_TEAPOT,
+	ASSET_UNAVAILABLE_FOR_LEGAL_REASONS,
+	ASSET_NOT_WHITELISTED,
+	ASSET_FAILED_VALIDATION_CHECK,
+	ASSET_RESOURCE_LOAD_FAILED
+}
 
-enum { STAGE_PENDING, STAGE_DOWNLOADING, STAGE_BACKGROUND_LOADING, STAGE_VALIDATING, STAGE_INSTANCING, STAGE_DONE, STAGE_CANCELLING }
+enum {
+	STAGE_PENDING,
+	STAGE_DOWNLOADING,
+	STAGE_BACKGROUND_LOADING,
+	STAGE_VALIDATING,
+	STAGE_INSTANCING,
+	STAGE_DONE,
+	STAGE_CANCELLING
+}
 
-enum user_content_type { USER_CONTENT_AVATAR, USER_CONTENT_MAP, USER_CONTENT_PROP, USER_CONTENT_GAME_MODE, USER_CONTENT_UNKNOWN }
+enum user_content_type {
+	USER_CONTENT_AVATAR,
+	USER_CONTENT_MAP,
+	USER_CONTENT_PROP,
+	USER_CONTENT_GAME_MODE,
+	USER_CONTENT_UNKNOWN
+}
 
 # The amount of space a progress bar should dedicate to the downloading phase
 const DOWNLOAD_PROGRESS_BAR_RATIO = 0.9
@@ -120,7 +146,13 @@ func get_error_path(p_type: int, p_asset_err: int) -> String:
 			return ""
 
 
-func _http_request_completed(p_result: int, p_response_code: int, _headers: PackedStringArray, p_body: PackedByteArray, p_request_object: Dictionary) -> void:
+func _http_request_completed(
+	p_result: int,
+	p_response_code: int,
+	_headers: PackedStringArray,
+	p_body: PackedByteArray,
+	p_request_object: Dictionary
+) -> void:
 	var response_code: int = ASSET_UNKNOWN_FAILURE
 
 	if p_result != OK:
@@ -130,29 +162,48 @@ func _http_request_completed(p_result: int, p_response_code: int, _headers: Pack
 	match p_response_code:
 		HTTPClient.RESPONSE_OK:
 			if p_request_object["path"] == "":
-				var path: String = "%s/%s.%s" % [ASSET_CACHE_PATH, String(p_request_object["url"]).md5_text(), CACHE_FILE_EXTENSION]
+				var path: String = (
+					"%s/%s.%s"
+					% [
+						ASSET_CACHE_PATH,
+						String(p_request_object["url"]).md5_text(),
+						CACHE_FILE_EXTENSION
+					]
+				)
 				var file: FileAccess = FileAccess.open(path, FileAccess.WRITE)
 				if file != null:
 					file.store_buffer(p_body)
 				p_request_object["path"] = path
 			response_code = ASSET_OK
 		HTTPClient.RESPONSE_UNAUTHORIZED:
-			p_request_object["path"] = get_error_path(p_request_object["asset_type"], ASSET_UNAUTHORIZED)
+			p_request_object["path"] = get_error_path(
+				p_request_object["asset_type"], ASSET_UNAUTHORIZED
+			)
 			response_code = ASSET_FORBIDDEN
 		HTTPClient.RESPONSE_FORBIDDEN:
-			p_request_object["path"] = get_error_path(p_request_object["asset_type"], ASSET_FORBIDDEN)
+			p_request_object["path"] = get_error_path(
+				p_request_object["asset_type"], ASSET_FORBIDDEN
+			)
 			response_code = ASSET_FORBIDDEN
 		HTTPClient.RESPONSE_NOT_FOUND:
-			p_request_object["path"] = get_error_path(p_request_object["asset_type"], ASSET_NOT_FOUND)
+			p_request_object["path"] = get_error_path(
+				p_request_object["asset_type"], ASSET_NOT_FOUND
+			)
 			response_code = ASSET_NOT_FOUND
 		HTTPClient.RESPONSE_IM_A_TEAPOT:
-			p_request_object["path"] = get_error_path(p_request_object["asset_type"], ASSET_I_AM_A_TEAPOT)
+			p_request_object["path"] = get_error_path(
+				p_request_object["asset_type"], ASSET_I_AM_A_TEAPOT
+			)
 			response_code = ASSET_I_AM_A_TEAPOT
 		HTTPClient.RESPONSE_UNAVAILABLE_FOR_LEGAL_REASONS:
-			p_request_object["path"] = get_error_path(p_request_object["asset_type"], ASSET_UNAVAILABLE_FOR_LEGAL_REASONS)
+			p_request_object["path"] = get_error_path(
+				p_request_object["asset_type"], ASSET_UNAVAILABLE_FOR_LEGAL_REASONS
+			)
 			response_code = ASSET_UNAVAILABLE_FOR_LEGAL_REASONS
 		_:
-			p_request_object["path"] = get_error_path(p_request_object["asset_type"], ASSET_UNKNOWN_FAILURE)
+			p_request_object["path"] = get_error_path(
+				p_request_object["asset_type"], ASSET_UNKNOWN_FAILURE
+			)
 			response_code = ASSET_UNKNOWN_FAILURE
 
 	if request_objects.has(p_request_object["request_path"]):
@@ -181,11 +232,15 @@ func make_http_request(p_request_object: Dictionary, p_bypass_whitelist: bool) -
 		_complete_request(p_request_object, ASSET_NOT_WHITELISTED)
 		return request_object
 
-	var etag_path: String = "%s/%s.%s" % [ASSET_CACHE_PATH, String(url).md5_text(), ETAG_FILE_EXTENSION]
+	var etag_path: String = (
+		"%s/%s.%s" % [ASSET_CACHE_PATH, String(url).md5_text(), ETAG_FILE_EXTENSION]
+	)
 	if FileAccess.file_exists(etag_path):
 		var etag_file = FileAccess.open(etag_path, FileAccess.READ)
 		if etag_file != null:
-			var resource_path: String = "%s/%s.%s" % [ASSET_CACHE_PATH, String(url).md5_text(), CACHE_FILE_EXTENSION]
+			var resource_path: String = (
+				"%s/%s.%s" % [ASSET_CACHE_PATH, String(url).md5_text(), CACHE_FILE_EXTENSION]
+			)
 
 			if FileAccess.file_exists(resource_path):
 				request_object["path"] = resource_path
@@ -204,7 +259,10 @@ func make_http_request(p_request_object: Dictionary, p_bypass_whitelist: bool) -
 	http_request.download_chunk_size = HTTP_DOWNLOAD_CHUNK_SIZE
 	add_child(http_request, true)
 
-	if http_request.request_completed.connect(self._http_request_completed.bind(request_object)) != OK:
+	if (
+		http_request.request_completed.connect(self._http_request_completed.bind(request_object))
+		!= OK
+	):
 		push_error("Could not connect signal 'request_complete'!")
 
 	register_request(request_object)
@@ -266,7 +324,15 @@ func _uro_api_request(p_request_object: Dictionary, p_id: String, p_asset_type: 
 
 	var request_path: String = p_request_object["request_path"]
 	if not GodotUro.godot_uro_helper_const.requester_result_is_ok(async_result):
-		print("Uro Request for %s returned with error: %s" % [request_path, GodotUro.godot_uro_helper_const.get_full_requester_error_string(async_result)])
+		print(
+			(
+				"Uro Request for %s returned with error: %s"
+				% [
+					request_path,
+					GodotUro.godot_uro_helper_const.get_full_requester_error_string(async_result)
+				]
+			)
+		)
 		_complete_request(p_request_object, ASSET_UNKNOWN_FAILURE)
 		return {}
 
@@ -280,7 +346,9 @@ func _uro_api_request(p_request_object: Dictionary, p_id: String, p_asset_type: 
 			var user_content = data[user_content_type_string]
 			if user_content.has("user_content_data"):
 				var user_content_data = user_content["user_content_data"]
-				p_request_object["url"] = vsk_asset_manager_const._get_full_url_for_uro_request(user_content_data)
+				p_request_object["url"] = vsk_asset_manager_const._get_full_url_for_uro_request(
+					user_content_data
+				)
 				data_valid = true
 				p_request_object = make_http_request(p_request_object, true)
 				return p_request_object
@@ -292,7 +360,9 @@ func _uro_api_request(p_request_object: Dictionary, p_id: String, p_asset_type: 
 	return {}
 
 
-func _execute_uro_file_request(p_request_object: Dictionary, p_id: String, p_uro_content_type: int, p_request_path: String) -> void:
+func _execute_uro_file_request(
+	p_request_object: Dictionary, p_id: String, p_uro_content_type: int, p_request_path: String
+) -> void:
 	var request_object: Dictionary = p_request_object
 	request_object = await _uro_api_request(request_object, p_id, p_uro_content_type)
 
@@ -331,8 +401,20 @@ func make_uro_file_request(p_request_object: Dictionary, _bypass_whitelist: bool
 	return request_object
 
 
-func make_request(p_request_path: String, p_asset_type: int, p_bypass_whitelist: bool, p_skip_validation: bool, p_external_path_whitelist: Dictionary, p_resource_whitelist: Dictionary) -> Dictionary:
-	var request_object: Dictionary = {"request_id": INVALID_REQUEST, "request_path": p_request_path, "path": "", "asset_type": p_asset_type}
+func make_request(
+	p_request_path: String,
+	p_asset_type: int,
+	p_bypass_whitelist: bool,
+	p_skip_validation: bool,
+	p_external_path_whitelist: Dictionary,
+	p_resource_whitelist: Dictionary
+) -> Dictionary:
+	var request_object: Dictionary = {
+		"request_id": INVALID_REQUEST,
+		"request_path": p_request_path,
+		"path": "",
+		"asset_type": p_asset_type
+	}
 
 	var request_type: int = vsk_asset_manager_const.get_request_type(p_request_path)
 	request_object["object"] = {}
@@ -401,7 +483,10 @@ func cancel_request(p_request_path: String) -> void:
 func _get_request_data_progress_internal(p_request_object: Dictionary) -> Dictionary:
 	var object = p_request_object.get("object")
 	if typeof(object) != TYPE_NIL and object is HTTPRequest:
-		return {"body_size": p_request_object["object"].get_body_size(), "downloaded_bytes": p_request_object["object"].get_downloaded_bytes()}
+		return {
+			"body_size": p_request_object["object"].get_body_size(),
+			"downloaded_bytes": p_request_object["object"].get_downloaded_bytes()
+		}
 	else:
 		return {"body_size": 0, "downloaded_bytes": 0}
 
@@ -420,15 +505,39 @@ func get_request_data_progress(p_request_path: String) -> Dictionary:
 
 
 static func get_download_progress_string(p_downloaded_bytes: int, p_body_size: int) -> String:
-	var downloaded_bytes_data_block: Dictionary = data_storage_units_const.convert_bytes_to_data_unit_block(p_downloaded_bytes)
-	var body_size_data_block: Dictionary = data_storage_units_const.convert_bytes_to_data_unit_block(p_body_size)
+	var downloaded_bytes_data_block: Dictionary = (
+		data_storage_units_const.convert_bytes_to_data_unit_block(p_downloaded_bytes)
+	)
+	var body_size_data_block: Dictionary = (
+		data_storage_units_const.convert_bytes_to_data_unit_block(p_body_size)
+	)
 
-	var downloaded_bytes_largest_unit: int = data_storage_units_const.get_largest_unit_type(downloaded_bytes_data_block)
-	var body_size_largest_unit: int = data_storage_units_const.get_largest_unit_type(body_size_data_block)
+	var downloaded_bytes_largest_unit: int = data_storage_units_const.get_largest_unit_type(
+		downloaded_bytes_data_block
+	)
+	var body_size_largest_unit: int = data_storage_units_const.get_largest_unit_type(
+		body_size_data_block
+	)
 
-	var downloaded_bytes_string: String = "%s%s" % [data_storage_units_const.get_string_for_unit_data_block(downloaded_bytes_data_block, downloaded_bytes_largest_unit), data_storage_units_const.get_string_for_unit_type(downloaded_bytes_largest_unit)]
+	var downloaded_bytes_string: String = (
+		"%s%s"
+		% [
+			data_storage_units_const.get_string_for_unit_data_block(
+				downloaded_bytes_data_block, downloaded_bytes_largest_unit
+			),
+			data_storage_units_const.get_string_for_unit_type(downloaded_bytes_largest_unit)
+		]
+	)
 
-	var body_size_string: String = "%s%s" % [data_storage_units_const.get_string_for_unit_data_block(body_size_data_block, body_size_largest_unit), data_storage_units_const.get_string_for_unit_type(body_size_largest_unit)]
+	var body_size_string: String = (
+		"%s%s"
+		% [
+			data_storage_units_const.get_string_for_unit_data_block(
+				body_size_data_block, body_size_largest_unit
+			),
+			data_storage_units_const.get_string_for_unit_type(body_size_largest_unit)
+		]
+	)
 
 	return "%s/%s" % [downloaded_bytes_string, body_size_string]
 
@@ -468,10 +577,14 @@ func get_project_settings() -> void:
 func apply_project_settings() -> void:
 	if Engine.is_editor_hint():
 		if !ProjectSettings.has_setting("assets/config/avatar_forbidden_path"):
-			ProjectSettings.set_setting("assets/config/avatar_forbidden_path", avatar_forbidden_path)
+			ProjectSettings.set_setting(
+				"assets/config/avatar_forbidden_path", avatar_forbidden_path
+			)
 
 		if !ProjectSettings.has_setting("assets/config/avatar_not_found_path"):
-			ProjectSettings.set_setting("assets/config/avatar_not_found_path", avatar_not_found_path)
+			ProjectSettings.set_setting(
+				"assets/config/avatar_not_found_path", avatar_not_found_path
+			)
 
 		if !ProjectSettings.has_setting("assets/config/avatar_error_path"):
 			ProjectSettings.set_setting("assets/config/avatar_error_path", avatar_error_path)

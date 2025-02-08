@@ -73,7 +73,9 @@ func _instance_upload_panel_child_control() -> void:
 
 			_request_user_content(user_content_type, current_database_id)
 
-			control.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE)
+			control.set_anchors_and_offsets_preset(
+				Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE
+			)
 		else:
 			push_error("Could ")
 
@@ -92,11 +94,18 @@ func _instance_info_child_control(p_string: String) -> void:
 		control = info_label
 		add_child(info_label, true)
 
-		control.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE)
+		control.set_anchors_and_offsets_preset(
+			Control.PRESET_FULL_RECT, Control.PRESET_MODE_MINSIZE
+		)
 
 
 func _received_user_content_data(p_database_id: String, p_user_content_data: Dictionary) -> void:
-	print("_received user content for: '%s'. current_database_id: '%s'" % [str(p_database_id), str(current_database_id)])
+	print(
+		(
+			"_received user content for: '%s'. current_database_id: '%s'"
+			% [str(p_database_id), str(current_database_id)]
+		)
+	)
 	control.update_user_content_data(p_user_content_data, not p_database_id.is_empty())
 
 

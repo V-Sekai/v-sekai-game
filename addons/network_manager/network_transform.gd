@@ -6,7 +6,9 @@
 @tool
 class_name NetworkTransform extends NetworkLogic
 
-const network_entity_manager_const = preload("res://addons/network_manager/network_entity_manager.gd")
+const network_entity_manager_const = preload(
+	"res://addons/network_manager/network_entity_manager.gd"
+)
 const math_funcs_const = preload("res://addons/math_util/math_funcs.gd")
 
 var target_origin: Vector3 = Vector3()
@@ -78,11 +80,15 @@ func interpolate_transform(p_delta: float) -> void:
 			var distance: float = current_origin.distance_to(target_origin)
 			if snap_threshold > 0.0 and distance < snap_threshold:
 				if origin_interpolation_factor > 0.0:
-					current_origin = current_origin.lerp(target_origin, origin_interpolation_factor * p_delta)
+					current_origin = current_origin.lerp(
+						target_origin, origin_interpolation_factor * p_delta
+					)
 				else:
 					current_origin = target_origin
 				if rotation_interpolation_factor > 0.0:
-					current_rotation = current_rotation.slerp(target_rotation, rotation_interpolation_factor * p_delta)
+					current_rotation = current_rotation.slerp(
+						target_rotation, rotation_interpolation_factor * p_delta
+					)
 				else:
 					current_rotation = target_rotation
 			else:

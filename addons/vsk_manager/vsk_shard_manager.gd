@@ -8,8 +8,24 @@ extends Node
 
 var active_shards: Dictionary = {}
 
-func create_shard(p_callback: Callable, p_port: int, p_map: String, p_server_name: String, p_player_count: int, p_max_players: int) -> Dictionary:
-	var async_result = await (GodotUro.godot_uro_api.create_shard_async({"port": p_port, "map": p_map, "name": p_server_name, "max_users": p_max_players, "current_users": p_player_count}))
+
+func create_shard(
+	p_callback: Callable,
+	p_port: int,
+	p_map: String,
+	p_server_name: String,
+	p_player_count: int,
+	p_max_players: int
+) -> Dictionary:
+	var async_result = await (GodotUro.godot_uro_api.create_shard_async(
+		{
+			"port": p_port,
+			"map": p_map,
+			"name": p_server_name,
+			"max_users": p_max_players,
+			"current_users": p_player_count
+		}
+	))
 
 	if async_result["output"] is Dictionary:
 		var data = async_result["output"].get("data")
@@ -25,6 +41,7 @@ func create_shard(p_callback: Callable, p_port: int, p_map: String, p_server_nam
 	if p_callback.is_valid():
 		p_callback.call({"result": FAILED, "data": null})
 	return {"result": FAILED, "data": null}
+
 
 func delete_shard(p_callback: Callable, p_id: String) -> Dictionary:
 	var async_result = await GodotUro.godot_uro_api.delete_shard_async(p_id, {})
@@ -70,9 +87,13 @@ func shard_heartbeat(p_id: String) -> Dictionary:
 	return {"result": FAILED, "data": null, "callback": null}
 
 
-func shard_update_player_count(p_callback: Callable, p_id: String, p_player_count: int) -> Dictionary:
-	var async_result = await GodotUro.godot_uro_api.update_shard_async(p_id, {"current_users": p_player_count})
-	
+func shard_update_player_count(
+	p_callback: Callable, p_id: String, p_player_count: int
+) -> Dictionary:
+	var async_result = await GodotUro.godot_uro_api.update_shard_async(
+		p_id, {"current_users": p_player_count}
+	)
+
 	var data = async_result.get("data")
 	if data is Dictionary:
 		var id = data.get("id")
@@ -80,13 +101,17 @@ func shard_update_player_count(p_callback: Callable, p_id: String, p_player_coun
 			active_shards[id] = {}
 			if p_callback.is_valid():
 				p_callback.call({"result": OK, "data": data})
-			return {"result": OK, "data": data,}
-	
+			return {
+				"result": OK,
+				"data": data,
+			}
+
 	active_shards[async_result] = {}
-	
+
 	if p_callback.is_valid():
 		p_callback.call({"result": FAILED, "data": null})
 	return {"result": FAILED, "data": null}
 
+
 func setup() -> void:
-	pass # Nothing to setup
+	pass  # Nothing to setup

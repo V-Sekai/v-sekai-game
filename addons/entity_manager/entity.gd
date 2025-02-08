@@ -26,7 +26,14 @@ func is_subnode_property_valid() -> bool:
 	if !Engine.is_editor_hint():
 		return true
 	else:
-		return not scene_file_path.is_empty() or (is_inside_tree() and get_tree().edited_scene_root and get_tree().edited_scene_root == self)
+		return (
+			not scene_file_path.is_empty()
+			or (
+				is_inside_tree()
+				and get_tree().edited_scene_root
+				and get_tree().edited_scene_root == self
+			)
+		)
 
 
 static func sub_property_path(p_property: String, p_sub_node_name: String) -> String:
@@ -48,7 +55,9 @@ func _get_property_list() -> Array:
 			var node: Node = get_node_or_null(simulation_logic_node_path)
 			if node and node != self:
 				if is_subnode_property_valid():
-					var logic_node_properties: Array = runtime_entity_const.get_custom_logic_node_properties(node)
+					var logic_node_properties: Array = (
+						runtime_entity_const.get_custom_logic_node_properties(node)
+					)
 					for property in logic_node_properties:
 						property["name"] = "simulation_logic_node/%s" % property["name"]
 						properties.push_back(property)
@@ -79,7 +88,9 @@ func get_sub_property(p_path: NodePath, p_property: String, p_sub_node_name: Str
 	return variant
 
 
-func set_sub_property(p_path: NodePath, p_property: String, p_value, p_sub_node_name: String) -> bool:
+func set_sub_property(
+	p_path: NodePath, p_property: String, p_value, p_sub_node_name: String
+) -> bool:
 	var node = get_node_or_null(p_path)
 	if node != null and node != self:
 		var property: String = Entity.sub_property_path(p_property, p_sub_node_name)
@@ -106,7 +117,9 @@ func _get(p_property: StringName):
 	if Engine.is_editor_hint():
 		var variant = null
 		if simulation_logic_node_path != NodePath() and is_subnode_property_valid():
-			variant = get_sub_property(simulation_logic_node_path, p_property, "simulation_logic_node")
+			variant = get_sub_property(
+				simulation_logic_node_path, p_property, "simulation_logic_node"
+			)
 		return variant
 	else:
 		return super._get(p_property)
@@ -116,7 +129,9 @@ func _set(p_property: StringName, p_value) -> bool:
 	if Engine.is_editor_hint():
 		var return_val: bool = false
 		if simulation_logic_node_path != NodePath() and is_subnode_property_valid():
-			return_val = set_sub_property(simulation_logic_node_path, p_property, p_value, "simulation_logic_node")
+			return_val = set_sub_property(
+				simulation_logic_node_path, p_property, p_value, "simulation_logic_node"
+			)
 
 		return return_val
 	else:

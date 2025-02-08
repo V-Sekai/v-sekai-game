@@ -101,11 +101,29 @@ static func get_string_for_requester_code(p_requester_code: int) -> String:
 
 static func get_full_requester_error_string(p_requester: Dictionary) -> String:
 	if p_requester["requester_code"] == RequesterCode.FILE_ERROR:
-		return "%s (error code: %s)" % [get_string_for_requester_code(p_requester["requester_code"]), p_requester["generic_code"]]
+		return (
+			"%s (error code: %s)"
+			% [
+				get_string_for_requester_code(p_requester["requester_code"]),
+				p_requester["generic_code"]
+			]
+		)
 	elif p_requester["requester_code"] == RequesterCode.HTTP_RESPONSE_NOT_OK:
-		return "%s (error code: %s)" % [get_string_for_requester_code(p_requester["requester_code"]), p_requester["response_code"]]
+		return (
+			"%s (error code: %s)"
+			% [
+				get_string_for_requester_code(p_requester["requester_code"]),
+				p_requester["response_code"]
+			]
+		)
 	elif p_requester["requester_code"] == RequesterCode.POLL_ERROR:
-		return "%s (error code: %s)" % [get_string_for_requester_code(p_requester["requester_code"]), p_requester["generic_code"]]
+		return (
+			"%s (error code: %s)"
+			% [
+				get_string_for_requester_code(p_requester["requester_code"]),
+				p_requester["generic_code"]
+			]
+		)
 	else:
 		return get_string_for_requester_code(p_requester["requester_code"])
 
@@ -118,7 +136,10 @@ static func requester_result_is_ok(p_result) -> bool:
 
 
 static func requester_result_has_response(p_result) -> bool:
-	if p_result["requester_code"] == RequesterCode.OK or p_result["requester_code"] == RequesterCode.HTTP_RESPONSE_NOT_OK:
+	if (
+		p_result["requester_code"] == RequesterCode.OK
+		or p_result["requester_code"] == RequesterCode.HTTP_RESPONSE_NOT_OK
+	):
 		return true
 	else:
 		return false
@@ -150,9 +171,13 @@ static func process_user_privilege_ruleset(p_data) -> Dictionary:
 
 	if typeof(p_data) == TYPE_DICTIONARY:
 		ruleset["is_admin"] = get_value_of_type(p_data, "is_admin", TYPE_BOOL, false)
-		ruleset["can_upload_avatars"] = get_value_of_type(p_data, "can_upload_avatars", TYPE_BOOL, false)
+		ruleset["can_upload_avatars"] = get_value_of_type(
+			p_data, "can_upload_avatars", TYPE_BOOL, false
+		)
 		ruleset["can_upload_maps"] = get_value_of_type(p_data, "can_upload_maps", TYPE_BOOL, false)
-		ruleset["can_upload_props"] = get_value_of_type(p_data, "can_upload_props", TYPE_BOOL, false)
+		ruleset["can_upload_props"] = get_value_of_type(
+			p_data, "can_upload_props", TYPE_BOOL, false
+		)
 	else:
 		ruleset["is_admin"] = false
 		ruleset["can_upload_avatars"] = false
@@ -169,18 +194,41 @@ static func process_session_json(p_input: Dictionary) -> Dictionary:
 			if output is Dictionary:
 				var data = output.get("data")
 				if data is Dictionary:
-					var renewal_token: String = get_value_of_type(data, "renewal_token", TYPE_STRING, GodotUroData.renewal_token)
-					var access_token: String = get_value_of_type(data, "access_token", TYPE_STRING, GodotUroData.access_token)
+					var renewal_token: String = get_value_of_type(
+						data, "renewal_token", TYPE_STRING, GodotUroData.renewal_token
+					)
+					var access_token: String = get_value_of_type(
+						data, "access_token", TYPE_STRING, GodotUroData.access_token
+					)
 
 					var user: Dictionary = get_value_of_type(data, "user", TYPE_DICTIONARY, {})
 
-					var user_id: String = get_value_of_type(user, "id", TYPE_STRING, DEFAULT_ACCOUNT_ID)
-					var user_username: String = get_value_of_type(user, "username", TYPE_STRING, DEFAULT_ACCOUNT_USERNAME)
-					var user_display_name: String = get_value_of_type(user, "display_name", TYPE_STRING, DEFAULT_ACCOUNT_DISPLAY_NAME)
+					var user_id: String = get_value_of_type(
+						user, "id", TYPE_STRING, DEFAULT_ACCOUNT_ID
+					)
+					var user_username: String = get_value_of_type(
+						user, "username", TYPE_STRING, DEFAULT_ACCOUNT_USERNAME
+					)
+					var user_display_name: String = get_value_of_type(
+						user, "display_name", TYPE_STRING, DEFAULT_ACCOUNT_DISPLAY_NAME
+					)
 
-					var user_privilege_ruleset: Dictionary = process_user_privilege_ruleset(data.get("user_privilege_ruleset"))
+					var user_privilege_ruleset: Dictionary = process_user_privilege_ruleset(
+						data.get("user_privilege_ruleset")
+					)
 
-					return {"requester_code": p_input["requester_code"], "generic_code": p_input["generic_code"], "response_code": p_input["response_code"], "message": "Success!", "renewal_token": renewal_token, "access_token": access_token, "user_id": user_id, "user_username": user_username, "user_display_name": user_display_name, "user_privilege_ruleset": user_privilege_ruleset}
+					return {
+						"requester_code": p_input["requester_code"],
+						"generic_code": p_input["generic_code"],
+						"response_code": p_input["response_code"],
+						"message": "Success!",
+						"renewal_token": renewal_token,
+						"access_token": access_token,
+						"user_id": user_id,
+						"user_username": user_username,
+						"user_display_name": user_display_name,
+						"user_privilege_ruleset": user_privilege_ruleset
+					}
 			return {
 				"requester_code": RequesterCode.MALFORMED_RESPONSE_DATA,
 				"generic_code": p_input["generic_code"],
@@ -195,11 +243,26 @@ static func process_session_json(p_input: Dictionary) -> Dictionary:
 				if error is Dictionary:
 					var message = error.get("message")
 					if message is String:
-						return {"requester_code": p_input["requester_code"], "generic_code": p_input["generic_code"], "response_code": p_input["response_code"], "message": message}
+						return {
+							"requester_code": p_input["requester_code"],
+							"generic_code": p_input["generic_code"],
+							"response_code": p_input["response_code"],
+							"message": message
+						}
 
-			return {"requester_code": RequesterCode.MALFORMED_RESPONSE_DATA, "generic_code": p_input["generic_code"], "response_code": p_input["response_code"], "message": get_full_requester_error_string(p_input)}
+			return {
+				"requester_code": RequesterCode.MALFORMED_RESPONSE_DATA,
+				"generic_code": p_input["generic_code"],
+				"response_code": p_input["response_code"],
+				"message": get_full_requester_error_string(p_input)
+			}
 	else:
-		return {"requester_code": p_input["requester_code"], "generic_code": p_input["generic_code"], "response_code": p_input["response_code"], "message": get_full_requester_error_string(p_input)}
+		return {
+			"requester_code": p_input["requester_code"],
+			"generic_code": p_input["generic_code"],
+			"response_code": p_input["response_code"],
+			"message": get_full_requester_error_string(p_input)
+		}
 
 
 static func process_shards_json(p_input: Dictionary) -> Dictionary:
@@ -217,8 +280,12 @@ static func process_shards_json(p_input: Dictionary) -> Dictionary:
 					new_shard["address"] = get_value_of_type(shard, "address", TYPE_STRING, "")
 					new_shard["port"] = get_value_of_type(shard, "port", TYPE_FLOAT, -1)
 					new_shard["map"] = get_value_of_type(shard, "map", TYPE_STRING, UNKNOWN_MAP)
-					new_shard["name"] = get_value_of_type(shard, "name", TYPE_STRING, UNTITLED_SHARD)
-					new_shard["current_users"] = get_value_of_type(shard, "current_users", TYPE_FLOAT, 0)
+					new_shard["name"] = get_value_of_type(
+						shard, "name", TYPE_STRING, UNTITLED_SHARD
+					)
+					new_shard["current_users"] = get_value_of_type(
+						shard, "current_users", TYPE_FLOAT, 0
+					)
 					new_shard["max_users"] = get_value_of_type(shard, "max_users", TYPE_FLOAT, 0)
 
 					new_shards.push_back(new_shard)

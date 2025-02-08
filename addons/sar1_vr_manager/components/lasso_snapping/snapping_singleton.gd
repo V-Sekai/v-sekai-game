@@ -13,7 +13,9 @@ func _init():
 		snapping_points = ClassDB.instantiate("LassoDB")
 
 
-static func calc_snapping_power_sphere(point: Vector3, size_radius: float, power: float, source: Transform3D) -> float:
+static func calc_snapping_power_sphere(
+	point: Vector3, size_radius: float, power: float, source: Transform3D
+) -> float:
 	var point_local: Vector3 = point * source
 	var rejection = Vector3(point_local.x, point_local.y, 0)  #assuming -z is forward
 	var euclidian_dist: float = point_local.length()
@@ -34,7 +36,13 @@ static func calc_redirection_basis(source: Vector3, center: Vector3):
 	return new_basis
 
 
-static func calc_redirection_dist(point: Vector3, source: Vector3, center: Vector3, redirect_basis: Basis, redirect_direction: Vector2) -> float:
+static func calc_redirection_dist(
+	point: Vector3,
+	source: Vector3,
+	center: Vector3,
+	redirect_basis: Basis,
+	redirect_direction: Vector2
+) -> float:
 	var point_vector = source - point
 	var center_vector = source - center
 	if point_vector.angle_to(center_vector) > PI / 4:  # Return if angle is more than 45 degrees away, we don't snap.
@@ -46,7 +54,10 @@ static func calc_redirection_dist(point: Vector3, source: Vector3, center: Vecto
 	elif redirect_direction.x == 0:
 		return (-point_2d.x / point_2d.y + 1) * (point_2d.x / 2)
 	elif point_2d.y == 0:
-		return Vector2(point_2d.x / 2, point_2d.x / 2 * (redirect_direction.y / redirect_direction.x)).length_squared()
+		return (
+			Vector2(point_2d.x / 2, point_2d.x / 2 * (redirect_direction.y / redirect_direction.x))
+			. length_squared()
+		)
 	var a1: float = -point_2d.x / point_2d.y
 	var c1: float = (1 - a1) * point_2d.x / 2
 	var a2: float = redirect_direction.y / redirect_direction.x

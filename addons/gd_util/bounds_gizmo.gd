@@ -42,7 +42,9 @@ func set_handle(p_idx: int, p_camera: Camera3D, p_point: Vector2) -> void:
 	var axis: Vector3 = Vector3()
 	axis[p_idx] = 1.0
 
-	var result: PackedVector3Array = Geometry3D.get_closest_points_between_segments(ofs, ofs + axis * 4096, sg[0], sg[1])
+	var result: PackedVector3Array = Geometry3D.get_closest_points_between_segments(
+		ofs, ofs + axis * 4096, sg[0], sg[1]
+	)
 	var ra: Vector3 = result[0]
 	var rb: Vector3 = result[1]
 

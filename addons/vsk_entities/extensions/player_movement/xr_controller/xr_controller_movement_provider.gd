@@ -11,6 +11,7 @@ var _origin: XROrigin3D = null
 # Controller node
 @onready var _controller: XRController3D = get_parent()
 
+
 func _ready():
 	if not _controller:
 		push_error("Could not find '_controller' at xr_controller_movement_provider")

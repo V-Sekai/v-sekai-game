@@ -7,7 +7,9 @@
 extends Control
 
 const vsk_map_definition_const = preload("res://addons/vsk_map/vsk_map_definition.gd")
-const vsk_map_definition_runtime_const = preload("res://addons/vsk_map/vsk_map_definition_runtime.gd")
+const vsk_map_definition_runtime_const = preload(
+	"res://addons/vsk_map/vsk_map_definition_runtime.gd"
+)
 
 const vsk_types_const = preload("res://addons/vsk_importer_exporter/vsk_types.gd")
 const map_callback_const = preload("res://addons/vsk_map/map_callback.gd")
@@ -92,7 +94,9 @@ func _save_file_at_path(p_string: String) -> void:
 
 	var err: int = map_callback_const.EXPORTER_NODE_LOADED
 	if vsk_exporter:
-		err = vsk_exporter.export_map(editor_plugin.get_editor_interface().get_edited_scene_root(), node, p_string)
+		err = vsk_exporter.export_map(
+			editor_plugin.get_editor_interface().get_edited_scene_root(), node, p_string
+		)
 
 	error_callback(err)
 

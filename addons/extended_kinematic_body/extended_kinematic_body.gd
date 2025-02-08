@@ -19,7 +19,9 @@ var is_grounded: bool = false
 @onready var exclusion_array: Array = [self]
 
 
-static func get_sphere_query_parameters(p_transform, p_radius, p_mask, p_exclude) -> PhysicsShapeQueryParameters3D:
+static func get_sphere_query_parameters(
+	p_transform, p_radius, p_mask, p_exclude
+) -> PhysicsShapeQueryParameters3D:
 	var query: PhysicsShapeQueryParameters3D = PhysicsShapeQueryParameters3D.new()
 	query.set_transform(p_transform)
 	var shape: SphereShape3D = SphereShape3D.new()
@@ -30,7 +32,9 @@ static func get_sphere_query_parameters(p_transform, p_radius, p_mask, p_exclude
 	return query
 
 
-static func get_capsule_query_parameters(p_transform, p_height, p_radius, p_mask, p_exclude) -> PhysicsShapeQueryParameters3D:
+static func get_capsule_query_parameters(
+	p_transform, p_height, p_radius, p_mask, p_exclude
+) -> PhysicsShapeQueryParameters3D:
 	var query: PhysicsShapeQueryParameters3D = PhysicsShapeQueryParameters3D.new()
 	query.set_transform(p_transform)
 	var shape: CapsuleShape3D = CapsuleShape3D.new()
@@ -88,7 +92,9 @@ func _step_down(p_dss: PhysicsDirectSpaceState3D) -> void:
 				if ray_result.is_empty() or !test_slope(ray_result.normal, up, slope_max_angle):
 					is_grounded = false
 
-				var valid_floor_param: PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.new()
+				var valid_floor_param: PhysicsRayQueryParameters3D = (
+					PhysicsRayQueryParameters3D.new()
+				)
 				valid_floor_param.from = global_transform.origin
 				valid_floor_param.to = global_transform.origin - (up * step_height * 2.0)
 				valid_floor_param.exclude = exclusion_array
@@ -104,7 +110,9 @@ func _step_down(p_dss: PhysicsDirectSpaceState3D) -> void:
 func extended_move(p_motion: Vector3, _p_slide_attempts: int) -> Vector3:
 	if get_world_3d() == null:
 		return Vector3(0.0, 0.0, 0.0)
-	var dss: PhysicsDirectSpaceState3D = PhysicsServer3D.space_get_direct_state(get_world_3d().get_space())
+	var dss: PhysicsDirectSpaceState3D = PhysicsServer3D.space_get_direct_state(
+		get_world_3d().get_space()
+	)
 	var motion: Vector3 = Vector3(0.0, 0.0, 0.0)
 	if dss:
 		var shape_owners = get_shape_owners()
@@ -115,7 +123,9 @@ func extended_move(p_motion: Vector3, _p_slide_attempts: int) -> Vector3:
 				if shape is CapsuleShape3D:
 					if is_grounded:
 						# Raise off the ground
-						var step_up_kinematic_result: KinematicCollision3D = move_and_collide(up * step_height)
+						var step_up_kinematic_result: KinematicCollision3D = move_and_collide(
+							up * step_height
+						)
 						# Do actual motion
 						# FIXME: They changed move_and_slide to have 0 arguments????
 						velocity = p_motion
@@ -138,15 +148,26 @@ func extended_move(p_motion: Vector3, _p_slide_attempts: int) -> Vector3:
 							step_down_kinematic_result = move_and_collide(up * -step_height)
 						else:
 							virtual_step_offset = -step_up_kinematic_result.get_travel().length()
-							step_down_kinematic_result = move_and_collide((up * -step_height) + step_up_kinematic_result.get_remainder())
+							step_down_kinematic_result = move_and_collide(
+								(up * -step_height) + step_up_kinematic_result.get_remainder()
+							)
 
-						if step_down_kinematic_result != null and _is_valid_kinematic_collision(step_down_kinematic_result):
+						if (
+							step_down_kinematic_result != null
+							and _is_valid_kinematic_collision(step_down_kinematic_result)
+						):
 							virtual_step_offset += step_down_kinematic_result.get_travel().length()
 							motion = (up * -step_height)
 
-							var result_param: PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.new()
-							result_param.from = step_down_kinematic_result.get_position() + (up * step_height)
-							result_param.to = step_down_kinematic_result.get_position() - (up * anti_bump_factor)
+							var result_param: PhysicsRayQueryParameters3D = (
+								PhysicsRayQueryParameters3D.new()
+							)
+							result_param.from = (
+								step_down_kinematic_result.get_position() + (up * step_height)
+							)
+							result_param.to = (
+								step_down_kinematic_result.get_position() - (up * anti_bump_factor)
+							)
 							result_param.exclude = exclusion_array
 							result_param.collision_mask = collision_mask
 
@@ -154,11 +175,21 @@ func extended_move(p_motion: Vector3, _p_slide_attempts: int) -> Vector3:
 							var ray_result = dss.intersect_ray(result_param)
 
 							# Use it to verify whether it is a slope
-							if ray_result.is_empty() or !test_slope(ray_result.normal, up, slope_max_angle):
+							if (
+								ray_result.is_empty()
+								or !test_slope(ray_result.normal, up, slope_max_angle)
+							):
 								var slope_limit_fix: int = 2
 								while slope_limit_fix > 0:
-									if step_down_kinematic_result != null and _is_valid_kinematic_collision(step_down_kinematic_result):
-										var step_down_normal: Vector3 = step_down_kinematic_result.get_normal()
+									if (
+										step_down_kinematic_result != null
+										and _is_valid_kinematic_collision(
+											step_down_kinematic_result
+										)
+									):
+										var step_down_normal: Vector3 = (
+											step_down_kinematic_result.get_normal()
+										)
 
 										# If you are now on a valid surface, break the loop
 										if test_slope(step_down_normal, up, slope_max_angle):
@@ -169,11 +200,18 @@ func extended_move(p_motion: Vector3, _p_slide_attempts: int) -> Vector3:
 
 											# Use the step down normal to slide down to the ground
 											motion = motion.slide(step_down_normal)
-											var slide_down_result: KinematicCollision3D = move_and_collide(motion)
+											var slide_down_result: KinematicCollision3D = move_and_collide(
+												motion
+											)
 
 											# Accumulate this back into the visual step offset
-											if slide_down_result != null and _is_valid_kinematic_collision(slide_down_result):
-												virtual_step_offset += slide_down_result.get_travel().length()
+											if (
+												slide_down_result != null
+												and _is_valid_kinematic_collision(slide_down_result)
+											):
+												virtual_step_offset += (
+													slide_down_result.get_travel().length()
+												)
 											else:
 												virtual_step_offset = 0.0
 									else:

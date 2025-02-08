@@ -14,7 +14,9 @@ static func get_runtime_info_mesh(p_mesh: Mesh, p_dictionary: Dictionary = {}) -
 	return p_dictionary
 
 
-static func get_runtime_avatar_info_for_node(p_node: Node, p_dictionary: Dictionary = {}) -> Dictionary:
+static func get_runtime_avatar_info_for_node(
+	p_node: Node, p_dictionary: Dictionary = {}
+) -> Dictionary:
 	if p_node is MeshInstance3D:
 		p_dictionary["MeshInstance3DCount"] += 1
 		if p_node.skin:
