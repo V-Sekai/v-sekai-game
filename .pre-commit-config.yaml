@@ -1,6 +1,14 @@
 repos:
   - repo: local
     hooks:
+      - id: gdlint
+        name: gdlint
+        entry: gdlint
+        language: python
+        additional_dependencies: [gdtoolkit==4.3.3]       
+        files: ^addons/godot_uro/godot_uro_helper\.gd$
+        types: [gdscript]
+
       # vsk_importer_exporter is ignored due to broken code.
       # VRM and godot_state_charts are ignored because upstream changes are complicated
       - id: gdformat
