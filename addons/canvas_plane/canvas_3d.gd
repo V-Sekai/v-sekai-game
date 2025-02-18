@@ -149,7 +149,7 @@ func _set_billboard_mode(p_billboard_mode: BillboardMode) -> void:
 func _setup_canvas_item() -> void:
 	if !control_root.resized.is_connected(self._resized):
 		if control_root.resized.connect(self._resized) != OK:
-			printerr("Failed to connect control_root.resized signal.")
+			push_error("Failed to connect control_root.resized signal.")
 			return
 
 	original_canvas_rid = control_root.get_canvas()
@@ -259,11 +259,11 @@ func _ready() -> void:
 
 	# FIXME: No on_pointer_release or on_pointer_pressed here. Do we copy from canvas_plane.gd?
 	# if pointer_receiver.pointer_pressed.connect(self.on_pointer_pressed) != OK:
-	#	printerr("Failed to connect pointer_receiver.pointer_pressed signal.")
+	#	push_error("Failed to connect pointer_receiver.pointer_pressed signal.")
 	#	return
 
 	# if pointer_receiver.pointer_release.connect(self.on_pointer_release) != OK:
-	#	printerr("Failed to connect pointer_receiver.pointer_release signal.")
+	#	push_error("Failed to connect pointer_receiver.pointer_release signal.")
 	#	return
 
 	pointer_receiver.collision_mask = collision_mask
@@ -310,4 +310,4 @@ func _ready() -> void:
 
 	if Engine.is_editor_hint():
 		if get_tree().tree_changed.connect(self._tree_changed) != OK:
-			printerr("Could not connect tree_changed")
+			push_error("Could not connect tree_changed")
