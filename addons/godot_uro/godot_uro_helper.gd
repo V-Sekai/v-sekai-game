@@ -51,6 +51,11 @@ const DEFAULT_ACCOUNT_DISPLAY_NAME = "UNKNOWN_DISPLAY_NAME"
 const UNTITLED_SHARD = "UNTITLED_SHARD"
 const UNKNOWN_MAP = "UNKNOWN_MAP"
 
+# NEW API
+const NEW_PROFILE_PATH = "/session"
+const NEW_REGISTRATION_PATH = "/signup"
+const NEW_LOGIN_PATH = "/login"
+
 
 static func get_string_for_requester_code(p_requester_code: int) -> String:
 	match p_requester_code:
