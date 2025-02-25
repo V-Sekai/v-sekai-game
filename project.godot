@@ -598,6 +598,7 @@ driver/threads/thread_model.macos=1
 
 [services]
 
+uro/use_dev_api=false
 uro/use_localhost=false
 uro/host="https://uro.v-sekai.cloud"
 uro/port=443
