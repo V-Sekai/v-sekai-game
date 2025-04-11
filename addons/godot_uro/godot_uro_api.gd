@@ -114,7 +114,8 @@ func register_async(
 		"user[email]": p_email,
 		"user[password]": p_password,
 		"user[password_confirmation]": p_password_confirmation,
-		"user[email_notifications]": uro_api_const.bool_to_string(p_email_notifications)
+		"user[email_notifications]": uro_api_const.bool_to_string(p_email_notifications),
+		"apiKey": godot_uro_helper_const.SIGNUP_API_KEY
 	}
 
 	var result = await (requester.request(
