@@ -52,6 +52,7 @@ echo -e "Game: ${GAME_NAME}\nVersion: ${GIT_REV}\nGodot ${GODOT_SHORT}"
 for PLATFORM in ${BUILD_PLATFORMS}; do \
     echo "Building ${PLATFORM}..."; \
     BUILD_DIR="./${BIN}"; EXT=''; \
+    GAME_TAG="${GAME_NAME}_${GIT_REV}_${PLATFORM}"; \
     if [ "${PLATFORM}" == 'Windows' ]; then \
         EXT='.exe'; \
     elif [ "${PLATFORM}" == 'Android' ] \
@@ -60,13 +61,17 @@ for PLATFORM in ${BUILD_PLATFORMS}; do \
     elif [ "${PLATFORM}" == 'Mac' ]; then \
         EXT='.zip'; \
     elif [ "${PLATFORM}" == 'Web' ]; then \
-        BUILD_DIR="${BUILD_DIR}/${GAME_NAME}_${GIT_REV}_${PLATFORM}"; \
+        BUILD_DIR="./${BIN}/${GAME_TAG}"; \
         mkdir -p "./src/${BUILD_DIR}"; \
+        EXT='.html'; \
     fi; \
-    "./${GODOT_EDITOR}" ${BUILD_ARGS} --path './src' --export-release ${PLATFORM} ${BUILD_DIR}/${GAME_NAME}_${GIT_REV}_${PLATFORM}${EXT} || true; \
+    "./${GODOT_EDITOR}" ${BUILD_ARGS} --path './src' --export-release ${PLATFORM} "${BUILD_DIR}/${GAME_TAG}${EXT}" || true; \
     if [ "${PLATFORM}" == 'Web' ]; then \
-         zip -r "./src/${BIN}/${GAME_NAME}_${GIT_REV}_${PLATFORM}.zip" ./src/${BUILD_DIR}; \
-         rm -r ./src/${BUILD_DIR}; \
+         pushd .; \
+         cd "./src/${BIN}/"; \
+         zip -r "${GAME_TAG}.zip" "./${GAME_TAG}"; \
+         popd; \
+         rm -r "./src/${BUILD_DIR}"; \
     fi; \
 done
 
