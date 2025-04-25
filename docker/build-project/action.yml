@@ -12,6 +12,10 @@ inputs:
     description: 'Override project export_presets.cfg with default configuration file'
     required: false
     default: 'false'
+  xr_plugins:
+    description: 'Install Godot XR Vendor Plugins, required for Meta Quest https://github.com/GodotVR/godot_openxr_vendors'
+    required: false
+    default: 'true'
   nightly:
     description: 'Nightly build mode'
     required: false
