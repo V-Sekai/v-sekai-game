@@ -6,6 +6,8 @@
 @tool
 extends "res://addons/entity_manager/node_3d_simulation_logic.gd"
 
+const model_rigid_body_const = preload("res://addons/vsk_entities/extensions/model_rigid_body.gd")
+
 # Render
 @export var _render_node_path: NodePath = NodePath():
 	set = set_render_node_path
@@ -80,7 +82,7 @@ func _instantiate_scene() -> void:
 			instantiate = Node3D.new()
 			instantiate.set_name("Dummy")
 
-		var model_dictionary: Dictionary = $/root/ModelFormat.build_model_trees(instantiate)
+		var model_dictionary: Dictionary = ModelFormat.build_model_trees(instantiate)
 
 		visual_nodes = model_dictionary.visual
 		physics_nodes = model_dictionary.physics

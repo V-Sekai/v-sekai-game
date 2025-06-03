@@ -143,14 +143,20 @@ func nm_rset_unreliable_id(peer_id: int, p_property: String, p_value):
 
 
 func sanitise_rpc() -> void:
-	pass
-	#var method_list: Array = get_method_list()
-	#for method in method_list:
-	#	# FIXME: rpc_get_mode is missing
-	#	var rpc_mode: int = rpc_get_mode(method.name)
-	#	if rpc_mode != MultiplayerAPI.RPC_MODE_DISABLED: ##### FIXME: Missing method in godot master #
-	#		virtual_rpc_method_table[method.name] = {"rpc_mode": rpc_mode}
-	#		rpc_config(method.name, MultiplayerAPI.RPC_MODE_DISABLED)
+	# This won't run on RPCs set with rpc_config()
+	var script_rpc_config = get_script().get_rpc_config()
+
+	for method in script_rpc_config.keys():
+		var config = script_rpc_config[method]
+		print("Script RPC Method:", method)
+		#print("Configuration:", config)
+		var rpc_mode: int = config.rpc_mode
+		if rpc_mode != MultiplayerAPI.RPC_MODE_DISABLED:
+			virtual_rpc_method_table[method] = {"rpc_mode": rpc_mode}
+			var new_config = script_rpc_config[method]
+			new_config.rpc_mode = MultiplayerAPI.RPC_MODE_DISABLED
+			rpc_config(method, new_config)
+			print("Script RPC Method:", method, "sanitised!")
 
 
 func _ready():

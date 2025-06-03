@@ -8,6 +8,9 @@ extends Node
 @export var mute_button_path: NodePath = NodePath()
 var mute_buton: Button = null
 
+@export var random_prop_button_path: NodePath = NodePath()
+var random_prop: Button = null
+
 @export var fps_label_path: NodePath = NodePath()
 var fps_label: Label = null
 
@@ -24,6 +27,7 @@ func _ready():
 	update_mute_button_text()
 
 	fps_label = get_node_or_null(fps_label_path)
+	random_prop = get_node_or_null(random_prop_button_path)
 
 
 func _on_DisconnectButton_pressed() -> void:
@@ -33,6 +37,10 @@ func _on_DisconnectButton_pressed() -> void:
 func _on_MuteButton_pressed() -> void:
 	VSKAudioManager.toggle_mute()
 	update_mute_button_text()
+
+
+func _on_RandomPropButton_pressed() -> void:
+	VSKPropSpawner.spawn_prop_test()
 
 
 func _process(_delta):

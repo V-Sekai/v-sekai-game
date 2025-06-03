@@ -247,11 +247,11 @@ func get_entity_type_safe(p_target_entity: EntityRef) -> String:
 		return ""
 
 
-func get_entity_last_transform_safe(p_target_entity: EntityRef) -> String:
+func get_entity_last_transform_safe(p_target_entity: EntityRef) -> Transform3D:
 	if p_target_entity._entity:
 		return p_target_entity._entity.get_last_transform()
 	else:
-		return ""
+		return Transform3D.IDENTITY
 
 
 func send_entity_message(

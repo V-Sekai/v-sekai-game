@@ -45,19 +45,19 @@ class LoadingTask:
 
 func is_loading_task_queue_empty() -> bool:
 	var _mutex_lock = mutex_lock_const.new(_loading_tasks_mutex)
-	print_verbose("Checking if loading task queue is empty")
+	#print_verbose("Checking if loading task queue is empty")
 	return _loading_tasks.is_empty()
 
 
 func get_loading_active() -> bool:
 	var _mutex_lock = mutex_lock_const.new(_loading_tasks_mutex)
-	print_verbose("Getting loading active status")
+	#print_verbose("Getting loading active status")
 	return _loading_active
 
 
 func set_loading_active(p_bool: bool) -> void:
 	var _mutex_lock = mutex_lock_const.new(_loading_tasks_mutex)
-	print_verbose("Setting loading active status to %s" % [str(p_bool)])
+	#print_verbose("Setting loading active status to %s" % [str(p_bool)])
 	_loading_active = p_bool
 
 
@@ -67,7 +67,7 @@ func request_loading_task(
 	p_type_whitelist: Dictionary,
 	p_type_hint: String = ""
 ) -> bool:
-	print_verbose("Requesting loading task for path: %s" % [p_path])
+	#print_verbose("Requesting loading task for path: %s" % [p_path])
 	var new_loading_task: LoadingTask = LoadingTask.new(p_type_hint)
 	new_loading_task.bypass_whitelist = false
 	new_loading_task.external_path_whitelist = p_external_path_whitelist
@@ -131,7 +131,7 @@ func _destroy_loading_task(p_path) -> void:
 
 func _get_loading_task_paths() -> Dictionary:
 	var _mutex_lock = mutex_lock_const.new(_loading_tasks_mutex)
-	print_verbose("Getting loading task paths")
+	#print_verbose("Getting loading task paths")
 	var loading_tasks: Dictionary = {}
 
 	for key in _loading_tasks.keys():
