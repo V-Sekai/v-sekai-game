@@ -735,6 +735,10 @@ func _host_state_instance() -> Dictionary:
 
 				new_player_instances.push_back(player_instance)
 
+				#TODO: Use a game ready signal instead
+				VSKPropSpawner.tester = true
+
+
 	instanced_nodes["map"] = map_instance
 	instanced_nodes["players"] = new_player_instances
 

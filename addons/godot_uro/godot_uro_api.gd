@@ -14,6 +14,7 @@ const USER_NAME = "user"
 const SHARD_NAME = "shard"
 const AVATAR_NAME = "avatar"
 const MAP_NAME = "map"
+const PROP_NAME = "prop"
 
 var requester: RefCounted = null
 var godot_uro: Node = null
@@ -263,6 +264,32 @@ func get_map_async(p_id: String) -> Dictionary:
 
 	var result = await (requester.request(
 		godot_uro_helper_const.get_api_path() + godot_uro_helper_const.MAPS_PATH + "/" + p_id,
+		query,
+		godot_uro_requester_const.TokenType.ACCESS_TOKEN,
+		{"method": HTTPClient.METHOD_GET, "encoding": "form"}
+	))
+
+	return uro_api_const._handle_result(result)
+
+
+func get_props_async() -> Dictionary:
+	var query: Dictionary = godot_uro_helper_const.populate_query(PROP_NAME, {})
+
+	var result = await (requester.request(
+		godot_uro_helper_const.get_api_path() + godot_uro_helper_const.PROPS_PATH,
+		query,
+		godot_uro_requester_const.TokenType.NO_TOKEN,
+		{"method": HTTPClient.METHOD_GET, "encoding": "form"}
+	))
+
+	return uro_api_const._handle_result(result)
+
+
+func get_prop_async(p_id: String) -> Dictionary:
+	var query: Dictionary = {}
+
+	var result = await (requester.request(
+		godot_uro_helper_const.get_api_path() + godot_uro_helper_const.PROPS_PATH + "/" + p_id,
 		query,
 		godot_uro_requester_const.TokenType.ACCESS_TOKEN,
 		{"method": HTTPClient.METHOD_GET, "encoding": "form"}

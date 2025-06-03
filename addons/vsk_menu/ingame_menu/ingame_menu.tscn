@@ -13,6 +13,7 @@ grow_vertical = 2
 script = ExtResource("1")
 mute_button_path = NodePath("ColorRect/VBoxContainer/GridContainer/ButtonContainer15/MuteButton")
 fps_label_path = NodePath("ColorRect/VBoxContainer/FPS")
+random_prop_button_path = NodePath("ColorRect/VBoxContainer/GridContainer/ButtonContainer14/RandomPropButton")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 layout_mode = 1
@@ -237,7 +238,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Button" type="Button" parent="ColorRect/VBoxContainer/GridContainer/ButtonContainer14"]
+[node name="RandomPropButton" type="Button" parent="ColorRect/VBoxContainer/GridContainer/ButtonContainer14"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.1
@@ -245,7 +246,7 @@ anchor_top = 0.1
 anchor_right = 0.9
 anchor_bottom = 0.9
 theme_override_fonts/font = ExtResource("2")
-disabled = true
+text = "TR_MENU_RANDOM_PROP"
 
 [node name="ButtonContainer15" type="Control" parent="ColorRect/VBoxContainer/GridContainer"]
 layout_mode = 2
@@ -286,5 +287,6 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = ExtResource("2")
 text = "FPS: 0"
 
+[connection signal="pressed" from="ColorRect/VBoxContainer/GridContainer/ButtonContainer14/RandomPropButton" to="." method="_on_RandomPropButton_pressed"]
 [connection signal="pressed" from="ColorRect/VBoxContainer/GridContainer/ButtonContainer15/MuteButton" to="." method="_on_MuteButton_pressed"]
 [connection signal="pressed" from="ColorRect/VBoxContainer/GridContainer/ButtonContainer16/DisconnectButton" to="." method="_on_DisconnectButton_pressed"]

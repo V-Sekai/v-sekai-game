@@ -78,6 +78,7 @@ TR_MENU_PLAYER_COUNT,Player Count,Número de jugadores
 TR_MENU_PLAYER_DISPLAY_NAME,Display Name,Nombre visible
 TR_MENU_PORT,Port,Puerto
 TR_MENU_QUIT_MESSAGE,Are you sure you want to quit?,¿Estás seguro de que quieres salir?
+TR_MENU_RANDOM_PROP,Random Prop,Prop al azar
 TR_MENU_RECEIVE_EMAIL_NOTIFICATIONS,Receive Email Notifications,Recibir notificaciones de correo
 TR_MENU_RECONNECT,Reconnect,Re-conectar
 TR_MENU_REFRESH,Refresh,Refrescar
