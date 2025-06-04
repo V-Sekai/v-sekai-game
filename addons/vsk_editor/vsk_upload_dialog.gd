@@ -120,6 +120,9 @@ func _user_content_can_be_uploaded_by_current_account() -> bool:
 		vsk_types_const.UserContentType.Avatar:
 			if VSKAccountManager.can_upload_avatars:
 				return true
+		vsk_types_const.UserContentType.Prop:
+			if VSKAccountManager.can_upload_props:
+				return true
 		vsk_types_const.UserContentType.Map:
 			if VSKAccountManager.can_upload_maps:
 				return true

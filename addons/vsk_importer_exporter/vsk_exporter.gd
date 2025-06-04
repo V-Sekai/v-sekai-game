@@ -29,6 +29,11 @@ const avatar_definition_runtime_const = preload(
 	"res://addons/vsk_avatar/vsk_avatar_definition_runtime.gd"
 )
 
+const prop_definition_const = preload("res://addons/vsk_prop/vsk_prop_definition.gd")
+const prop_definition_runtime_const = preload(
+	"res://addons/vsk_prop/vsk_prop_definition_runtime.gd"
+)
+
 var map_definition = load("res://addons/vsk_map/vsk_map_definition.gd")
 var map_definition_runtime = load("res://addons/vsk_map/vsk_map_definition_runtime.gd")
 
@@ -36,9 +41,11 @@ const bone_lib_const = preload("res://addons/vsk_avatar/bone_lib.gd")
 const node_util_const = preload("res://addons/gd_util/node_util.gd")
 
 const avatar_callback_const = preload("res://addons/vsk_avatar/avatar_callback.gd")
+const prop_callback_const = preload("res://addons/vsk_prop/prop_callback.gd")
 const map_callback_const = preload("res://addons/vsk_map/map_callback.gd")
 
 const validator_avatar_const = preload("res://addons/vsk_importer_exporter/vsk_avatar_validator.gd")
+const validator_prop_const = preload("res://addons/vsk_importer_exporter/vsk_prop_validator.gd")
 const validator_map_const = preload("res://addons/vsk_importer_exporter/vsk_map_validator.gd")
 
 const entity_node_const = preload("res://addons/entity_manager/entity.gd")
@@ -1076,6 +1083,72 @@ func export_avatar(p_root: Node, p_node: Node, p_path: String) -> int:
 
 
 ##
+## Prop
+##
+
+
+func create_packed_scene_for_prop(_p_root, p_node) -> Dictionary:
+	var packed_scene_export: PackedScene = null
+	var err: int = prop_callback_const.PROP_FAILED
+
+	var dictionary: Dictionary = {}
+
+	var validator: validator_prop_const = null
+
+	if ProjectSettings.get_setting("ugc/config/sanitize_prop_export"):
+		validator = validator_prop_const.new()
+
+		print("Creating sanitised duplicate...")
+		dictionary = create_sanitised_duplication(p_node, validator)
+
+		print("Done sanitised duplicate...")
+	else:
+		dictionary = {"node": p_node.duplicate(), "entity_nodes": []}
+
+	var duplicate_node: Node = dictionary["node"]
+
+	if duplicate_node:
+		var entity_resource_array: Array = []
+
+		packed_scene_export = PackedScene.new()
+
+		print("Converting to runtime user content...")
+		duplicate_node = vsk_exporter_const.convert_to_runtime_user_content(
+			duplicate_node, prop_definition_runtime_const
+		)
+		duplicate_node.prop_resources = entity_resource_array
+
+		print("Packing prop...")
+
+		duplicate_node.set_name(p_node.get_name())  # Reset name
+		if packed_scene_export.pack(duplicate_node) == OK:
+			err = prop_callback_const.PROP_OK
+
+	if duplicate_node:
+		duplicate_node.free()
+
+	return {"packed_scene": packed_scene_export, "err": err}
+
+
+func export_prop(p_root: Node, p_node: Node, p_path: String) -> int:
+	# Create a packed scene
+	var packed_scene_dict: Dictionary = create_packed_scene_for_prop(p_root, p_node)
+
+	var err: int = packed_scene_dict["err"]
+
+	if err == prop_callback_const.PROP_OK:
+		err = save_user_content_resource(p_path, packed_scene_dict["packed_scene"])
+		if err == OK:
+			print("---Prop exported successfully!---")
+		else:
+			print("---Prop exported successfully!---")
+	else:
+		print("---Prop export failed!---")
+
+	return err
+
+
+##
 ## Map
 ##
 
@@ -1226,6 +1299,17 @@ func _user_content_submission_requested(p_upload_data: Dictionary, p_callbacks: 
 				p_callbacks["packed_scene_created"].call()
 			else:
 				p_callbacks["packed_scene_creation_failed"].call("Avatar export failed!")
+		vsk_types_const.UserContentType.Prop:
+			var packed_scene_dict: Dictionary = create_packed_scene_for_prop(root, node)
+
+			var err: int = packed_scene_dict["err"]
+
+			if err == prop_callback_const.PROP_OK:
+				packed_scene = packed_scene_dict["packed_scene"]
+
+				p_callbacks["packed_scene_created"].call()
+			else:
+				p_callbacks["packed_scene_creation_failed"].call("Prop export failed!")
 		vsk_types_const.UserContentType.Map:
 			var packed_scene_dict: Dictionary = create_packed_scene_for_map(root, node)
 
@@ -1326,6 +1410,8 @@ func _ready():
 	if Engine.is_editor_hint():
 		if !ProjectSettings.has_setting("ugc/config/sanitize_avatar_export"):
 			ProjectSettings.set_setting("ugc/config/sanitize_avatar_export", true)
+		if !ProjectSettings.has_setting("ugc/config/sanitize_prop_export"):
+			ProjectSettings.set_setting("ugc/config/sanitize_prop_export", true)
 		if !ProjectSettings.has_setting("ugc/config/sanitize_map_export"):
 			ProjectSettings.set_setting("ugc/config/sanitize_map_export", true)
 

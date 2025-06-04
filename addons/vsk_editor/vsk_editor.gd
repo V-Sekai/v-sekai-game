@@ -266,6 +266,18 @@ func _requesting_user_content(
 				else:
 					_user_content_get_failed(result)
 
+		vsk_types_const.UserContentType.Prop:
+			if not p_database_id.is_empty():
+				var result = await GodotUro.godot_uro_api.dashboard_get_prop_async(p_database_id)
+				if GodotUro.godot_uro_helper_const.requester_result_is_ok(result):
+					var output: Dictionary = result["output"]
+					var data: Dictionary = output["data"]
+					if data.has("prop"):
+						user_content = data["prop"]
+						database_id = p_database_id
+				else:
+					_user_content_get_failed(result)
+
 		vsk_types_const.UserContentType.Map:
 			if not p_database_id.is_empty():
 				var result = await GodotUro.godot_uro_api.dashboard_get_map_async(p_database_id)
@@ -482,6 +494,10 @@ func _packed_scene_pre_uploading_callback(
 						result = await GodotUro.godot_uro_api.dashboard_create_avatar_async(
 							upload_dictionary
 						)
+					vsk_types_const.UserContentType.Prop:
+						result = await GodotUro.godot_uro_api.dashboard_create_prop_async(
+							upload_dictionary
+						)
 					vsk_types_const.UserContentType.Map:
 						result = await GodotUro.godot_uro_api.dashboard_create_map_async(
 							upload_dictionary
@@ -490,6 +506,10 @@ func _packed_scene_pre_uploading_callback(
 				match type:
 					vsk_types_const.UserContentType.Avatar:
 						result = await GodotUro.godot_uro_api.dashboard_update_avatar_async(
+							database_id, upload_dictionary
+						)
+					vsk_types_const.UserContentType.Prop:
+						result = await GodotUro.godot_uro_api.dashboard_update_prop_async(
 							database_id, upload_dictionary
 						)
 					vsk_types_const.UserContentType.Map:
