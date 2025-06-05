@@ -1,0 +1,70 @@
+[gd_scene load_steps=8 format=3 uid="uid://b8cq8t2yuydt"]
+
+[ext_resource type="Script" uid="uid://dcdn5wi5ifcr0" path="res://addons/vsk_ui/view_controllers/vsk_ui_view_controller_big_menu.gd" id="2_e1bxb"]
+[ext_resource type="PackedScene" uid="uid://b8af2il3sjsc2" path="res://addons/vsk_ui/views/vsk_ui_view_content_menu.tscn" id="3_38wm4"]
+[ext_resource type="PackedScene" uid="uid://dkhu4ajatpaxx" path="res://addons/vsk_ui/vsk_window.tscn" id="3_lrrh4"]
+[ext_resource type="PackedScene" uid="uid://dtrkh7xwvamyn" path="res://addons/vsk_ui/views/vsk_ui_view_avatar_menu.tscn" id="4_e1bxb"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_e1bxb"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_lrrh4"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_38wm4"]
+
+[node name="BigMenuViewController" type="Control" node_paths=PackedStringArray("title_label")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_e1bxb")
+title_label = NodePath("Content/VBoxContainer/WindowView/Panel/Content/Header/TopHeaderPanelContainer/VBoxContainer/MarginContainer/HBoxContainer/Title")
+
+[node name="Content" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Content"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="WindowView" parent="Content/VBoxContainer" instance=ExtResource("3_lrrh4")]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TabContainer" type="TabContainer" parent="Content/VBoxContainer/WindowView/Panel/Content/Body/MarginContainer/Content" index="0"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_e1bxb")
+theme_override_styles/tabbar_background = SubResource("StyleBoxEmpty_lrrh4")
+theme_override_styles/tab_unselected = SubResource("StyleBoxEmpty_38wm4")
+tab_alignment = 1
+current_tab = 0
+tabs_position = 1
+
+[node name="Explore" parent="Content/VBoxContainer/WindowView/Panel/Content/Body/MarginContainer/Content/TabContainer" instance=ExtResource("3_38wm4")]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="Avatars" parent="Content/VBoxContainer/WindowView/Panel/Content/Body/MarginContainer/Content/TabContainer" instance=ExtResource("4_e1bxb")]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+
+[connection signal="content_selected" from="Content/VBoxContainer/WindowView/Panel/Content/Body/MarginContainer/Content/TabContainer/Avatars" to="." method="_on_avatars_content_selected"]
+
+[editable path="Content/VBoxContainer/WindowView"]
+[editable path="Content/VBoxContainer/WindowView/Panel/Content/Header/TopHeaderPanelContainer"]

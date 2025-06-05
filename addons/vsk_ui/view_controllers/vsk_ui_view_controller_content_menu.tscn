@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://wlyd0uw813c3"]
+
+[ext_resource type="Script" uid="uid://ylmhgmnqupea" path="res://addons/vsk_ui/view_controllers/vsk_ui_view_controller_content_menu.gd" id="1_ndpv6"]
+[ext_resource type="PackedScene" uid="uid://b8af2il3sjsc2" path="res://addons/vsk_ui/views/vsk_ui_view_content_menu.tscn" id="3_pc4vb"]
+
+[node name="ContentMenuViewController" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ndpv6")
+
+[node name="ContentMenu" parent="." instance=ExtResource("3_pc4vb")]
+layout_mode = 1

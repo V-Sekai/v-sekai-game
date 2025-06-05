@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://dcd0ooyvb0nwu"]
+
+[node name="TopHeaderPanelContainer" type="PanelContainer"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 69.0
+grow_horizontal = 2
+
+[node name="TopHeaderPanel" type="Panel" parent="."]
+layout_mode = 2
+theme_type_variation = &"TopHeaderPanel"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_type_variation = &"ZeroSeperationVBoxContainer"
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"MenuMarginContainer"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer"]
+layout_mode = 2
+theme_type_variation = &"ZeroSeperationHBoxContainer"
+
+[node name="Title" type="Label" parent="VBoxContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme_type_variation = &"TopHeaderLabel"
+vertical_alignment = 1
+clip_text = true

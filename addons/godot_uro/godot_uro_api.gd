@@ -5,104 +5,77 @@
 
 @tool
 extends RefCounted
-
-const godot_uro_requester_const = preload("godot_uro_requester.gd")
-const godot_uro_helper_const = preload("godot_uro_helper.gd")
-const uro_api_const = preload("res://addons/godot_uro/godot_uro_api.gd")
+class_name GodotUroAPI
 
 const USER_NAME = "user"
 const SHARD_NAME = "shard"
 const AVATAR_NAME = "avatar"
 const MAP_NAME = "map"
 
-var requester: RefCounted = null
-var godot_uro: Node = null
+var _godot_uro: GodotUro = null
 
+func cancel(p_requester: GodotUroRequester) -> void:
+	p_requester.cancel()
 
-func cancel_async() -> void:
-	await requester.cancel()
-
-
-static func bool_to_string(p_bool: bool) -> String:
-	if p_bool:
-		return "true"
-	else:
-		return "false"
-
-
-static func populate_query(p_query_name: String, p_query_dictionary: Dictionary) -> Dictionary:
+func get_profile_async(p_requester: GodotUroRequester, p_access_token: String) -> Dictionary:
 	var query: Dictionary = {}
 
-	for key in p_query_dictionary.keys():
-		query["%s[%s]" % [p_query_name, key]] = p_query_dictionary[key]
-
-	return query
-
-
-func get_profile_async() -> Dictionary:
-	var query: Dictionary = {}
-
-	var result = await (requester.request(
-		godot_uro_helper_const.get_api_path() + godot_uro_helper_const.PROFILE_PATH,
+	var result = await (p_requester.request(
+		GodotUroHelper.get_api_path() + GodotUroHelper.PROFILE_PATH,
 		query,
-		godot_uro_requester_const.TokenType.ACCESS_TOKEN,
+		p_access_token,
 		{"method": HTTPClient.METHOD_GET, "encoding": "form"}
 	))
 
-	return uro_api_const._handle_result(result)
-
-
-func renew_session_async() -> Dictionary:
+	return _handle_result(result)
+	
+func renew_session_async(p_requester: GodotUroRequester, p_renewal_token: String) -> Dictionary:
 	var query: Dictionary = {}
-
-	var result = await (requester.request(
+	
+	var result = await (p_requester.request(
 		(
-			godot_uro_helper_const.get_api_path()
-			+ godot_uro_helper_const.SESSION_PATH
-			+ godot_uro_helper_const.RENEW_PATH
+			GodotUroHelper.get_api_path()
+			+ GodotUroHelper.SESSION_PATH
+			+ GodotUroHelper.RENEW_PATH
 		),
 		query,
-		godot_uro_requester_const.TokenType.RENEWAL_TOKEN,
+		p_renewal_token,
 		{"method": HTTPClient.METHOD_POST, "encoding": "form"}
 	))
 
-	return uro_api_const._handle_result(result)
+	return _handle_result(result)
 
-
-func sign_in_async(p_username_or_email: String, p_password: String) -> Dictionary:
+func sign_in_async(p_requester: GodotUroRequester, p_username_or_email: String, p_password: String) -> Dictionary:
 	var query: Dictionary = {
 		"user[username_or_email]": p_username_or_email,
 		"user[password]": p_password,
 	}
 
-	var new_requester = godot_uro.create_requester()
-
-	var result = await (new_requester.request(
-		godot_uro_helper_const.get_api_path() + godot_uro_helper_const.SESSION_PATH,
+	var result: GodotUroRequester.Result = await (p_requester.request(
+		GodotUroHelper.get_api_path() + GodotUroHelper.SESSION_PATH,
 		query,
-		godot_uro_requester_const.TokenType.NO_TOKEN,
+		"",
 		{"method": HTTPClient.METHOD_POST, "encoding": "form"}
 	))
 
-	requester = new_requester
-
-	return uro_api_const._handle_result(result)
+	return _handle_result(result)
 
 
-func sign_out_async() -> Dictionary:
+func sign_out_async(p_requester: GodotUroRequester, p_access_token: String) -> Dictionary:
 	var query: Dictionary = {}
 
-	var result = await (requester.request(
-		godot_uro_helper_const.get_api_path() + godot_uro_helper_const.SESSION_PATH,
+	var result = await (p_requester.request(
+		GodotUroHelper.get_api_path() + GodotUroHelper.SESSION_PATH,
 		query,
-		godot_uro_requester_const.TokenType.ACCESS_TOKEN,
+		p_access_token,
 		{"method": HTTPClient.METHOD_DELETE, "encoding": "form"}
 	))
 
-	return uro_api_const._handle_result(result)
+	return _handle_result(result)
 
 
 func register_async(
+	p_requester: GodotUroRequester,
 	p_username: String,
 	p_email: String,
 	p_password: String,
@@ -114,246 +87,231 @@ func register_async(
 		"user[email]": p_email,
 		"user[password]": p_password,
 		"user[password_confirmation]": p_password_confirmation,
-		"user[email_notifications]": uro_api_const.bool_to_string(p_email_notifications)
+		"user[email_notifications]": GodotUroHelper.bool_to_string(p_email_notifications)
 	}
 
-	var result = await (requester.request(
-		godot_uro_helper_const.get_api_path() + godot_uro_helper_const.REGISTRATION_PATH,
+	var result = await (p_requester.request(
+		GodotUroHelper.get_api_path() + GodotUroHelper.REGISTRATION_PATH,
 		query,
-		godot_uro_requester_const.TokenType.NO_TOKEN,
+		"",
 		{"method": HTTPClient.METHOD_POST, "encoding": "form"}
 	))
 
-	return uro_api_const._handle_result(result)
+	return _handle_result(result)
 
-
-func create_identity_proof_for_async(p_id: String) -> Dictionary:
+func create_identity_proof_for_async(p_requester: GodotUroRequester, p_access_token: String, p_id: String) -> Dictionary:
 	var query: Dictionary = {
 		"identity_proof[user_to]": p_id,
 	}
 
-	var result = await (requester.request(
-		godot_uro_helper_const.get_api_path() + godot_uro_helper_const.IDENTITY_PROOFS_PATH,
+	var result = await (p_requester.request(
+		GodotUroHelper.get_api_path() + GodotUroHelper.IDENTITY_PROOFS_PATH,
 		query,
-		godot_uro_requester_const.TokenType.ACCESS_TOKEN,
+		p_access_token,
 		{"method": HTTPClient.METHOD_POST, "encoding": "form"}
 	))
+	
+	return _handle_result(result)
 
-	return uro_api_const._handle_result(result)
-
-
-func get_identity_proof_async(p_id: String) -> Dictionary:
+func get_identity_proof_async(p_requester: GodotUroRequester, p_access_token: String, p_id: String) -> Dictionary:
 	var query: Dictionary = {}
 
-	var result = await (requester.request(
+	var result = await (p_requester.request(
 		(
-			godot_uro_helper_const.get_api_path()
-			+ godot_uro_helper_const.IDENTITY_PROOFS_PATH
+			GodotUroHelper.get_api_path()
+			+ GodotUroHelper.IDENTITY_PROOFS_PATH
 			+ "/"
 			+ p_id
 		),
 		query,
-		godot_uro_requester_const.TokenType.ACCESS_TOKEN,
+		p_access_token,
 		{"method": HTTPClient.METHOD_GET, "encoding": "form"}
 	))
+	return _handle_result(result)
 
-	return uro_api_const._handle_result(result)
+func create_shard_async(p_requester: GodotUroRequester, p_access_token: String, p_query: Dictionary) -> Dictionary:
+	var query: Dictionary = GodotUroHelper.populate_query(SHARD_NAME, p_query)
 
-
-func create_shard_async(p_query: Dictionary) -> Dictionary:
-	var query: Dictionary = godot_uro_helper_const.populate_query(SHARD_NAME, p_query)
-
-	var result = await (requester.request(
-		godot_uro_helper_const.get_api_path() + godot_uro_helper_const.SHARDS_PATH,
+	var result = await (p_requester.request(
+		GodotUroHelper.get_api_path() + GodotUroHelper.SHARDS_PATH,
 		query,
-		godot_uro_requester_const.TokenType.ACCESS_TOKEN,
+		p_access_token,
 		{"method": HTTPClient.METHOD_POST, "encoding": "form"}
 	))
+	return _handle_result(result)
 
-	return uro_api_const._handle_result(result)
-
-
-func delete_shard_async(p_id: String, p_query: Dictionary) -> Dictionary:
-	var query: Dictionary = godot_uro_helper_const.populate_query(SHARD_NAME, p_query)
-
-	var result = await (requester.request(
+func delete_shard_async(p_requester: GodotUroRequester, p_access_token: String, p_id: String, p_query: Dictionary) -> Dictionary:
+	var query: Dictionary = GodotUroHelper.populate_query(SHARD_NAME, p_query)
+	
+	var result = await (p_requester.request(
 		(
 			"%s%s/%s"
-			% [godot_uro_helper_const.get_api_path(), godot_uro_helper_const.SHARDS_PATH, p_id]
+			% [GodotUroHelper.get_api_path(), GodotUroHelper.SHARDS_PATH, p_id]
 		),
 		query,
-		godot_uro_requester_const.TokenType.ACCESS_TOKEN,
+		p_access_token,
 		{"method": HTTPClient.METHOD_DELETE, "encoding": "form"}
 	))
 
-	return uro_api_const._handle_result(result)
+	return _handle_result(result)
 
-
-func update_shard_async(p_id: String, p_query: Dictionary) -> Dictionary:
-	var query: Dictionary = godot_uro_helper_const.populate_query(SHARD_NAME, p_query)
-
-	var result = await (requester.request(
+func update_shard_async(p_requester: GodotUroRequester, p_access_token: String, p_id: String, p_query: Dictionary) -> Dictionary:
+	var query: Dictionary = GodotUroHelper.populate_query(SHARD_NAME, p_query)
+	
+	var result = await (p_requester.request(
 		(
 			"%s%s/%s"
-			% [godot_uro_helper_const.get_api_path(), godot_uro_helper_const.SHARDS_PATH, p_id]
+			% [GodotUroHelper.get_api_path(), GodotUroHelper.SHARDS_PATH, p_id]
 		),
 		query,
-		godot_uro_requester_const.TokenType.ACCESS_TOKEN,
+		p_access_token,
 		{"method": HTTPClient.METHOD_PUT, "encoding": "form"}
 	))
 
-	return uro_api_const._handle_result(result)
+	return _handle_result(result)
 
+func get_shards_async(p_requester: GodotUroRequester) -> Dictionary:
+	var query: Dictionary = GodotUroHelper.populate_query(SHARD_NAME, {})
 
-func get_shards_async() -> Dictionary:
-	var query: Dictionary = godot_uro_helper_const.populate_query(SHARD_NAME, {})
-
-	var result = await (requester.request(
-		godot_uro_helper_const.get_api_path() + godot_uro_helper_const.SHARDS_PATH,
+	var result = await (p_requester.request(
+		GodotUroHelper.get_api_path() + GodotUroHelper.SHARDS_PATH,
 		query,
-		godot_uro_requester_const.TokenType.NO_TOKEN,
+		"",
 		{"method": HTTPClient.METHOD_GET, "encoding": "form"}
 	))
 
-	return godot_uro_helper_const.process_shards_json(uro_api_const._handle_result(result))
+	return GodotUroHelper.process_shards_json(_handle_result(result))
 
+func get_avatars_async(p_requester: GodotUroRequester) -> Dictionary:
+	var query: Dictionary = GodotUroHelper.populate_query(AVATAR_NAME, {})
 
-func get_avatars_async() -> Dictionary:
-	var query: Dictionary = godot_uro_helper_const.populate_query(AVATAR_NAME, {})
-
-	var result = await (requester.request(
-		godot_uro_helper_const.get_api_path() + godot_uro_helper_const.AVATARS_PATH,
+	var result = await (p_requester.request(
+		GodotUroHelper.get_api_path() + GodotUroHelper.AVATARS_PATH,
 		query,
-		godot_uro_requester_const.TokenType.NO_TOKEN,
+		"",
 		{"method": HTTPClient.METHOD_GET, "encoding": "form"}
 	))
 
-	return uro_api_const._handle_result(result)
+	return _handle_result(result)
 
-
-func get_avatar_async(p_id: String) -> Dictionary:
+func get_avatar_async(p_requester: GodotUroRequester, p_id: String) -> Dictionary:
 	var query: Dictionary = {}
 
-	var result = await (requester.request(
-		godot_uro_helper_const.get_api_path() + godot_uro_helper_const.AVATARS_PATH + "/" + p_id,
+	var result = await (p_requester.request(
+		GodotUroHelper.get_api_path() + GodotUroHelper.AVATARS_PATH + "/" + p_id,
 		query,
-		godot_uro_requester_const.TokenType.ACCESS_TOKEN,
+		"",
 		{"method": HTTPClient.METHOD_GET, "encoding": "form"}
 	))
 
-	return uro_api_const._handle_result(result)
+	return _handle_result(result)
 
+func get_maps_async(p_requester: GodotUroRequester) -> Dictionary:
+	var query: Dictionary = GodotUroHelper.populate_query(MAP_NAME, {})
 
-func get_maps_async() -> Dictionary:
-	var query: Dictionary = godot_uro_helper_const.populate_query(MAP_NAME, {})
-
-	var result = await (requester.request(
-		godot_uro_helper_const.get_api_path() + godot_uro_helper_const.MAPS_PATH,
+	var result = await (p_requester.request(
+		GodotUroHelper.get_api_path() + GodotUroHelper.MAPS_PATH,
 		query,
-		godot_uro_requester_const.TokenType.NO_TOKEN,
+		"",
 		{"method": HTTPClient.METHOD_GET, "encoding": "form"}
 	))
 
-	return uro_api_const._handle_result(result)
+	return _handle_result(result)
 
-
-func get_map_async(p_id: String) -> Dictionary:
+func get_map_async(p_requester: GodotUroRequester, p_access_token: String, p_id: String) -> Dictionary:
 	var query: Dictionary = {}
-
-	var result = await (requester.request(
-		godot_uro_helper_const.get_api_path() + godot_uro_helper_const.MAPS_PATH + "/" + p_id,
+	
+	var result = await (p_requester.request(
+		GodotUroHelper.get_api_path() + GodotUroHelper.MAPS_PATH + "/" + p_id,
 		query,
-		godot_uro_requester_const.TokenType.ACCESS_TOKEN,
+		p_access_token,
 		{"method": HTTPClient.METHOD_GET, "encoding": "form"}
 	))
 
-	return uro_api_const._handle_result(result)
-
+	return _handle_result(result)
 
 ##
 ## Dashboard Avatar
 ##
 
 
-func dashboard_get_avatars_async() -> Dictionary:
+func dashboard_get_avatars_async(p_requester: GodotUroRequester, p_access_token: String) -> Dictionary:
 	var query: Dictionary = {}
-
+	
 	var path: String = (
-		godot_uro_helper_const.get_api_path()
-		+ godot_uro_helper_const.DASHBOARD_PATH
-		+ godot_uro_helper_const.AVATARS_PATH
+		GodotUroHelper.get_api_path()
+		+ GodotUroHelper.DASHBOARD_PATH
+		+ GodotUroHelper.AVATARS_PATH
 	)
 
-	var result = await requester.request(
+	var result = await p_requester.request(
 		path,
 		query,
-		godot_uro_requester_const.TokenType.ACCESS_TOKEN,
+		p_access_token,
 		{"method": HTTPClient.METHOD_GET, "encoding": "form"}
 	)
 	print("Path " + str(path) + " returned " + str(result) + " type " + str(typeof(result)))
 
-	return uro_api_const._handle_result(result)
+	return _handle_result(result)
 
-
-func dashboard_create_avatar_async(p_query: Dictionary) -> Dictionary:
-	var query: Dictionary = godot_uro_helper_const.populate_query(AVATAR_NAME, p_query)
+func dashboard_create_avatar_async(p_requester: GodotUroRequester, p_access_token: String, p_query: Dictionary) -> Dictionary:
+	var query: Dictionary = GodotUroHelper.populate_query(AVATAR_NAME, p_query)
 
 	var path: String = (
-		godot_uro_helper_const.get_api_path()
-		+ godot_uro_helper_const.DASHBOARD_PATH
-		+ godot_uro_helper_const.AVATARS_PATH
+		GodotUroHelper.get_api_path()
+		+ GodotUroHelper.DASHBOARD_PATH
+		+ GodotUroHelper.AVATARS_PATH
 	)
 
-	var result = await requester.request(
+	var result = await p_requester.request(
 		path,
 		query,
-		godot_uro_requester_const.TokenType.ACCESS_TOKEN,
+		p_access_token,
 		{"method": HTTPClient.METHOD_POST, "encoding": "multipart"}
 	)
 
-	return uro_api_const._handle_result(result)
+	return _handle_result(result)
 
-
-func dashboard_update_avatar_async(p_id: String, p_query: Dictionary) -> Dictionary:
-	var query: Dictionary = godot_uro_helper_const.populate_query(AVATAR_NAME, p_query)
+func dashboard_update_avatar_async(p_requester: GodotUroRequester, p_access_token: String, p_id: String, p_query: Dictionary) -> Dictionary:
+	var query: Dictionary = GodotUroHelper.populate_query(AVATAR_NAME, p_query)
 
 	var path: String = (
-		godot_uro_helper_const.get_api_path()
-		+ godot_uro_helper_const.DASHBOARD_PATH
-		+ godot_uro_helper_const.AVATARS_PATH
+		GodotUroHelper.get_api_path()
+		+ GodotUroHelper.DASHBOARD_PATH
+		+ GodotUroHelper.AVATARS_PATH
 		+ "/"
 		+ str(p_id)
 	)
-
-	var result = await requester.request(
+	
+	var result = await p_requester.request(
 		path,
 		query,
-		godot_uro_requester_const.TokenType.ACCESS_TOKEN,
+		p_access_token,
 		{"method": HTTPClient.METHOD_PUT, "encoding": "multipart"}
 	)
 
-	return uro_api_const._handle_result(result)
+	return _handle_result(result)
 
 
-func dashboard_get_avatar_async(p_id: String) -> Dictionary:
+func dashboard_get_avatar_async(p_requester: GodotUroRequester, p_access_token: String, p_id: String) -> Dictionary:
 	var query: Dictionary = {}
 
 	var path: String = (
-		godot_uro_helper_const.get_api_path()
-		+ godot_uro_helper_const.DASHBOARD_PATH
-		+ godot_uro_helper_const.AVATARS_PATH
+		GodotUroHelper.get_api_path()
+		+ GodotUroHelper.DASHBOARD_PATH
+		+ GodotUroHelper.AVATARS_PATH
 		+ "/"
 		+ str(p_id)
 	)
-
-	var result = await requester.request(
+	
+	var result = await p_requester.request(
 		path,
 		query,
-		godot_uro_requester_const.TokenType.ACCESS_TOKEN,
+		p_access_token,
 		{"method": HTTPClient.METHOD_GET, "encoding": "form"}
 	)
 
-	return uro_api_const._handle_result(result)
+	return _handle_result(result)
 
 
 ##
@@ -361,85 +319,81 @@ func dashboard_get_avatar_async(p_id: String) -> Dictionary:
 ##
 
 
-func dashboard_get_maps_async() -> Dictionary:
+func dashboard_get_maps_async(p_requester: GodotUroRequester, p_access_token: String) -> Dictionary:
 	var query: Dictionary = {}
 
 	var path: String = (
-		godot_uro_helper_const.get_api_path()
-		+ godot_uro_helper_const.DASHBOARD_PATH
-		+ godot_uro_helper_const.MAPS_PATH
+		GodotUroHelper.get_api_path()
+		+ GodotUroHelper.DASHBOARD_PATH
+		+ GodotUroHelper.MAPS_PATH
 	)
-
-	var result = await requester.request(
+	
+	var result = await p_requester.request(
 		path,
 		query,
-		godot_uro_requester_const.TokenType.ACCESS_TOKEN,
+		p_access_token,
 		{"method": HTTPClient.METHOD_GET, "encoding": "form"}
 	)
 
-	return uro_api_const._handle_result(result)
+	return _handle_result(result)
 
-
-func dashboard_create_map_async(p_query: Dictionary) -> Dictionary:
-	var query: Dictionary = godot_uro_helper_const.populate_query(MAP_NAME, p_query)
+func dashboard_create_map_async(p_requester: GodotUroRequester, p_access_token: String, p_query: Dictionary) -> Dictionary:
+	var query: Dictionary = GodotUroHelper.populate_query(MAP_NAME, p_query)
 
 	var path: String = (
-		godot_uro_helper_const.get_api_path()
-		+ godot_uro_helper_const.DASHBOARD_PATH
-		+ godot_uro_helper_const.MAPS_PATH
+		GodotUroHelper.get_api_path()
+		+ GodotUroHelper.DASHBOARD_PATH
+		+ GodotUroHelper.MAPS_PATH
 	)
-
-	var result = await requester.request(
+	
+	var result = await p_requester.request(
 		path,
 		query,
-		godot_uro_requester_const.TokenType.ACCESS_TOKEN,
+		p_access_token,
 		{"method": HTTPClient.METHOD_POST, "encoding": "multipart"}
 	)
 
-	return uro_api_const._handle_result(result)
+	return _handle_result(result)
 
-
-func dashboard_update_map_async(p_id: String, p_query: Dictionary) -> Dictionary:
-	var query: Dictionary = godot_uro_helper_const.populate_query(MAP_NAME, p_query)
+func dashboard_update_map_async(p_requester: GodotUroRequester, p_access_token: String, p_id: String, p_query: Dictionary) -> Dictionary:
+	var query: Dictionary = GodotUroHelper.populate_query(MAP_NAME, p_query)
 
 	var path: String = (
-		godot_uro_helper_const.get_api_path()
-		+ godot_uro_helper_const.DASHBOARD_PATH
-		+ godot_uro_helper_const.MAPS_PATH
+		GodotUroHelper.get_api_path()
+		+ GodotUroHelper.DASHBOARD_PATH
+		+ GodotUroHelper.MAPS_PATH
 		+ "/"
 		+ str(p_id)
 	)
-
-	var result = await requester.request(
+	
+	var result = await p_requester.request(
 		path,
 		query,
-		godot_uro_requester_const.TokenType.ACCESS_TOKEN,
+		p_access_token,
 		{"method": HTTPClient.METHOD_PUT, "encoding": "multipart"}
 	)
 
-	return uro_api_const._handle_result(result)
+	return _handle_result(result)
 
-
-func dashboard_get_map_async(p_id: String) -> Dictionary:
+func dashboard_get_map_async(p_requester: GodotUroRequester, p_access_token: String, p_id: String) -> Dictionary:
 	var query: Dictionary = {}
 
 	var path: String = (
-		godot_uro_helper_const.get_api_path()
-		+ godot_uro_helper_const.DASHBOARD_PATH
-		+ godot_uro_helper_const.MAPS_PATH
+		GodotUroHelper.get_api_path()
+		+ GodotUroHelper.DASHBOARD_PATH
+		+ GodotUroHelper.MAPS_PATH
 		+ "/"
 		+ str(p_id)
 	)
-
-	var result = await requester.request(
+	
+	var result = await p_requester.request(
 		path,
 		query,
-		godot_uro_requester_const.TokenType.ACCESS_TOKEN,
+		p_access_token,
 		{"method": HTTPClient.METHOD_GET, "encoding": "form"}
 	)
 
-	return uro_api_const._handle_result(result)
-
+	return _handle_result(result)
 
 static func _handle_result(result: RefCounted) -> Dictionary:
 	var result_dict: Dictionary = {
@@ -456,5 +410,4 @@ static func _handle_result(result: RefCounted) -> Dictionary:
 
 
 func _init(p_godot_uro):
-	godot_uro = p_godot_uro
-	requester = p_godot_uro.create_requester()
+	_godot_uro = p_godot_uro

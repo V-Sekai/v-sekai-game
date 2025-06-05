@@ -1,0 +1,125 @@
+[gd_scene load_steps=7 format=3 uid="uid://c7bhefvtw3l1y"]
+
+[ext_resource type="Script" uid="uid://bf1m05ftx8xgu" path="res://addons/vsk_ui/views/vsk_ui_view_side_navigation_bar.gd" id="1_1blbv"]
+[ext_resource type="PackedScene" uid="uid://drb876hffoveb" path="res://addons/vsk_ui/widgets/vsk_button.tscn" id="1_pxpkr"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ixf25"]
+bg_color = Color(0.533333, 0.196078, 0.188235, 1)
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7dqni"]
+bg_color = Color(0.65, 0.234542, 0.2275, 1)
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y34s5"]
+bg_color = Color(0.2, 0.2, 0.2, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.8, 0.8, 0.8, 0)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bawn2"]
+bg_color = Color(0.32, 0.32, 0.32, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.8, 0.8, 0.8, 0)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+anti_aliasing = false
+
+[node name="Navigation" type="Control"]
+clip_contents = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.25
+script = ExtResource("1_1blbv")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VSKButton" parent="VBoxContainer" instance=ExtResource("1_pxpkr")]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+_shadow_offset = Vector2(0, 2)
+_thumbnail_background_stylebox = SubResource("StyleBoxFlat_ixf25")
+_thumbnail_background_hover_stylebox = SubResource("StyleBoxFlat_7dqni")
+_thumbnail_background_pressed_stylebox = null
+_background_stylebox = SubResource("StyleBoxFlat_y34s5")
+_background_hover_stylebox = SubResource("StyleBoxFlat_bawn2")
+_background_pressed_stylebox = null
+text = "Test"
+display_mode = 1
+metadata/_edit_pinned_properties_ = [&"display_mode"]
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"InfoLabel"
+text = "Browse"
+horizontal_alignment = 1
+
+[node name="VSKButton2" parent="VBoxContainer" instance=ExtResource("1_pxpkr")]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+size_flags_horizontal = 3
+_shadow_offset = Vector2(0, 2)
+_thumbnail_background_stylebox = SubResource("StyleBoxFlat_ixf25")
+_thumbnail_background_hover_stylebox = SubResource("StyleBoxFlat_7dqni")
+_thumbnail_background_pressed_stylebox = null
+_background_stylebox = SubResource("StyleBoxFlat_y34s5")
+_background_hover_stylebox = SubResource("StyleBoxFlat_bawn2")
+_background_pressed_stylebox = null
+text = "Test"
+display_mode = 1
+metadata/_edit_pinned_properties_ = [&"display_mode"]
+
+[node name="VSKButton3" parent="VBoxContainer" instance=ExtResource("1_pxpkr")]
+custom_minimum_size = Vector2(1.98, 64)
+layout_mode = 2
+size_flags_horizontal = 3
+_shadow_offset = Vector2(0, 2)
+_thumbnail_background_stylebox = SubResource("StyleBoxFlat_ixf25")
+_thumbnail_background_hover_stylebox = SubResource("StyleBoxFlat_7dqni")
+_thumbnail_background_pressed_stylebox = null
+_background_stylebox = SubResource("StyleBoxFlat_y34s5")
+_background_hover_stylebox = SubResource("StyleBoxFlat_bawn2")
+_background_pressed_stylebox = null
+text = "Test"
+display_mode = 1
+metadata/_edit_pinned_properties_ = [&"display_mode"]
+
+[node name="VSKButton4" parent="VBoxContainer" instance=ExtResource("1_pxpkr")]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+size_flags_horizontal = 3
+_shadow_offset = Vector2(0, 2)
+_thumbnail_background_stylebox = SubResource("StyleBoxFlat_ixf25")
+_thumbnail_background_hover_stylebox = SubResource("StyleBoxFlat_7dqni")
+_thumbnail_background_pressed_stylebox = null
+_background_stylebox = SubResource("StyleBoxFlat_y34s5")
+_background_hover_stylebox = SubResource("StyleBoxFlat_bawn2")
+_background_pressed_stylebox = null
+text = "Test"
+display_mode = 1
+metadata/_edit_pinned_properties_ = [&"display_mode"]

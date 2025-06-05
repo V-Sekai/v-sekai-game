@@ -1,0 +1,120 @@
+[gd_scene load_steps=2 format=3 uid="uid://cbi7jiche7t5l"]
+
+[ext_resource type="Script" uid="uid://bcnnyihcec1gv" path="res://addons/AutoSizeText/ui/AutoSizeTextEdit.gd" id="1_43qmb"]
+
+[node name="AutoSizeSampleTextEdit" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 7.0
+offset_top = 45.0
+offset_right = 7.0
+offset_bottom = 45.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TittleOnly" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_right = 20.0
+offset_bottom = 23.0
+grow_horizontal = 2
+text = "SAMPLE OF [TextEdit]"
+
+[node name="TittleXRange" type="Label" parent="."]
+layout_mode = 0
+offset_left = 751.0
+offset_top = 23.0
+offset_right = 1142.0
+offset_bottom = 46.0
+text = "RANGE SAMPLE"
+horizontal_alignment = 1
+
+[node name="Sample_Main_Text" type="TextEdit" parent="."]
+layout_mode = 0
+offset_top = 49.0
+offset_right = 576.0
+offset_bottom = 169.0
+theme_override_font_sizes/font_size = 10
+script = ExtResource("1_43qmb")
+_text = "WORD SMART
+Play alone, with friends in private rooms or join a faction and play online with the whole world in this epic MMORPG.
+https://spielmannspiel.com/light-switch-simulator"
+auto_split_text = true
+
+[node name="Sample_Sample_Big_Text" type="TextEdit" parent="."]
+layout_mode = 0
+offset_top = 184.0
+offset_right = 576.0
+offset_bottom = 323.0
+theme_override_font_sizes/font_size = 8
+script = ExtResource("1_43qmb")
+_text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus imperdiet justo ac metus ultrices, malesuada commodo purus faucibus.
+Nunc finibus, sem et hendrerit congue, mi risus sollicitudin diam, a elementum leo quam sit amet nibh. Nunc ut ullamcorper ligula. Etiam
+finibus, neque et venenatis efficitur, nulla velit condimentum nunc, non iaculis lectus dolor ut nunc. Phasellus feugiat tortor dolor, non
+mattis neque semper nec. Aliquam sit amet est in massa pulvinar malesuada. Proin efficitur, lectus eu sagittis aliquam, dui magna
+scelerisque mauris, vitae consequat velit elit ut neque. Curabitur porttitor lacus metus, ut porttitor urna pellentesque eget. Integer
+accumsan quis nunc eget commodo. Nunc a tristique lectus. In lobortis ligula a lobortis aliquam. Pellentesque nulla  ipsum, consectetur vel
+libero a, lobortis cursus velit. Suspendisse potenti. Phasellus tempus blandit dui.
+"
+min_size = 1
+
+[node name="Sample_Place_Holder" type="TextEdit" parent="."]
+layout_mode = 0
+offset_top = 386.0
+offset_right = 576.0
+offset_bottom = 599.0
+theme_override_font_sizes/font_size = 8
+placeholder_text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus imperdiet justo ac metus ultrices, malesuada commodo purus faucibus.
+Nunc finibus, sem et hendrerit congue, mi risus sollicitudin diam, a elementum leo quam sit amet nibh. Nunc ut ullamcorper ligula. Etiam
+finibus, neque et venenatis efficitur, nulla velit condimentum nunc, non iaculis lectus dolor ut nunc. Phasellus feugiat tortor dolor, non
+mattis neque semper nec. Aliquam sit amet est in massa pulvinar malesuada. Proin efficitur, lectus eu sagittis aliquam, dui magna
+scelerisque mauris, vitae consequat velit elit ut neque. Curabitur porttitor lacus metus, ut porttitor urna pellentesque eget. Integer
+accumsan quis nunc eget commodo. Nunc a tristique lectus. In lobortis ligula a lobortis aliquam. Pellentesque nulla  ipsum, consectetur vel
+libero a, lobortis cursus velit. Suspendisse potenti. Phasellus tempus blandit dui."
+script = ExtResource("1_43qmb")
+min_size = 1
+
+[node name="Sample_Range_WH_Test" type="TextEdit" parent="."]
+layout_mode = 0
+offset_left = 751.0
+offset_top = 49.0
+offset_right = 1145.0
+offset_bottom = 394.0
+theme_override_font_sizes/font_size = 27
+script = ExtResource("1_43qmb")
+_text = "X X X X X X X X X X X X X X X 
+X
+X
+X
+X
+X
+X
+A"
+min_size = 1
+max_size = 90
+
+[node name="Sample_1MoreSample?_WhyNot?" type="TextEdit" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.0260417
+anchor_top = 0.0123457
+anchor_right = -0.0260417
+anchor_bottom = 0.0123457
+offset_left = 781.0
+offset_top = 395.0
+offset_right = 1175.0
+offset_bottom = 595.0
+theme_override_font_sizes/font_size = 18
+placeholder_text = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+script = ExtResource("1_43qmb")
+min_size = 1

@@ -5,11 +5,9 @@
 
 @tool
 extends RefCounted
-
-const vsk_exporter_addon_const = preload("vsk_exporter_addon.gd")
+class_name VSKExporterAddonInterface
 
 var exporter_addons: Array = []
-
 
 func preprocess_scene(p_node: Node, p_validator: RefCounted) -> Node:
 	for addon in exporter_addons:

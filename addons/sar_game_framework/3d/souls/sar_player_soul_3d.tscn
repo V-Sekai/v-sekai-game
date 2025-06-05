@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://bp0ap87pblmir"]
+
+[ext_resource type="PackedScene" uid="uid://cyb0g6atx1nl7" path="res://addons/sar_game_framework/generic/souls/sar_soul.tscn" id="1_il1o0"]
+
+[node name="SarPlayerSoul3D" instance=ExtResource("1_il1o0")]
+process_mode = 3
+process_priority = -1000
+process_physics_priority = -1000

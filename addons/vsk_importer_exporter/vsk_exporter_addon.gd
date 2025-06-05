@@ -5,6 +5,7 @@
 
 @tool
 extends RefCounted
+class_name VSKExporterAddon
 
 
 func preprocess_scene(p_node: Node, _p_validator: RefCounted) -> Node:

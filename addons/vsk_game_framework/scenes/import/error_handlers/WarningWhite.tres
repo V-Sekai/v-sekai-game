@@ -1,0 +1,5 @@
+[gd_resource type="StandardMaterial3D" load_steps=0 format=3 uid="uid://by53ox7icc35v"]
+
+[resource]
+resource_name = "WarningWhite"
+emission_enabled = true

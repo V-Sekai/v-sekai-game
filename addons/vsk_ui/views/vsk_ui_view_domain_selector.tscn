@@ -1,0 +1,72 @@
+[gd_scene load_steps=4 format=3 uid="uid://c5y46r5i8hbr2"]
+
+[ext_resource type="Theme" uid="uid://s05juvtforjo" path="res://addons/vsk_ui/vsk_ui_dark.tres" id="1_uiq4h"]
+[ext_resource type="Script" uid="uid://da7qebbq0k0yp" path="res://addons/vsk_ui/views/vsk_ui_view_domain_selector.gd" id="2_edey2"]
+[ext_resource type="Resource" uid="uid://b3nkerk3freuq" path="res://addons/vsk_game_framework/data/vsk_default_homeserver_info.tres" id="3_edey2"]
+
+[node name="DomainSelectorView" type="Control" node_paths=PackedStringArray("_homeserver_list")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_uiq4h")
+script = ExtResource("2_edey2")
+_homeserver_list = NodePath("Panel/Content/Body/MarginContainer/AspectRatioContainer/VBoxContainer/HBoxContainer/HomeserverList")
+homeserver_info = ExtResource("3_edey2")
+
+[node name="Panel" type="Control" parent="."]
+clip_children = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Content" type="VBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"ZeroSeperationVBoxContainer"
+
+[node name="Body" type="VBoxContainer" parent="Panel/Content"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"ZeroSeperationVBoxContainer"
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel/Content/Body"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"ScreenMarginContainer"
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="Panel/Content/Body/MarginContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/Content/Body/MarginContainer/AspectRatioContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/Content/Body/MarginContainer/AspectRatioContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 1
+
+[node name="HomeserverList" type="VBoxContainer" parent="Panel/Content/Body/MarginContainer/AspectRatioContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/Content/Body/MarginContainer/AspectRatioContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 2
+
+[node name="ContinueButton" type="Button" parent="Panel/Content/Body/MarginContainer/AspectRatioContainer/VBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Continue"
+
+[connection signal="pressed" from="Panel/Content/Body/MarginContainer/AspectRatioContainer/VBoxContainer/VBoxContainer/ContinueButton" to="." method="_on_continue_button_pressed"]

@@ -1,0 +1,67 @@
+[gd_scene load_steps=2 format=3 uid="uid://b3dxn3kyssq7b"]
+
+[ext_resource type="Script" uid="uid://b70ilu8l1173s" path="res://addons/vsk_ui/views/vsk_ui_view_welcome.gd" id="1_cmage"]
+
+[node name="WelcomeView" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+script = ExtResource("1_cmage")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+alignment = 1
+
+[node name="InfoBox" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="ActionLabel" type="Label" parent="VBoxContainer/InfoBox"]
+layout_mode = 2
+theme_type_variation = &"HeaderLarge"
+text = "Welcome to V-Sekai!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Container" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Container"]
+layout_mode = 2
+alignment = 1
+
+[node name="SignInButton" type="Button" parent="VBoxContainer/Container/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Sign-in"
+
+[node name="RegisterButton" type="Button" parent="VBoxContainer/Container/HBoxContainer"]
+editor_description = "Need to sort out the API for in-app account creation."
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Create Account"
+
+[node name="Container2" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+alignment = 2
+
+[node name="SkipButton" type="Button" parent="VBoxContainer/Container2"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Continue without Signing in"
+
+[connection signal="pressed" from="VBoxContainer/Container/HBoxContainer/SignInButton" to="." method="_sign_in_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/Container/HBoxContainer/RegisterButton" to="." method="_register_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/Container2/SkipButton" to="." method="_skip_button_pressed"]

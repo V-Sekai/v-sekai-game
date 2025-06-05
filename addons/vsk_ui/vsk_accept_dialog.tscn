@@ -1,0 +1,133 @@
+[gd_scene load_steps=2 format=3 uid="uid://clqhvkk7w2d54"]
+
+[ext_resource type="Script" uid="uid://d11kfgsd6jgt" path="res://addons/AutoSizeText/ui/AutoSizeLabel.gd" id="1_c5uy4"]
+
+[node name="Control" type="Control"]
+custom_minimum_size = Vector2(600, 200)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch_mode = 1
+
+[node name="Control" type="Control" parent="AspectRatioContainer"]
+layout_mode = 2
+
+[node name="Panel" type="Panel" parent="AspectRatioContainer/Control"]
+clip_children = 2
+clip_contents = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.3
+anchor_right = 0.9
+anchor_bottom = 0.7
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+
+[node name="Content" type="VBoxContainer" parent="AspectRatioContainer/Control/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"ZeroSeperationVBoxContainer"
+
+[node name="Header" type="VBoxContainer" parent="AspectRatioContainer/Control/Panel/Content"]
+layout_mode = 2
+theme_type_variation = &"ZeroSeperationVBoxContainer"
+alignment = 1
+
+[node name="TopHeaderPanelContainer" type="PanelContainer" parent="AspectRatioContainer/Control/Panel/Content/Header"]
+layout_mode = 2
+
+[node name="TopHeaderPanel" type="Panel" parent="AspectRatioContainer/Control/Panel/Content/Header/TopHeaderPanelContainer"]
+layout_mode = 2
+theme_type_variation = &"TopHeaderPanel"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="AspectRatioContainer/Control/Panel/Content/Header/TopHeaderPanelContainer"]
+layout_mode = 2
+theme_type_variation = &"ZeroSeperationVBoxContainer"
+
+[node name="MarginContainer" type="MarginContainer" parent="AspectRatioContainer/Control/Panel/Content/Header/TopHeaderPanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="AspectRatioContainer/Control/Panel/Content/Header/TopHeaderPanelContainer/VBoxContainer/MarginContainer"]
+layout_mode = 2
+theme_type_variation = &"ZeroSeperationHBoxContainer"
+alignment = 1
+
+[node name="PanelHeaderLabel" type="Label" parent="AspectRatioContainer/Control/Panel/Content/Header/TopHeaderPanelContainer/VBoxContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"TopHeaderLabel"
+text = "Alert!"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+
+[node name="Body" type="MarginContainer" parent="AspectRatioContainer/Control/Panel/Content"]
+custom_minimum_size = Vector2(200, 100)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="AspectRatioContainer/Control/Panel/Content/Body"]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="AspectRatioContainer/Control/Panel/Content/Body/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MessageLabel" type="Label" parent="AspectRatioContainer/Control/Panel/Content/Body/VBoxContainer/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 32
+text = "Message"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("1_c5uy4")
+step_sizes = Array[int]([14, 16, 20, 24, 32])
+metadata/_custom_type_script = "uid://d11kfgsd6jgt"
+
+[node name="Buttons" type="VBoxContainer" parent="AspectRatioContainer/Control/Panel/Content/Body/VBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"ZeroSeperationVBoxContainer"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="AspectRatioContainer/Control/Panel/Content/Body/VBoxContainer/Buttons"]
+layout_mode = 2
+alignment = 1
+
+[node name="Button" type="Button" parent="AspectRatioContainer/Control/Panel/Content/Body/VBoxContainer/Buttons/HBoxContainer"]
+layout_mode = 2
+text = "OK"
+
+[node name="Button2" type="Button" parent="AspectRatioContainer/Control/Panel/Content/Body/VBoxContainer/Buttons/HBoxContainer"]
+layout_mode = 2
+text = "Cancel"

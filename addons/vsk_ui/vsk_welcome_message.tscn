@@ -1,0 +1,107 @@
+[gd_scene load_steps=6 format=3 uid="uid://dhq5hl530vv17"]
+
+[ext_resource type="Theme" uid="uid://s05juvtforjo" path="res://addons/vsk_ui/vsk_ui_dark.tres" id="1_jeoqs"]
+[ext_resource type="Script" uid="uid://dc8eyk6dihmtb" path="res://addons/vsk_ui/vsk_welcome_message.gd" id="2_no1xc"]
+[ext_resource type="PackedScene" uid="uid://dcd0ooyvb0nwu" path="res://addons/vsk_ui/vsk_top_header_panel_container.tscn" id="3_ueswl"]
+[ext_resource type="Script" uid="uid://d11kfgsd6jgt" path="res://addons/AutoSizeText/ui/AutoSizeLabel.gd" id="4_mnj2y"]
+[ext_resource type="Script" uid="uid://leehmvr1x5lu" path="res://addons/AutoSizeText/ui/AutoSizeRichTextLabel.gd" id="5_0ia7f"]
+
+[node name="WelcomeMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_jeoqs")
+script = ExtResource("2_no1xc")
+
+[node name="Panel" type="Panel" parent="."]
+clip_children = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Content" type="VBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"ZeroSeperationVBoxContainer"
+
+[node name="Header" type="VBoxContainer" parent="Panel/Content"]
+layout_mode = 2
+theme_type_variation = &"ZeroSeperationVBoxContainer"
+
+[node name="TopHeaderPanelContainer" parent="Panel/Content/Header" instance=ExtResource("3_ueswl")]
+layout_mode = 2
+
+[node name="Body" type="VBoxContainer" parent="Panel/Content"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"ZeroSeperationVBoxContainer"
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel/Content/Body"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"ScreenMarginContainer"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/Content/Body/MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Control" type="Control" parent="Panel/Content/Body/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.25
+
+[node name="Header" type="Label" parent="Panel/Content/Body/MarginContainer/VBoxContainer/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.25
+theme_override_font_sizes/font_size = 38
+text = "Welcome to V-Sekai"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("4_mnj2y")
+metadata/_custom_type_script = "uid://d11kfgsd6jgt"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel/Content/Body/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+follow_focus = true
+horizontal_scroll_mode = 0
+
+[node name="Body" type="RichTextLabel" parent="Panel/Content/Body/MarginContainer/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_font_sizes/normal_font_size = 25
+theme_override_font_sizes/bold_font_size = 25
+theme_override_font_sizes/bold_italics_font_size = 25
+theme_override_font_sizes/italics_font_size = 25
+theme_override_font_sizes/mono_font_size = 25
+bbcode_enabled = true
+text = "TODO: implement welcome message."
+script = ExtResource("5_0ia7f")
+max_font_size = 72
+metadata/_custom_type_script = "uid://leehmvr1x5lu"
+
+[node name="ContinueButton" type="Button" parent="Panel/Content/Body/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Continue"
+
+[connection signal="pressed" from="Panel/Content/Body/MarginContainer/VBoxContainer/ContinueButton" to="." method="_on_continue_button_pressed"]

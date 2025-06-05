@@ -1,0 +1,69 @@
+[remap]
+
+importer="scene"
+importer_version=1
+type="PackedScene"
+uid="uid://cg2pto01yr7pq"
+path="res://.godot/imported/HumanM@Run01_BackwardRight [RM].fbx-6528ae934ab9b1c40f40498b02cf08f5.scn"
+
+[deps]
+
+source_file="res://addons/vsk_game_framework/animations/Basic Motions FREE/Animations/Male/Movement/Run/RootMotion/HumanM@Run01_BackwardRight [RM].fbx"
+dest_files=["res://.godot/imported/HumanM@Run01_BackwardRight [RM].fbx-6528ae934ab9b1c40f40498b02cf08f5.scn"]
+
+[params]
+
+nodes/root_type=""
+nodes/root_name=""
+nodes/root_script=null
+nodes/apply_root_scale=true
+nodes/root_scale=1.0
+nodes/import_as_skeleton_bones=false
+nodes/use_name_suffixes=true
+nodes/use_node_type_suffixes=true
+meshes/ensure_tangents=true
+meshes/generate_lods=true
+meshes/generate_collisions=0
+meshes/physics/shape_type=7
+meshes/physics/physics_material_override=null
+meshes/physics/layer=1
+meshes/physics/mask=1
+meshes/decomposition/advanced=false
+meshes/decomposition/precision=5
+meshes/decomposition/max_concavity=1.0
+meshes/decomposition/symmetry_planes_clipping_bias=0.05
+meshes/decomposition/revolution_axes_clipping_bias=0.05
+meshes/decomposition/min_volume_per_convex_hull=0.0001
+meshes/decomposition/resolution=10000
+meshes/decomposition/max_num_vertices_per_convex_hull=32
+meshes/decomposition/plane_downsampling=4
+meshes/decomposition/convexhull_downsampling=4
+meshes/decomposition/normalize_mesh=false
+meshes/decomposition/mode=0
+meshes/decomposition/convexhull_approximation=true
+meshes/decomposition/max_convex_hulls=1
+meshes/decomposition/project_hull_vertices=true
+meshes/primitive/size=Vector3(2, 2, 2)
+meshes/primitive/height=1.0
+meshes/primitive/radius=1.0
+meshes/primitive/position=Vector3(0, 0, 0)
+meshes/primitive/rotation=Vector3(0, 0, 0)
+meshes/create_shadow_meshes=true
+meshes/light_baking=1
+meshes/lightmap_texel_size=0.2
+meshes/force_disable_compression=false
+skins/use_named_skins=true
+animation/import=true
+animation/fps=30
+animation/trimming=true
+animation/remove_immutable_tracks=true
+animation/import_rest_as_RESET=false
+import_script/path=""
+materials/extract=0
+materials/extract_format=0
+materials/extract_path=""
+_subresources={}
+fbx/importer=0
+fbx/allow_geometry_helper_nodes=false
+fbx/embedded_image_handling=1
+fbx/naming_version=1

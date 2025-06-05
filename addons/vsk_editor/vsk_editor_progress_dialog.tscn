@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://cjnca8e1nn0i0"]
+
+[ext_resource type="PackedScene" uid="uid://fw50jktro3bx" path="res://addons/vsk_editor/vsk_editor_progress_dialog_body.tscn" id="1"]
+[ext_resource type="Script" uid="uid://dgvh51bqb1xgo" path="res://addons/vsk_editor/vsk_editor_progress_dialog.gd" id="2"]
+
+[node name="ProgressDialog" type="Window" node_paths=PackedStringArray("progress_dialog_body")]
+oversampling_override = 1.0
+position = Vector2i(0, 36)
+size = Vector2i(640, 240)
+script = ExtResource("2")
+progress_dialog_body = NodePath("ProgressDialogBody")
+
+[node name="ProgressDialogBody" parent="." instance=ExtResource("1")]
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
+
+[connection signal="cancel_button_pressed" from="ProgressDialogBody" to="." method="_on_cancel_button_pressed"]

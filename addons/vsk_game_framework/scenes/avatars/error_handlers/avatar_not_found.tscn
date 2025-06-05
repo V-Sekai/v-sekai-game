@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://ds2r4hq5v74pk"]
+
+[ext_resource type="PackedScene" uid="uid://dt2r4f1bcuxma" path="res://addons/vsk_game_framework/scenes/import/error_handlers/avatar_not_found.glb" id="1"]
+[ext_resource type="Script" uid="uid://comugqt6n1y2q" path="res://addons/vsk_game_framework/scripts/ugc/avatar/vsk_avatar_3d.gd" id="1_nsbcl"]
+
+[node name="Avatar" type="Node3D"]
+script = ExtResource("1_nsbcl")
+
+[node name="avatar_not_found" parent="." instance=ExtResource("1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)

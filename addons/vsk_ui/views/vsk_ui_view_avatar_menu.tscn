@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://dtrkh7xwvamyn"]
+
+[ext_resource type="PackedScene" uid="uid://b8af2il3sjsc2" path="res://addons/vsk_ui/views/vsk_ui_view_content_menu.tscn" id="1_qwrtx"]
+[ext_resource type="Script" uid="uid://cokq4qh7jdqe8" path="res://addons/vsk_ui/views/vsk_ui_view_avatar_menu.gd" id="2_wlmf1"]
+
+[node name="AvatarMenu" instance=ExtResource("1_qwrtx")]
+script = ExtResource("2_wlmf1")
+
+[node name="ContentBrowser" parent="Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer" index="2"]
+content_text = "Avatar Browser"

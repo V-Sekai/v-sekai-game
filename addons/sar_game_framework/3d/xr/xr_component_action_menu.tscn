@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://ddkmd567fwfhx"]
+
+[ext_resource type="Script" uid="uid://cbsefj82n5os6" path="res://addons/sar_game_framework/3d/xr/xr_component_action.gd" id="1_buh8n"]
+
+[node name="XRMenuActionComponent" type="Node"]
+script = ExtResource("1_buh8n")
+xr_input_action = "menu"
+godot_input_action = "menu"

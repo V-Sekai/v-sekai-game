@@ -1,0 +1,5 @@
+@tool
+extends SarGameEntityComponent
+class_name SarGameEntityComponentGameEntityMultiplayer3D
+
+@export var multiplayer_synchronizer_spawn: MultiplayerSynchronizer = null

@@ -1,0 +1,61 @@
+[gd_scene load_steps=6 format=3 uid="uid://ddmws7hvyxqda"]
+
+[ext_resource type="Script" uid="uid://7d5kuctgk8u3" path="res://addons/vsk_editor/vsk_editor_uro_toolbar_container.gd" id="1_5n13v"]
+[ext_resource type="Texture2D" uid="uid://ddmrcblnd4y4v" path="res://icon.svg" id="2_5xncy"]
+[ext_resource type="Texture2D" uid="uid://dy5smxmxgkbt0" path="res://spash.png" id="3_psp7v"]
+[ext_resource type="PackedScene" uid="uid://bcbndkyamdyof" path="res://addons/vsk_editor/sign_in/vsk_editor_sign_in_dialog.tscn" id="4_so5v1"]
+[ext_resource type="PackedScene" uid="uid://dv8saw5c87lkg" path="res://addons/vsk_editor/dashboard/vsk_editor_dashboard_dialog.tscn" id="5_5xncy"]
+
+[node name="UroToolbar" type="HBoxContainer" node_paths=PackedStringArray("sign_in_window", "dashboard_window", "pending_control", "info_label", "sign_in_button", "account_options_button", "account_options_control")]
+offset_right = 104.0
+offset_bottom = 40.0
+size_flags_horizontal = 0
+script = ExtResource("1_5n13v")
+sign_in_window = NodePath("SignIn")
+dashboard_window = NodePath("Dashboard")
+pending_control = NodePath("InfoLabel")
+info_label = NodePath("InfoLabel")
+sign_in_button = NodePath("SignInButton")
+account_options_button = NodePath("AccountMenuIcon/AccountOptionsMenuButton")
+account_options_control = NodePath("AccountMenuIcon")
+
+[node name="InfoLabel" type="Label" parent="."]
+layout_mode = 2
+text = "Pending..."
+
+[node name="SignInButton" type="Button" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Sign into your Uro account."
+text = "Sign In"
+icon = ExtResource("2_5xncy")
+flat = true
+
+[node name="AccountMenuIcon" type="TextureRect" parent="."]
+layout_mode = 2
+texture = ExtResource("3_psp7v")
+expand_mode = 2
+
+[node name="AccountOptionsMenuButton" type="MenuButton" parent="AccountMenuIcon"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+item_count = 3
+popup/item_0/text = "Dashboard"
+popup/item_0/id = 0
+popup/item_1/id = 0
+popup/item_1/separator = true
+popup/item_2/text = "Sign Out"
+popup/item_2/id = 99
+
+[node name="SignIn" parent="." instance=ExtResource("4_so5v1")]
+visible = false
+
+[node name="Dashboard" parent="." instance=ExtResource("5_5xncy")]
+visible = false
+
+[connection signal="pressed" from="SignInButton" to="." method="_on_sign_in_button_pressed"]
+[connection signal="session_request_successful" from="SignIn" to="." method="_on_sign_in_session_request_successful"]

@@ -1,0 +1,40 @@
+[gd_scene load_steps=3 format=3 uid="uid://dykiw8vajp3tc"]
+
+[ext_resource type="Script" uid="uid://cy2w1pmygdtch" path="res://addons/vsk_game_framework/scripts/gui/vsk_ingame_gui.gd" id="1_2uwp4"]
+[ext_resource type="Texture2D" uid="uid://cvea7vaqbfmfe" path="res://addons/vsk_game_framework/textures/gui/mic_muted.svg" id="2_mylmk"]
+
+[node name="IngameGUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_2uwp4")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+modulate = Color(1, 1, 1, 0.25)
+layout_mode = 2
+texture = ExtResource("2_mylmk")

@@ -1,0 +1,100 @@
+[gd_scene load_steps=3 format=3 uid="uid://dndlpuyrlfmxu"]
+
+[ext_resource type="Script" uid="uid://b2gmpyx11flok" path="res://addons/vsk_editor/sign_in/vsk_editor_sign_in_dialog_control.gd" id="1_20pjy"]
+[ext_resource type="PackedScene" uid="uid://urmu1vdc6efl" path="res://addons/vsk_editor/sign_in/vsk_editor_domain_selector.tscn" id="2_rbh58"]
+
+[node name="VSKEditorSignInDialogControl" type="Control" node_paths=PackedStringArray("domain_selector_window", "signing_into_label", "domain_label", "username_or_email_lineedit", "password_lineedit", "change_domain_button", "submit_button", "cancel_button", "result_label")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_20pjy")
+domain_selector_window = NodePath("DomainSelector")
+signing_into_label = NodePath("MainBody/VBoxContainer/DomainInfoContainer/SigningInLabel")
+domain_label = NodePath("MainBody/VBoxContainer/DomainInfoContainer/DomainLabel")
+username_or_email_lineedit = NodePath("MainBody/VBoxContainer/SignInFieldsContainer/EmailUsernameLineEdit")
+password_lineedit = NodePath("MainBody/VBoxContainer/SignInFieldsContainer/PasswordLineEdit")
+change_domain_button = NodePath("MainBody/VBoxContainer/ChangeDomainButton")
+submit_button = NodePath("MainBody/SubmitButton")
+cancel_button = NodePath("MainBody/CancelButton")
+result_label = NodePath("MainBody/VBoxContainer/ResultsLabel")
+
+[node name="MainBody" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainBody"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 32
+alignment = 1
+
+[node name="DomainInfoContainer" type="VBoxContainer" parent="MainBody/VBoxContainer"]
+layout_mode = 2
+
+[node name="SigningInLabel" type="Label" parent="MainBody/VBoxContainer/DomainInfoContainer"]
+layout_mode = 2
+text = "Signing Into:"
+horizontal_alignment = 1
+
+[node name="DomainLabel" type="Label" parent="MainBody/VBoxContainer/DomainInfoContainer"]
+layout_mode = 2
+text = "v-sekai.org"
+horizontal_alignment = 1
+
+[node name="SignInFieldsContainer" type="VBoxContainer" parent="MainBody/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="EmailUsernameLabel" type="Label" parent="MainBody/VBoxContainer/SignInFieldsContainer"]
+layout_mode = 2
+text = "Email/Username:"
+
+[node name="EmailUsernameLineEdit" type="LineEdit" parent="MainBody/VBoxContainer/SignInFieldsContainer"]
+layout_mode = 2
+virtual_keyboard_type = 5
+
+[node name="PasswordLabel" type="Label" parent="MainBody/VBoxContainer/SignInFieldsContainer"]
+layout_mode = 2
+text = "Password:"
+
+[node name="PasswordLineEdit" type="LineEdit" parent="MainBody/VBoxContainer/SignInFieldsContainer"]
+layout_mode = 2
+virtual_keyboard_type = 6
+secret = true
+
+[node name="ThirdPartySignIn" type="HBoxContainer" parent="MainBody/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="ChangeDomainButton" type="Button" parent="MainBody/VBoxContainer"]
+layout_mode = 2
+text = "Pick Another Server"
+
+[node name="ResultsLabel" type="Label" parent="MainBody/VBoxContainer"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="SubmitButton" type="Button" parent="MainBody"]
+layout_mode = 2
+text = "Submit"
+
+[node name="CancelButton" type="Button" parent="MainBody"]
+visible = false
+layout_mode = 2
+text = "Cancel"
+
+[node name="DomainSelector" parent="." instance=ExtResource("2_rbh58")]
+visible = false
+
+[connection signal="pressed" from="MainBody/VBoxContainer/ChangeDomainButton" to="." method="_change_domain_called"]
+[connection signal="pressed" from="MainBody/SubmitButton" to="." method="_submit_button_pressed"]
+[connection signal="pressed" from="MainBody/CancelButton" to="." method="_on_cancel_button_pressed"]
+[connection signal="confirmed" from="DomainSelector" to="." method="_domain_confirmed"]

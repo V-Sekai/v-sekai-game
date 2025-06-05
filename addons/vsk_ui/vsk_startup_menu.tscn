@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://dtd0moos4van2"]
+
+[ext_resource type="Script" uid="uid://o2dyykcgijya" path="res://addons/vsk_ui/vsk_startup_menu.gd" id="1_0fepa"]
+[ext_resource type="PackedScene" uid="uid://d4k28nbwaaoj4" path="res://addons/sar_game_framework/2d/gui/sar_ui_navigation_controller.tscn" id="1_o3py4"]
+
+[node name="VSKStartupMenu" type="Control" node_paths=PackedStringArray("navigation_controller")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_0fepa")
+navigation_controller = NodePath("NavigationController")
+
+[node name="NavigationController" parent="." instance=ExtResource("1_o3py4")]
+layout_mode = 1

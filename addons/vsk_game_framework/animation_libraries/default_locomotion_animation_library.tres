@@ -1,0 +1,40 @@
+[gd_resource type="AnimationLibrary" load_steps=18 format=3 uid="uid://n76vrt1dau5a"]
+
+[ext_resource type="Animation" uid="uid://bfhqarm5y7wwi" path="res://addons/vsk_game_framework/animations/Basic Motions FREE/Animations/Female/Idles/HumanF_Idle01.tres" id="1_4d54w"]
+[ext_resource type="Animation" uid="uid://lwyec54wpk03" path="res://addons/vsk_game_framework/animations/Basic Motions FREE/Animations/Female/Movement/Run/HumanF@Run01_Forward.tres" id="2_b8aga"]
+[ext_resource type="Animation" uid="uid://khy0lm550jwp" path="res://addons/vsk_game_framework/animations/Basic Motions FREE/Animations/Female/Movement/Run/HumanF@Run01_ForwardLeft.tres" id="3_aa60n"]
+[ext_resource type="Animation" uid="uid://bkl5k6rcxyk8s" path="res://addons/vsk_game_framework/animations/Basic Motions FREE/Animations/Female/Movement/Run/HumanF@Run01_ForwardRight.tres" id="4_vg4m7"]
+[ext_resource type="Animation" uid="uid://s64qm3dep1l1" path="res://addons/vsk_game_framework/animations/Basic Motions FREE/Animations/Female/Movement/Run/HumanF@Run01_Left.tres" id="5_vg4m7"]
+[ext_resource type="Animation" uid="uid://chloe0xpmxvv7" path="res://addons/vsk_game_framework/animations/Basic Motions FREE/Animations/Female/Movement/Run/HumanF@Run01_Right.tres" id="6_kjgiq"]
+[ext_resource type="Animation" uid="uid://ckwb35qwxngrb" path="res://addons/vsk_game_framework/animations/Basic Motions FREE/Animations/Female/Movement/Run/HumanF@Run01_Backward.tres" id="7_1krc3"]
+[ext_resource type="Animation" uid="uid://bsgifaup6ylan" path="res://addons/vsk_game_framework/animations/Basic Motions FREE/Animations/Female/Movement/Run/HumanF@Run01_BackwardLeft.tres" id="8_e1y3b"]
+[ext_resource type="Animation" uid="uid://cooq5xssuadg7" path="res://addons/vsk_game_framework/animations/Basic Motions FREE/Animations/Female/Movement/Run/HumanF@Run01_BackwardRight.tres" id="9_ylekt"]
+[ext_resource type="Animation" uid="uid://cfa41nhcgytuo" path="res://addons/vsk_game_framework/animations/Basic Motions FREE/Animations/Female/Movement/Walk/HumanF@Walk01_Right.tres" id="10_uimyg"]
+[ext_resource type="Animation" uid="uid://b1fjdlj2b12qw" path="res://addons/vsk_game_framework/animations/Basic Motions FREE/Animations/Female/Movement/Walk/HumanF@Walk01_Left.tres" id="11_78cq0"]
+[ext_resource type="Animation" uid="uid://dipba0l6vkn3f" path="res://addons/vsk_game_framework/animations/Basic Motions FREE/Animations/Female/Movement/Walk/HumanF@Walk01_ForwardRight.tres" id="12_ixruy"]
+[ext_resource type="Animation" uid="uid://cjiiv7ht84v6u" path="res://addons/vsk_game_framework/animations/Basic Motions FREE/Animations/Female/Movement/Walk/HumanF@Walk01_ForwardLeft.tres" id="13_xp0r0"]
+[ext_resource type="Animation" uid="uid://06pk7100g8sq" path="res://addons/vsk_game_framework/animations/Basic Motions FREE/Animations/Female/Movement/Walk/HumanF@Walk01_Forward.tres" id="14_y4kta"]
+[ext_resource type="Animation" uid="uid://dxlu5qhdjjuri" path="res://addons/vsk_game_framework/animations/Basic Motions FREE/Animations/Female/Movement/Walk/HumanF@Walk01_BackwardRight.tres" id="15_oytse"]
+[ext_resource type="Animation" uid="uid://bo8ns0jm36mx8" path="res://addons/vsk_game_framework/animations/Basic Motions FREE/Animations/Female/Movement/Walk/HumanF@Walk01_BackwardLeft.tres" id="16_7wsv7"]
+[ext_resource type="Animation" uid="uid://coir4w2p0drgq" path="res://addons/vsk_game_framework/animations/Basic Motions FREE/Animations/Female/Movement/Walk/HumanF@Walk01_Backward.tres" id="17_82pw4"]
+
+[resource]
+_data = {
+&"idle": ExtResource("1_4d54w"),
+&"run_backwards": ExtResource("7_1krc3"),
+&"run_backwards_left": ExtResource("8_e1y3b"),
+&"run_backwards_right": ExtResource("9_ylekt"),
+&"run_forward": ExtResource("2_b8aga"),
+&"run_forward_left": ExtResource("3_aa60n"),
+&"run_forward_right": ExtResource("4_vg4m7"),
+&"run_left": ExtResource("5_vg4m7"),
+&"run_right": ExtResource("6_kjgiq"),
+&"walk_backwards": ExtResource("17_82pw4"),
+&"walk_backwards_left": ExtResource("16_7wsv7"),
+&"walk_backwards_right": ExtResource("15_oytse"),
+&"walk_forward": ExtResource("14_y4kta"),
+&"walk_forward_left": ExtResource("13_xp0r0"),
+&"walk_forward_right": ExtResource("12_ixruy"),
+&"walk_left": ExtResource("11_78cq0"),
+&"walk_right": ExtResource("10_uimyg")
+}

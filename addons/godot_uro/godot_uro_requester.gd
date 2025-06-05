@@ -5,15 +5,11 @@
 
 @tool
 extends RefCounted
-
-const godot_uro_helper_const = preload("godot_uro_helper.gd")
-const random_const = preload("res://addons/gd_util/random.gd")
-const uro_requester_const = preload("res://addons/godot_uro/godot_uro_requester.gd")
+class_name GodotUroRequester
 
 const BOUNDARY_STRING_PREFIX = "UroFileUpload"
 const BOUNDARY_STRING_LENGTH = 32
 const YIELD_PERIOD_MS = 50
-
 
 class Result:
 	var requester_code: int = -1
@@ -30,51 +26,49 @@ class Result:
 		data = p_data
 
 
-const DEFAULT_OPTIONS = {
+const DEFAULT_OPTIONS: Dictionary = {
 	"method": HTTPClient.METHOD_GET,
 	"encoding": "query",
 	"token": null,
 	"download_to": null,
 }
 
-var http_pool: Node
+var _http_pool: HTTPPool = null
 
-var hostname: String = ""
-var port: int = -1
-var use_ssl: bool = true
-var http_query_string: HTTPClient = HTTPClient.new()  # for non-static query_string_from_dict
+var _hostname: String = ""
+var _port: int = -1
+var _use_ssl: bool = true
+var _http_query_string: HTTPClient = HTTPClient.new()  # for non-static query_string_from_dict
+
+var http_state: HTTPPool.HTTPState = null
 
 ##
-var has_enhanced_qs_from_dict: bool = false
+var _has_enhanced_qs_from_dict: bool = false
 ##
 
 
-func _init(p_http_pool, p_hostname: String, p_port: int = -1, p_use_ssl: bool = true):
-	http_pool = p_http_pool
-	hostname = p_hostname
-	port = p_port
-	use_ssl = p_use_ssl
+func _init(p_http_pool: HTTPPool, p_hostname: String, p_port: int = -1, p_use_ssl: bool = true):
+	_http_pool = p_http_pool
+	_hostname = p_hostname
+	_port = p_port
+	_use_ssl = p_use_ssl
 
-	has_enhanced_qs_from_dict = http_query_string.query_string_from_dict({"a": null}) == "a"
-
-
-enum TokenType { NO_TOKEN, RENEWAL_TOKEN, ACCESS_TOKEN }
-
+	_has_enhanced_qs_from_dict = _http_query_string.query_string_from_dict({"a": null}) == "a"
 
 static func get_status_error_response(p_status: int) -> Result:
 	match p_status:
 		HTTPClient.STATUS_CANT_CONNECT:
-			return Result.new(godot_uro_helper_const.RequesterCode.CANT_CONNECT, FAILED, -1)
+			return Result.new(GodotUroHelper.RequesterCode.CANT_CONNECT, FAILED, -1)
 		HTTPClient.STATUS_CANT_RESOLVE:
-			return Result.new(godot_uro_helper_const.RequesterCode.CANT_RESOLVE, FAILED, -1)
+			return Result.new(GodotUroHelper.RequesterCode.CANT_RESOLVE, FAILED, -1)
 		HTTPClient.STATUS_TLS_HANDSHAKE_ERROR:
-			return Result.new(godot_uro_helper_const.RequesterCode.SSL_HANDSHAKE_ERROR, FAILED, -1)
+			return Result.new(GodotUroHelper.RequesterCode.SSL_HANDSHAKE_ERROR, FAILED, -1)
 		HTTPClient.STATUS_DISCONNECTED:
-			return Result.new(godot_uro_helper_const.RequesterCode.DISCONNECTED, FAILED, -1)
+			return Result.new(GodotUroHelper.RequesterCode.DISCONNECTED, FAILED, -1)
 		HTTPClient.STATUS_CONNECTION_ERROR:
-			return Result.new(godot_uro_helper_const.RequesterCode.CONNECTION_ERROR, FAILED, -1)
+			return Result.new(GodotUroHelper.RequesterCode.CONNECTION_ERROR, FAILED, -1)
 		_:
-			return Result.new(godot_uro_helper_const.RequesterCode.UNKNOWN_STATUS_ERROR, FAILED, -1)
+			return Result.new(GodotUroHelper.RequesterCode.UNKNOWN_STATUS_ERROR, FAILED, -1)
 
 
 func http_download_progressed(_http_state: RefCounted, _bytes: int, _total_bytes: int):
@@ -83,11 +77,17 @@ func http_download_progressed(_http_state: RefCounted, _bytes: int, _total_bytes
 
 
 func request(
-	p_path: String, p_payload: Dictionary, p_use_token: int, p_options: Dictionary = DEFAULT_OPTIONS
-) -> Result:
-	var http_state = await http_pool.new_http_state()
+	p_path: String,
+	p_payload: Dictionary,
+	p_token: String,
+	p_options: Dictionary = DEFAULT_OPTIONS) -> Result:
+	if http_state:
+		printerr("HTTP state is already active for this request")
+		return Result.new(GodotUroHelper.RequesterCode.CANT_CONNECT, ERR_CANT_CREATE, -1)
+		
+	http_state = await _http_pool.new_http_state()
 	if http_state == null:
-		return Result.new(godot_uro_helper_const.RequesterCode.CANT_CONNECT, ERR_CANT_CREATE, -1)
+		return Result.new(GodotUroHelper.RequesterCode.CANT_CONNECT, ERR_CANT_CREATE, -1)
 
 	var download_prog_callable = self.http_download_progressed.bind(http_state)
 	if p_options.get("download_to"):
@@ -96,7 +96,7 @@ func request(
 
 	var http_client: HTTPClient = null
 	for i in range(3):
-		http_client = await http_state.connect_http(hostname, port, use_ssl)
+		http_client = await http_state.connect_http(_hostname, _port, _use_ssl)
 		if http_client != null:
 			break
 
@@ -105,18 +105,15 @@ func request(
 		if err == OK:
 			err = FAILED
 		http_state.release()
-		return Result.new(godot_uro_helper_const.RequesterCode.CANT_CONNECT, err, -1)
+		http_state = null
+		return Result.new(GodotUroHelper.RequesterCode.CANT_CONNECT, err, -1)
 
 	var uri: String = p_path
 	var encoded_payload: PackedByteArray = PackedByteArray()
 	var headers: Array = []
 
-	if p_use_token != TokenType.NO_TOKEN:
-		match p_use_token:
-			TokenType.RENEWAL_TOKEN:
-				headers.push_back("Authorization: %s" % GodotUroData.renewal_token)
-			TokenType.ACCESS_TOKEN:
-				headers.push_back("Authorization: %s" % GodotUroData.access_token)
+	if p_token:
+		headers.push_back("Authorization: %s" % p_token)
 
 	if p_payload:
 		var encoding: String = _get_option(p_options, "encoding")
@@ -134,10 +131,10 @@ func request(
 			"multipart":
 				var boundary_string: String = (
 					BOUNDARY_STRING_PREFIX
-					+ random_const.generate_insecure_unique_id(BOUNDARY_STRING_LENGTH)
+					+ RandomizationUtilities.generate_insecure_unique_id(BOUNDARY_STRING_LENGTH)
 				)
 				headers.append("Content-Type: multipart/form-data; boundary=%s" % boundary_string)
-				encoded_payload = uro_requester_const._compose_multipart_body(
+				encoded_payload = GodotUroRequester._compose_multipart_body(
 					p_payload, boundary_string
 				)
 			_:
@@ -156,8 +153,9 @@ func request(
 		return
 
 	if not await http_state.wait_for_request():
-		var ret = uro_requester_const.get_status_error_response(http_client.get_status())
+		var ret = get_status_error_response(http_client.get_status())
 		http_state.release()
+		http_state = null
 		return ret
 
 	if p_options.get("download_to"):
@@ -167,6 +165,7 @@ func request(
 	var response_body: String = http_state.response_body.get_string_from_utf8()
 	var response_code: int = http_state.response_code
 	http_state.release()
+	http_state = null
 	if response_body:
 		var json_parse_result = JSON.new()
 		if json_parse_result.parse(response_body) == OK:
@@ -175,10 +174,10 @@ func request(
 			else:
 				data = {"data": str(json_parse_result.get_data())}
 			if response_code == HTTPClient.RESPONSE_OK:
-				return Result.new(godot_uro_helper_const.RequesterCode.OK, OK, response_code, data)
+				return Result.new(GodotUroHelper.RequesterCode.OK, OK, response_code, data)
 			else:
 				return Result.new(
-					godot_uro_helper_const.RequesterCode.HTTP_RESPONSE_NOT_OK,
+					GodotUroHelper.RequesterCode.HTTP_RESPONSE_NOT_OK,
 					FAILED,
 					response_code,
 					data
@@ -186,14 +185,14 @@ func request(
 		else:
 			if response_code == HTTPClient.RESPONSE_OK:
 				return Result.new(
-					godot_uro_helper_const.RequesterCode.JSON_PARSE_ERROR,
+					GodotUroHelper.RequesterCode.JSON_PARSE_ERROR,
 					FAILED,
 					response_code,
 					data
 				)
 			else:
 				return Result.new(
-					godot_uro_helper_const.RequesterCode.HTTP_RESPONSE_NOT_OK,
+					GodotUroHelper.RequesterCode.HTTP_RESPONSE_NOT_OK,
 					FAILED,
 					response_code,
 					data
@@ -201,7 +200,7 @@ func request(
 	else:
 		push_error("GodotUroRequester: No response body!")
 		return Result.new(
-			godot_uro_helper_const.RequesterCode.UNKNOWN_STATUS_ERROR, FAILED, response_code, data
+			GodotUroHelper.RequesterCode.UNKNOWN_STATUS_ERROR, FAILED, response_code, data
 		)
 
 
@@ -275,8 +274,8 @@ static func _compose_multipart_body(
 
 
 func _dict_to_query_string(p_dictionary: Dictionary) -> String:
-	if has_enhanced_qs_from_dict:
-		return http_query_string.query_string_from_dict(p_dictionary)
+	if _has_enhanced_qs_from_dict:
+		return _http_query_string.query_string_from_dict(p_dictionary)
 
 	# For 3.0
 	var qs: String = ""
@@ -289,3 +288,7 @@ func _dict_to_query_string(p_dictionary: Dictionary) -> String:
 			qs += "&%s=%s" % [key.uri_encode(), String(value).uri_encode()]
 	qs = qs.substr(1)
 	return qs
+	
+func cancel() -> void:
+	if http_state:
+		http_state.cancel()

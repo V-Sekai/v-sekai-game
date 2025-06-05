@@ -1,0 +1,84 @@
+[gd_scene load_steps=3 format=3 uid="uid://bt7nx0jqdlkdu"]
+
+[ext_resource type="PackedScene" uid="uid://drb876hffoveb" path="res://addons/vsk_ui/widgets/vsk_button.tscn" id="1_vp53y"]
+[ext_resource type="Script" uid="uid://d11kfgsd6jgt" path="res://addons/AutoSizeText/ui/AutoSizeLabel.gd" id="2_25qaq"]
+
+[node name="VSKButtonSession" instance=ExtResource("1_vp53y")]
+display_mode = 2
+show_image_container = false
+show_text_container = false
+
+[node name="VerticalContainer" parent="ClippedContent/UniversalContainer" index="0"]
+visible = false
+
+[node name="ImageContainer" parent="ClippedContent/UniversalContainer/VerticalContainer" index="0"]
+visible = false
+
+[node name="TextContainer" parent="ClippedContent/UniversalContainer/VerticalContainer" index="1"]
+visible = false
+
+[node name="AutoSizeLabel" parent="ClippedContent/UniversalContainer/VerticalContainer/TextContainer/MarginContainer" index="0"]
+theme_override_font_sizes/font_size = 9
+
+[node name="ImageContainer" parent="ClippedContent/UniversalContainer/HorizontalContainer" index="0"]
+visible = false
+
+[node name="TextContainer" parent="ClippedContent/UniversalContainer/HorizontalContainer" index="1"]
+visible = false
+
+[node name="MarginContainer" type="MarginContainer" parent="ClippedContent/UniversalContainer" index="2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Session Button" type="VBoxContainer" parent="ClippedContent/UniversalContainer/MarginContainer" index="0"]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="ClippedContent/UniversalContainer/MarginContainer/Session Button" index="0"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SessionName" type="Label" parent="ClippedContent/UniversalContainer/MarginContainer/Session Button/Control" index="0"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 13
+text = "Session Name"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("2_25qaq")
+metadata/_custom_type_script = "uid://d11kfgsd6jgt"
+
+[node name="Control2" type="Control" parent="ClippedContent/UniversalContainer/MarginContainer/Session Button" index="1"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="UserCount" type="Label" parent="ClippedContent/UniversalContainer/MarginContainer/Session Button/Control2" index="0"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 13
+text = "8/8"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("2_25qaq")
+metadata/_custom_type_script = "uid://d11kfgsd6jgt"

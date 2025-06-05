@@ -1,0 +1,7 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://8qm2hf872nsk"]
+
+[ext_resource type="Shader" uid="uid://c2dteguvkowyj" path="res://addons/vsk_game_framework/shaders/loading_orb.gdshader" id="1_t3skc"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_t3skc")

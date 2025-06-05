@@ -4,5 +4,6 @@
 # SPDX-License-Identifier: MIT
 
 extends RefCounted
+class_name VSKTypes
 
 enum UserContentType { Unknown = -1, Avatar = 0, Map = 1 }

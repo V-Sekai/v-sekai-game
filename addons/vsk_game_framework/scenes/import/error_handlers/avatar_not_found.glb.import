@@ -1,0 +1,68 @@
+[remap]
+
+importer="scene"
+importer_version=1
+type="PackedScene"
+uid="uid://dt2r4f1bcuxma"
+path="res://.godot/imported/avatar_not_found.glb-30f8c2091ddf8f81e318083aa238561c.scn"
+
+[deps]
+
+source_file="res://addons/vsk_game_framework/scenes/import/error_handlers/avatar_not_found.glb"
+dest_files=["res://.godot/imported/avatar_not_found.glb-30f8c2091ddf8f81e318083aa238561c.scn"]
+
+[params]
+
+nodes/root_type="Node3D"
+nodes/root_name="Scene Root"
+nodes/apply_root_scale=true
+nodes/root_scale=0.5
+nodes/import_as_skeleton_bones=false
+nodes/use_name_suffixes=true
+nodes/use_node_type_suffixes=true
+meshes/ensure_tangents=true
+meshes/generate_lods=true
+meshes/create_shadow_meshes=true
+meshes/light_baking=0
+meshes/lightmap_texel_size=0.1
+meshes/force_disable_compression=false
+skins/use_named_skins=true
+animation/import=true
+animation/fps=15
+animation/trimming=false
+animation/remove_immutable_tracks=true
+animation/import_rest_as_RESET=false
+import_script/path=""
+_subresources={
+"materials": {
+"WarningWhite": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://addons/vsk_game_framework/scenes/import/error_handlers/WarningWhite.tres",
+"use_external/path": "uid://by53ox7icc35v"
+},
+"WarningYellow": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://addons/vsk_game_framework/scenes/import/error_handlers/WarningYellow.tres",
+"use_external/path": "uid://cwcfp0kfhgram"
+}
+},
+"nodes": {
+"PATH:QuestionMarkCurveBack": {
+"mesh_instance/layers": 4
+},
+"PATH:QuestionMarkCurveFront": {
+"mesh_instance/layers": 4
+},
+"PATH:QuestionMarkDot": {
+"mesh_instance/layers": 4
+},
+"PATH:QuestionMarkInner": {
+"mesh_instance/layers": 4
+},
+"PATH:QuestionMarkOuter": {
+"mesh_instance/layers": 4
+}
+}
+}
+gltf/naming_version=0
+gltf/embedded_image_handling=1

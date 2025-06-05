@@ -1,0 +1,71 @@
+[gd_scene load_steps=3 format=3 uid="uid://cq8cjcrgopd4m"]
+
+[ext_resource type="Texture2D" uid="uid://3xe3jq5e0cx1" path="res://addons/AutoSizeText/images/godot_icon.svg" id="2_ximif"]
+[ext_resource type="Script" uid="uid://cs3okxqop883t" path="res://addons/AutoSizeText/ui/AutoSizeLineEdit.gd" id="2_ykgak"]
+
+[node name="Samples" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="OnlyTittle" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -0.5
+offset_right = 0.5
+offset_bottom = 23.0
+grow_horizontal = 2
+text = "JUST SAMPLE OF [Line Edit]"
+horizontal_alignment = 1
+
+[node name="Sample_Harder" type="LineEdit" parent="."]
+layout_mode = 0
+offset_top = 23.0
+offset_right = 1151.0
+offset_bottom = 84.0
+theme_override_font_sizes/font_size = 38
+alignment = 3
+script = ExtResource("2_ykgak")
+_text = "Just change the size of these labels and see how they work."
+
+[node name="Sample_Better" type="LineEdit" parent="."]
+layout_mode = 0
+offset_top = 84.0
+offset_right = 1151.0
+offset_bottom = 145.0
+theme_override_font_sizes/font_size = 17
+alignment = 1
+clear_button_enabled = true
+script = ExtResource("2_ykgak")
+_text = "WORD SMARTPlay alone, with friends in private rooms or join a faction and play online with the whole world in this epic MMORPG"
+min_size = 1
+
+[node name="Sample_Faster" type="LineEdit" parent="."]
+layout_mode = 0
+offset_top = 145.0
+offset_right = 1151.0
+offset_bottom = 206.0
+theme_override_font_sizes/font_size = 21
+alignment = 1
+clear_button_enabled = true
+script = ExtResource("2_ykgak")
+_text = "Lorem Ipsum\"Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...\""
+min_size = 1
+
+[node name="Sample_Stronger" type="LineEdit" parent="."]
+layout_mode = 0
+offset_top = 206.0
+offset_right = 1151.0
+offset_bottom = 342.0
+theme_override_font_sizes/font_size = 16
+placeholder_text = "As PlaceHolder: Lorem Ipsum\"Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...\""
+alignment = 1
+clear_button_enabled = true
+right_icon = ExtResource("2_ximif")
+script = ExtResource("2_ykgak")
+min_size = 1

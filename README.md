@@ -2,21 +2,21 @@
 
 <div align="center">
   <a href="https://github.com/V-Sekai/v-sekai-game">
-    <img src="vsk_default/icon/v_sekai_logo_bg.svg" alt="Logo" width="300" height="300">
+	<img src="icon.svg" alt="Logo" width="300" height="300">
   </a>
 
   <h1 align="center">V-Sekai</h1>
 
   <p align="center">
-    <i>“Open-source Social VR for everyone”</i>
-    <br />
-    <br />
-    <a href="https://github.com/V-Sekai/v-sekai-game/"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/V-Sekai/v-sekai-game/issues/new?assignees=&labels=enhancement&projects=&template=feature_proposal.yml">Request Feature</a>
-    ·
-    <a href="https://github.com/V-Sekai/v-sekai-game/issues/new?assignees=&labels=bug&projects=&template=bug_report.yml">Report Bug</a>
+	<i>�Open-source Social VR for everyone�</i>
+	<br />
+	<br />
+	<a href="https://github.com/V-Sekai/v-sekai-game/"><strong>Explore the docs �</strong></a>
+	<br />
+	<br />
+	<a href="https://github.com/V-Sekai/v-sekai-game/issues/new?assignees=&labels=enhancement&projects=&template=feature_proposal.yml">Request Feature</a>
+	�
+	<a href="https://github.com/V-Sekai/v-sekai-game/issues/new?assignees=&labels=bug&projects=&template=bug_report.yml">Report Bug</a>
   </p>
 </div>
 
@@ -58,8 +58,8 @@ We're happy to accept pull requests for **features** and **bug fixes**.
 - **Website:** :link:[https://v-sekai.org/](https://v-sekai.org/)
 - **X (Twitter):** :link:[https://x.com/vsekaiofficial](https://x.com/vsekaiofficial)
 - **Discord:** <a href="https://discord.gg/H3s3PD49XC">
-        <img src="https://img.shields.io/discord/1138836561102897172?logo=discord"
-            alt="Chat on Discord"></a>
+		<img src="https://img.shields.io/discord/1138836561102897172?logo=discord"
+			alt="Chat on Discord"></a>
 
 You can find our issues and suggestions at the [documentation website](https://v-sekai.github.io/manuals).
 

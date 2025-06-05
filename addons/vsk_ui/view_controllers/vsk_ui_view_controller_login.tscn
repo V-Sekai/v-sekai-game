@@ -1,0 +1,36 @@
+[gd_scene load_steps=3 format=3 uid="uid://ceyxtppyj12p8"]
+
+[ext_resource type="Script" uid="uid://b85v70rll6ayp" path="res://addons/vsk_ui/view_controllers/vsk_ui_view_controller_login.gd" id="1_iete1"]
+[ext_resource type="PackedScene" uid="uid://3as8qqoehxad" path="res://addons/vsk_ui/views/vsk_ui_view_account_action.tscn" id="2_h72vr"]
+
+[node name="ViewControllerLogIn" type="Control" node_paths=PackedStringArray("view_account_action", "view")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_iete1")
+view_account_action = NodePath("MarginContainer/AspectRatioContainer/View")
+view = NodePath("MarginContainer/AspectRatioContainer/View")
+title = "Sign in"
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"ScreenMarginContainer"
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="View" parent="MarginContainer/AspectRatioContainer" instance=ExtResource("2_h72vr")]
+layout_mode = 2
+account_action = 0
+metadata/_edit_pinned_properties_ = [&"account_action"]
+
+[connection signal="pick_other_domain_selected" from="MarginContainer/AspectRatioContainer/View" to="." method="_on_view_pick_other_domain_selected"]
+[connection signal="sign_in_selected" from="MarginContainer/AspectRatioContainer/View" to="." method="_on_view_sign_in_selected"]

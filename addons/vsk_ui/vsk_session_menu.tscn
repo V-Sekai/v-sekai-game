@@ -1,0 +1,478 @@
+[gd_scene load_steps=11 format=3 uid="uid://ca4diw5bbr60r"]
+
+[ext_resource type="Theme" uid="uid://s05juvtforjo" path="res://addons/vsk_ui/vsk_ui_dark.tres" id="1_h4igm"]
+[ext_resource type="PackedScene" uid="uid://dcd0ooyvb0nwu" path="res://addons/vsk_ui/vsk_top_header_panel_container.tscn" id="3_004mi"]
+[ext_resource type="PackedScene" uid="uid://6dmf2p00vihh" path="res://addons/vsk_ui/vsk_sub_header_panel_container.tscn" id="3_qf2rp"]
+[ext_resource type="Script" uid="uid://dnkg28mh25h88" path="res://addons/sar_game_framework/2d/gui/sar_ui_top_level_alignment.gd" id="4_anyfg"]
+[ext_resource type="Texture2D" uid="uid://dy5smxmxgkbt0" path="res://spash.png" id="5_qf2rp"]
+[ext_resource type="PackedScene" uid="uid://bt7nx0jqdlkdu" path="res://addons/vsk_ui/widgets/vsk_button_session.tscn" id="7_q0edg"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ixf25"]
+bg_color = Color(0.533333, 0.196078, 0.188235, 1)
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7dqni"]
+bg_color = Color(0.65, 0.234542, 0.2275, 1)
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y34s5"]
+bg_color = Color(0.2, 0.2, 0.2, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.8, 0.8, 0.8, 0)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bawn2"]
+bg_color = Color(0.32, 0.32, 0.32, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.8, 0.8, 0.8, 0)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+anti_aliasing = false
+
+[node name="SessionMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource("1_h4igm")
+
+[node name="Panel" type="Panel" parent="."]
+clip_children = 2
+clip_contents = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Content" type="VBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"ZeroSeperationVBoxContainer"
+
+[node name="Header" type="VBoxContainer" parent="Panel/Content"]
+layout_mode = 2
+theme_type_variation = &"ZeroSeperationVBoxContainer"
+
+[node name="TopHeaderPanelContainer" parent="Panel/Content/Header" instance=ExtResource("3_004mi")]
+layout_mode = 2
+
+[node name="SubHeaderPanelContainer" parent="Panel/Content/Header" instance=ExtResource("3_qf2rp")]
+layout_mode = 2
+
+[node name="Body" type="VBoxContainer" parent="Panel/Content"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"ZeroSeperationVBoxContainer"
+
+[node name="Control" type="Control" parent="Panel/Content/Body"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel/Content/Body/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 13
+size_flags_vertical = 3
+theme_type_variation = &"MenuMarginContainer"
+
+[node name="TopLevelAligner" type="Control" parent="Panel/Content/Body/Control/MarginContainer"]
+layout_mode = 2
+script = ExtResource("4_anyfg")
+
+[node name="TopLevelContent" type="Control" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner"]
+top_level = true
+clip_contents = true
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = 120.0
+offset_right = -16.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ContentBrowser" type="Control" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer"]
+clip_contents = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/ContentBrowser"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/ContentBrowser/VBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"InfoLabel"
+text = "Selected Session"
+vertical_alignment = 1
+
+[node name="ContentArea" type="Control" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/ContentBrowser/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/ContentBrowser/VBoxContainer/ContentArea"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/ContentBrowser/VBoxContainer/ContentArea/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Panel" type="Panel" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/ContentBrowser/VBoxContainer/ContentArea/ScrollContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 200)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"SubPanel"
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/ContentBrowser/VBoxContainer/ContentArea/ScrollContainer/VBoxContainer/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/ContentBrowser/VBoxContainer/ContentArea/ScrollContainer/VBoxContainer/Panel/MarginContainer"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/ContentBrowser/VBoxContainer/ContentArea/ScrollContainer/VBoxContainer/Panel/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.75
+texture = ExtResource("5_qf2rp")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="Control" type="Control" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/ContentBrowser/VBoxContainer/ContentArea/ScrollContainer/VBoxContainer/Panel/MarginContainer/HBoxContainer"]
+clip_contents = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/ContentBrowser/VBoxContainer/ContentArea/ScrollContainer/VBoxContainer/Panel/MarginContainer/HBoxContainer/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/ContentBrowser/VBoxContainer/ContentArea/ScrollContainer/VBoxContainer/Panel/MarginContainer/HBoxContainer/Control/VBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"HeaderMedium"
+text = "Session Name"
+
+[node name="Label2" type="Label" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/ContentBrowser/VBoxContainer/ContentArea/ScrollContainer/VBoxContainer/Panel/MarginContainer/HBoxContainer/Control/VBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"HeaderMedium"
+text = "Host"
+
+[node name="Label3" type="Label" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/ContentBrowser/VBoxContainer/ContentArea/ScrollContainer/VBoxContainer/Panel/MarginContainer/HBoxContainer/Control/VBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"HeaderMedium"
+text = "8/8"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/ContentBrowser/VBoxContainer/ContentArea/ScrollContainer/VBoxContainer/Panel/MarginContainer/HBoxContainer/Control/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Button" type="Button" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/ContentBrowser/VBoxContainer/ContentArea/ScrollContainer/VBoxContainer/Panel/MarginContainer/HBoxContainer/Control/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Connect"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/ContentBrowser/VBoxContainer/ContentArea/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/ContentBrowser/VBoxContainer/ContentArea/ScrollContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "New Instance"
+
+[node name="VSeparator" type="VSeparator" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="Navigation" type="Control" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer"]
+clip_contents = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.25
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/Navigation"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/Navigation/VBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"InfoLabel"
+text = "Sessions"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/Navigation/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/Navigation/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VSKButton2" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/Navigation/VBoxContainer/ScrollContainer/VBoxContainer" instance=ExtResource("7_q0edg")]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+_shadow_offset = Vector2(0, 2)
+_thumbnail_background_stylebox = SubResource("StyleBoxFlat_ixf25")
+_thumbnail_background_hover_stylebox = SubResource("StyleBoxFlat_7dqni")
+_thumbnail_background_pressed_stylebox = null
+_background_stylebox = SubResource("StyleBoxFlat_y34s5")
+_background_hover_stylebox = SubResource("StyleBoxFlat_bawn2")
+_background_pressed_stylebox = null
+
+[node name="VSKButton3" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/Navigation/VBoxContainer/ScrollContainer/VBoxContainer" instance=ExtResource("7_q0edg")]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+_shadow_offset = Vector2(0, 2)
+_thumbnail_background_stylebox = SubResource("StyleBoxFlat_ixf25")
+_thumbnail_background_hover_stylebox = SubResource("StyleBoxFlat_7dqni")
+_thumbnail_background_pressed_stylebox = null
+_background_stylebox = SubResource("StyleBoxFlat_y34s5")
+_background_hover_stylebox = SubResource("StyleBoxFlat_bawn2")
+_background_pressed_stylebox = null
+
+[node name="VSKButton4" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/Navigation/VBoxContainer/ScrollContainer/VBoxContainer" instance=ExtResource("7_q0edg")]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+_shadow_offset = Vector2(0, 2)
+_thumbnail_background_stylebox = SubResource("StyleBoxFlat_ixf25")
+_thumbnail_background_hover_stylebox = SubResource("StyleBoxFlat_7dqni")
+_thumbnail_background_pressed_stylebox = null
+_background_stylebox = SubResource("StyleBoxFlat_y34s5")
+_background_hover_stylebox = SubResource("StyleBoxFlat_bawn2")
+_background_pressed_stylebox = null
+
+[node name="VSKButton5" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/Navigation/VBoxContainer/ScrollContainer/VBoxContainer" instance=ExtResource("7_q0edg")]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+_shadow_offset = Vector2(0, 2)
+_thumbnail_background_stylebox = SubResource("StyleBoxFlat_ixf25")
+_thumbnail_background_hover_stylebox = SubResource("StyleBoxFlat_7dqni")
+_thumbnail_background_pressed_stylebox = null
+_background_stylebox = SubResource("StyleBoxFlat_y34s5")
+_background_hover_stylebox = SubResource("StyleBoxFlat_bawn2")
+_background_pressed_stylebox = null
+
+[node name="VSKButton6" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/Navigation/VBoxContainer/ScrollContainer/VBoxContainer" instance=ExtResource("7_q0edg")]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+_shadow_offset = Vector2(0, 2)
+_thumbnail_background_stylebox = SubResource("StyleBoxFlat_ixf25")
+_thumbnail_background_hover_stylebox = SubResource("StyleBoxFlat_7dqni")
+_thumbnail_background_pressed_stylebox = null
+_background_stylebox = SubResource("StyleBoxFlat_y34s5")
+_background_hover_stylebox = SubResource("StyleBoxFlat_bawn2")
+_background_pressed_stylebox = null
+
+[node name="VSKButton7" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/Navigation/VBoxContainer/ScrollContainer/VBoxContainer" instance=ExtResource("7_q0edg")]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+_shadow_offset = Vector2(0, 2)
+_thumbnail_background_stylebox = SubResource("StyleBoxFlat_ixf25")
+_thumbnail_background_hover_stylebox = SubResource("StyleBoxFlat_7dqni")
+_thumbnail_background_pressed_stylebox = null
+_background_stylebox = SubResource("StyleBoxFlat_y34s5")
+_background_hover_stylebox = SubResource("StyleBoxFlat_bawn2")
+_background_pressed_stylebox = null
+
+[node name="VSKButton8" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/Navigation/VBoxContainer/ScrollContainer/VBoxContainer" instance=ExtResource("7_q0edg")]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+_shadow_offset = Vector2(0, 2)
+_thumbnail_background_stylebox = SubResource("StyleBoxFlat_ixf25")
+_thumbnail_background_hover_stylebox = SubResource("StyleBoxFlat_7dqni")
+_thumbnail_background_pressed_stylebox = null
+_background_stylebox = SubResource("StyleBoxFlat_y34s5")
+_background_hover_stylebox = SubResource("StyleBoxFlat_bawn2")
+_background_pressed_stylebox = null
+
+[node name="VSKButton9" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/Navigation/VBoxContainer/ScrollContainer/VBoxContainer" instance=ExtResource("7_q0edg")]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+_shadow_offset = Vector2(0, 2)
+_thumbnail_background_stylebox = SubResource("StyleBoxFlat_ixf25")
+_thumbnail_background_hover_stylebox = SubResource("StyleBoxFlat_7dqni")
+_thumbnail_background_pressed_stylebox = null
+_background_stylebox = SubResource("StyleBoxFlat_y34s5")
+_background_hover_stylebox = SubResource("StyleBoxFlat_bawn2")
+_background_pressed_stylebox = null
+
+[node name="VSKButton10" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/Navigation/VBoxContainer/ScrollContainer/VBoxContainer" instance=ExtResource("7_q0edg")]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+_shadow_offset = Vector2(0, 2)
+_thumbnail_background_stylebox = SubResource("StyleBoxFlat_ixf25")
+_thumbnail_background_hover_stylebox = SubResource("StyleBoxFlat_7dqni")
+_thumbnail_background_pressed_stylebox = null
+_background_stylebox = SubResource("StyleBoxFlat_y34s5")
+_background_hover_stylebox = SubResource("StyleBoxFlat_bawn2")
+_background_pressed_stylebox = null
+
+[node name="VSKButton11" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/Navigation/VBoxContainer/ScrollContainer/VBoxContainer" instance=ExtResource("7_q0edg")]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+_shadow_offset = Vector2(0, 2)
+_thumbnail_background_stylebox = SubResource("StyleBoxFlat_ixf25")
+_thumbnail_background_hover_stylebox = SubResource("StyleBoxFlat_7dqni")
+_thumbnail_background_pressed_stylebox = null
+_background_stylebox = SubResource("StyleBoxFlat_y34s5")
+_background_hover_stylebox = SubResource("StyleBoxFlat_bawn2")
+_background_pressed_stylebox = null
+
+[node name="VSKButton12" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/Navigation/VBoxContainer/ScrollContainer/VBoxContainer" instance=ExtResource("7_q0edg")]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+_shadow_offset = Vector2(0, 2)
+_thumbnail_background_stylebox = SubResource("StyleBoxFlat_ixf25")
+_thumbnail_background_hover_stylebox = SubResource("StyleBoxFlat_7dqni")
+_thumbnail_background_pressed_stylebox = null
+_background_stylebox = SubResource("StyleBoxFlat_y34s5")
+_background_hover_stylebox = SubResource("StyleBoxFlat_bawn2")
+_background_pressed_stylebox = null
+
+[node name="VSKButton13" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/Navigation/VBoxContainer/ScrollContainer/VBoxContainer" instance=ExtResource("7_q0edg")]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+_shadow_offset = Vector2(0, 2)
+_thumbnail_background_stylebox = SubResource("StyleBoxFlat_ixf25")
+_thumbnail_background_hover_stylebox = SubResource("StyleBoxFlat_7dqni")
+_thumbnail_background_pressed_stylebox = null
+_background_stylebox = SubResource("StyleBoxFlat_y34s5")
+_background_hover_stylebox = SubResource("StyleBoxFlat_bawn2")
+_background_pressed_stylebox = null
+
+[node name="VSKButton14" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/Navigation/VBoxContainer/ScrollContainer/VBoxContainer" instance=ExtResource("7_q0edg")]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+_shadow_offset = Vector2(0, 2)
+_thumbnail_background_stylebox = SubResource("StyleBoxFlat_ixf25")
+_thumbnail_background_hover_stylebox = SubResource("StyleBoxFlat_7dqni")
+_thumbnail_background_pressed_stylebox = null
+_background_stylebox = SubResource("StyleBoxFlat_y34s5")
+_background_hover_stylebox = SubResource("StyleBoxFlat_bawn2")
+_background_pressed_stylebox = null
+
+[node name="VSKButton15" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/Navigation/VBoxContainer/ScrollContainer/VBoxContainer" instance=ExtResource("7_q0edg")]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+_shadow_offset = Vector2(0, 2)
+_thumbnail_background_stylebox = SubResource("StyleBoxFlat_ixf25")
+_thumbnail_background_hover_stylebox = SubResource("StyleBoxFlat_7dqni")
+_thumbnail_background_pressed_stylebox = null
+_background_stylebox = SubResource("StyleBoxFlat_y34s5")
+_background_hover_stylebox = SubResource("StyleBoxFlat_bawn2")
+_background_pressed_stylebox = null
+
+[node name="VSKButton16" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/Navigation/VBoxContainer/ScrollContainer/VBoxContainer" instance=ExtResource("7_q0edg")]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+_shadow_offset = Vector2(0, 2)
+_thumbnail_background_stylebox = SubResource("StyleBoxFlat_ixf25")
+_thumbnail_background_hover_stylebox = SubResource("StyleBoxFlat_7dqni")
+_thumbnail_background_pressed_stylebox = null
+_background_stylebox = SubResource("StyleBoxFlat_y34s5")
+_background_hover_stylebox = SubResource("StyleBoxFlat_bawn2")
+_background_pressed_stylebox = null
+
+[node name="VSKButton17" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/Navigation/VBoxContainer/ScrollContainer/VBoxContainer" instance=ExtResource("7_q0edg")]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+_shadow_offset = Vector2(0, 2)
+_thumbnail_background_stylebox = SubResource("StyleBoxFlat_ixf25")
+_thumbnail_background_hover_stylebox = SubResource("StyleBoxFlat_7dqni")
+_thumbnail_background_pressed_stylebox = null
+_background_stylebox = SubResource("StyleBoxFlat_y34s5")
+_background_hover_stylebox = SubResource("StyleBoxFlat_bawn2")
+_background_pressed_stylebox = null
+
+[node name="VSKButton18" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/Navigation/VBoxContainer/ScrollContainer/VBoxContainer" instance=ExtResource("7_q0edg")]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+_shadow_offset = Vector2(0, 2)
+_thumbnail_background_stylebox = SubResource("StyleBoxFlat_ixf25")
+_thumbnail_background_hover_stylebox = SubResource("StyleBoxFlat_7dqni")
+_thumbnail_background_pressed_stylebox = null
+_background_stylebox = SubResource("StyleBoxFlat_y34s5")
+_background_hover_stylebox = SubResource("StyleBoxFlat_bawn2")
+_background_pressed_stylebox = null
+
+[node name="VSKButton19" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/Navigation/VBoxContainer/ScrollContainer/VBoxContainer" instance=ExtResource("7_q0edg")]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+_shadow_offset = Vector2(0, 2)
+_thumbnail_background_stylebox = SubResource("StyleBoxFlat_ixf25")
+_thumbnail_background_hover_stylebox = SubResource("StyleBoxFlat_7dqni")
+_thumbnail_background_pressed_stylebox = null
+_background_stylebox = SubResource("StyleBoxFlat_y34s5")
+_background_hover_stylebox = SubResource("StyleBoxFlat_bawn2")
+_background_pressed_stylebox = null
+
+[connection signal="sort_children" from="Panel/Content/Body/Control/MarginContainer" to="Panel/Content/Body/Control/MarginContainer/TopLevelAligner" method="_on_sorted"]

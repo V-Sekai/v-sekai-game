@@ -1,0 +1,3 @@
+@tool
+extends VSKUIViewControllerAccountAction
+class_name VSKUIViewControllerRegister

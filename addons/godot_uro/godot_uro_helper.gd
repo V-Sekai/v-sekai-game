@@ -5,6 +5,28 @@
 
 @tool
 extends RefCounted
+class_name GodotUroHelper
+
+static func _get_upload_data_for_file(p_file_path: String) -> Dictionary:
+	var file: FileAccess = FileAccess.open(p_file_path, FileAccess.READ)
+	if file:
+		var buffer = file.get_buffer(file.get_length())
+		return {
+			"filename": p_file_path.get_file(),
+			"content_type": "application/octet-stream",
+			"data": buffer
+		}
+
+	push_error("Failed to get upload data!")
+	return {}
+
+
+static func _get_raw_png_from_image(p_image: Image) -> Dictionary:
+	return {
+		"filename": "autogen.png", "content_type": "image/png", "data": p_image.save_png_to_buffer()
+	}
+
+###
 
 enum UroUserContentType { UNKNOWN, AVATAR, MAP, PROP }
 enum RequesterCode {
@@ -28,28 +50,26 @@ enum RequesterCode {
 	POLL_ERROR,
 }
 
-const LOCALHOST_HOST = "127.0.0.1"
-const LOCALHOST_PORT = 4000
-const DEFAULT_URO_HOST = LOCALHOST_HOST
-const DEFAULT_URO_PORT = LOCALHOST_PORT
-const API_PATH = "/api"
-const API_VERSION = "/v1"
-const SHOW_PATH = "/show"
-const NEW_PATH = "/new"
-const RENEW_PATH = "/renew"
-const PROFILE_PATH = "/profile"
-const SESSION_PATH = "/session"
-const REGISTRATION_PATH = "/registration"
-const IDENTITY_PROOFS_PATH = "/identity_proofs"
-const AVATARS_PATH = "/avatars"
-const MAPS_PATH = "/maps"
-const SHARDS_PATH = "/shards"
-const DASHBOARD_PATH = "/dashboard"
-const DEFAULT_ACCOUNT_ID = "UNKNOWN_ID"
-const DEFAULT_ACCOUNT_USERNAME = "UNKNOWN_USERNAME"
-const DEFAULT_ACCOUNT_DISPLAY_NAME = "UNKNOWN_DISPLAY_NAME"
-const UNTITLED_SHARD = "UNTITLED_SHARD"
-const UNKNOWN_MAP = "UNKNOWN_MAP"
+const LOCALHOST_HOST: String = "127.0.0.1"
+const LOCALHOST_PORT: int = 4000
+const API_PATH: String = "/api"
+const API_VERSION: String = "/v1"
+const SHOW_PATH: String = "/show"
+const NEW_PATH: String = "/new"
+const RENEW_PATH: String = "/renew"
+const PROFILE_PATH: String = "/profile"
+const SESSION_PATH: String = "/session"
+const REGISTRATION_PATH: String = "/registration"
+const IDENTITY_PROOFS_PATH: String = "/identity_proofs"
+const AVATARS_PATH: String = "/avatars"
+const MAPS_PATH: String = "/maps"
+const SHARDS_PATH: String = "/shards"
+const DASHBOARD_PATH: String = "/dashboard"
+const DEFAULT_ACCOUNT_ID: String = "UNKNOWN_ID"
+const DEFAULT_ACCOUNT_USERNAME: String = "UNKNOWN_USERNAME"
+const DEFAULT_ACCOUNT_DISPLAY_NAME: String = "UNKNOWN_DISPLAY_NAME"
+const UNTITLED_SHARD: String = "UNTITLED_SHARD"
+const UNKNOWN_MAP: String = "UNKNOWN_MAP"
 
 
 static func get_string_for_requester_code(p_requester_code: int) -> String:
@@ -124,14 +144,20 @@ static func get_full_requester_error_string(p_requester: Dictionary) -> String:
 
 
 static func requester_result_is_ok(p_result) -> bool:
-	return p_result["requester_code"] == RequesterCode.OK
+	return p_result.get("requester_code", RequesterCode.UNKNOWN_STATUS_ERROR) == RequesterCode.OK
 
 
 static func requester_result_has_response(p_result) -> bool:
 	return (
-		p_result["requester_code"] == RequesterCode.OK
-		or p_result["requester_code"] == RequesterCode.HTTP_RESPONSE_NOT_OK
+		p_result.get("requester_code", RequesterCode.UNKNOWN_STATUS_ERROR) == RequesterCode.OK
+		or p_result.get("requester_code", RequesterCode.UNKNOWN_STATUS_ERROR) == RequesterCode.HTTP_RESPONSE_NOT_OK
 	)
+
+static func bool_to_string(p_bool: bool) -> String:
+	if p_bool:
+		return "true"
+	else:
+		return "false"
 
 
 static func populate_query(p_query_name: String, p_query_dictionary: Dictionary) -> Dictionary:
@@ -175,22 +201,23 @@ static func process_user_privilege_ruleset(p_data) -> Dictionary:
 	return ruleset
 
 
-static func process_session_json(p_input: Dictionary) -> Dictionary:
+static func process_session_json(p_input: Dictionary, p_renewal_token: String, p_access_token: String) -> Dictionary:
 	if requester_result_has_response(p_input):
+		var output: Variant
 		if requester_result_is_ok(p_input):
-			var output = p_input["output"]
+			output = p_input["output"]
 			if output is Dictionary:
 				var data = output.get("data")
 				if data is Dictionary:
 					var renewal_token: String = get_value_of_type(
-						data, "renewal_token", TYPE_STRING, GodotUroData.renewal_token
+						data, "renewal_token", TYPE_STRING, p_renewal_token
 					)
 					var access_token: String = get_value_of_type(
-						data, "access_token", TYPE_STRING, GodotUroData.access_token
+						data, "access_token", TYPE_STRING, p_access_token
 					)
-
+					
 					var user: Dictionary = get_value_of_type(data, "user", TYPE_DICTIONARY, {})
-
+					
 					var user_id: String = get_value_of_type(
 						user, "id", TYPE_STRING, DEFAULT_ACCOUNT_ID
 					)
@@ -224,7 +251,7 @@ static func process_session_json(p_input: Dictionary) -> Dictionary:
 				"message": "Malformed response data!",
 			}
 
-		var output = p_input.get("output")
+		output = p_input.get("output")
 		if output is Dictionary:
 			var error = output.get("error")
 			if error is Dictionary:
@@ -282,3 +309,42 @@ static func process_shards_json(p_input: Dictionary) -> Dictionary:
 	result_dict["response_code"] = p_input["response_code"]
 	result_dict["output"] = {"data": {"shards": new_shards}}
 	return result_dict
+
+
+## Returns a dictionary containing the username and domain from an account
+## address. The address should be formatted as username@domain. If either
+## can't be found, it will return a dictionary with an empty username
+## and domain.
+static func get_username_and_domain_from_address(p_address: String) -> Dictionary[String, String]:
+	var result_dictionary: Dictionary[String, String] = {"username":"", "domain":""}
+	if not p_address.is_empty():
+		var splits: Array = p_address.split("@")
+		if splits.size() == 2:
+			result_dictionary["username"] = splits[0]
+			result_dictionary["domain"] = splits[1]
+	
+	return result_dictionary
+
+## Returns a dictionary formatted with all the information required to
+## upload a piece of user-generated content.
+static func create_content_upload_dictionary(
+	p_name: String,
+	p_description: String,
+	p_file_path: String,
+	p_image: Image,
+	p_is_public: bool
+) -> Dictionary:
+	var dictionary: Dictionary = {
+		"name": p_name, "description": p_description, "is_public": p_is_public
+	}
+
+	var user_content_data: Dictionary = _get_upload_data_for_file(p_file_path)
+	if !user_content_data.is_empty():
+		dictionary["user_content_data"] = user_content_data
+	else:
+		return {}
+		
+	if p_image:
+		dictionary["user_content_preview"] = _get_raw_png_from_image(p_image)
+	
+	return dictionary

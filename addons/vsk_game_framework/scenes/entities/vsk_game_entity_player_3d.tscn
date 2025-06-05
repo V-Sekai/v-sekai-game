@@ -1,0 +1,191 @@
+[gd_scene load_steps=21 format=3 uid="uid://iym64t583x3o"]
+
+[ext_resource type="PackedScene" uid="uid://u8r0xjhfygc5" path="res://addons/vsk_game_framework/scenes/entities/vsk_game_entity_character_3d.tscn" id="1_vskga"]
+[ext_resource type="Script" uid="uid://1rc6bcevxdqs" path="res://addons/sar_game_framework/generic/entities/component/sar_game_entity_component_snapshot.gd" id="2_ll1w3"]
+[ext_resource type="Script" uid="uid://1v8aet4hbahr" path="res://addons/vsk_game_framework/scripts/entities/vsk_game_entity_player_3d.gd" id="2_tisd7"]
+[ext_resource type="Script" uid="uid://bnme6um04qs8p" path="res://addons/sar_game_framework/3d/entities/components/sar_game_entity_component_player_multiplayer_3d.gd" id="2_wmm5c"]
+[ext_resource type="Script" uid="uid://cloy0pllqlb2r" path="res://addons/vsk_game_framework/scripts/entities/interfaces/vsk_game_entity_interface_player_3d.gd" id="3_nasei"]
+[ext_resource type="Script" uid="uid://ba4n6qspjel1i" path="res://addons/vsk_game_framework/scripts/entities/components/vsk_game_entity_component_avatar_sync.gd" id="4_5fa3r"]
+[ext_resource type="Script" uid="uid://drg6o4ibvnr87" path="res://addons/sar_game_framework/generic/snapshots/sar_snapshot_transform_3d.gd" id="4_ifdh7"]
+[ext_resource type="Script" uid="uid://cml85rhfk612m" path="res://addons/sar_game_framework/generic/entities/component/sar_game_entity_component_remote_transform_buffer.gd" id="6_5fa3r"]
+[ext_resource type="Script" uid="uid://bxuxnktcukug6" path="res://addons/sar_game_framework/generic/snapshots/sar_snapshot_fixed_size.gd" id="7_m0jcv"]
+[ext_resource type="Script" uid="uid://d4nn5q418kk1x" path="res://addons/sar_game_framework/generic/snapshots/sar_snapshot_vector3.gd" id="8_h6k8g"]
+[ext_resource type="Script" uid="uid://co513u6fkckn6" path="res://addons/vsk_game_framework/scripts/entities/components/vsk_game_entity_component_avatar_loader.gd" id="8_kkxyr"]
+[ext_resource type="Script" uid="uid://c6pxum8wd4hh5" path="res://addons/vsk_game_framework/scripts/entities/components/vsk_game_entity_component_avatar_3d.gd" id="9_lfgub"]
+[ext_resource type="Script" uid="uid://btqako6usmi3l" path="res://addons/sar_game_framework/generic/snapshots/sar_snapshot_flag.gd" id="10_ctmcs"]
+[ext_resource type="Script" uid="uid://dvc8g1h4ynhvw" path="res://addons/vsk_game_framework/scripts/entities/components/vsk_game_entity_component_avatar_parameters.gd" id="10_v3j3u"]
+[ext_resource type="Script" uid="uid://bxm6hb06jml5" path="res://addons/vsk_game_framework/scripts/entities/components/vsk_game_entity_component_debug_info.gd" id="14_fx7lb"]
+[ext_resource type="Script" uid="uid://beeajygkhrfmg" path="res://addons/sar_game_framework/generic/entities/component/sar_game_entity_component_scene_tree_state_notifier.gd" id="16_agmen"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ifdh7"]
+properties/0/path = NodePath("MultiplayerComponent/SnapshotComponent:sync_net_state")
+properties/0/spawn = false
+properties/0/replication_mode = 1
+properties/1/path = NodePath("AvatarSyncComponent:requested_avatar_path")
+properties/1/spawn = false
+properties/1/replication_mode = 2
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_wmm5c"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 0
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 0
+properties/2/path = NodePath("AvatarSyncComponent:requested_avatar_path")
+properties/2/spawn = true
+properties/2/replication_mode = 0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5fa3r"]
+albedo_color = Color(1, 0, 0, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_5fa3r"]
+material = SubResource("StandardMaterial3D_5fa3r")
+top_radius = 0.0
+bottom_radius = 0.1
+height = 0.25
+
+[node name="VSKGameEntityPlayer3D" groups=["VSKPlayers"] instance=ExtResource("1_vskga")]
+visible = true
+script = ExtResource("2_tisd7")
+
+[node name="GameEntityInterface" parent="." index="0" node_paths=PackedStringArray("avatar_parameters_component", "avatar_sync_component")]
+script = ExtResource("3_nasei")
+avatar_parameters_component = NodePath("../AvatarParametersComponent")
+avatar_sync_component = NodePath("../AvatarSyncComponent")
+
+[node name="MultiplayerComponent" type="Node" parent="." index="1" node_paths=PackedStringArray("multiplayer_synchronizer_spawn", "game_entity")]
+script = ExtResource("2_wmm5c")
+multiplayer_synchronizer_spawn = NodePath("MultiplayerSynchronizerSpawn")
+game_entity = NodePath("..")
+metadata/_custom_type_script = "uid://bnme6um04qs8p"
+
+[node name="MultiplayerSynchronizerSync" type="MultiplayerSynchronizer" parent="MultiplayerComponent" index="0"]
+process_thread_group = 1
+process_thread_group_order = 0
+process_thread_messages = 0
+editor_description = "This node node is hooked into the snapshot interpolator and syncs a virtual value which provides bitpacked representation of a player snapshot.
+
+It is set to the main thread for now since the update_visibility function is calls talks directly to the multiplayer API, which is only allowed from the main thread, but the heavy lifting concerning per-entity packet encoding and decoding should be possible to make asynchronous."
+root_path = NodePath("../..")
+replication_config = SubResource("SceneReplicationConfig_ifdh7")
+
+[node name="MultiplayerSynchronizerSpawn" type="MultiplayerSynchronizer" parent="MultiplayerComponent" index="1"]
+process_thread_group = 1
+process_thread_group_order = 0
+process_thread_messages = 0
+editor_description = "This node is always set up to have its authority owned by the server host, but is only used for the initial spawn state.
+
+It is set to the main thread for now since the update_visibility function is calls talks directly to the multiplayer API, which is only allowed from the main thread, but the heavy lifting concerning per-entity packet encoding and decoding should be possible to make asynchronous."
+root_path = NodePath("../..")
+replication_config = SubResource("SceneReplicationConfig_wmm5c")
+
+[node name="SnapshotComponent" type="Node" parent="MultiplayerComponent" index="2" node_paths=PackedStringArray("game_entity")]
+script = ExtResource("2_ll1w3")
+game_entity = NodePath("../..")
+
+[node name="TransformSnapshot" type="Node" parent="MultiplayerComponent/SnapshotComponent" index="0" node_paths=PackedStringArray("game_entity")]
+script = ExtResource("4_ifdh7")
+game_entity = NodePath("../../..")
+metadata/_custom_type_script = "uid://drg6o4ibvnr87"
+
+[node name="ParametersSnapshot" type="Node" parent="MultiplayerComponent/SnapshotComponent" index="1"]
+script = ExtResource("7_m0jcv")
+fixed_buffer_size = 256
+metadata/_custom_type_script = "uid://bxuxnktcukug6"
+
+[node name="velocity" type="Node" parent="MultiplayerComponent/SnapshotComponent/ParametersSnapshot" index="0"]
+script = ExtResource("8_h6k8g")
+metadata/_custom_type_script = "uid://d4nn5q418kk1x"
+
+[node name="grounded" type="Node" parent="MultiplayerComponent/SnapshotComponent/ParametersSnapshot" index="1"]
+script = ExtResource("10_ctmcs")
+metadata/_custom_type_script = "uid://btqako6usmi3l"
+
+[node name="RemoteTransformBufferComponent" type="Node" parent="MultiplayerComponent" index="3" node_paths=PackedStringArray("movement_component", "game_entity")]
+script = ExtResource("6_5fa3r")
+movement_component = NodePath("../../VesselMovementComponent")
+game_entity = NodePath("../..")
+
+[node name="AvatarSyncComponent" type="Node" parent="." index="2" node_paths=PackedStringArray("game_entity")]
+editor_description = "Modify the requested_avatar_path here to assign a new avatar to be used. The requested_avatar_path should be delta watched by the MultiplayerSynchronizer so this result should be remote sent to all other peers when a change has occured."
+script = ExtResource("4_5fa3r")
+requested_avatar_path = "https://http.cat/status/418"
+game_entity = NodePath("..")
+
+[node name="AvatarLoaderComponent" type="Node" parent="." index="3" node_paths=PackedStringArray("avatar_component", "game_entity")]
+editor_description = "This node receives signals from the AvatarSyncComponent and is responsible for actually issuing the requests to an asset manager to load the desired avatar in an asynchronous fashion.
+
+Once a result has been received, it will assign the resulting PackedScene directly to the model component to actually instantiate the avatar."
+script = ExtResource("8_kkxyr")
+avatar_component = NodePath("../ModelComponent")
+game_entity = NodePath("..")
+metadata/_custom_type_script = "uid://co513u6fkckn6"
+
+[node name="AvatarParametersComponent" type="Node" parent="." index="4" node_paths=PackedStringArray("avatar_component", "parameters_snapshot", "game_entity")]
+script = ExtResource("10_v3j3u")
+avatar_component = NodePath("../ModelComponent")
+parameters_snapshot = NodePath("../MultiplayerComponent/SnapshotComponent/ParametersSnapshot")
+game_entity = NodePath("..")
+metadata/_custom_type_script = "uid://co513u6fkckn6"
+
+[node name="DebugInfoComponent" type="Node" parent="." index="5" node_paths=PackedStringArray("posession_info_labels", "game_entity")]
+script = ExtResource("14_fx7lb")
+posession_info_labels = [NodePath("../DebugInfo/PosessionDebugLabel")]
+game_entity = NodePath("..")
+
+[node name="ModelComponent" parent="." index="6"]
+editor_description = "This component is responsible for loading and displaying a character's avatar."
+script = ExtResource("9_lfgub")
+
+[node name="ThirdPersonModel" parent="." index="7"]
+editor_description = ""
+
+[node name="VesselMovementComponent" parent="." index="10"]
+editor_description = "This node is responsible for physically moving a character."
+
+[node name="VesselPossessionComponent" parent="." index="11"]
+editor_description = "This node is responsible for connecting a soul to vessel in order to make them perform actions."
+
+[node name="VesselInputComponent" parent="." index="12"]
+editor_description = "This node is responsible for handling input from the soul."
+
+[node name="PlayerSceneTreeStateNotifierComponent" type="Node" parent="." index="14" node_paths=PackedStringArray("game_entity")]
+script = ExtResource("16_agmen")
+group_name = "player_scene_tree_state_notification_receivers"
+game_entity = NodePath("..")
+
+[node name="DebugMarker" type="MeshInstance3D" parent="." index="15"]
+transform = Transform3D(-5.73206e-15, 1.31134e-07, -1, -1, -4.37114e-08, 0, -4.37114e-08, 1, 1.31134e-07, 0, 0.3, 0)
+visible = false
+mesh = SubResource("CylinderMesh_5fa3r")
+
+[node name="DebugInfo" type="Node3D" parent="." index="16"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+visible = false
+
+[node name="PosessionDebugLabel" type="Label3D" parent="DebugInfo" index="0"]
+layers = 2
+billboard = 1
+
+[connection signal="teleported" from="." to="MultiplayerComponent/SnapshotComponent/TransformSnapshot" method="_set_transform"]
+[connection signal="teleported" from="." to="MultiplayerComponent/RemoteTransformBufferComponent" method="_reset_transform"]
+[connection signal="synchronized" from="MultiplayerComponent/MultiplayerSynchronizerSync" to="MultiplayerComponent/SnapshotComponent" method="_on_multiplayer_synchronizer_sync_synchronized"]
+[connection signal="synchronized" from="MultiplayerComponent/MultiplayerSynchronizerSync" to="MultiplayerComponent/SnapshotComponent/TransformSnapshot" method="_on_synchronized"]
+[connection signal="synchronized" from="MultiplayerComponent/MultiplayerSynchronizerSpawn" to="MultiplayerComponent/SnapshotComponent/TransformSnapshot" method="_on_synchronized"]
+[connection signal="transform_updated" from="MultiplayerComponent/SnapshotComponent/TransformSnapshot" to="MultiplayerComponent/RemoteTransformBufferComponent" method="_on_transform_snapshot_transform_updated"]
+[connection signal="updated" from="MultiplayerComponent/SnapshotComponent/ParametersSnapshot" to="AvatarParametersComponent" method="_on_parameters_updated"]
+[connection signal="requested_avatar_path_changed" from="AvatarSyncComponent" to="AvatarLoaderComponent" method="_on_requested_avatar_path_changed"]
+[connection signal="game_scene_changed" from="SimulationParent/VSKSimulationPlayer" to="SimulationParent/VSKSimulationPlayer/SceneBoundsDetector3DComponent" method="_on_game_scene_changed"]
+[connection signal="model_changed" from="SimulationParent/VSKSimulationPlayer" to="SimulationParent/VSKSimulationPlayer/PlayspaceComponent" method="_on_model_changed"]
+[connection signal="post_movement" from="SimulationParent/VSKSimulationPlayer" to="SimulationParent/VSKSimulationPlayer/Animator3DComponent" method="_on_post_movement"]
+[connection signal="pre_movement" from="SimulationParent/VSKSimulationPlayer" to="SimulationParent/VSKSimulationPlayer/AuxiliaryMotion3DComponent" method="_on_pre_movement"]
+[connection signal="shutdown" from="SimulationParent/VSKSimulationPlayer" to="SimulationParent/VSKSimulationPlayer/MouseModeComponent" method="_on_shutdown"]
+[connection signal="shutdown" from="SimulationParent/VSKSimulationPlayer" to="SimulationParent/VSKSimulationPlayer/CharacterBody3DComponent" method="_on_simulation_shutdown"]
+[connection signal="shutdown" from="SimulationParent/VSKSimulationPlayer" to="SimulationParent/VSKSimulationPlayer/CollisionShape3DComponent" method="_on_simulation_shutdown"]
+[connection signal="transform_changed" from="SimulationParent/VSKSimulationPlayer" to="SimulationParent/VSKSimulationPlayer/PlayspaceComponent" method="_on_transform_changed"]
+[connection signal="transform_post_update" from="SimulationParent/VSKSimulationPlayer" to="SimulationParent/VSKSimulationPlayer/Motor3DComponent" method="_on_transform_post_update"]
+[connection signal="vessel_possession_changed" from="SimulationParent/VSKSimulationPlayer" to="SimulationParent/VSKSimulationPlayer/MouseModeComponent" method="_on_possession_changed"]
+[connection signal="vessel_possession_changed" from="SimulationParent/VSKSimulationPlayer" to="SimulationParent/VSKSimulationPlayer/PlayspaceComponent" method="_on_vessel_possession_changed"]
+[connection signal="vessel_possession_changed" from="SimulationParent/VSKSimulationPlayer" to="SimulationParent/VSKSimulationPlayer/FaderComponent" method="_on_vessel_possession_changed"]
+[connection signal="possessed_by_soul" from="VesselPossessionComponent" to="DebugInfoComponent" method="_on_possessed_by_soul"]

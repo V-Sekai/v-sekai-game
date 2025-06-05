@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3 uid="uid://dv8saw5c87lkg"]
+
+[ext_resource type="Script" uid="uid://bpm0wxfxiu5vo" path="res://addons/vsk_editor/dashboard/vsk_editor_dashboard_dialog.gd" id="1_i0sb0"]
+[ext_resource type="PackedScene" uid="uid://drtdslcxgyc37" path="res://addons/vsk_editor/dashboard/vsk_editor_dashboard_dialog_control.tscn" id="2_1v7ek"]
+
+[node name="Dashboard" type="AcceptDialog" node_paths=PackedStringArray("dashboard_dialog_control")]
+oversampling_override = 1.0
+title = "Dashboard"
+position = Vector2i(0, 36)
+size = Vector2i(800, 450)
+visible = true
+exclusive = false
+minimize_disabled = false
+maximize_disabled = false
+script = ExtResource("1_i0sb0")
+dashboard_dialog_control = NodePath("DashboardDialogControl")
+
+[node name="DashboardDialogControl" parent="." instance=ExtResource("2_1v7ek")]
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -18.0

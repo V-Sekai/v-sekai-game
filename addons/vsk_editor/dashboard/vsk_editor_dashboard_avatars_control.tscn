@@ -1,0 +1,25 @@
+[gd_scene load_steps=3 format=3 uid="uid://c3mfovmk4bed6"]
+
+[ext_resource type="Script" uid="uid://c42jnudw076lu" path="res://addons/vsk_editor/dashboard/vsk_editor_dashboard_avatars_control.gd" id="1_2d840"]
+[ext_resource type="PackedScene" uid="uid://md26adjqj58j" path="res://addons/vsk_editor/dashboard/vsk_editor_dashboard_content_control.tscn" id="1_xpuew"]
+
+[node name="Avatars" node_paths=PackedStringArray("upload_button") instance=ExtResource("1_xpuew")]
+script = ExtResource("1_2d840")
+upload_button = NodePath("VBoxContainer/HBoxContainer/UploadButton")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer" index="2"]
+layout_mode = 2
+
+[node name="UploadButton" type="Button" parent="VBoxContainer/HBoxContainer" index="0"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Upload New Avatar"
+
+[node name="UploadFileDialog" parent="." index="2"]
+access = 2
+filters = PackedStringArray("*.vrm")
+use_native_dialog = false
+
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/UploadButton" to="." method="_on_upload_button_pressed"]
+[connection signal="file_selected" from="UploadFileDialog" to="." method="_on_upload_file_dialog_file_selected"]
+[connection signal="files_selected" from="UploadFileDialog" to="." method="_on_upload_file_dialog_files_selected"]

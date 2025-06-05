@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cyb0g6atx1nl7"]
+
+[ext_resource type="Script" uid="uid://fp7dp57qnbrq" path="res://addons/sar_game_framework/generic/souls/sar_soul.gd" id="1_hjt2f"]
+
+[node name="SarSoul" type="Node"]
+script = ExtResource("1_hjt2f")

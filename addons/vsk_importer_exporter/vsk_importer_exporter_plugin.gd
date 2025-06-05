@@ -5,6 +5,7 @@
 
 @tool
 extends EditorPlugin
+class_name VSKImporterExporterPlugin
 
 var editor_interface: EditorInterface = null
 
@@ -26,10 +27,11 @@ func _get_plugin_name() -> String:
 func _enter_tree() -> void:
 	editor_interface = get_editor_interface()
 
-	add_autoload_singleton("VSKExporter", "res://addons/vsk_importer_exporter/vsk_exporter.gd")
-	add_autoload_singleton("VSKImporter", "res://addons/vsk_importer_exporter/vsk_importer.gd")
+	#add_autoload_singleton("VSKExporterSingleton", "res://addons/vsk_importer_exporter/vsk_exporter.gd")
+	#add_autoload_singleton("VSKImporterSingleton", "res://addons/vsk_importer_exporter/vsk_importer.gd")
 
 
 func _exit_tree() -> void:
-	remove_autoload_singleton("VSKImporter")
-	remove_autoload_singleton("VSKExporter")
+	pass
+#	remove_autoload_singleton("VSKImporterSingleton")
+#	remove_autoload_singleton("VSKExporterSingleton")

@@ -1,0 +1,42 @@
+[gd_scene load_steps=6 format=3 uid="uid://cmx3ucbbmfhst"]
+
+[ext_resource type="Shader" uid="uid://bpj2c1im84ku0" path="res://addons/V-Sekai.xr-mirror/mirror.gdshader" id="1_5cymf"]
+[ext_resource type="Script" uid="uid://fuwxvq2ha0ri" path="res://addons/V-Sekai.xr-mirror/mirror.gd" id="2_w4yhn"]
+[ext_resource type="Environment" uid="uid://bar1ygta6oxeu" path="res://addons/V-Sekai.xr-mirror/mirror_env.tres" id="3_d6d7e"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_ply7g"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nal70"]
+render_priority = 0
+shader = ExtResource("1_5cymf")
+shader_parameter/use_screenspace = false
+shader_parameter/albedo_color = Color(1, 1, 1, 1)
+
+[node name="Mirror" type="MeshInstance3D" node_paths=PackedStringArray("left_camera", "right_camera", "leftvp", "rightvp")]
+layers = 2
+mesh = SubResource("QuadMesh_ply7g")
+surface_material_override/0 = SubResource("ShaderMaterial_nal70")
+script = ExtResource("2_w4yhn")
+left_camera = NodePath("LeftViewport/Camera3D")
+right_camera = NodePath("RightViewport/Camera3D")
+leftvp = NodePath("LeftViewport")
+rightvp = NodePath("RightViewport")
+
+[node name="LeftViewport" type="SubViewport" parent="."]
+size = Vector2i(128, 128)
+render_target_update_mode = 4
+
+[node name="Camera3D" type="Camera3D" parent="LeftViewport"]
+visible = false
+cull_mask = 1048573
+environment = ExtResource("3_d6d7e")
+projection = 2
+
+[node name="RightViewport" type="SubViewport" parent="."]
+size = Vector2i(128, 128)
+render_target_update_mode = 4
+
+[node name="Camera3D" type="Camera3D" parent="RightViewport"]
+visible = false
+cull_mask = 1048573
+environment = ExtResource("3_d6d7e")

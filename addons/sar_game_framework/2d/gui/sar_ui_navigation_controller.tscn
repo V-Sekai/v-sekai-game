@@ -1,0 +1,21 @@
+[gd_scene load_steps=2 format=3 uid="uid://d4k28nbwaaoj4"]
+
+[ext_resource type="Script" uid="uid://dx57iegssgfh0" path="res://addons/sar_game_framework/2d/gui/sar_ui_navigation_controller.gd" id="1_oiead"]
+
+[node name="NavigationController" type="Control" node_paths=PackedStringArray("content")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_oiead")
+content = NodePath("Content")
+
+[node name="Content" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2

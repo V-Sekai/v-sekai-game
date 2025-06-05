@@ -1,0 +1,27 @@
+[gd_scene load_steps=2 format=3 uid="uid://0nj557u77i4l"]
+
+[sub_resource type="GDScript" id="GDScript_868w6"]
+script/source = "extends HBoxContainer
+
+func _ready() -> void:
+	pass
+"
+
+[node name="PropetyWidgetCheckButton" type="HBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1052.0
+offset_bottom = -616.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_868w6")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+text = "Option"
+vertical_alignment = 1
+
+[node name="CheckButton" type="CheckButton" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3

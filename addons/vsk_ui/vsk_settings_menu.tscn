@@ -1,0 +1,184 @@
+[gd_scene load_steps=6 format=3 uid="uid://du3ctrn76jhxn"]
+
+[ext_resource type="Theme" uid="uid://s05juvtforjo" path="res://addons/vsk_ui/vsk_ui_dark.tres" id="1_romp7"]
+[ext_resource type="Script" uid="uid://o2dyykcgijya" path="res://addons/vsk_ui/vsk_startup_menu.gd" id="2_romp7"]
+[ext_resource type="PackedScene" uid="uid://dcd0ooyvb0nwu" path="res://addons/vsk_ui/vsk_top_header_panel_container.tscn" id="3_u0yqx"]
+[ext_resource type="Script" uid="uid://dnkg28mh25h88" path="res://addons/sar_game_framework/2d/gui/sar_ui_top_level_alignment.gd" id="4_r1l7i"]
+[ext_resource type="PackedScene" uid="uid://dpv2yrmcx70xc" path="res://addons/vsk_ui/widgets/vsk_text_input.tscn" id="6_dqqn7"]
+
+[node name="SettingsMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource("1_romp7")
+script = ExtResource("2_romp7")
+
+[node name="Panel" type="Panel" parent="."]
+clip_children = 2
+clip_contents = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Content" type="VBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"ZeroSeperationVBoxContainer"
+
+[node name="Header" type="VBoxContainer" parent="Panel/Content"]
+layout_mode = 2
+theme_type_variation = &"ZeroSeperationVBoxContainer"
+
+[node name="TopHeaderPanelContainer" parent="Panel/Content/Header" instance=ExtResource("3_u0yqx")]
+layout_mode = 2
+
+[node name="Body" type="VBoxContainer" parent="Panel/Content"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"ZeroSeperationVBoxContainer"
+
+[node name="Control" type="Control" parent="Panel/Content/Body"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel/Content/Body/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 13
+size_flags_vertical = 3
+theme_type_variation = &"MenuMarginContainer"
+
+[node name="TopLevelAligner" type="Control" parent="Panel/Content/Body/Control/MarginContainer"]
+layout_mode = 2
+script = ExtResource("4_r1l7i")
+
+[node name="TopLevelContent" type="Control" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner"]
+top_level = true
+clip_contents = true
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = 77.0
+offset_right = -16.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Navigation" type="Control" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer"]
+clip_contents = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.25
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/Navigation"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VSeparator" type="VSeparator" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="ContentBrowser" type="Control" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer"]
+clip_contents = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/ContentBrowser"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SearchContainer" type="HBoxContainer" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/ContentBrowser/VBoxContainer"]
+layout_mode = 2
+
+[node name="TextInput" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/ContentBrowser/VBoxContainer/SearchContainer" instance=ExtResource("6_dqqn7")]
+layout_mode = 2
+backspace_deletes_composite_character_enabled = null
+virtual_keyboard_show_on_focus = null
+
+[node name="Label" type="Label" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/ContentBrowser/VBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"InfoLabel"
+text = "Settings"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ContentArea" type="Control" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/ContentBrowser/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ScrollContentContainer" type="ScrollContainer" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/ContentBrowser/VBoxContainer/ContentArea"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 3
+
+[node name="ContentContainer" type="GridContainer" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/ContentBrowser/VBoxContainer/ContentArea/ScrollContentContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+columns = 3
+
+[node name="ContentLoadPreview" type="Control" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/ContentBrowser/VBoxContainer/ContentArea"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/ContentBrowser/VBoxContainer/ContentArea/ContentLoadPreview"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Loading Content..."
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="sort_children" from="Panel/Content/Body/Control/MarginContainer" to="Panel/Content/Body/Control/MarginContainer/TopLevelAligner" method="_on_sorted"]

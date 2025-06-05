@@ -1,0 +1,90 @@
+[gd_scene load_steps=10 format=3 uid="uid://crjgg4fi0c0ad"]
+
+[ext_resource type="PackedScene" uid="uid://riyhjc3pjwu7" path="res://addons/sar_game_framework/3d/simulation/sar_player_simulation_fps_tps_xr_hybrid_playspace_component_3d.tscn" id="1_jvu1v"]
+[ext_resource type="Script" uid="uid://bps4jvd15dpw6" path="res://addons/vsk_game_framework/scripts/simulation/vsk_player_simulation_playspace_component_3d.gd" id="2_00l76"]
+[ext_resource type="PackedScene" uid="uid://bkibmgqi21pfb" path="res://addons/sar_game_framework/3d/xr/xr_component_hand_movement.tscn" id="3_rwdra"]
+[ext_resource type="PackedScene" uid="uid://bbmkc1oeb4j7c" path="res://addons/sar_game_framework/3d/xr/xr_component_action_jump.tscn" id="4_eow00"]
+[ext_resource type="PackedScene" uid="uid://ddkmd567fwfhx" path="res://addons/sar_game_framework/3d/xr/xr_component_action_menu.tscn" id="5_mdjmv"]
+[ext_resource type="PackedScene" uid="uid://c6536akabfvna" path="res://addons/sar_game_framework/3d/xr/xr_component_hand_rotation.tscn" id="6_5e044"]
+[ext_resource type="Script" uid="uid://d3evp1l2c735g" path="res://addons/sar_game_framework/3d/simulation/playspace/sar_playspace_head_offset_component_3d.gd" id="7_7l3ug"]
+[ext_resource type="Script" uid="uid://csndide20cut0" path="res://addons/sar_game_framework/3d/simulation/playspace/sar_playspace_fps_tps_xr_hybrid_settings_fetcher_component_3d.gd" id="8_jvu1v"]
+
+[sub_resource type="GDScript" id="GDScript_jvu1v"]
+script/source = "extends Node
+
+# Quick and dirty script for testing camera-relative XR world rescaling.
+
+@export var xr_origin: SarPlayerSimulationXROrigin3D = null
+@export var active: bool = false
+
+var inc: float = 1.0
+
+const MIN: float = 0.75
+const MAX: float = 1.25
+
+func _process(p_delta: float) -> void:
+	if not Engine.is_editor_hint():
+		if active:
+			xr_origin.world_scale_centered += inc * randf_range(0.1, 1.9) * p_delta
+			if xr_origin.world_scale_centered > MAX:
+				if inc > 0.0:
+					inc = -inc
+			elif xr_origin.world_scale_centered < MIN:
+				if inc < 0.0:
+					inc = -inc
+"
+
+[node name="VSKPlayerSimulationPlayspaceComponent3D" instance=ExtResource("1_jvu1v")]
+editor_description = "V-Sekai extends the standard FPS, TPS, XR hybrid playspace to provide functionality specific to it, including deriving various parameters from the avatar we have set, head offset accumulation, as well as various settings the user can customize."
+script = ExtResource("2_00l76")
+default_height = 1.8
+maximum_pitch = 60.0
+minimum_pitch = -60.0
+
+[node name="HeadOffsetComponent" type="Node" parent="." index="0" node_paths=PackedStringArray("pivot", "xr_camera", "xr_origin")]
+editor_description = "This node is designed to keep track of the player's head moving from the center of their origin point. Every physics frame, it will calculate an offset and attempt emit signals which are intended to be translated into offset for the simulation's physical body. Once this step has been performed, we should then receive the results to compensate."
+script = ExtResource("7_7l3ug")
+pivot = NodePath("../CameraBase/CameraPivot")
+xr_camera = NodePath("../CameraBase/CameraPivot/CameraOffset/XROrigin3D/XRCamera3D")
+xr_origin = NodePath("../CameraBase/CameraPivot/CameraOffset/XROrigin3D")
+
+[node name="CameraBase" parent="." index="1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="CameraPivot" parent="CameraBase" index="0"]
+editor_description = "This node is responsible for handling all camera rotation controlled via external input. The attached script performs the math which rotates the camera without applying rotation to it directly, instead, rotating the XROrigin around it."
+
+[node name="XROrigin3D" parent="CameraBase/CameraPivot/CameraOffset" index="0"]
+current = true
+left_hand_default_child_scenes = Array[PackedScene]([ExtResource("3_rwdra"), ExtResource("4_eow00"), ExtResource("5_mdjmv")])
+right_hand_default_child_scenes = Array[PackedScene]([ExtResource("6_5e044"), ExtResource("4_eow00"), ExtResource("5_mdjmv")])
+
+[node name="XRCamera3D" parent="CameraBase/CameraPivot/CameraOffset/XROrigin3D" index="0"]
+cull_mask = 3
+
+[node name="LeftHandTest" type="XRController3D" parent="CameraBase/CameraPivot/CameraOffset/XROrigin3D" index="1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000531018, 0, 0)
+tracker = &"left_hand"
+show_when_tracked = true
+
+[node name="RightHandTest" type="XRController3D" parent="CameraBase/CameraPivot/CameraOffset/XROrigin3D" index="2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000531018, 0, 0)
+tracker = &"right_hand"
+show_when_tracked = true
+
+[node name="SettingsFetcherComponent" type="Node" parent="." index="2" node_paths=PackedStringArray("playspace")]
+editor_description = "We would like to be able to provide user customization to various functions of the playspace, so this node can be thought of as orchestrator for the various parameters the scene can be set to."
+script = ExtResource("8_jvu1v")
+playspace = NodePath("..")
+metadata/_custom_type_script = "uid://bb7ar2kq0iibp"
+
+[node name="RescaleTester" type="Node" parent="." index="3" node_paths=PackedStringArray("xr_origin")]
+editor_description = "This is just here for testing at the moment."
+script = SubResource("GDScript_jvu1v")
+xr_origin = NodePath("../CameraBase/CameraPivot/CameraOffset/XROrigin3D")
+
+[connection signal="external_camera_offset_received" from="." to="HeadOffsetComponent" method="_external_offset_received"]
+[connection signal="teleport" from="." to="HeadOffsetComponent" method="_reset_space"]
+[connection signal="offset_calculated" from="HeadOffsetComponent" to="." method="_on_internal_camera_offset_calculated"]
+[connection signal="delta_rotated" from="CameraBase/CameraPivot" to="HeadOffsetComponent" method="_on_delta_rotated"]
+[connection signal="world_scale_center_offset" from="CameraBase/CameraPivot/CameraOffset/XROrigin3D" to="HeadOffsetComponent" method="_translate_previous_camera_position"]

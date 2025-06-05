@@ -1,0 +1,230 @@
+[gd_scene load_steps=13 format=3 uid="uid://nj1xfi0elr7"]
+
+[ext_resource type="Script" uid="uid://dnlo81of77j32" path="res://vsk_default/scenes/vsk_startup_scene.gd" id="1_tqw6f"]
+[ext_resource type="Environment" uid="uid://ddliis45nkc3n" path="res://vsk_default/scenes/vsk_startup_scene_environment.tres" id="2_tqw6f"]
+[ext_resource type="PackedScene" uid="uid://dhq5hl530vv17" path="res://addons/vsk_ui/vsk_welcome_message.tscn" id="3_2k5sa"]
+[ext_resource type="PackedScene" uid="uid://bk6ynr82osrft" path="res://addons/vsk_game_framework/scenes/gui/vsk_viewport_2d_in_3d.tscn" id="3_hiocw"]
+[ext_resource type="PackedScene" uid="uid://cq54hvau05aei" path="res://addons/vsk_ui/view_controllers/navigation_controllers/vsk_ui_navigation_controller_startup.tscn" id="3_ltrtt"]
+[ext_resource type="PackedScene" uid="uid://dgdb1texynduw" path="res://addons/godot-xr-tools/objects/virtual_keyboard.tscn" id="5_yb4y3"]
+
+[sub_resource type="Animation" id="Animation_2k5sa"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Fader:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0, 0, 0, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Fader:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("XRScreens/MessageBox:material:albedo_color")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_tqw6f"]
+resource_name = "fade_in"
+step = 0.0333333
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Fader:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0, 0, 0, 1), Color(0, 0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Fader:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, true]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("XRScreens/MessageBox:material:albedo_color")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_hiocw"]
+resource_name = "fade_in_complete"
+step = 0.0333333
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Fader:color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0, 0, 0, 0), Color(0, 0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Fader:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_hiocw"]
+_data = {
+&"RESET": SubResource("Animation_2k5sa"),
+&"fade_in": SubResource("Animation_tqw6f"),
+&"fade_in_complete": SubResource("Animation_hiocw")
+}
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ltrtt"]
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+metallic = 1.0
+roughness = 0.5
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_vb8qr"]
+size = Vector2(5, 5)
+
+[node name="StartupScene" type="Node3D" node_paths=PackedStringArray("navigation_controller_2d", "animation_player")]
+script = ExtResource("1_tqw6f")
+navigation_controller_2d = NodePath("CanvasLayer/NavigationController")
+animation_player = NodePath("FaderAnimationPlayer")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
+shadow_enabled = true
+
+[node name="XROrigin3D" type="XROrigin3D" parent="."]
+current = true
+
+[node name="XRCamera3D" type="XRCamera3D" parent="XROrigin3D"]
+current = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource("2_tqw6f")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+unique_name_in_owner = true
+layer = -1
+
+[node name="NavigationController" parent="CanvasLayer" instance=ExtResource("3_ltrtt")]
+
+[node name="MessageBoxLayer" type="CanvasLayer" parent="."]
+unique_name_in_owner = true
+layer = -1
+visible = false
+
+[node name="Control" type="Control" parent="MessageBoxLayer"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Fader" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="FaderAnimationPlayer" type="AnimationPlayer" parent="."]
+unique_name_in_owner = true
+libraries = {
+&"": SubResource("AnimationLibrary_hiocw")
+}
+autoplay = "fade_in"
+next/fade_in = &"fade_in_complete"
+
+[node name="XRScreens" type="Node3D" parent="."]
+
+[node name="MainScreen" parent="XRScreens" instance=ExtResource("3_hiocw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -3.0071)
+viewport_size = Vector2(1200, 800)
+input_gamepad = true
+unshaded = true
+
+[node name="MessageBox" parent="XRScreens" instance=ExtResource("3_hiocw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -2.8)
+visible = false
+screen_size = Vector2(1.5, 1)
+scene = ExtResource("3_2k5sa")
+viewport_size = Vector2(600, 300)
+input_gamepad = true
+unshaded = true
+scene_properties_keys = PackedStringArray("vsk_welcome_message.gd")
+
+[node name="Popup" parent="XRScreens" instance=ExtResource("3_hiocw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -2.9)
+visible = false
+screen_size = Vector2(1, 0.5)
+scene = ExtResource("3_2k5sa")
+input_gamepad = true
+unshaded = true
+scene_properties_keys = PackedStringArray("vsk_welcome_message.gd")
+
+[node name="VirtualKeyboard" parent="XRScreens" instance=ExtResource("5_yb4y3")]
+transform = Transform3D(1, 0, 0, 0, 0.5, 0.866025, 0, -0.866025, 0.5, 0, 0.8, -2.6)
+scene_properties_keys = PackedStringArray("virtual_keyboard_2d.gd")
+
+[node name="Floor" type="MeshInstance3D" parent="."]
+editor_description = "This is pretty bad and hacky, using a big HD texture like this. What we really need is a similar approach but with MSDF."
+material_override = SubResource("StandardMaterial3D_ltrtt")
+mesh = SubResource("PlaneMesh_vb8qr")
+
+[node name="Music" type="AudioStreamPlayer" parent="."]
+autoplay = true
+mix_target = 1
+playback_type = 1
+
+[connection signal="gui_input" from="Fader" to="." method="_on_fader_gui_input"]
+[connection signal="animation_finished" from="FaderAnimationPlayer" to="." method="_on_fader_animation_player_animation_finished"]
+[connection signal="current_animation_changed" from="FaderAnimationPlayer" to="." method="_on_fader_animation_player_current_animation_changed"]

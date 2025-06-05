@@ -1,0 +1,587 @@
+[gd_scene load_steps=2 format=3 uid="uid://b50wmvhyqi41l"]
+
+[ext_resource type="PackedScene" uid="uid://dgf4u5ip2bmdc" path="res://avatar_vr_demo/models/collision_box.tscn" id="1_lc8dr"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="CollisionBox" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+
+[node name="CollisionBox2" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 1)
+
+[node name="CollisionBox3" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -0.5, 1)
+
+[node name="CollisionBox4" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -0.5, 0)
+
+[node name="CollisionBox5" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -0.5, -1)
+
+[node name="CollisionBox6" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, -1)
+
+[node name="CollisionBox7" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, -0.5, -1)
+
+[node name="CollisionBox8" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, -0.5, 0)
+
+[node name="CollisionBox9" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, -0.5, 1)
+
+[node name="CollisionBox10" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, -0.5, 1)
+
+[node name="CollisionBox11" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, -0.5, 0)
+
+[node name="CollisionBox12" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, -0.5, -1)
+
+[node name="CollisionBox13" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, -0.5, -2)
+
+[node name="CollisionBox14" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, -0.5, -2)
+
+[node name="CollisionBox15" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, -2)
+
+[node name="CollisionBox16" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -0.5, -2)
+
+[node name="CollisionBox17" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -0.5, -2)
+
+[node name="CollisionBox18" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -0.5, -1)
+
+[node name="CollisionBox19" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -0.5, 0)
+
+[node name="CollisionBox20" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -0.5, 1)
+
+[node name="CollisionBox21" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -0.5, 1)
+
+[node name="CollisionBox22" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 2)
+
+[node name="CollisionBox23" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -0.5, 2)
+
+[node name="CollisionBox24" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, -0.5, 2)
+
+[node name="CollisionBox25" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, -0.5, 2)
+
+[node name="CollisionBox67" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, -0.5, 1)
+
+[node name="CollisionBox68" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, -0.5, 0)
+
+[node name="CollisionBox69" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, -0.5, -1)
+
+[node name="CollisionBox70" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, -0.5, -2)
+
+[node name="CollisionBox71" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, -0.5, 2)
+
+[node name="CollisionBox72" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, -0.5, 1)
+
+[node name="CollisionBox73" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, -0.5, 0)
+
+[node name="CollisionBox74" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, -0.5, -1)
+
+[node name="CollisionBox75" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, -0.5, -2)
+
+[node name="CollisionBox76" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, -0.5, 2)
+
+[node name="CollisionBox77" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -0.5, 1)
+
+[node name="CollisionBox78" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -0.5, 0)
+
+[node name="CollisionBox79" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -0.5, -1)
+
+[node name="CollisionBox80" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -0.5, -2)
+
+[node name="CollisionBox81" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -0.5, 2)
+
+[node name="CollisionBox82" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.5, 1)
+
+[node name="CollisionBox83" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.5, 0)
+
+[node name="CollisionBox84" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.5, -1)
+
+[node name="CollisionBox85" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.5, -2)
+
+[node name="CollisionBox86" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.5, 2)
+
+[node name="CollisionBox87" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0.5, 1)
+
+[node name="CollisionBox88" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0.5, 0)
+
+[node name="CollisionBox89" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0.5, -1)
+
+[node name="CollisionBox90" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0.5, -2)
+
+[node name="CollisionBox91" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0.5, 2)
+
+[node name="CollisionBox92" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, -0.5, 1)
+
+[node name="CollisionBox93" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, -0.5, 0)
+
+[node name="CollisionBox94" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, -0.5, -1)
+
+[node name="CollisionBox95" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, -0.5, -2)
+
+[node name="CollisionBox96" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, -0.5, 2)
+
+[node name="CollisionBox26" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -0.5, 2)
+
+[node name="CollisionBox27" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 3)
+
+[node name="CollisionBox28" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -0.5, 3)
+
+[node name="CollisionBox29" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, -0.5, 3)
+
+[node name="CollisionBox30" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, -0.5, 3)
+
+[node name="CollisionBox31" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -0.5, 3)
+
+[node name="CollisionBox37" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, -3)
+
+[node name="CollisionBox38" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -0.5, -3)
+
+[node name="CollisionBox39" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, -0.5, -3)
+
+[node name="CollisionBox40" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, -0.5, -3)
+
+[node name="CollisionBox41" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -0.5, -3)
+
+[node name="CollisionBox47" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, -4)
+
+[node name="CollisionBox48" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -0.5, -4)
+
+[node name="CollisionBox49" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, -0.5, -4)
+
+[node name="CollisionBox50" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, -0.5, -4)
+
+[node name="CollisionBox51" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -0.5, -4)
+
+[node name="CollisionBox52" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -4)
+
+[node name="CollisionBox53" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0.5, -4)
+
+[node name="CollisionBox54" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0.5, -4)
+
+[node name="CollisionBox55" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.5, -4)
+
+[node name="CollisionBox56" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.5, -4)
+
+[node name="CollisionBox97" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, -0.5, -3)
+
+[node name="CollisionBox99" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, -0.5, -4)
+
+[node name="CollisionBox100" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.5, -4)
+
+[node name="CollisionBox101" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -0.5, -3)
+
+[node name="CollisionBox102" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.5, -3)
+
+[node name="CollisionBox103" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -0.5, -4)
+
+[node name="CollisionBox104" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.5, -4)
+
+[node name="CollisionBox105" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, -0.5, -3)
+
+[node name="CollisionBox107" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, -0.5, -4)
+
+[node name="CollisionBox108" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.5, -4)
+
+[node name="CollisionBox109" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, -0.5, -3)
+
+[node name="CollisionBox110" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0.5, -3)
+
+[node name="CollisionBox111" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, -0.5, -4)
+
+[node name="CollisionBox112" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0.5, -4)
+
+[node name="CollisionBox57" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 4)
+
+[node name="CollisionBox58" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -0.5, 4)
+
+[node name="CollisionBox59" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, -0.5, 4)
+
+[node name="CollisionBox60" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, -0.5, 4)
+
+[node name="CollisionBox61" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -0.5, 4)
+
+[node name="CollisionBox62" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 4)
+
+[node name="CollisionBox63" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0.5, 4)
+
+[node name="CollisionBox64" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0.5, 4)
+
+[node name="CollisionBox65" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.5, 4)
+
+[node name="CollisionBox66" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.5, 4)
+
+[node name="CollisionBox113" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, -0.5, 3)
+
+[node name="CollisionBox115" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, -0.5, 4)
+
+[node name="CollisionBox116" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.5, 4)
+
+[node name="CollisionBox117" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -0.5, 3)
+
+[node name="CollisionBox118" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.5, 3)
+
+[node name="CollisionBox119" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -0.5, 4)
+
+[node name="CollisionBox120" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.5, 4)
+
+[node name="CollisionBox121" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, -0.5, 3)
+
+[node name="CollisionBox123" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, -0.5, 4)
+
+[node name="CollisionBox124" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.5, 4)
+
+[node name="CollisionBox125" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, -0.5, 3)
+
+[node name="CollisionBox126" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0.5, 3)
+
+[node name="CollisionBox127" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, -0.5, 4)
+
+[node name="CollisionBox128" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0.5, 4)
+
+[node name="CollisionBox129" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0.5, 1)
+
+[node name="CollisionBox130" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0.5, 0)
+
+[node name="CollisionBox131" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0.5, -1)
+
+[node name="CollisionBox132" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0.5, -2)
+
+[node name="CollisionBox133" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0.5, 2)
+
+[node name="CollisionBox134" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, -0.5, 1)
+
+[node name="CollisionBox135" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, -0.5, 0)
+
+[node name="CollisionBox136" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, -0.5, -1)
+
+[node name="CollisionBox137" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, -0.5, -2)
+
+[node name="CollisionBox138" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, -0.5, 2)
+
+[node name="CollisionBox139" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, -0.5, -3)
+
+[node name="CollisionBox140" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0.5, -3)
+
+[node name="CollisionBox141" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, -0.5, -4)
+
+[node name="CollisionBox142" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0.5, -4)
+
+[node name="CollisionBox143" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, -0.5, 3)
+
+[node name="CollisionBox144" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0.5, 3)
+
+[node name="CollisionBox145" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, -0.5, 4)
+
+[node name="CollisionBox146" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0.5, 4)
+
+[node name="CollisionBox147" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.5, 1)
+
+[node name="CollisionBox148" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.5, 0)
+
+[node name="CollisionBox149" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.5, -1)
+
+[node name="CollisionBox150" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.5, -2)
+
+[node name="CollisionBox151" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.5, 2)
+
+[node name="CollisionBox152" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, -0.5, 1)
+
+[node name="CollisionBox153" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, -0.5, 0)
+
+[node name="CollisionBox154" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, -0.5, -1)
+
+[node name="CollisionBox155" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, -0.5, -2)
+
+[node name="CollisionBox156" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, -0.5, 2)
+
+[node name="CollisionBox157" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, -0.5, -3)
+
+[node name="CollisionBox158" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.5, -3)
+
+[node name="CollisionBox159" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, -0.5, -4)
+
+[node name="CollisionBox160" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.5, -4)
+
+[node name="CollisionBox98" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, -5)
+
+[node name="CollisionBox106" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -0.5, -5)
+
+[node name="CollisionBox114" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, -0.5, -5)
+
+[node name="CollisionBox122" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, -0.5, -5)
+
+[node name="CollisionBox165" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -0.5, -5)
+
+[node name="CollisionBox166" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -5)
+
+[node name="CollisionBox167" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0.5, -5)
+
+[node name="CollisionBox168" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0.5, -5)
+
+[node name="CollisionBox169" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.5, -5)
+
+[node name="CollisionBox170" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.5, -5)
+
+[node name="CollisionBox171" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, -0.5, -5)
+
+[node name="CollisionBox172" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.5, -5)
+
+[node name="CollisionBox173" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -0.5, -5)
+
+[node name="CollisionBox174" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.5, -5)
+
+[node name="CollisionBox175" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, -0.5, -5)
+
+[node name="CollisionBox176" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.5, -5)
+
+[node name="CollisionBox177" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, -0.5, -5)
+
+[node name="CollisionBox178" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0.5, -5)
+
+[node name="CollisionBox179" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, -0.5, -5)
+
+[node name="CollisionBox180" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0.5, -5)
+
+[node name="CollisionBox181" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, -0.5, -5)
+
+[node name="CollisionBox182" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.5, -5)
+
+[node name="CollisionBox183" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 5)
+
+[node name="CollisionBox184" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -0.5, 5)
+
+[node name="CollisionBox185" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, -0.5, 5)
+
+[node name="CollisionBox186" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, -0.5, 5)
+
+[node name="CollisionBox187" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, -0.5, 5)
+
+[node name="CollisionBox188" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 5)
+
+[node name="CollisionBox189" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0.5, 5)
+
+[node name="CollisionBox190" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0.5, 5)
+
+[node name="CollisionBox191" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.5, 5)
+
+[node name="CollisionBox192" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.5, 5)
+
+[node name="CollisionBox193" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, -0.5, 5)
+
+[node name="CollisionBox194" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.5, 5)
+
+[node name="CollisionBox195" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, -0.5, 5)
+
+[node name="CollisionBox196" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.5, 5)
+
+[node name="CollisionBox197" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, -0.5, 5)
+
+[node name="CollisionBox198" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0.5, 5)
+
+[node name="CollisionBox199" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, -0.5, 5)
+
+[node name="CollisionBox200" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0.5, 5)
+
+[node name="CollisionBox201" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, -0.5, 5)
+
+[node name="CollisionBox202" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0.5, 5)
+
+[node name="CollisionBox203" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, -0.5, 5)
+
+[node name="CollisionBox204" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.5, 5)
+
+[node name="CollisionBox161" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, -0.5, 3)
+
+[node name="CollisionBox162" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.5, 3)
+
+[node name="CollisionBox163" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, -0.5, 4)
+
+[node name="CollisionBox164" parent="." instance=ExtResource("1_lc8dr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.5, 4)

@@ -1,0 +1,10 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://cpkl1ruqang3b"]
+
+[ext_resource type="Texture2D" uid="uid://daimca464icyb" path="res://vsk_default/example_ugc/maps/cc0_hut/Wall.png" id="1_w3t18"]
+
+[resource]
+resource_name = "Wall"
+cull_mode = 2
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("1_w3t18")
+roughness = 0.9

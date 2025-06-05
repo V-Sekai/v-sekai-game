@@ -309,7 +309,7 @@ class MToonProperty:
 		label.custom_minimum_size = Vector2(200, 30)
 		return label
 
-	func get_tooltip_text() -> String:
+	func _get_tooltip_text() -> String:
 		if not tooltip.is_empty():
 			return tooltip
 		else:
@@ -349,8 +349,9 @@ class MToonProperty:
 		slider.custom_minimum_size = Vector2(50.0, 20.0)
 		slider.value_changed.connect(self._value_changed)
 
-	func emit_changed(prop: StringName, val: Variant, field: StringName = &"", changing: bool = false) -> void:
-		get_edited_object_hack()[prop] = val
+	# TODO: fix this
+	#func emit_changed(prop: StringName, val: Variant, field: StringName = &"", changing: bool = false) -> void:
+	#	get_edited_object_hack()[prop] = val
 
 
 class RenderingTypeInspector:

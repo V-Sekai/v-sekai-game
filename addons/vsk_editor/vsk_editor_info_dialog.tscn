@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://f1dowphxixma"]
+
+[ext_resource type="Script" uid="uid://qajwo8qjauw8" path="res://addons/vsk_editor/vsk_editor_info_dialog.gd" id="1"]
+
+[node name="InfoDialog" type="AcceptDialog"]
+size = Vector2i(440, 150)
+visible = true
+script = ExtResource("1")

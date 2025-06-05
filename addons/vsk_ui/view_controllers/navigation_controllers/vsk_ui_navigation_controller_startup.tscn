@@ -1,0 +1,35 @@
+[gd_scene load_steps=4 format=3 uid="uid://cq54hvau05aei"]
+
+[ext_resource type="PackedScene" uid="uid://d4k28nbwaaoj4" path="res://addons/sar_game_framework/2d/gui/sar_ui_navigation_controller.tscn" id="1_lertw"]
+[ext_resource type="Script" uid="uid://du7j0u3f0uxsq" path="res://addons/vsk_ui/view_controllers/navigation_controllers/vsk_ui_navigation_controller_startup.gd" id="2_73j1y"]
+[ext_resource type="PackedScene" uid="uid://dkhu4ajatpaxx" path="res://addons/vsk_ui/vsk_window.tscn" id="3_tnus0"]
+
+[node name="NavigationController" node_paths=PackedStringArray("title_label", "back_button", "content") instance=ExtResource("1_lertw")]
+script = ExtResource("2_73j1y")
+title_label = NodePath("MarginContainer/AspectRatioContainer/WindowView/Panel/Content/Header/TopHeaderPanelContainer/VBoxContainer/MarginContainer/HBoxContainer/Title")
+back_button = NodePath("MarginContainer/AspectRatioContainer/WindowView/Panel/Content/Header/TopHeaderPanelContainer/VBoxContainer/MarginContainer/HBoxContainer/BackButton")
+content = NodePath("MarginContainer/AspectRatioContainer/WindowView/Panel/Content/Body/MarginContainer/Content")
+
+[node name="MarginContainer" type="MarginContainer" parent="." index="1"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"ScreenMarginContainer"
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="MarginContainer" index="0"]
+layout_mode = 2
+
+[node name="WindowView" parent="MarginContainer/AspectRatioContainer" index="0" instance=ExtResource("3_tnus0")]
+layout_mode = 2
+
+[node name="BackButton" type="Button" parent="MarginContainer/AspectRatioContainer/WindowView/Panel/Content/Header/TopHeaderPanelContainer/VBoxContainer/MarginContainer/HBoxContainer" index="1"]
+layout_mode = 2
+text = "Back"
+flat = true
+icon_alignment = 1
+
+[editable path="MarginContainer/AspectRatioContainer/WindowView"]
+[editable path="MarginContainer/AspectRatioContainer/WindowView/Panel/Content/Header/TopHeaderPanelContainer"]

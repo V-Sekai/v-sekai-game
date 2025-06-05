@@ -1,0 +1,43 @@
+[gd_scene load_steps=2 format=3 uid="uid://dakf5mjmofu8q"]
+
+[ext_resource type="Script" uid="uid://bub6vdigl8y4u" path="res://addons/vsk_ui/view_controllers/vsk_ui_view_controller_select_standing_or_seated.gd" id="1_l7pdt"]
+
+[node name="ViewControllerSelectStandingOrSeated" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_l7pdt")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"ScreenMarginContainer"
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/AspectRatioContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/AspectRatioContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 1
+
+[node name="StandingButton" type="Button" parent="MarginContainer/AspectRatioContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Standing"
+
+[node name="SeatedButton" type="Button" parent="MarginContainer/AspectRatioContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Seated"

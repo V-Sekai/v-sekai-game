@@ -5,11 +5,7 @@
 
 @tool
 extends Node
-
-const validator_const = preload("res://addons/vsk_importer_exporter/vsk_validator.gd")
-const validator_avatar_const = preload("res://addons/vsk_importer_exporter/vsk_avatar_validator.gd")
-const validator_map_const = preload("res://addons/vsk_importer_exporter/vsk_map_validator.gd")
-const importer_const = preload("res://addons/vsk_importer_exporter/vsk_importer.gd")
+class_name VSKImporter
 
 const NO_PARENT_SAVED = 0x7FFFFFFF
 const NAME_INDEX_BITS = 18
@@ -156,7 +152,11 @@ static func get_ref_node_from_relative_path(p_node: RefNode, p_path: NodePath) -
 	return current
 
 
-enum RefNodeType { OTHER = 0, ANIMATION_PLAYER = 1, MESH_INSTANCE = 2 }
+enum RefNodeType {
+	OTHER = 0,
+	ANIMATION_PLAYER = 1,
+	MESH_INSTANCE = 2
+}
 
 
 static func scan_ref_node_tree(
@@ -504,7 +504,7 @@ static func reader_snode(p_snodes: PackedInt32Array, p_reader: Dictionary) -> Di
 	return p_reader
 
 
-static func sanitise_packed_scene(
+static func clean_packed_scene(
 	p_packed_scene: PackedScene, p_validator: RefCounted
 ) -> Dictionary:  # validator_const
 	if p_packed_scene == null:
@@ -643,11 +643,11 @@ static func sanitise_packed_scene(
 	return {"packed_scene": resulting_packed_scene, "result": result}
 
 
-static func sanitise_packed_scene_for_map(p_packed_scene: PackedScene) -> Dictionary:
-	if ProjectSettings.get_setting("ugc/config/sanitize_map_import"):
-		print("Sanitising map...")
-		var validator: validator_map_const = validator_map_const.new()
-		return sanitise_packed_scene(p_packed_scene, validator)
+static func clean_packed_scene_for_map(p_packed_scene: PackedScene) -> Dictionary:
+	if ProjectSettings.get_setting("ugc/config/clean_map_import"):
+		print("Cleaning map...")
+		var validator: VSKMapValidator = VSKMapValidator.new()
+		return clean_packed_scene(p_packed_scene, validator)
 	else:
 		push_warning("Map validation is currently disabled.")
 		var result: Dictionary = {"code": ImporterResult.OK, "info": ""}
@@ -655,11 +655,11 @@ static func sanitise_packed_scene_for_map(p_packed_scene: PackedScene) -> Dictio
 		return ret
 
 
-func sanitise_packed_scene_for_avatar(p_packed_scene: PackedScene) -> Dictionary:
-	if ProjectSettings.get_setting("ugc/config/sanitize_avatar_import"):
-		print("Sanitising avatar...")
-		var validator = validator_avatar_const.new()
-		return importer_const.sanitise_packed_scene(p_packed_scene, validator)
+func clean_packed_scene_for_avatar(p_packed_scene: PackedScene) -> Dictionary:
+	if ProjectSettings.get_setting("ugc/config/clean_avatar_import"):
+		print("Cleaning avatar...")
+		var validator: VSKAvatarValidator = VSKAvatarValidator.new()
+		return VSKImporter.clean_packed_scene(p_packed_scene, validator)
 	else:
 		push_warning("Avatar validation is currently disabled.")
 		var result: Dictionary = {"code": ImporterResult.OK, "info": ""}
@@ -668,11 +668,7 @@ func sanitise_packed_scene_for_avatar(p_packed_scene: PackedScene) -> Dictionary
 
 
 func _ready() -> void:
-	if !ProjectSettings.has_setting("ugc/config/sanitize_avatar_import"):
-		ProjectSettings.set_setting("ugc/config/sanitize_avatar_import", true)
-	if !ProjectSettings.has_setting("ugc/config/sanitize_map_import"):
-		ProjectSettings.set_setting("ugc/config/sanitize_map_import", true)
-
-
-func setup() -> void:
-	pass
+	if !ProjectSettings.has_setting("ugc/config/clean_avatar_import"):
+		ProjectSettings.set_setting("ugc/config/clean_avatar_import", true)
+	if !ProjectSettings.has_setting("ugc/config/clean_map_import"):
+		ProjectSettings.set_setting("ugc/config/clean_map_import", true)

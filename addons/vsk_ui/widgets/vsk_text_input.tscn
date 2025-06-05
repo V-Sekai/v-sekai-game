@@ -1,0 +1,58 @@
+[gd_scene load_steps=2 format=3 uid="uid://dpv2yrmcx70xc"]
+
+[ext_resource type="Script" uid="uid://yw1xy22fmg6r" path="res://addons/vsk_ui/widgets/vsk_text_input.gd" id="1_v3yw6"]
+
+[node name="TextInput" type="Control" node_paths=PackedStringArray("_line_edit")]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 3
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+script = ExtResource("1_v3yw6")
+_line_edit = NodePath("HBoxContainer/LineEdit")
+text = null
+placeholder_text = null
+alignment = null
+max_length = null
+editable = null
+keep_editing_on_text_submit = null
+expand_to_text_length = null
+context_menu_enabled = null
+emoji_menu_enabled = null
+virtual_keyboard_enabled = null
+virtual_keyboard_type = null
+clear_button_enabled = null
+shortcut_keys_enabled = null
+middle_mouse_paste_enabled = null
+selecting_enabled = null
+deselect_on_focus_loss_enabled = null
+drag_and_drop_selection_enabled = null
+right_icon = null
+flat = null
+draw_control_chars = null
+select_all_on_focus = null
+caret_blink = null
+caret_blink_interval = null
+caret_column = null
+caret_force_displayed = null
+caret_mid_grapheme = null
+secret = null
+secret_character = null
+text_direction = null
+language = null
+structured_text_bidi_override = null
+structured_text_bidi_override_options = null
+script = ExtResource("1_v3yw6")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 64.0
+grow_horizontal = 2
+
+[node name="LineEdit" type="LineEdit" parent="HBoxContainer"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+size_flags_horizontal = 3

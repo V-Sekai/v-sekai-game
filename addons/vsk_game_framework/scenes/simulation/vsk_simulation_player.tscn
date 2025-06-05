@@ -1,0 +1,249 @@
+[gd_scene load_steps=23 format=3 uid="uid://butylt8jwkigr"]
+
+[ext_resource type="Script" uid="uid://b02vyxkiq7wyw" path="res://addons/sar_game_framework/3d/simulation/sar_character_simulation_3d.gd" id="1_titpx"]
+[ext_resource type="PackedScene" uid="uid://crjgg4fi0c0ad" path="res://addons/vsk_game_framework/scenes/simulation/components/vsk_player_simulation_playspace_component_3d.tscn" id="2_av2xa"]
+[ext_resource type="Script" uid="uid://c3qbnqd5cvjg2" path="res://addons/sar_game_framework/generic/simulation/sar_player_simulation_character_mouse_mode_component.gd" id="3_pv8pi"]
+[ext_resource type="Script" uid="uid://xhjxsqg6uxgd" path="res://addons/sar_game_framework/generic/simulation/sar_player_simulation_menu_component.gd" id="3_v6yf8"]
+[ext_resource type="Script" uid="uid://5lhm1rhhiyl5" path="res://addons/sar_game_framework/3d/simulation/sar_player_simulation_character_motor_component_3d.gd" id="4_1n530"]
+[ext_resource type="Script" uid="uid://d3ulrxf0nafqf" path="res://addons/vsk_game_framework/scripts/simulation/vsk_player_simulation_input_component_3d.gd" id="4_5f7rd"]
+[ext_resource type="Script" uid="uid://ddbfs06ixb1ej" path="res://addons/sar_game_framework/3d/simulation/sar_player_simulation_character_body_component_3d.gd" id="4_5jhfg"]
+[ext_resource type="Script" uid="uid://cg6cns7ollo08" path="res://addons/sar_game_framework/3d/simulation/sar_player_simulation_character_jump_component_3d.gd" id="4_sfadj"]
+[ext_resource type="Script" uid="uid://dijql7c5rjo7i" path="res://addons/sar_game_framework/3d/simulation/sar_player_simulation_collision_shape_component_3d.gd" id="5_av2xa"]
+[ext_resource type="Script" uid="uid://budqs650scjhh" path="res://addons/sar_game_framework/3d/simulation/sar_player_simulation_auxiliary_motion_component_3d.gd" id="5_qcjme"]
+[ext_resource type="Script" uid="uid://bvg3qi21nofj1" path="res://addons/vsk_game_framework/scripts/simulation/vsk_player_simulation_character_step_3d.gd" id="6_qbc2f"]
+[ext_resource type="Script" uid="uid://csjs6gkrjstgn" path="res://addons/vsk_game_framework/scripts/simulation/vsk_player_simulation_scene_bounds_detector_3d.gd" id="7_m6tix"]
+[ext_resource type="Script" uid="uid://cycc0q5l48sbx" path="res://addons/vsk_game_framework/scripts/simulation/vsk_player_simulation_respawner_3d.gd" id="8_qn546"]
+[ext_resource type="Script" uid="uid://wts5ieufm8j5" path="res://addons/vsk_game_framework/scripts/simulation/vsk_player_simulation_animator_component_3d.gd" id="12_tpxi6"]
+[ext_resource type="PackedScene" uid="uid://dykiw8vajp3tc" path="res://addons/vsk_game_framework/scenes/gui/ingame_gui.tscn" id="12_wjp03"]
+[ext_resource type="PackedScene" uid="uid://c2lsahyu64ckk" path="res://addons/vsk_ui/views/vsk_ui_view_quick_menu.tscn" id="14_o2km5"]
+[ext_resource type="Script" uid="uid://bxwvtooweymv2" path="res://addons/vsk_game_framework/scripts/gui/vsk_ingame_menu.gd" id="15_5f7rd"]
+[ext_resource type="Script" uid="uid://duee8kk4yfgq7" path="res://addons/vsk_game_framework/scripts/simulation/vsk_player_simulation_nameplate_assigner_component_3d.gd" id="16_5mnbu"]
+[ext_resource type="Script" uid="uid://gdldgf60cm3j" path="res://addons/sar_game_framework/generic/simulation/sar_player_simulation_fader.gd" id="18_dbj7c"]
+[ext_resource type="PackedScene" uid="uid://b8cq8t2yuydt" path="res://addons/vsk_ui/view_controllers/vsk_ui_view_controller_big_menu.tscn" id="20_cq6gb"]
+[ext_resource type="Script" uid="uid://be1lj0oha5ltw" path="res://addons/vsk_game_framework/scripts/gui/vsk_ingame_big_menu.gd" id="20_egvnd"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_qbc2f"]
+radius = 0.2
+height = 1.6
+
+[node name="VSKSimulationPlayer" type="Node3D"]
+editor_description = "This is the simulation space for a standard V-Sekai player which provides input management, camera control, XR nodes, GUI, respawn behaviour, animation parameter driver, and physics motor. It is intended to be run entirely local and can be swapped out for an entirely different simulation of the users preference as long as it remains API compatible."
+script = ExtResource("1_titpx")
+
+[node name="Respawner3DComponent" type="Node" parent="." node_paths=PackedStringArray("simulation")]
+editor_description = "This node is intended to allow the player to request to be respawned."
+script = ExtResource("8_qn546")
+simulation = NodePath("..")
+
+[node name="SceneBoundsDetector3DComponent" type="Node" parent="." node_paths=PackedStringArray("simulation")]
+editor_description = "This node check for if the player is outside of a boundry and will emit a signal if they are."
+script = ExtResource("7_m6tix")
+simulation = NodePath("..")
+default_bounds = AABB(-10000000, -200, -10000000, 20000000, 20000000, 20000000)
+
+[node name="MenuComponent" type="Node" parent="." node_paths=PackedStringArray("simulation")]
+process_mode = 3
+editor_description = "This node is responsible for toggling the game menu on and off."
+script = ExtResource("3_v6yf8")
+simulation = NodePath("..")
+metadata/_custom_type_script = "uid://xhjxsqg6uxgd"
+
+[node name="MouseModeComponent" type="Node" parent="." node_paths=PackedStringArray("simulation")]
+editor_description = "This node is responsible for switching the currently active mouse mode."
+script = ExtResource("3_pv8pi")
+simulation = NodePath("..")
+preferred_mouse_mode = 2
+metadata/_custom_type_script = "uid://c3qbnqd5cvjg2"
+
+[node name="PlayspaceComponent" parent="." node_paths=PackedStringArray("simulation") instance=ExtResource("2_av2xa")]
+simulation = NodePath("..")
+metadata/_edit_pinned_properties_ = [&"simulation"]
+
+[node name="InputComponent" type="Node" parent="." node_paths=PackedStringArray("simulation", "playspace", "motor", "jump")]
+process_mode = 3
+editor_description = "This node takes the input data from the game entity and uses it to drive the player simulation."
+script = ExtResource("4_5f7rd")
+simulation = NodePath("..")
+playspace = NodePath("../PlayspaceComponent")
+motor = NodePath("../Motor3DComponent")
+jump = NodePath("../Jump3DComponent")
+metadata/_custom_type_script = "uid://vtmfog7ujb68"
+
+[node name="Motor3DComponent" type="Node" parent="." node_paths=PackedStringArray("simulation", "playspace")]
+editor_description = "The motor is responsible for simulating player physics derived from controller input allowing you to move freely around the world."
+script = ExtResource("4_1n530")
+simulation = NodePath("..")
+playspace = NodePath("../PlayspaceComponent")
+max_ground_velocity = 5.0
+max_acceleration = 1000.0
+stop_speed = 100.0
+friction = 10.0
+
+[node name="Jump3DComponent" type="Node" parent="." node_paths=PackedStringArray("simulation")]
+editor_description = "This node waits for the 'should_jump' flag to be set by the input system which indicates that the player should jump."
+script = ExtResource("4_sfadj")
+simulation = NodePath("..")
+metadata/_custom_type_script = "uid://cg6cns7ollo08"
+
+[node name="AuxiliaryMotion3DComponent" type="Node" parent="." node_paths=PackedStringArray("simulation", "playspace")]
+editor_description = "This node is responsible for taking camera/origin offset calculated from the camera container node and performing an additional physicsd integration step attempting to compensate for difference. Onces its done, it feeds the results back into the camera container."
+script = ExtResource("5_qcjme")
+simulation = NodePath("..")
+playspace = NodePath("../PlayspaceComponent")
+
+[node name="CharacterBody3DComponent" type="Node" parent="." node_paths=PackedStringArray("simulation")]
+editor_description = "This node is intended to both allow customization to the players physical CharacterBody3D node, as well as keeping track of its initial state so it can be reverted to this upon the simulation space shutting down."
+script = ExtResource("4_5jhfg")
+floor_max_angle = 0.872665
+simulation = NodePath("..")
+
+[node name="CollisionShape3DComponent" type="Node" parent="." node_paths=PackedStringArray("simulation")]
+editor_description = "This node assigns a collider to the player entity when it starts up. It will also cleanup itself by removing this collider when teh simulation space shuts down."
+script = ExtResource("5_av2xa")
+simulation = NodePath("..")
+shape = SubResource("CapsuleShape3D_qbc2f")
+offset = Vector3(0, 0.8, 0)
+
+[node name="CharacterStep3DComponent" type="Node" parent="." node_paths=PackedStringArray("simulation", "auxiliary_motion")]
+editor_description = "This node is responsible for handling the special integration of a CharacterBody3D with access to step-up and step-down behaviour in order to prevent snagging on stairs. It does by providing an _integration and _ground_test method which are assigned as callbacks in the entity's movement component and the simulation's auxiliary motion component during their respective integration phases."
+script = ExtResource("6_qbc2f")
+simulation = NodePath("..")
+auxiliary_motion = NodePath("../AuxiliaryMotion3DComponent")
+step_height = 0.7
+
+[node name="Animator3DComponent" type="Node" parent="." node_paths=PackedStringArray("simulation", "motor")]
+editor_description = "This node is intended to manipulate the properties of an avatar's AnimationTreeDriver so they can animate."
+script = ExtResource("12_tpxi6")
+simulation = NodePath("..")
+motor = NodePath("../Motor3DComponent")
+velocity_animation_multiplier = 0.2
+metadata/_custom_type_script = "uid://57rusoeu6gsx"
+
+[node name="FaderComponent" type="Node" parent="." node_paths=PackedStringArray("fade_overlay")]
+editor_description = "This node is intended to provide a fade-in and fade-out when the simulation space becomes active to provide a less jarring experience for players entering a multiplayer session."
+script = ExtResource("18_dbj7c")
+fade_overlay = NodePath("../FadeOverlay")
+metadata/_custom_type_script = "uid://gdldgf60cm3j"
+
+[node name="Nametag3DComponent" type="Node" parent="." groups=["player_scene_tree_state_notification_receivers"]]
+script = ExtResource("16_5mnbu")
+metadata/_custom_type_script = "uid://duee8kk4yfgq7"
+
+[node name="UserInterface2D" type="Node" parent="."]
+process_thread_group = 1
+process_thread_group_order = 0
+process_thread_messages = 0
+
+[node name="HeadlockedGUICanvasLayer" type="CanvasLayer" parent="UserInterface2D"]
+process_mode = 3
+editor_description = "Put any GUI elements we want headlocked to the player camera here. While in desktop, it should use the canvas layer as is, in XR mode, we will attempt to push the rendering of this canvas layer to a 3D viewport headlocked to the player's XR camera."
+follow_viewport_enabled = true
+
+[node name="IngameGUI" parent="UserInterface2D/HeadlockedGUICanvasLayer" instance=ExtResource("12_wjp03")]
+
+[node name="QuickMenuCanvasLayer" type="CanvasLayer" parent="UserInterface2D"]
+process_mode = 3
+follow_viewport_enabled = true
+
+[node name="IngameQuickMenu" type="Control" parent="UserInterface2D/QuickMenuCanvasLayer" node_paths=PackedStringArray("simulation")]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("15_5f7rd")
+simulation = NodePath("../../..")
+
+[node name="MarginContainer" type="MarginContainer" parent="UserInterface2D/QuickMenuCanvasLayer/IngameQuickMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_bottom = 32
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="UserInterface2D/QuickMenuCanvasLayer/IngameQuickMenu/MarginContainer"]
+layout_mode = 2
+
+[node name="QuickMenu" parent="UserInterface2D/QuickMenuCanvasLayer/IngameQuickMenu/MarginContainer/AspectRatioContainer" instance=ExtResource("14_o2km5")]
+layout_mode = 2
+
+[node name="BigMenuCanvasLayer" type="CanvasLayer" parent="UserInterface2D"]
+process_mode = 3
+follow_viewport_enabled = true
+
+[node name="IngameBigMenu" type="Control" parent="UserInterface2D/BigMenuCanvasLayer" node_paths=PackedStringArray("simulation", "controller", "menu_compoent")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("20_egvnd")
+simulation = NodePath("../../..")
+controller = NodePath("MarginContainer/BigMenuViewController")
+menu_compoent = NodePath("../../../MenuComponent")
+
+[node name="MarginContainer" type="MarginContainer" parent="UserInterface2D/BigMenuCanvasLayer/IngameBigMenu"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
+
+[node name="BigMenuViewController" parent="UserInterface2D/BigMenuCanvasLayer/IngameBigMenu/MarginContainer" instance=ExtResource("20_cq6gb")]
+layout_mode = 2
+title = "Hello World"
+
+[node name="FadeOverlay" type="ColorRect" parent="."]
+editor_description = "This node is the representation of the fade overly managed by the FaderComponent."
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[connection signal="game_scene_changed" from="." to="SceneBoundsDetector3DComponent" method="_on_game_scene_changed"]
+[connection signal="model_changed" from="." to="PlayspaceComponent" method="_on_model_changed"]
+[connection signal="post_movement" from="." to="Animator3DComponent" method="_on_post_movement"]
+[connection signal="pre_movement" from="." to="AuxiliaryMotion3DComponent" method="_on_pre_movement"]
+[connection signal="shutdown" from="." to="MouseModeComponent" method="_on_shutdown"]
+[connection signal="shutdown" from="." to="CharacterBody3DComponent" method="_on_simulation_shutdown"]
+[connection signal="shutdown" from="." to="CollisionShape3DComponent" method="_on_simulation_shutdown"]
+[connection signal="transform_changed" from="." to="PlayspaceComponent" method="_on_transform_changed"]
+[connection signal="transform_post_update" from="." to="Motor3DComponent" method="_on_transform_post_update"]
+[connection signal="vessel_possession_changed" from="." to="MouseModeComponent" method="_on_possession_changed"]
+[connection signal="vessel_possession_changed" from="." to="PlayspaceComponent" method="_on_vessel_possession_changed"]
+[connection signal="vessel_possession_changed" from="." to="FaderComponent" method="_on_vessel_possession_changed"]
+[connection signal="respawned" from="Respawner3DComponent" to="PlayspaceComponent" method="_on_teleported"]
+[connection signal="exited_bounds" from="SceneBoundsDetector3DComponent" to="Respawner3DComponent" method="request_respawn"]
+[connection signal="menu_state_activated" from="MenuComponent" to="InputComponent" method="block_input"]
+[connection signal="menu_state_activated" from="MenuComponent" to="UserInterface2D/QuickMenuCanvasLayer/IngameQuickMenu" method="show"]
+[connection signal="menu_state_activated" from="MenuComponent" to="MouseModeComponent" method="set_preferred_mouse_mode" binds= [0]]
+[connection signal="menu_state_deactivated" from="MenuComponent" to="InputComponent" method="unblock_input"]
+[connection signal="menu_state_deactivated" from="MenuComponent" to="UserInterface2D/QuickMenuCanvasLayer/IngameQuickMenu" method="hide"]
+[connection signal="menu_state_deactivated" from="MenuComponent" to="UserInterface2D/BigMenuCanvasLayer/IngameBigMenu" method="hide"]
+[connection signal="menu_state_deactivated" from="MenuComponent" to="MouseModeComponent" method="set_preferred_mouse_mode" binds= [2]]
+[connection signal="internal_camera_offset_calculated" from="PlayspaceComponent" to="AuxiliaryMotion3DComponent" method="add_auxilary_movement_offset"]
+[connection signal="menu_toggle_requested" from="InputComponent" to="MenuComponent" method="menu_toggle"]
+[connection signal="respawn_requested" from="InputComponent" to="Respawner3DComponent" method="request_respawn"]
+[connection signal="avatar_menu_requested" from="UserInterface2D/QuickMenuCanvasLayer/IngameQuickMenu" to="UserInterface2D/BigMenuCanvasLayer/IngameBigMenu" method="_on_ingame_quick_menu_avatar_menu_requested"]
+[connection signal="explore_menu_requested" from="UserInterface2D/QuickMenuCanvasLayer/IngameQuickMenu" to="UserInterface2D/BigMenuCanvasLayer/IngameBigMenu" method="_on_ingame_quick_menu_explore_menu_requested"]
+[connection signal="avatar_menu_requested" from="UserInterface2D/QuickMenuCanvasLayer/IngameQuickMenu/MarginContainer/AspectRatioContainer/QuickMenu" to="UserInterface2D/QuickMenuCanvasLayer/IngameQuickMenu" method="_on_quick_menu_avatar_menu_requested"]
+[connection signal="explore_menu_requested" from="UserInterface2D/QuickMenuCanvasLayer/IngameQuickMenu/MarginContainer/AspectRatioContainer/QuickMenu" to="UserInterface2D/QuickMenuCanvasLayer/IngameQuickMenu" method="_on_quick_menu_explore_menu_requested"]
+[connection signal="respawn_pressed" from="UserInterface2D/QuickMenuCanvasLayer/IngameQuickMenu/MarginContainer/AspectRatioContainer/QuickMenu" to="Respawner3DComponent" method="request_respawn"]
+[connection signal="respawn_pressed" from="UserInterface2D/QuickMenuCanvasLayer/IngameQuickMenu/MarginContainer/AspectRatioContainer/QuickMenu" to="MenuComponent" method="set_menu_active" binds= [false]]
+[connection signal="avatar_url_selected" from="UserInterface2D/BigMenuCanvasLayer/IngameBigMenu/MarginContainer/BigMenuViewController" to="UserInterface2D/BigMenuCanvasLayer/IngameBigMenu" method="_on_avatar_url_selected"]

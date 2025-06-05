@@ -1,0 +1,42 @@
+[gd_scene load_steps=2 format=3 uid="uid://bfkj05i3p6enf"]
+
+[sub_resource type="GDScript" id="GDScript_868w6"]
+script/source = "extends HBoxContainer
+
+func _ready() -> void:
+	pass
+"
+
+[node name="PropertyWidgetOption" type="HBoxContainer"]
+offset_right = 183.0
+offset_bottom = 40.0
+script = SubResource("GDScript_868w6")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+text = "Option"
+vertical_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Margin" type="Control" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+
+[node name="LeftButton" type="Button" parent="HBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "<"
+
+[node name="CurrentChoiceLabel" type="Label" parent="HBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Selection"
+
+[node name="RightButton" type="Button" parent="HBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = ">"

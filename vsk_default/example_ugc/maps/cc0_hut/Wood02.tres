@@ -1,0 +1,11 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://gv00jkao48t1"]
+
+[ext_resource type="Texture2D" uid="uid://b3jny5wm0ofag" path="res://vsk_default/example_ugc/maps/cc0_hut/Wood02.png" id="1_7661c"]
+
+[resource]
+resource_name = "Wood02"
+cull_mode = 2
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("1_7661c")
+roughness = 0.9
+uv1_scale = Vector3(20, 20, 20)

@@ -1,0 +1,29 @@
+[remap]
+
+importer="2d_array_texture"
+type="CompressedTexture2DArray"
+uid="uid://bwfoenhiaxph6"
+path.bptc="res://.godot/imported/cc0_hut.exr-d062565bdce0e9423cc276335bfaddc4.bptc.ctexarray"
+metadata={
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
+}
+
+[deps]
+
+source_file="res://vsk_default/example_ugc/maps/cc0_hut/cc0_hut.exr"
+dest_files=["res://.godot/imported/cc0_hut.exr-d062565bdce0e9423cc276335bfaddc4.bptc.ctexarray"]
+
+[params]
+
+compress/mode=2
+compress/high_quality=false
+compress/lossy_quality=0.7
+compress/uastc_level=0
+compress/rdo_quality_loss=0.0
+compress/hdr_compression=1
+compress/channel_pack=1
+mipmaps/generate=false
+mipmaps/limit=-1
+slices/horizontal=1
+slices/vertical=2
