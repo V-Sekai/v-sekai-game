@@ -1,0 +1,39 @@
+[gd_scene load_steps=4 format=3 uid="uid://u8r0xjhfygc5"]
+
+[ext_resource type="PackedScene" uid="uid://dl7uoup3v1qby" path="res://addons/sar_game_framework/3d/entities/sar_game_entity_character_3d.tscn" id="1_4topm"]
+[ext_resource type="Script" uid="uid://b2ij7sawkhdjn" path="res://addons/sar_game_framework/3d/entities/components/sar_game_entity_component_character_simulation_3d.gd" id="2_nhvou"]
+[ext_resource type="PackedScene" uid="uid://butylt8jwkigr" path="res://addons/vsk_game_framework/scenes/simulation/vsk_simulation_player.tscn" id="3_toqrd"]
+
+[node name="VSKGameEntityCharacter3D" groups=["VSKCharacters"] instance=ExtResource("1_4topm")]
+visible = false
+
+[node name="ModelComponent" parent="." index="1"]
+use_asynchronous_instantiation = true
+
+[node name="CharacterSimulationComponent" type="Node" parent="." index="3" node_paths=PackedStringArray("game_entity_interface", "vessel_movement_component", "vessel_posession_component", "model_component", "simulation_parent_container", "game_entity")]
+editor_description = "An extra level of abstraction is used called 'simulation' which is local, sandboxed node space designed for controlling all gameplay aspects of this entity, including input, movement, physics, camera, menus, ect. It is designed in such a way so as to allow players to entirely swap their simulation space locally and still co-exist with other players using a common networking architecture."
+script = ExtResource("2_nhvou")
+game_entity_interface = NodePath("../GameEntityInterface")
+vessel_movement_component = NodePath("../VesselMovementComponent")
+vessel_posession_component = NodePath("../VesselPossessionComponent")
+model_component = NodePath("../ModelComponent")
+simulation_parent_container = NodePath("../SimulationParent")
+simulation_scene = ExtResource("3_toqrd")
+game_entity = NodePath("..")
+metadata/_custom_type_script = "uid://b2ij7sawkhdjn"
+
+[node name="SimulationParent" type="Node3D" parent="." index="4"]
+editor_description = "The container node for the simulation space."
+
+[connection signal="game_scene_changed" from="SimulationParent/VSKSimulationPlayer" to="SimulationParent/VSKSimulationPlayer/SceneBoundsDetector3DComponent" method="_on_game_scene_changed"]
+[connection signal="model_changed" from="SimulationParent/VSKSimulationPlayer" to="SimulationParent/VSKSimulationPlayer/PlayspaceComponent" method="_on_model_changed"]
+[connection signal="post_movement" from="SimulationParent/VSKSimulationPlayer" to="SimulationParent/VSKSimulationPlayer/Animator3DComponent" method="_on_post_movement"]
+[connection signal="pre_movement" from="SimulationParent/VSKSimulationPlayer" to="SimulationParent/VSKSimulationPlayer/AuxiliaryMotion3DComponent" method="_on_pre_movement"]
+[connection signal="shutdown" from="SimulationParent/VSKSimulationPlayer" to="SimulationParent/VSKSimulationPlayer/MouseModeComponent" method="_on_shutdown"]
+[connection signal="shutdown" from="SimulationParent/VSKSimulationPlayer" to="SimulationParent/VSKSimulationPlayer/CharacterBody3DComponent" method="_on_simulation_shutdown"]
+[connection signal="shutdown" from="SimulationParent/VSKSimulationPlayer" to="SimulationParent/VSKSimulationPlayer/CollisionShape3DComponent" method="_on_simulation_shutdown"]
+[connection signal="transform_changed" from="SimulationParent/VSKSimulationPlayer" to="SimulationParent/VSKSimulationPlayer/PlayspaceComponent" method="_on_transform_changed"]
+[connection signal="transform_post_update" from="SimulationParent/VSKSimulationPlayer" to="SimulationParent/VSKSimulationPlayer/Motor3DComponent" method="_on_transform_post_update"]
+[connection signal="vessel_possession_changed" from="SimulationParent/VSKSimulationPlayer" to="SimulationParent/VSKSimulationPlayer/MouseModeComponent" method="_on_possession_changed"]
+[connection signal="vessel_possession_changed" from="SimulationParent/VSKSimulationPlayer" to="SimulationParent/VSKSimulationPlayer/PlayspaceComponent" method="_on_vessel_possession_changed"]
+[connection signal="vessel_possession_changed" from="SimulationParent/VSKSimulationPlayer" to="SimulationParent/VSKSimulationPlayer/FaderComponent" method="_on_vessel_possession_changed"]

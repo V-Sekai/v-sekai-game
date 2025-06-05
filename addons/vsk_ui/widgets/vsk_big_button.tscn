@@ -1,0 +1,48 @@
+[gd_scene load_steps=5 format=3 uid="uid://6vbmwbi3rtyl"]
+
+[ext_resource type="PackedScene" uid="uid://drb876hffoveb" path="res://addons/vsk_ui/widgets/vsk_button.tscn" id="1_5m1ti"]
+[ext_resource type="Script" uid="uid://cilpy8rjg0hkb" path="res://addons/textureRectUrl/node_textureRectUrl.gd" id="2_np7aa"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y34s5"]
+bg_color = Color(0.2, 0.2, 0.2, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.8, 0.8, 0.8, 0)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ixf25"]
+bg_color = Color(0.533333, 0.196078, 0.188235, 1)
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[node name="VSKButton" node_paths=PackedStringArray("_url_texture") instance=ExtResource("1_5m1ti")]
+size_flags_horizontal = 2
+size_flags_vertical = 3
+_url_texture = NodePath("ClippedContent/UniversalContainer/VerticalContainer/ImageContainer/TextureRectUrl")
+
+[node name="Background" parent="." index="0"]
+theme_override_styles/panel = SubResource("StyleBoxFlat_y34s5")
+
+[node name="ThumbnailBackground" parent="ClippedContent/UniversalContainer/VerticalContainer/ImageContainer" index="0"]
+theme_override_styles/panel = SubResource("StyleBoxFlat_ixf25")
+
+[node name="TextureRectUrl" type="TextureRect" parent="ClippedContent/UniversalContainer/VerticalContainer/ImageContainer" index="1"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 2
+stretch_mode = 5
+script = ExtResource("2_np7aa")
+metadata/_custom_type_script = "uid://cilpy8rjg0hkb"
+
+[node name="ThumbnailBackground" parent="ClippedContent/UniversalContainer/HorizontalContainer/ImageContainer" index="0"]
+theme_override_styles/panel = SubResource("StyleBoxFlat_ixf25")

@@ -1,0 +1,38 @@
+[gd_scene load_steps=6 format=3 uid="uid://r6odwgbvltnf"]
+
+[ext_resource type="Script" uid="uid://dd8xlevou5g0o" path="res://addons/sar_game_framework/3d/entities/sar_game_entity_vessel_3d.gd" id="1_a55tq"]
+[ext_resource type="Script" uid="uid://ccexcd6fttoa2" path="res://addons/sar_game_framework/3d/entities/interfaces/sar_game_entity_interface_vessel_3d.gd" id="3_o6dwe"]
+[ext_resource type="Script" uid="uid://bq70q2h5kam3e" path="res://addons/sar_game_framework/generic/entities/component/sar_game_entity_component_vessel_possession.gd" id="4_gllrx"]
+[ext_resource type="Script" uid="uid://m20u5msj0a45" path="res://addons/sar_game_framework/3d/entities/components/sar_game_entity_component_vessel_movement_3d.gd" id="5_b6bep"]
+[ext_resource type="Script" uid="uid://hfqy0k7gxdam" path="res://addons/sar_game_framework/generic/entities/component/sar_game_entity_component_vessel_input.gd" id="5_hhi7u"]
+
+[node name="SarGameEntityVessel3D" type="Node3D" node_paths=PackedStringArray("game_entity_interface") groups=["SarVessels"]]
+script = ExtResource("1_a55tq")
+game_entity_interface = NodePath("GameEntityInterface")
+
+[node name="GameEntityInterface" type="Node" parent="." node_paths=PackedStringArray("movement_component", "possession_component", "input_component", "game_entity")]
+editor_description = "This node is a callback interface to allow the GameEntity's associated nodes to communicate with one another."
+script = ExtResource("3_o6dwe")
+movement_component = NodePath("../VesselMovementComponent")
+possession_component = NodePath("../VesselPossessionComponent")
+input_component = NodePath("../VesselInputComponent")
+game_entity = NodePath("..")
+
+[node name="VesselMovementComponent" type="Node" parent="." node_paths=PackedStringArray("game_entity")]
+process_thread_group = 1
+process_thread_group_order = 1
+process_thread_messages = 0
+editor_description = "This node is responsible for physically moving a character via an abitrary PhysicsBody3D. It will emit signals once integration has completed allowing game logic to be synchronized around integration even if entities are run in entirely different groups."
+script = ExtResource("5_b6bep")
+game_entity = NodePath("..")
+
+[node name="VesselPossessionComponent" type="Node" parent="."]
+editor_description = "This node is responsible for connecting a soul to vessel in order to make them able to control the vessel directly."
+script = ExtResource("4_gllrx")
+
+[node name="VesselInputComponent" type="Node" parent="."]
+process_mode = 3
+editor_description = "This node is responsible for handling input data received from a soul."
+script = ExtResource("5_hhi7u")
+
+[connection signal="movement_complete" from="VesselMovementComponent" to="." method="_on_movement_controller_movement_complete"]

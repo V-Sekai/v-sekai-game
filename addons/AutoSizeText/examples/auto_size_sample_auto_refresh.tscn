@@ -1,0 +1,46 @@
+[gd_scene load_steps=3 format=3 uid="uid://qnjqoi71jfur"]
+
+[ext_resource type="Script" uid="uid://d11kfgsd6jgt" path="res://addons/AutoSizeText/ui/AutoSizeLabel.gd" id="1_eweir"]
+[ext_resource type="Script" uid="uid://leehmvr1x5lu" path="res://addons/AutoSizeText/ui/AutoSizeRichTextLabel.gd" id="2_8nli8"]
+
+[node name="AutoSizeSample" type="Node2D"]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="AutoSizeLabel" type="Label" parent="CanvasLayer"]
+offset_right = 410.0
+offset_bottom = 165.0
+theme_override_font_sizes/font_size = 28
+text = "Change This Text To see Auto-Refresh
+
+https://spielmannspiel.com/"
+autowrap_mode = 3
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("1_eweir")
+watch_text_change = true
+min_font_size = 8
+max_font_size = 38
+step_sizes = Array[int]([])
+metadata/_custom_type_script = "uid://d11kfgsd6jgt"
+
+[node name="AutoSizeRichTextLabel" type="RichTextLabel" parent="CanvasLayer"]
+offset_left = 410.0
+offset_right = 820.0
+offset_bottom = 165.0
+theme_override_font_sizes/bold_italics_font_size = 22
+theme_override_font_sizes/italics_font_size = 22
+theme_override_font_sizes/mono_font_size = 22
+theme_override_font_sizes/normal_font_size = 22
+theme_override_font_sizes/bold_font_size = 22
+bbcode_enabled = true
+text = "[wave amp=150.0 freq=5.0 connected=0]Change This Text To see Auto-Refresh[/wave] 
+[b]Change This Text To see Auto-Refresh[/b]
+
+https://spielmannspiel.com/"
+script = ExtResource("2_8nli8")
+watch_text_change = true
+min_font_size = 8
+max_font_size = 38
+step_sizes = Array[int]([])
+metadata/_custom_type_script = "uid://leehmvr1x5lu"

@@ -1,0 +1,63 @@
+[gd_resource type="Resource" script_class="AnimationTreeDriverPropertyTable" load_steps=16 format=3 uid="uid://c81a2m0lfy4fo"]
+
+[ext_resource type="Script" uid="uid://c5fa4te745lt8" path="res://addons/animation_tree_driver/animation_tree_driver_property.gd" id="1_8ka7r"]
+[ext_resource type="Script" uid="uid://o4t650nrsq0u" path="res://addons/animation_tree_driver/animation_tree_driver_property_controller.gd" id="2_ytboy"]
+[ext_resource type="Script" uid="uid://owqysobubma4" path="res://addons/animation_tree_driver/animation_tree_driver_property_controller_expression.gd" id="3_mektf"]
+[ext_resource type="Script" uid="uid://cvec8mlrxko0o" path="res://addons/animation_tree_driver/animation_tree_driver_property_controller_curve.gd" id="4_157s0"]
+[ext_resource type="Script" uid="uid://c5f6hhrmwldy1" path="res://addons/animation_tree_driver/animation_tree_driver_property_controller_sum.gd" id="5_gsvjn"]
+[ext_resource type="Script" uid="uid://b7b1nm8dhcdfp" path="res://addons/animation_tree_driver/animation_tree_driver_property_table.gd" id="6_x2v73"]
+
+[sub_resource type="Resource" id="Resource_fnl6g"]
+script = ExtResource("3_mektf")
+expression = "Vector2(value.x, value.z)"
+metadata/_custom_type_script = "uid://owqysobubma4"
+
+[sub_resource type="Resource" id="Resource_je5lg"]
+script = ExtResource("2_ytboy")
+animation_tree_property_path = "parameters/Locomotion/GroundLocomotion/Run/blend_position"
+value = SubResource("Resource_fnl6g")
+metadata/_custom_type_script = "uid://o4t650nrsq0u"
+
+[sub_resource type="Resource" id="Resource_5yn8t"]
+script = ExtResource("3_mektf")
+expression = "Vector2(value.x, value.z).length_squared()"
+metadata/_custom_type_script = "uid://owqysobubma4"
+
+[sub_resource type="Curve" id="Curve_fnl6g"]
+_limits = [0.0, 8.0, 0.0, 4.0]
+_data = [Vector2(0, 0.25), 0.0, 0.0, 0, 0, Vector2(0.01, 1), 0.0, 2.5, 0, 0, Vector2(1, 2), 0.0, 0.0, 0, 0, Vector2(4, 8), 0.0, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="Resource" id="Resource_kxt7p"]
+script = ExtResource("4_157s0")
+curve = SubResource("Curve_fnl6g")
+metadata/_custom_type_script = "uid://cvec8mlrxko0o"
+
+[sub_resource type="Resource" id="Resource_0hc1c"]
+script = ExtResource("5_gsvjn")
+a = SubResource("Resource_5yn8t")
+b = SubResource("Resource_kxt7p")
+metadata/_custom_type_script = "uid://c5f6hhrmwldy1"
+
+[sub_resource type="Resource" id="Resource_5l88r"]
+script = ExtResource("2_ytboy")
+animation_tree_property_path = "parameters/Locomotion/GroundLocomotion/LocomotionTimescale/scale"
+value = SubResource("Resource_0hc1c")
+metadata/_custom_type_script = "uid://o4t650nrsq0u"
+
+[sub_resource type="Resource" id="Resource_nuwvy"]
+script = ExtResource("1_8ka7r")
+property_type = 3
+property_name = "velocity"
+controllers = Array[ExtResource("2_ytboy")]([SubResource("Resource_je5lg"), SubResource("Resource_5l88r")])
+metadata/_custom_type_script = "uid://c5fa4te745lt8"
+
+[sub_resource type="Resource" id="Resource_d6lem"]
+script = ExtResource("1_8ka7r")
+property_name = "grounded"
+metadata/_custom_type_script = "uid://c5fa4te745lt8"
+
+[resource]
+script = ExtResource("6_x2v73")
+properties = Array[ExtResource("1_8ka7r")]([SubResource("Resource_nuwvy"), SubResource("Resource_d6lem")])
+metadata/_custom_type_script = "uid://b7b1nm8dhcdfp"

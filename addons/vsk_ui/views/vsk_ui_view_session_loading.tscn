@@ -1,0 +1,61 @@
+[gd_scene load_steps=4 format=3 uid="uid://dvhvxsybfkg2e"]
+
+[ext_resource type="Theme" uid="uid://s05juvtforjo" path="res://addons/vsk_ui/vsk_ui_dark.tres" id="1_ckvvq"]
+[ext_resource type="Script" uid="uid://dx0ji02bbweix" path="res://addons/vsk_ui/views/vsk_ui_view_session_loading.gd" id="2_r6l4b"]
+[ext_resource type="Script" uid="uid://d11kfgsd6jgt" path="res://addons/AutoSizeText/ui/AutoSizeLabel.gd" id="3_3hihn"]
+
+[node name="SessionLoadingView" type="Control" node_paths=PackedStringArray("progress_bar", "progress_label")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_ckvvq")
+script = ExtResource("2_r6l4b")
+progress_bar = NodePath("AspectRatioContainer/VBoxContainer/ProgressBar")
+progress_label = NodePath("AspectRatioContainer/VBoxContainer/ProgressBar/ProgressLabel")
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="AspectRatioContainer"]
+layout_mode = 2
+
+[node name="Top" type="Control" parent="AspectRatioContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ProgressBar" type="ProgressBar" parent="AspectRatioContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.25
+max_value = 1.0
+show_percentage = false
+
+[node name="ProgressLabel" type="Label" parent="AspectRatioContainer/VBoxContainer/ProgressBar"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 60
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 1
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_3hihn")
+watch_text_change = true
+max_font_size = 72
+metadata/_custom_type_script = "uid://d11kfgsd6jgt"
+
+[node name="Bottom" type="Control" parent="AspectRatioContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3

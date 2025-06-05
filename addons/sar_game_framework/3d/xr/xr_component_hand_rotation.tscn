@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://c6536akabfvna"]
+
+[ext_resource type="Script" uid="uid://gah4ps6arqjb" path="res://addons/sar_game_framework/3d/xr/xr_component_hand_rotation.gd" id="1_apcwn"]
+
+[node name="XRHandRotationComponent" type="Node"]
+script = ExtResource("1_apcwn")

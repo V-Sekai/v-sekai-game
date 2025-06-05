@@ -1,0 +1,17 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://d2ql2ee2l5lsm"
+
+[deps]
+
+files=["res://addons/vsk_game_framework/localization/vsk_game_strings.en.translation", "res://addons/vsk_game_framework/localization/vsk_game_strings.de.translation", "res://addons/vsk_game_framework/localization/vsk_game_strings.es.translation"]
+
+source_file="res://addons/vsk_game_framework/localization/vsk_game_strings.csv"
+dest_files=["res://addons/vsk_game_framework/localization/vsk_game_strings.en.translation", "res://addons/vsk_game_framework/localization/vsk_game_strings.de.translation", "res://addons/vsk_game_framework/localization/vsk_game_strings.es.translation"]
+
+[params]
+
+compress=true
+delimiter=0

@@ -1,0 +1,36 @@
+[gd_scene load_steps=5 format=3 uid="uid://drtdslcxgyc37"]
+
+[ext_resource type="Script" uid="uid://doo6qhmx22uec" path="res://addons/vsk_editor/dashboard/vsk_editor_dashboard_dialog_control.gd" id="1_tostd"]
+[ext_resource type="PackedScene" uid="uid://dutpgb3dcuf6q" path="res://addons/vsk_editor/dashboard/vsk_editor_dashboard_profile_control.tscn" id="2_xtfsy"]
+[ext_resource type="PackedScene" uid="uid://c3mfovmk4bed6" path="res://addons/vsk_editor/dashboard/vsk_editor_dashboard_avatars_control.tscn" id="3_7eg62"]
+[ext_resource type="PackedScene" uid="uid://cfrqexmht30pf" path="res://addons/vsk_editor/dashboard/vsk_editor_dashboard_maps_control.tscn" id="4_xtfsy"]
+
+[node name="DashboardDialogControl" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_tostd")
+
+[node name="TabContainer" type="TabContainer" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+tab_alignment = 1
+current_tab = 0
+
+[node name="Profile" parent="TabContainer" instance=ExtResource("2_xtfsy")]
+layout_mode = 2
+
+[node name="Avatars" parent="TabContainer" instance=ExtResource("3_7eg62")]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="Maps" parent="TabContainer" instance=ExtResource("4_xtfsy")]
+visible = false
+layout_mode = 2
+
+[connection signal="tab_changed" from="TabContainer" to="." method="_on_tab_changed"]

@@ -1,0 +1,102 @@
+[gd_scene load_steps=2 format=3 uid="uid://d0m8umaoobnpp"]
+
+[ext_resource type="Script" uid="uid://d11kfgsd6jgt" path="res://addons/AutoSizeText/ui/AutoSizeLabel.gd" id="1_flqcm"]
+
+[node name="AutoSizeSample" type="Node2D"]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="info" type="Label" parent="CanvasLayer"]
+custom_minimum_size = Vector2(0, 1)
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 64.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 38
+text = "Just change the size of these labels and see how they work."
+autowrap_mode = 3
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("1_flqcm")
+metadata/_custom_type_script = "uid://d11kfgsd6jgt"
+
+[node name="AutoSizeLabelWordSmart" type="Label" parent="CanvasLayer"]
+custom_minimum_size = Vector2(0, 1)
+offset_left = 56.0
+offset_top = 64.0
+offset_right = 504.0
+offset_bottom = 256.0
+theme_override_font_sizes/font_size = 20
+text = "WORD SMART
+Play alone, with friends in private rooms or join a faction and play online with the whole world in this epic MMORPG.
+https://spielmannspiel.com/light-switch-simulator"
+autowrap_mode = 3
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("1_flqcm")
+metadata/_custom_type_script = "uid://d11kfgsd6jgt"
+
+[node name="AutoSizeLabelArbitrary" type="Label" parent="CanvasLayer"]
+custom_minimum_size = Vector2(0, 1)
+offset_left = 504.0
+offset_top = 64.0
+offset_right = 968.0
+offset_bottom = 256.0
+theme_override_font_sizes/font_size = 20
+text = "ARBITRARY
+Play alone, with friends in private rooms or join a faction and play online with the whole world in this epic MMORPG.
+https://spielmannspiel.com/light-switch-simulator"
+autowrap_mode = 1
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("1_flqcm")
+metadata/_custom_type_script = "uid://d11kfgsd6jgt"
+
+[node name="AutoSizeLabelWord" type="Label" parent="CanvasLayer"]
+custom_minimum_size = Vector2(0, 1)
+offset_left = 56.0
+offset_top = 256.0
+offset_right = 504.0
+offset_bottom = 448.0
+theme_override_font_sizes/font_size = 20
+text = "WORD
+Play alone, with friends in private rooms or join a faction and play online with the whole world in this epic MMORPG.
+https://spielmannspiel.com/light-switch-simulator"
+autowrap_mode = 2
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("1_flqcm")
+metadata/_custom_type_script = "uid://d11kfgsd6jgt"
+
+[node name="AutoSizeLabelWordSmart3" type="Label" parent="CanvasLayer"]
+custom_minimum_size = Vector2(0, 1)
+offset_left = 504.0
+offset_top = 256.0
+offset_right = 1152.0
+offset_bottom = 640.0
+theme_override_font_sizes/font_size = 37
+text = "WORD SMART
+Play alone, with friends in private rooms or join a faction and play online with the whole world in this epic MMORPG.
+https://spielmannspiel.com/light-switch-simulator"
+autowrap_mode = 3
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("1_flqcm")
+metadata/_custom_type_script = "uid://d11kfgsd6jgt"
+
+[node name="AutoSizeLabelStepSize" type="Label" parent="CanvasLayer"]
+custom_minimum_size = Vector2(0, 1)
+offset_left = 56.0
+offset_top = 448.0
+offset_right = 504.0
+offset_bottom = 640.0
+theme_override_font_sizes/font_size = 10
+text = "STEP SIZE
+Play alone, with friends in private rooms or join a faction and play online with the whole world in this epic MMORPG.
+https://spielmannspiel.com/light-switch-simulator"
+autowrap_mode = 3
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("1_flqcm")
+step_sizes = Array[int]([8, 10, 20, 30])
+metadata/_custom_type_script = "uid://d11kfgsd6jgt"

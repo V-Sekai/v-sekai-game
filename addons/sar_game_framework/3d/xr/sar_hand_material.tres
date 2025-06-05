@@ -1,0 +1,11 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://tb5a577itxpt"]
+
+[ext_resource type="Shader" uid="uid://bbxwnhmyp87lt" path="res://addons/sar_game_framework/3d/xr/hand_shader.gdshader" id="1_eru8b"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_eru8b")
+shader_parameter/color1 = Color(1, 1, 1, 0.1)
+shader_parameter/color2 = Color(1, 1, 1, 1)
+shader_parameter/threshold = 0.2
+shader_parameter/fresnel_sharpness = 1.0

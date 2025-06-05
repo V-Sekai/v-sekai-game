@@ -2,8 +2,11 @@
 # SaracenOne & K. S. Ernest (Fire) Lee & Lyuma & MMMaellon & Contributors
 # http_pool.gd
 # SPDX-License-Identifier: MIT
-
+@tool
 extends Node
+class_name HTTPPool
+
+## TODO: cancelling doesn't work.
 
 signal http_tick
 
@@ -29,7 +32,6 @@ class HTTPState:
 
 	var http_pool: Node
 	var http: HTTPClient
-	var busy: bool = false
 	var cancelled: bool = false
 	var terminated: bool = false
 
@@ -52,11 +54,7 @@ class HTTPState:
 		self.out_path = p_out_path
 
 	func cancel() -> void:
-		if busy:
-			cancelled = true
-		else:
-			self.completed.emit.call_deferred(null)
-		await self.completed
+		cancelled = true
 
 	func term() -> void:
 		terminated = true
@@ -70,7 +68,9 @@ class HTTPState:
 			connection_finished.emit(null)
 			return
 
-		var poll_error: int = http.poll()
+		var poll_error: Error = http.poll()
+		if poll_error != OK:
+			printerr("poll_error %s" % error_string(poll_error))
 		status = http.get_status()
 
 		if (
@@ -86,10 +86,9 @@ class HTTPState:
 			and status != HTTPClient.STATUS_RESOLVING
 			and status != HTTPClient.STATUS_CONNECTED
 		):
-			busy = false
 			push_error(
 				(
-					"GodotUroRequester: could not connect to host: status = %s"
+					"HTTPPool: could not connect to host: status = %s"
 					% [str(http.get_status())]
 				)
 			)
@@ -111,7 +110,6 @@ class HTTPState:
 			if file:
 				file.close()
 			cancelled = false
-			busy = false
 			http.close()
 			exit_result = false
 		else:
@@ -129,7 +127,6 @@ class HTTPState:
 					if not out_path.is_empty():
 						file = FileAccess.open(out_path, FileAccess.WRITE)
 						if file.is_null():
-							busy = false
 							status = HTTPClient.STATUS_CONNECTED
 							exit_result = false
 
@@ -141,10 +138,12 @@ class HTTPState:
 
 				while status == HTTPClient.STATUS_BODY and exit_result == null:
 					var poll_error: int = http.poll()
-
+					if poll_error != OK:
+						printerr("poll_error %s" % error_string(poll_error))
+						
 					var chunk = http.read_response_body_chunk()
 					response_code = http.get_response_code()
-
+					
 					if file:
 						file.store_buffer(chunk)
 					else:
@@ -158,11 +157,9 @@ class HTTPState:
 					if status == HTTPClient.STATUS_CONNECTION_ERROR and !terminated and !cancelled:
 						if file:
 							file.close()
-						busy = false
 						exit_result = false
 					else:
 						if status != HTTPClient.STATUS_BODY:
-							busy = false
 							exit_result = true
 							if file:
 								file.close()
@@ -223,7 +220,7 @@ class HTTPState:
 			if connect_err != OK:
 				push_error(
 					(
-						"GodotUroRequester: could not connect to host: returned error %s"
+						"HTTPPool: could not connect to host: returned error %s"
 						% str(connect_err)
 					)
 				)

@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://bh0r15lv2x5bv"]
+
+[ext_resource type="Script" uid="uid://bo8bk3pp4p6yo" path="res://addons/vsk_ui/view_controllers/vsk_ui_view_controller_welcome.gd" id="1_m347j"]
+[ext_resource type="PackedScene" uid="uid://b3dxn3kyssq7b" path="res://addons/vsk_ui/views/vsk_ui_view_welcome.tscn" id="2_e4foh"]
+
+[node name="WelcomeViewController" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_m347j")
+title = "Welcome"
+
+[node name="View" parent="." instance=ExtResource("2_e4foh")]
+layout_mode = 1
+
+[connection signal="register_pressed" from="View" to="." method="_on_welcome_menu_register_pressed"]
+[connection signal="sign_in_pressed" from="View" to="." method="_on_welcome_menu_sign_in_pressed"]
+[connection signal="skip_pressed" from="View" to="." method="_on_welcome_menu_skip_pressed"]

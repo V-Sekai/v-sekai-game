@@ -1,0 +1,165 @@
+[gd_scene load_steps=8 format=3 uid="uid://bow6jgqyh7d6o"]
+
+[ext_resource type="Script" uid="uid://b7xnj72fr4er4" path="res://addons/vsk_ui/views/vsk_ui_view_content_browser.gd" id="1_hnl44"]
+[ext_resource type="PackedScene" uid="uid://dpv2yrmcx70xc" path="res://addons/vsk_ui/widgets/vsk_text_input.tscn" id="1_pqn5w"]
+[ext_resource type="PackedScene" uid="uid://drb876hffoveb" path="res://addons/vsk_ui/widgets/vsk_button.tscn" id="2_hnl44"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ixf25"]
+bg_color = Color(0.533333, 0.196078, 0.188235, 1)
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7dqni"]
+bg_color = Color(0.65, 0.234542, 0.2275, 1)
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y34s5"]
+bg_color = Color(0.2, 0.2, 0.2, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.8, 0.8, 0.8, 0)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bawn2"]
+bg_color = Color(0.32, 0.32, 0.32, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.8, 0.8, 0.8, 0)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+anti_aliasing = false
+
+[node name="ContentBrowser" type="Control" node_paths=PackedStringArray("content_item_container", "content_scroll_container", "content_load_indicator", "content_search_container", "content_label")]
+clip_contents = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+script = ExtResource("1_hnl44")
+show_search = true
+content_item_container = NodePath("VBoxContainer/ContentArea/ScrollContentContainer/ContentContainer")
+content_scroll_container = NodePath("VBoxContainer/ContentArea/ScrollContentContainer")
+content_load_indicator = NodePath("VBoxContainer/ContentArea/ContentLoadPreview")
+content_search_container = NodePath("VBoxContainer/SearchContainer")
+content_label = NodePath("VBoxContainer/ContentLabel")
+content_text = "Content Browser"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SearchContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="TextInput" parent="VBoxContainer/SearchContainer" instance=ExtResource("1_pqn5w")]
+visible = false
+layout_mode = 2
+backspace_deletes_composite_character_enabled = null
+virtual_keyboard_show_on_focus = null
+
+[node name="FilterButtonContainer" type="Control" parent="VBoxContainer/SearchContainer"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.25
+
+[node name="VSKButton" parent="VBoxContainer/SearchContainer/FilterButtonContainer" instance=ExtResource("2_hnl44")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 2
+size_flags_vertical = 3
+_shadow_offset = Vector2(0, 2)
+_thumbnail_background_stylebox = SubResource("StyleBoxFlat_ixf25")
+_thumbnail_background_hover_stylebox = SubResource("StyleBoxFlat_7dqni")
+_thumbnail_background_pressed_stylebox = null
+_background_stylebox = SubResource("StyleBoxFlat_y34s5")
+_background_hover_stylebox = SubResource("StyleBoxFlat_bawn2")
+_background_pressed_stylebox = null
+text = "Filters"
+display_mode = 1
+metadata/_edit_pinned_properties_ = [&"display_mode"]
+
+[node name="ContentLabel" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme_type_variation = &"InfoLabel"
+text = "Content Browser"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Filters" type="ScrollContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.0
+
+[node name="GridContainer" type="HFlowContainer" parent="VBoxContainer/Filters"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="CheckBox" type="CheckBox" parent="VBoxContainer/Filters/GridContainer"]
+layout_mode = 2
+text = "Test"
+
+[node name="ContentArea" type="Control" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ScrollContentContainer" type="ScrollContainer" parent="VBoxContainer/ContentArea"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 3
+
+[node name="ContentContainer" type="GridContainer" parent="VBoxContainer/ContentArea/ScrollContentContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 4
+
+[node name="ContentLoadPreview" type="Control" parent="VBoxContainer/ContentArea"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/ContentArea/ContentLoadPreview"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Loading Content..."
+horizontal_alignment = 1
+vertical_alignment = 1

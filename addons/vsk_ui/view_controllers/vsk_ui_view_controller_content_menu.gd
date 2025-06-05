@@ -1,0 +1,3 @@
+@tool
+extends SarUIViewController
+class_name VSKUIViewControllerContentMenu

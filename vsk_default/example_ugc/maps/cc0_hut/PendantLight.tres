@@ -1,0 +1,13 @@
+[gd_resource type="StandardMaterial3D" load_steps=3 format=3 uid="uid://dkitjiv08qmhs"]
+
+[ext_resource type="Texture2D" uid="uid://v0s0gxfr2q0s" path="res://vsk_default/example_ugc/maps/cc0_hut/PendantLight.png" id="1_lwn5a"]
+[ext_resource type="Texture2D" uid="uid://cptyhed5513s8" path="res://vsk_default/example_ugc/maps/cc0_hut/PendantLight_Emission.png" id="2_6p3lq"]
+
+[resource]
+resource_name = "PendantLight"
+cull_mode = 2
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("1_lwn5a")
+roughness = 0.9
+emission_enabled = true
+emission_texture = ExtResource("2_6p3lq")

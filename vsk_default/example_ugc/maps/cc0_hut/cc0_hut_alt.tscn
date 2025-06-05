@@ -1,0 +1,41 @@
+[gd_scene load_steps=6 format=3 uid="uid://mjm3i01nn4xh"]
+
+[ext_resource type="Script" uid="uid://bglgm3jhxcotq" path="res://addons/vsk_game_framework/scripts/ugc/map/vsk_map_3d.gd" id="1_wwhgp"]
+[ext_resource type="Environment" uid="uid://clb6njgnvu3t" path="res://vsk_default/example_ugc/maps/cc0_hut/hut_env.tres" id="2_phy17"]
+[ext_resource type="PackedScene" uid="uid://dtmk7xkh8h2sy" path="res://addons/sar_game_framework/3d/entities/sar_game_entity_player_start_3d.tscn" id="3_pwihk"]
+[ext_resource type="PackedScene" uid="uid://cmx3ucbbmfhst" path="res://addons/V-Sekai.xr-mirror/mirror.tscn" id="4_syooi"]
+[ext_resource type="PackedScene" uid="uid://c76ltxt3hfdu4" path="res://vsk_default/example_ugc/maps/cc0_hut/cc0_hut.gltf" id="5_n4dlf"]
+
+[node name="GameMap" type="Node3D"]
+script = ExtResource("1_wwhgp")
+
+[node name="VoxelGI" type="VoxelGI" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource("2_phy17")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 0, 0, 0)
+visible = false
+light_bake_mode = 1
+shadow_enabled = true
+directional_shadow_blend_splits = true
+
+[node name="PlayerStart" parent="." instance=ExtResource("3_pwihk")]
+transform = Transform3D(-0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, -0.707107, -2.5, 0, 1.5)
+
+[node name="Mirror" parent="." instance=ExtResource("4_syooi")]
+transform = Transform3D(3.09838, 0, 0, 0, 3.09838, 0, 0, 0, 1.03279, 2, 1.4, -2.4)
+
+[node name="cc0_hut" parent="." instance=ExtResource("5_n4dlf")]
+
+[node name="OmniLight3D" type="OmniLight3D" parent="cc0_hut/PendantLight" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+shadow_enabled = true
+distance_fade_enabled = true
+omni_shadow_mode = 0
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+autoplay = true
+
+[editable path="cc0_hut"]

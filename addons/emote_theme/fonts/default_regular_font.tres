@@ -1,8 +1,0 @@
-[gd_resource type="FontVariation" load_steps=2 format=3 uid="uid://codj0tafbo5gr"]
-
-[ext_resource type="FontFile" uid="uid://dej4wvmqfijo2" path="res://addons/emote_theme/fonts/roboto_mono_regular.ttf" id="1_dt8g7"]
-
-[resource]
-base_font = ExtResource("1_dt8g7")
-spacing_top = -1
-spacing_bottom = -1

@@ -1,0 +1,192 @@
+[gd_scene load_steps=4 format=3 uid="uid://mms01s6onpx7"]
+
+[ext_resource type="Script" uid="uid://bnaosc552evuy" path="res://addons/AutoSizeText/ui/AutoSizeButton.gd" id="1_7ogt3"]
+[ext_resource type="Script" uid="uid://leehmvr1x5lu" path="res://addons/AutoSizeText/ui/AutoSizeRichTextLabel.gd" id="2_1cvkl"]
+[ext_resource type="Script" uid="uid://d11kfgsd6jgt" path="res://addons/AutoSizeText/ui/AutoSizeLabel.gd" id="2_jc6be"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="pnlDevelopmentTesting" type="Panel" parent="."]
+layout_mode = 0
+offset_left = -704.0
+offset_top = 64.0
+offset_right = -64.0
+offset_bottom = 416.0
+
+[node name="devInfo" type="Label" parent="pnlDevelopmentTesting"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 64.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 38
+text = "Developer testing area"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("2_jc6be")
+metadata/_custom_type_script = "uid://d11kfgsd6jgt"
+
+[node name="AutoSizeLabel" type="Label" parent="pnlDevelopmentTesting"]
+layout_mode = 0
+offset_left = 64.0
+offset_top = 128.0
+offset_right = 128.0
+offset_bottom = 192.0
+theme_override_font_sizes/font_size = 12
+text = "I am an autosize label"
+autowrap_mode = 3
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("2_jc6be")
+metadata/_custom_type_script = "uid://d11kfgsd6jgt"
+
+[node name="Button" type="Button" parent="pnlDevelopmentTesting"]
+layout_mode = 0
+offset_left = 192.0
+offset_top = 128.0
+offset_right = 320.0
+offset_bottom = 192.0
+text = "I am  a Button"
+clip_text = true
+
+[node name="TextureButton" type="TextureButton" parent="pnlDevelopmentTesting"]
+layout_mode = 0
+offset_left = 64.0
+offset_top = 256.0
+offset_right = 192.0
+offset_bottom = 320.0
+
+[node name="AutoSizeLabel" type="Label" parent="pnlDevelopmentTesting/TextureButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 35
+text = "hamster"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("2_jc6be")
+watch_text_change = true
+metadata/_custom_type_script = "uid://d11kfgsd6jgt"
+
+[node name="Button2" type="Button" parent="pnlDevelopmentTesting"]
+layout_mode = 0
+offset_left = 384.0
+offset_top = 128.0
+offset_right = 512.0
+offset_bottom = 192.0
+text = "I am a button text"
+clip_text = true
+
+[node name="AutoSizeLabel" type="Label" parent="pnlDevelopmentTesting/Button2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 20
+text = "I am  a Button Label"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("2_jc6be")
+metadata/_custom_type_script = "uid://d11kfgsd6jgt"
+
+[node name="Button3" type="Button" parent="pnlDevelopmentTesting"]
+layout_mode = 0
+offset_left = 384.0
+offset_top = 256.0
+offset_right = 512.0
+offset_bottom = 320.0
+text = "I am a button text"
+clip_text = true
+
+[node name="AutoSizeLabel" type="Label" parent="pnlDevelopmentTesting/Button3"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 20
+text = "I am  a Button Label"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("2_jc6be")
+metadata/_custom_type_script = "uid://d11kfgsd6jgt"
+
+[node name="info" type="RichTextLabel" parent="."]
+custom_minimum_size = Vector2(0, 1)
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 64.0
+grow_horizontal = 2
+theme_override_font_sizes/bold_italics_font_size = 38
+theme_override_font_sizes/italics_font_size = 38
+theme_override_font_sizes/mono_font_size = 38
+theme_override_font_sizes/normal_font_size = 38
+theme_override_font_sizes/bold_font_size = 38
+bbcode_enabled = true
+text = "[fade start=20 length=50]Just change the size of these Buttons and see how they work.[/fade]"
+script = ExtResource("2_1cvkl")
+watch_text_change = true
+metadata/_custom_type_script = "uid://leehmvr1x5lu"
+
+[node name="AutoSizeButton" type="Button" parent="."]
+layout_mode = 0
+offset_left = 64.0
+offset_top = 128.0
+offset_right = 192.0
+offset_bottom = 192.0
+theme_override_font_sizes/font_size = 1
+clip_text = true
+script = ExtResource("1_7ogt3")
+button_text = "I am a Button and a label by default"
+metadata/_custom_type_script = "uid://bnaosc552evuy"
+
+[node name="AutoSizeButtonStepSize" type="Button" parent="."]
+layout_mode = 0
+offset_left = 256.0
+offset_top = 128.0
+offset_right = 384.0
+offset_bottom = 192.0
+theme_override_font_sizes/font_size = 1
+clip_text = true
+script = ExtResource("1_7ogt3")
+button_text = "I am  a Button and a label by default with Step Size"
+step_sizes = Array[int]([8, 20])
+metadata/_custom_type_script = "uid://bnaosc552evuy"
+
+[node name="AutoSizeButtonDisabled" type="Button" parent="."]
+layout_mode = 0
+offset_left = 64.0
+offset_top = 256.0
+offset_right = 192.0
+offset_bottom = 320.0
+theme_override_font_sizes/font_size = 1
+disabled = true
+clip_text = true
+script = ExtResource("1_7ogt3")
+button_text = "I am a Button and a label by default disabled"
+metadata/_custom_type_script = "uid://bnaosc552evuy"

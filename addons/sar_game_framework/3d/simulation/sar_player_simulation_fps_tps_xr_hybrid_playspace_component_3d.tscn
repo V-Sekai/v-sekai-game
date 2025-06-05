@@ -1,0 +1,41 @@
+[gd_scene load_steps=4 format=3 uid="uid://riyhjc3pjwu7"]
+
+[ext_resource type="Script" uid="uid://b17sv8b2cinal" path="res://addons/sar_game_framework/3d/simulation/sar_player_simulation_fps_tps_xr_hybrid_playspace_component_3d.gd" id="1_tx1op"]
+[ext_resource type="Script" uid="uid://cemx2o5bc8hi" path="res://addons/sar_game_framework/3d/simulation/playspace/sar_anchor_pivot_3d.gd" id="2_175ym"]
+[ext_resource type="Script" uid="uid://0bufs02htdx6" path="res://addons/sar_game_framework/3d/simulation/sar_player_simulation_xr_origin_3d.gd" id="2_ks13o"]
+
+[node name="SarPlayerSimulationFPSTPSXRHybridPlayspaceComponent3D" type="Node3D" node_paths=PackedStringArray("xr_origin", "camera_base", "camera_pivot", "camera_offset", "camera_pivot_reference_node", "camera")]
+editor_description = "A basic playspace which is intended to provide equal measure support for first-person and third-person cameras, as well as being able to operate in both XR and non-XR modes."
+script = ExtResource("1_tx1op")
+xr_origin = NodePath("CameraBase/CameraPivot/CameraOffset/XROrigin3D")
+camera_base = NodePath("CameraBase")
+camera_pivot = NodePath("CameraBase/CameraPivot")
+camera_offset = NodePath("CameraBase/CameraPivot/CameraOffset")
+camera_pivot_reference_node = NodePath("CameraBase/PivotReferenceTarget")
+camera = NodePath("CameraBase/CameraPivot/CameraOffset/XROrigin3D/XRCamera3D")
+
+[node name="CameraBase" type="Node3D" parent="."]
+editor_description = "Top-level node which will follow the camera container. When operating in XR mode, engine-side interpolation is disabled, so the container will interpolate this node towards itself between physics frames to give the impression of smooth motion regardless of what physics framerate we are running oat."
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
+top_level = true
+
+[node name="CameraPivot" type="Node3D" parent="CameraBase" node_paths=PackedStringArray("anchor_node")]
+editor_description = "This node is responsible for handling external rotation which is not directly controlled by the camera itself."
+script = ExtResource("2_175ym")
+anchor_node = NodePath("CameraOffset/XROrigin3D/XRCamera3D")
+modify_anchor_parent = true
+
+[node name="CameraOffset" type="Node3D" parent="CameraBase/CameraPivot"]
+editor_description = "Allows us to push the camera's origin further away from the rotation pivot."
+
+[node name="XROrigin3D" type="XROrigin3D" parent="CameraBase/CameraPivot/CameraOffset" node_paths=PackedStringArray("xr_camera")]
+editor_description = "The XROrigin playspace the camera lives inside of. When we are in XR mode, we cannot manipulate the camera directly, so instead, the pivot node will rotate the XROrigin in such a way that it gives the impression we are rotating the camera directly, even in situations where the camera is significantly offset from the center."
+script = ExtResource("2_ks13o")
+xr_camera = NodePath("XRCamera3D")
+
+[node name="XRCamera3D" type="XRCamera3D" parent="CameraBase/CameraPivot/CameraOffset/XROrigin3D"]
+physics_interpolation_mode = 0
+editor_description = "The main XRCamera. Despite its name and node type, it is usable in both XR and non-XR modes."
+
+[node name="PivotReferenceTarget" type="Marker3D" parent="CameraBase"]
+editor_description = "Helper node for the camera pivot to interpolate towards for situations where we can't rely on the engine's own interpolation functionality and have to do it ourselves, such as operating in XR mode."

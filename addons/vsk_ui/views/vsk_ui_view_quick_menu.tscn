@@ -1,0 +1,410 @@
+[gd_scene load_steps=12 format=3 uid="uid://c2lsahyu64ckk"]
+
+[ext_resource type="PackedScene" uid="uid://dcd0ooyvb0nwu" path="res://addons/vsk_ui/vsk_top_header_panel_container.tscn" id="2_dspnr"]
+[ext_resource type="PackedScene" uid="uid://drb876hffoveb" path="res://addons/vsk_ui/widgets/vsk_button.tscn" id="2_ocyw6"]
+[ext_resource type="Script" uid="uid://dnkg28mh25h88" path="res://addons/sar_game_framework/2d/gui/sar_ui_top_level_alignment.gd" id="2_pt0y8"]
+[ext_resource type="Script" uid="uid://d4f6mx58v7g8g" path="res://addons/vsk_ui/views/vsk_ui_view_quick_menu.gd" id="2_yirvo"]
+[ext_resource type="Script" uid="uid://d11kfgsd6jgt" path="res://addons/AutoSizeText/ui/AutoSizeLabel.gd" id="3_px80o"]
+[ext_resource type="PackedScene" uid="uid://6dmf2p00vihh" path="res://addons/vsk_ui/vsk_sub_header_panel_container.tscn" id="3_xtmsg"]
+[ext_resource type="Script" uid="uid://7qmvm671o3mm" path="res://addons/vsk_ui/scale_container.gd" id="3_xukdm"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ixf25"]
+bg_color = Color(0.533333, 0.196078, 0.188235, 1)
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7dqni"]
+bg_color = Color(0.65, 0.234542, 0.2275, 1)
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_y34s5"]
+bg_color = Color(0.2, 0.2, 0.2, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.8, 0.8, 0.8, 0)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+anti_aliasing = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bawn2"]
+bg_color = Color(0.32, 0.32, 0.32, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.8, 0.8, 0.8, 0)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+anti_aliasing = false
+
+[node name="QuickMenu" type="Control" node_paths=PackedStringArray("calibrate_button", "standing_sitting_button", "account_label", "time_label")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_yirvo")
+calibrate_button = NodePath("Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/QuickUtilities/QuickButtons/ButtonRow/CalibrateButton")
+standing_sitting_button = NodePath("Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/QuickUtilities/QuickButtons/ButtonRow/StandingSittingButton")
+account_label = NodePath("Panel/Content/Header/SubHeaderPanelContainer/VBoxContainer/MarginContainer/HBoxContainer/AccountRichTextLabel")
+time_label = NodePath("Panel/Content/Header/SubHeaderPanelContainer/VBoxContainer/MarginContainer/HBoxContainer/TimeLabel")
+
+[node name="Panel" type="Panel" parent="."]
+clip_children = 2
+clip_contents = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Content" type="VBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"ZeroSeperationVBoxContainer"
+
+[node name="Header" type="VBoxContainer" parent="Panel/Content"]
+layout_mode = 2
+theme_type_variation = &"ZeroSeperationVBoxContainer"
+
+[node name="TopHeaderPanelContainer" parent="Panel/Content/Header" instance=ExtResource("2_dspnr")]
+layout_mode = 2
+
+[node name="SubHeaderPanelContainer" parent="Panel/Content/Header" instance=ExtResource("3_xtmsg")]
+layout_mode = 2
+
+[node name="Body" type="VBoxContainer" parent="Panel/Content"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"ZeroSeperationVBoxContainer"
+
+[node name="Control" type="Control" parent="Panel/Content/Body"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel/Content/Body/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 13
+size_flags_vertical = 3
+theme_type_variation = &"MenuMarginContainer"
+
+[node name="TopLevelAligner" type="Control" parent="Panel/Content/Body/Control/MarginContainer"]
+layout_mode = 2
+script = ExtResource("2_pt0y8")
+
+[node name="TopLevelContent" type="Control" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner"]
+top_level = true
+clip_contents = true
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = 120.0
+offset_right = -16.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="AccessMenu" type="VBoxContainer" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="AccessMenuInfo" type="HBoxContainer" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/AccessMenu"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.1
+
+[node name="HSeparator" type="HSeparator" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/AccessMenu/AccessMenuInfo"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="AccessMenuInfoLabel" type="Label" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/AccessMenu/AccessMenuInfo"]
+custom_minimum_size = Vector2(320, 32)
+layout_mode = 2
+size_flags_vertical = 1
+theme_type_variation = &"InfoLabel"
+theme_override_font_sizes/font_size = 19
+text = "VSK_QUICK_MENU_ACCESS_MENU"
+horizontal_alignment = 2
+vertical_alignment = 1
+autowrap_mode = 3
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_px80o")
+metadata/_custom_type_script = "uid://d11kfgsd6jgt"
+
+[node name="AccessButtons" type="VBoxContainer" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/AccessMenu"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ButtonRowUpper2" type="HBoxContainer" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/AccessMenu/AccessButtons"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ButtonContainer" type="Control" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/AccessMenu/AccessButtons/ButtonRowUpper2"]
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("3_xukdm")
+
+[node name="ExploreButton" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/AccessMenu/AccessButtons/ButtonRowUpper2/ButtonContainer" instance=ExtResource("2_ocyw6")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+_shadow_offset = Vector2(0, 2)
+_thumbnail_background_stylebox = SubResource("StyleBoxFlat_ixf25")
+_thumbnail_background_hover_stylebox = SubResource("StyleBoxFlat_7dqni")
+_thumbnail_background_pressed_stylebox = null
+_background_stylebox = SubResource("StyleBoxFlat_y34s5")
+_background_hover_stylebox = SubResource("StyleBoxFlat_bawn2")
+_background_pressed_stylebox = null
+text = "VSK_QUICK_MENU_EXPLORE"
+
+[node name="ButtonContainer2" type="Control" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/AccessMenu/AccessButtons/ButtonRowUpper2"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="AvatarsButton" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/AccessMenu/AccessButtons/ButtonRowUpper2/ButtonContainer2" instance=ExtResource("2_ocyw6")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+_shadow_offset = Vector2(0, 2)
+_thumbnail_background_stylebox = SubResource("StyleBoxFlat_ixf25")
+_thumbnail_background_hover_stylebox = SubResource("StyleBoxFlat_7dqni")
+_thumbnail_background_pressed_stylebox = null
+_background_stylebox = SubResource("StyleBoxFlat_y34s5")
+_background_hover_stylebox = SubResource("StyleBoxFlat_bawn2")
+_background_pressed_stylebox = null
+text = "VSK_QUICK_MENU_AVATARS"
+
+[node name="ButtonContainer3" type="Control" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/AccessMenu/AccessButtons/ButtonRowUpper2"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PropsButton" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/AccessMenu/AccessButtons/ButtonRowUpper2/ButtonContainer3" instance=ExtResource("2_ocyw6")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+_shadow_offset = Vector2(0, 2)
+_thumbnail_background_stylebox = SubResource("StyleBoxFlat_ixf25")
+_thumbnail_background_hover_stylebox = SubResource("StyleBoxFlat_7dqni")
+_thumbnail_background_pressed_stylebox = null
+_background_stylebox = SubResource("StyleBoxFlat_y34s5")
+_background_hover_stylebox = SubResource("StyleBoxFlat_bawn2")
+_background_pressed_stylebox = null
+text = "VSK_QUICK_MENU_PROPS"
+
+[node name="ButtonContainer4" type="Control" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/AccessMenu/AccessButtons/ButtonRowUpper2"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SocialButton" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/AccessMenu/AccessButtons/ButtonRowUpper2/ButtonContainer4" instance=ExtResource("2_ocyw6")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+_shadow_offset = Vector2(0, 2)
+_thumbnail_background_stylebox = SubResource("StyleBoxFlat_ixf25")
+_thumbnail_background_hover_stylebox = SubResource("StyleBoxFlat_7dqni")
+_thumbnail_background_pressed_stylebox = null
+_background_stylebox = SubResource("StyleBoxFlat_y34s5")
+_background_hover_stylebox = SubResource("StyleBoxFlat_bawn2")
+_background_pressed_stylebox = null
+text = "VSK_QUICK_MENU_SOCIAL"
+
+[node name="ButtonRowLower" type="HBoxContainer" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/AccessMenu/AccessButtons"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SettingsButton" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/AccessMenu/AccessButtons/ButtonRowLower" instance=ExtResource("2_ocyw6")]
+layout_mode = 2
+size_flags_horizontal = 3
+_shadow_offset = Vector2(0, 2)
+_thumbnail_background_stylebox = SubResource("StyleBoxFlat_ixf25")
+_thumbnail_background_hover_stylebox = SubResource("StyleBoxFlat_7dqni")
+_thumbnail_background_pressed_stylebox = null
+_background_stylebox = SubResource("StyleBoxFlat_y34s5")
+_background_hover_stylebox = SubResource("StyleBoxFlat_bawn2")
+_background_pressed_stylebox = null
+text = "VSK_QUICK_MENU_SETTINGS"
+
+[node name="MoreButton" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/AccessMenu/AccessButtons/ButtonRowLower" instance=ExtResource("2_ocyw6")]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+_shadow_offset = Vector2(0, 2)
+_thumbnail_background_stylebox = SubResource("StyleBoxFlat_ixf25")
+_thumbnail_background_hover_stylebox = SubResource("StyleBoxFlat_7dqni")
+_thumbnail_background_pressed_stylebox = null
+_background_stylebox = SubResource("StyleBoxFlat_y34s5")
+_background_hover_stylebox = SubResource("StyleBoxFlat_bawn2")
+_background_pressed_stylebox = null
+text = "VSK_QUICK_MENU_MORE"
+
+[node name="QuickUtilities" type="VBoxContainer" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.5
+
+[node name="QuickUtilitiesInfo" type="HBoxContainer" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/QuickUtilities"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.25
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/QuickUtilities/QuickUtilitiesInfo"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HSeparator" type="HSeparator" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/QuickUtilities/QuickUtilitiesInfo/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="QuickUtilitiesInfoLabel" type="Label" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/QuickUtilities/QuickUtilitiesInfo/HBoxContainer"]
+custom_minimum_size = Vector2(320, 32)
+layout_mode = 2
+size_flags_vertical = 1
+theme_type_variation = &"InfoLabel"
+theme_override_font_sizes/font_size = 18
+text = "VSK_QUICK_MENU_QUICK_UTILITIES"
+horizontal_alignment = 2
+vertical_alignment = 1
+autowrap_mode = 3
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("3_px80o")
+metadata/_custom_type_script = "uid://d11kfgsd6jgt"
+
+[node name="QuickButtons" type="VBoxContainer" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/QuickUtilities"]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ButtonRow" type="HBoxContainer" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/QuickUtilities/QuickButtons"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="RespawnButton" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/QuickUtilities/QuickButtons/ButtonRow" instance=ExtResource("2_ocyw6")]
+layout_mode = 2
+size_flags_horizontal = 3
+_shadow_offset = Vector2(0, 2)
+_thumbnail_background_stylebox = SubResource("StyleBoxFlat_ixf25")
+_thumbnail_background_hover_stylebox = SubResource("StyleBoxFlat_7dqni")
+_thumbnail_background_pressed_stylebox = null
+_background_stylebox = SubResource("StyleBoxFlat_y34s5")
+_background_hover_stylebox = SubResource("StyleBoxFlat_bawn2")
+_background_pressed_stylebox = null
+text = "VSK_QUICK_MENU_RESPAWN"
+
+[node name="StandingSittingButton" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/QuickUtilities/QuickButtons/ButtonRow" instance=ExtResource("2_ocyw6")]
+layout_mode = 2
+size_flags_horizontal = 3
+_shadow_offset = Vector2(0, 2)
+_thumbnail_background_stylebox = SubResource("StyleBoxFlat_ixf25")
+_thumbnail_background_hover_stylebox = SubResource("StyleBoxFlat_7dqni")
+_thumbnail_background_pressed_stylebox = null
+_background_stylebox = SubResource("StyleBoxFlat_y34s5")
+_background_hover_stylebox = SubResource("StyleBoxFlat_bawn2")
+_background_pressed_stylebox = null
+text = "VSK_QUICK_MENU_STANDING"
+
+[node name="MuteButton" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/QuickUtilities/QuickButtons/ButtonRow" instance=ExtResource("2_ocyw6")]
+layout_mode = 2
+size_flags_horizontal = 3
+_shadow_offset = Vector2(0, 2)
+_thumbnail_background_stylebox = SubResource("StyleBoxFlat_ixf25")
+_thumbnail_background_hover_stylebox = SubResource("StyleBoxFlat_7dqni")
+_thumbnail_background_pressed_stylebox = null
+_background_stylebox = SubResource("StyleBoxFlat_y34s5")
+_background_hover_stylebox = SubResource("StyleBoxFlat_bawn2")
+_background_pressed_stylebox = null
+text = "VSK_QUICK_MENU_MUTE"
+
+[node name="CalibrateButton" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/QuickUtilities/QuickButtons/ButtonRow" instance=ExtResource("2_ocyw6")]
+layout_mode = 2
+size_flags_horizontal = 3
+_shadow_offset = Vector2(0, 2)
+_thumbnail_background_stylebox = SubResource("StyleBoxFlat_ixf25")
+_thumbnail_background_hover_stylebox = SubResource("StyleBoxFlat_7dqni")
+_thumbnail_background_pressed_stylebox = null
+_background_stylebox = SubResource("StyleBoxFlat_y34s5")
+_background_hover_stylebox = SubResource("StyleBoxFlat_bawn2")
+_background_pressed_stylebox = null
+text = "VSK_QUICK_MENU_CALIBRATE"
+
+[node name="CameraButton" parent="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/QuickUtilities/QuickButtons/ButtonRow" instance=ExtResource("2_ocyw6")]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+_shadow_offset = Vector2(0, 2)
+_thumbnail_background_stylebox = SubResource("StyleBoxFlat_ixf25")
+_thumbnail_background_hover_stylebox = SubResource("StyleBoxFlat_7dqni")
+_thumbnail_background_pressed_stylebox = null
+_background_stylebox = SubResource("StyleBoxFlat_y34s5")
+_background_hover_stylebox = SubResource("StyleBoxFlat_bawn2")
+_background_pressed_stylebox = null
+text = "VSK_QUICK_MENU_CAMERA"
+
+[connection signal="sort_children" from="Panel/Content/Body/Control/MarginContainer" to="Panel/Content/Body/Control/MarginContainer/TopLevelAligner" method="_on_sorted"]
+[connection signal="pressed" from="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/AccessMenu/AccessButtons/ButtonRowUpper2/ButtonContainer/ExploreButton" to="." method="_on_explore_button_pressed"]
+[connection signal="pressed" from="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/AccessMenu/AccessButtons/ButtonRowUpper2/ButtonContainer2/AvatarsButton" to="." method="_on_avatars_button_pressed"]
+[connection signal="pressed" from="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/AccessMenu/AccessButtons/ButtonRowUpper2/ButtonContainer3/PropsButton" to="." method="_on_props_button_pressed"]
+[connection signal="pressed" from="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/AccessMenu/AccessButtons/ButtonRowUpper2/ButtonContainer4/SocialButton" to="." method="_on_social_button_pressed"]
+[connection signal="pressed" from="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/AccessMenu/AccessButtons/ButtonRowLower/SettingsButton" to="." method="_on_settings_button_pressed"]
+[connection signal="pressed" from="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/AccessMenu/AccessButtons/ButtonRowLower/MoreButton" to="." method="_on_more_button_pressed"]
+[connection signal="pressed" from="Panel/Content/Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/QuickUtilities/QuickButtons/ButtonRow/RespawnButton" to="." method="_on_respawn_button_pressed"]
+
+[editable path="Panel/Content/Header/SubHeaderPanelContainer"]

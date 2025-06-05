@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="VSKHomeServerInfo" load_steps=2 format=3 uid="uid://b3nkerk3freuq"]
+
+[ext_resource type="Script" uid="uid://b24qp4x5x6qpl" path="res://addons/vsk_game_framework/scripts/data/vsk_home_server_info.gd" id="1_dpdaf"]
+
+[resource]
+script = ExtResource("1_dpdaf")
+homeserver_list = PackedStringArray("vsekai.org", "stage.v-sekai.org")
+allow_custom_homeserver = true
+metadata/_custom_type_script = "uid://b24qp4x5x6qpl"

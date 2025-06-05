@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=3 uid="uid://cfrqexmht30pf"]
+
+[ext_resource type="PackedScene" uid="uid://md26adjqj58j" path="res://addons/vsk_editor/dashboard/vsk_editor_dashboard_content_control.tscn" id="1_doy7k"]
+[ext_resource type="Script" uid="uid://cnops0x36wujm" path="res://addons/vsk_editor/dashboard/vsk_editor_dashboard_maps_control.gd" id="2_doy7k"]
+
+[node name="Maps" instance=ExtResource("1_doy7k")]
+script = ExtResource("2_doy7k")

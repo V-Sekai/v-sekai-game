@@ -1,0 +1,55 @@
+[gd_scene load_steps=8 format=3 uid="uid://6ohhdebb5pjr"]
+
+[ext_resource type="PackedScene" uid="uid://bp0ap87pblmir" path="res://addons/sar_game_framework/3d/souls/sar_player_soul_3d.tscn" id="1_c8irg"]
+[ext_resource type="Script" uid="uid://qn00bjbytwoj" path="res://addons/sar_game_framework/generic/souls/components/sar_soul_player_movement_component.gd" id="2_wjdk6"]
+[ext_resource type="Script" uid="uid://cqk7y1qloqfye" path="res://addons/sar_game_framework/generic/souls/components/sar_soul_player_camera_rotation_component.gd" id="3_eolqk"]
+[ext_resource type="Script" uid="uid://dbf047rrpjseg" path="res://addons/sar_game_framework/generic/souls/components/sar_soul_player_jump_component.gd" id="4_6cgcn"]
+[ext_resource type="Script" uid="uid://bgse78e3ug3nw" path="res://addons/vsk_game_framework/scripts/souls/components/vsk_soul_player_curtain_component.gd" id="4_q4sb2"]
+[ext_resource type="Script" uid="uid://c4uc3s0wpa7xp" path="res://addons/sar_game_framework/generic/souls/components/sar_soul_player_commands_component.gd" id="5_j6tie"]
+[ext_resource type="Script" uid="uid://cnady2h7f5gs" path="res://addons/sar_game_framework/generic/souls/components/sar_soul_player_mouse_mode_component.gd" id="5_oscwv"]
+
+[node name="VSKPlayerSoul3D" instance=ExtResource("1_c8irg")]
+
+[node name="PlayerMovementComponent" type="Node" parent="." index="0" node_paths=PackedStringArray("soul")]
+script = ExtResource("2_wjdk6")
+soul = NodePath("..")
+metadata/_custom_type_script = "uid://qn00bjbytwoj"
+
+[node name="PlayerCameraRotationComponent" type="Node" parent="." index="1" node_paths=PackedStringArray("soul")]
+script = ExtResource("3_eolqk")
+soul = NodePath("..")
+metadata/_custom_type_script = "uid://cqk7y1qloqfye"
+
+[node name="PlayerJumpComponent" type="Node" parent="." index="2" node_paths=PackedStringArray("soul")]
+script = ExtResource("4_6cgcn")
+soul = NodePath("..")
+metadata/_custom_type_script = "uid://dbf047rrpjseg"
+
+[node name="PlayerCommandsComponent" type="Node" parent="." index="3" node_paths=PackedStringArray("soul")]
+script = ExtResource("5_j6tie")
+commands = Array[String](["menu", "request_respawn"])
+soul = NodePath("..")
+metadata/_custom_type_script = "uid://c4uc3s0wpa7xp"
+
+[node name="PlayerMouseModeComponent" type="Node" parent="." index="4"]
+script = ExtResource("5_oscwv")
+metadata/_custom_type_script = "uid://cnady2h7f5gs"
+
+[node name="PlayerCurtainComponent" type="Node" parent="." index="5" node_paths=PackedStringArray("curtain")]
+script = ExtResource("4_q4sb2")
+curtain = NodePath("../Curtain")
+metadata/_custom_type_script = "uid://bgse78e3ug3nw"
+
+[node name="Curtain" type="ColorRect" parent="." index="6"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+color = Color(0, 0, 0, 1)
+
+[connection signal="mouse_mode_requested" from="." to="PlayerMouseModeComponent" method="_change_mouse_mode"]
+[connection signal="possessed" from="." to="PlayerCameraRotationComponent" method="_on_possessed"]
+[connection signal="possessed" from="." to="PlayerCurtainComponent" method="_on_possessed"]

@@ -5,110 +5,138 @@
 
 @tool
 extends Node
+class_name GodotUro
 
-const godot_uro_helper_const = preload("./godot_uro_helper.gd")
-const http_pool_const = preload("./http_pool.gd")
-
-# renewal_token and access_token have moved to GodotUroData.
 var cfg: ConfigFile = null
 
-var use_localhost: bool = true
-var uro_host: String = godot_uro_helper_const.DEFAULT_URO_HOST
-var uro_port: int = godot_uro_helper_const.DEFAULT_URO_PORT
-var uro_using_ssl: bool = true
-
 const EDITOR_CONFIG_FILE_PATH = "user://uro_editor.ini"
-const GAME_CONFIG_FILE_PATH = "user://uro.ini"
-const godot_uro_api_const = preload("./godot_uro_api.gd")
-const godot_uro_request_const = preload("./godot_uro_requester.gd")
+const GAME_CONFIG_FILE_PATH = "user://uro_game.ini"
 
-var godot_uro_api: RefCounted = null
-var http_pool = http_pool_const.new()
+var godot_uro_api: GodotUroAPI = null
+var http_pool = HTTPPool.new()
 
+func load_selected_id() -> String:
+	var selected_id: String = ""
+	
+	if Engine.is_editor_hint():
+		if cfg.load_encrypted_pass(get_uro_editor_config_path(), OS.get_unique_id()) != OK:
+			return ""
+	else:
+		if cfg.load_encrypted_pass(get_uro_game_config_path(), OS.get_unique_id()) != OK:
+			return ""
+			
+	if cfg.has_section("api") and cfg.has_section_key("api", "current_id"):
+		var value: Variant = cfg.get_value("api", "current_id")
+		if value is String:
+			selected_id = value
+	
+	return selected_id
+	
+func store_selected_id(p_id: String) -> void:
+	var _os_unique_id = OS.get_unique_id()
+	
+	cfg.set_value("api", "current_id", p_id)
+	
+	if Engine.is_editor_hint():
+		cfg.save_encrypted_pass(get_uro_editor_config_path(), OS.get_unique_id())
+	else:
+		cfg.save_encrypted_pass(get_uro_game_config_path(), OS.get_unique_id())
+	
+func get_tokens(p_username: String, p_domain: String) -> Dictionary:
+	var renewal_token: String = ""
+	var access_token: String = ""
+	
+	var result_dictionary: Dictionary = {}
+	result_dictionary["renewal_token"] = renewal_token
+	result_dictionary["access_token"] = access_token
+	
+	if Engine.is_editor_hint():
+		if cfg.load_encrypted_pass(get_uro_editor_config_path(), OS.get_unique_id()) != OK:
+			return result_dictionary
+	else:
+		if cfg.load_encrypted_pass(get_uro_game_config_path(), OS.get_unique_id()) != OK:
+			return result_dictionary
+	
+	if cfg.has_section("api"):
+		if cfg.has_section_key("api", p_username + "@" + p_domain + "/" + "renewal_token"):
+			renewal_token = cfg.get_value("api", p_username + "@" + p_domain + "/" + "renewal_token", "")
+		if cfg.has_section_key("api", p_username + "@" + p_domain + "/" + "access_token"):
+			access_token = cfg.get_value("api", p_username + "@" + p_domain + "/" + "access_token", "")
+	
+	result_dictionary["renewal_token"] = renewal_token
+	result_dictionary["access_token"] = access_token
+	
+	return result_dictionary
+	
+func clear_tokens(p_username: String, p_domain: String) -> void:
+	if Engine.is_editor_hint():
+		if cfg.load_encrypted_pass(get_uro_editor_config_path(), OS.get_unique_id()) != OK:
+			return
+	else:
+		if cfg.load_encrypted_pass(get_uro_game_config_path(), OS.get_unique_id()) != OK:
+			return
+		
+	if cfg.has_section("api"):
+		if cfg.has_section_key("api", p_username + "@" + p_domain + "/" + "renewal_token"):
+			cfg.erase_section_key("api", p_username + "@" + p_domain + "/" + "renewal_token")
+		if cfg.has_section_key("api", p_username + "@" + p_domain + "/" + "access_token"):
+			cfg.erase_section_key("api", p_username + "@" + p_domain + "/" + "access_token")
 
-func get_uro_config_path() -> String:
+	cfg.save_encrypted_pass(get_uro_game_config_path(), OS.get_unique_id())
+
+func get_api() -> GodotUroAPI:
+	return godot_uro_api
+
+func get_uro_game_config_path() -> String:
 	return GAME_CONFIG_FILE_PATH
-
 
 func get_uro_editor_config_path() -> String:
 	return EDITOR_CONFIG_FILE_PATH
 
-
-func get_base_url() -> String:
-	if use_localhost:
-		# "http://localhost:" does not work
-		return "http://127.0.0.1:" + str(uro_port)
+static func _is_host_localhost(p_host: String) -> bool:
+	if p_host == GodotUroHelper.LOCALHOST_HOST:
+		return true
 	else:
-		return uro_host
+		return false
 
-
-func get_host_and_port() -> Dictionary:
-	var host: String = ""
-	var port: int = 0
-
-	if use_localhost:
-		host = godot_uro_helper_const.LOCALHOST_HOST
-		port = godot_uro_helper_const.LOCALHOST_PORT
-	else:
-		host = uro_host
-		port = uro_port
-
-	return {"host": host, "port": port}
-
-
-func using_ssl() -> bool:
-	return uro_using_ssl
-
-
-func create_requester():  # godot_uro_request_const
-	var host_and_port: Dictionary = get_host_and_port()
-
-	var new_requester = godot_uro_request_const.new(
-		http_pool, host_and_port.host, host_and_port.port, using_ssl()
+func create_requester(p_host: String, p_port: int) -> GodotUroRequester:
+	if p_host == "localhost":
+		p_host = GodotUroHelper.LOCALHOST_HOST
+	
+	var new_requester = GodotUroRequester.new(
+		http_pool, p_host, p_port, not _is_host_localhost(p_host)
 	)
 
 	return new_requester
 
 
-func setup_configuration() -> void:
-	if !ProjectSettings.has_setting("services/uro/use_localhost"):
-		ProjectSettings.set_setting("services/uro/use_localhost", use_localhost)
-	else:
-		use_localhost = ProjectSettings.get_setting("services/uro/use_localhost")
-
-	if !ProjectSettings.has_setting("services/uro/host"):
-		ProjectSettings.set_setting("services/uro/host", uro_host)
-	else:
-		uro_host = ProjectSettings.get_setting("services/uro/host")
-
-	if !ProjectSettings.has_setting("services/uro/port"):
-		ProjectSettings.set_setting("services/uro/port", uro_port)
-	else:
-		uro_port = ProjectSettings.get_setting("services/uro/port")
-
-	if !ProjectSettings.has_setting("services/uro/use_ssl"):
-		ProjectSettings.set_setting("services/uro/use_ssl", uro_using_ssl)
-	else:
-		uro_using_ssl = ProjectSettings.get_setting("services/uro/use_ssl")
-
-
-func _ready():
+func _ready() -> void:
 	add_child(http_pool)
-
+	
 
 func _init():
 	cfg = ConfigFile.new()
-	if cfg.load(get_uro_editor_config_path()) != OK:
-		push_error("Could not load editor token!")
-	elif cfg.load(get_uro_config_path()) != OK:
-		push_error("Could not load game token!")
-
-	setup_configuration()
-
-	if cfg.save(get_uro_editor_config_path()) != OK:
-		push_error("Could not save editor token!")
-	elif cfg.save(get_uro_config_path()) != OK:
-		push_error("Could not save game token!")
+	
+	# TODO: web support
+	assert(OS.get_name() != "Web")
+	
+	# Get a unique OS ID to encrypt the session keys just in case
+	# the file gets stolen.
+	var os_unique_id: String = OS.get_unique_id()
+	
+	if Engine.is_editor_hint():
+		if cfg.load_encrypted_pass(get_uro_editor_config_path(), os_unique_id) != OK:
+			push_error("Could not load editor token!")
+	else:
+		if cfg.load_encrypted_pass(get_uro_game_config_path(), os_unique_id) != OK:
+			push_error("Could not load game token!")
+			
+	if Engine.is_editor_hint():
+		if cfg.save_encrypted_pass(get_uro_editor_config_path(), os_unique_id) != OK:
+			push_error("Could not save editor token!")
+	else:
+		if cfg.save_encrypted_pass(get_uro_game_config_path(), os_unique_id) != OK:
+			push_error("Could not save game token!")
 
 	if godot_uro_api == null:
-		godot_uro_api = godot_uro_api_const.new(self)
+		godot_uro_api = GodotUroAPI.new(self)

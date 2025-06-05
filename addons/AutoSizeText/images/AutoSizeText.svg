@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="256"
+   height="256"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="AutoSizeText.svg"
+   inkscape:version="1.4 (86a8ad7, 2024-10-11)"
+   inkscape:export-filename="AutoSizeText_256.png"
+   inkscape:export-xdpi="1536"
+   inkscape:export-ydpi="1536"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="1.4142136"
+     inkscape:cx="15.909903"
+     inkscape:cy="15.202796"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer4" />
+  <path
+     fill="#8eef97"
+     d="M 37.28596,1 C 17.245779,1 1,17.245778 1,37.285961 V 218.71577 c 0,20.04017 16.245779,36.28596 36.28596,36.28596 h 181.42982 c 20.04015,0 36.28594,-16.24579 36.28594,-36.28596 V 37.285961 C 255.00172,17.245778 238.75593,1 218.71578,1 Z m 0,36.285961 H 218.71578 V 218.71577 H 37.28596 Z"
+     id="path1"
+     sodipodi:nodetypes="sssssssssccccc"
+     style="stroke-width:18.1429" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer4"
+     inkscape:label="Layer Edges">
+    <path
+       d="m 159.7592,45.371952 50.91174,45.254832 V 45.371952 Z"
+       style="fill:#8eef97;stroke-width:16.9706"
+       id="path1-88" />
+    <path
+       d="M 45.119329,96.28437 90.374163,45.372635 H 45.119329 Z"
+       style="fill:#8eef97;stroke-width:16.9706"
+       id="path1-88-5" />
+    <path
+       d="M 95.98786,210.77743 45.076118,165.5226 v 45.25483 z"
+       style="fill:#8eef97;stroke-width:16.9706"
+       id="path1-88-1" />
+    <path
+       d="m 210.62773,159.86501 -45.25483,50.91174 h 45.25483 z"
+       style="fill:#8eef97;stroke-width:16.9706"
+       id="path1-88-5-5" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="Layer Font BG">
+    <path
+       fill="#e0e0e0"
+       d="m 57.689193,119.84763 h 63.189757 v 25.17103 h -4.50982 a 9.0301036,12.585511 0 0 0 -9.03008,-12.58551 H 95.655484 v 41.03925 a 12.732341,9.7537704 0 0 0 12.732346,9.75377 v 4.87692 H 70.169822 v -4.87692 A 12.732341,9.7537704 0 0 0 82.902166,173.4724 V 132.43315 H 71.218615 a 9.0301036,12.585511 0 0 0 -9.030108,12.58551 H 57.678706 Z M 89.152967,78.304961 H 202.13922 V 110.5868 h -8.07568 A 16.140916,16.140918 0 0 0 177.92261,94.445877 h -24.20598 v 72.639373 a 16.140916,16.140918 0 0 0 16.14076,16.14092 v 4.87692 h -48.42258 v -4.87692 A 16.140916,16.140918 0 0 0 137.5757,167.08525 V 94.445877 H 113.36959 A 16.140916,16.140918 0 0 0 97.228663,110.5868 h -8.075696 z"
+       id="path1-8-8"
+       style="display:inline;fill:#333333;stroke-width:10.488" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer1"
+     inkscape:label="Layer Font"
+     style="display:inline">
+    <path
+       fill="#e0e0e0"
+       d="m 54.436048,116.94001 h 63.189762 v 25.17103 H 113.116 a 9.0301036,12.585511 0 0 0 -9.03011,-12.5855 H 92.402339 v 41.03924 a 12.732341,9.7537704 0 0 0 12.732361,9.75377 v 4.87688 H 66.916695 v -4.87688 a 12.732341,9.7537704 0 0 0 12.732326,-9.75377 V 129.52554 H 67.965486 a 9.0301036,12.585511 0 0 0 -9.030105,12.5855 h -4.50982 z M 85.899823,75.39735 H 198.8861 v 32.28183 h -8.07569 A 16.140916,16.140918 0 0 0 174.66949,91.538266 h -24.20598 v 72.639364 a 16.140916,16.140918 0 0 0 16.14075,16.14092 v 4.87688 h -48.42259 v -4.87688 a 16.140916,16.140918 0 0 0 16.14091,-16.14092 V 91.538266 H 110.11645 A 16.140916,16.140918 0 0 0 93.975535,107.67918 h -8.075712 z"
+       id="path1-8"
+       style="display:inline;fill:#b3b3b3;fill-opacity:1;stroke-width:10.488" />
+  </g>
+</svg>

@@ -1,0 +1,32 @@
+[gd_resource type="AnimationLibrary" load_steps=10 format=3 uid="uid://n76vrt1dau5a"]
+
+[ext_resource type="Animation" uid="uid://1os5xdjslxma" path="res://addons/vsk_game_framework/animations/Anim_Idle.tres" id="1_4d54w"]
+[ext_resource type="Animation" uid="uid://cadqits41nxw5" path="res://addons/vsk_game_framework/animations/Anim_Walk_Right.tres" id="10_uimyg"]
+[ext_resource type="Animation" uid="uid://c1vldctvr8e08" path="res://addons/vsk_game_framework/animations/Anim_Walk_Left.tres" id="11_78cq0"]
+[ext_resource type="Animation" uid="uid://bph47omba51a0" path="res://addons/vsk_game_framework/animations/Anim_Walk_ForwardRight.tres" id="12_ixruy"]
+[ext_resource type="Animation" uid="uid://dcw4ldrng1slc" path="res://addons/vsk_game_framework/animations/Anim_Walk_ForwardLeft.tres" id="13_xp0r0"]
+[ext_resource type="Animation" uid="uid://b2gf4h7egmlnh" path="res://addons/vsk_game_framework/animations/Anim_Walk_Forward.tres" id="14_y4kta"]
+[ext_resource type="Animation" uid="uid://dqml0bk23ijov" path="res://addons/vsk_game_framework/animations/Anim_Walk_BackwardRight.tres" id="15_oytse"]
+[ext_resource type="Animation" uid="uid://boejn5l7jfnkh" path="res://addons/vsk_game_framework/animations/Anim_Walk_BackwardLeft.tres" id="16_7wsv7"]
+[ext_resource type="Animation" uid="uid://dwghttglom7tv" path="res://addons/vsk_game_framework/animations/Anim_Walk_Backward.tres" id="17_82pw4"]
+
+[resource]
+_data = {
+&"idle": ExtResource("1_4d54w"),
+&"run_backwards": ExtResource("17_82pw4"),
+&"run_backwards_left": ExtResource("16_7wsv7"),
+&"run_backwards_right": ExtResource("15_oytse"),
+&"run_forward": ExtResource("14_y4kta"),
+&"run_forward_left": ExtResource("13_xp0r0"),
+&"run_forward_right": ExtResource("12_ixruy"),
+&"run_left": ExtResource("11_78cq0"),
+&"run_right": ExtResource("10_uimyg"),
+&"walk_backwards": ExtResource("17_82pw4"),
+&"walk_backwards_left": ExtResource("16_7wsv7"),
+&"walk_backwards_right": ExtResource("15_oytse"),
+&"walk_forward": ExtResource("14_y4kta"),
+&"walk_forward_left": ExtResource("13_xp0r0"),
+&"walk_forward_right": ExtResource("12_ixruy"),
+&"walk_left": ExtResource("11_78cq0"),
+&"walk_right": ExtResource("10_uimyg")
+}

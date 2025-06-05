@@ -1,4 +1,0 @@
-[gd_scene format=3 uid="uid://bslhttmjse5ys"]
-
-[node name="PlayerXRCamera3D" type="XRCamera3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)

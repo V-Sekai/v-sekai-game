@@ -10,616 +10,268 @@ config_version=5
 
 [application]
 
-config/name="V-Sekai Game"
-run/main_scene="res://vsk_default/scenes/main_scene.tscn"
-config/quit_on_go_back=false
-config/features=PackedStringArray("4.4", "Double Precision")
-run/flush_stdout_on_print.debug=false
-boot_splash/bg_color=Color(0.227451, 0.054902, 0.054902, 1)
-boot_splash/show_image=false
+config/name="V-Sekai"
+config/description="Social Multiplayer User-Generated Content VR Platform for Godot."
+config/tags=PackedStringArray("multiplayer", "ugc", "xr")
+run/main_scene="uid://bbva2sy5g66ek"
+config/use_custom_user_dir=true
+config/custom_user_dir_name="vsk_game"
+config/project_settings_override="user://config.cfg"
+config/features=PackedStringArray("4.5", "Forward Plus")
+boot_splash/bg_color=Color(0, 0, 0, 1)
 boot_splash/fullsize=false
-config/icon="res://vsk_default/icon/groups_logo.svg"
-config/loading_scene="res://vsk_default/scenes/network_lobby.tscn"
-modify_resources=true
+boot_splash/image="uid://dy5smxmxgkbt0"
+config/icon="uid://ddmrcblnd4y4v"
 
 [assets]
 
-config/avatar_whitelist=PackedStringArray("res://vsk_default/scenes/avatars/*", "res://addons/vsk_avatar/avatars/loading/*", "res://addons/vsk_avatar/avatars/*", "https://uro.v-sekai.cloud/storage01/vsk_content/avatars/*", "res://addons/vrm/*")
-config/prop_whitelist=PackedStringArray("res://vsk_default/scenes/props/*", "https://uro.v-sekai.cloud/storage01/vsk_content/props/*", "res://vsk_default/scenes/prefabs/*")
-config/map_whitelist=PackedStringArray("res://vsk_default/scenes/maps/*", "https://uro.v-sekai.cloud/storage01/vsk_content/maps/*")
-config/game_mode_whitelist=PackedStringArray("res://vsk_default/scenes/game_modes/*", "https://uro.v-sekai.cloud/storage01/vsk_content/game_modes/*")
-config/avatar_forbidden_path="res://addons/vsk_avatar/avatars/error_handlers/avatar_forbidden.tscn"
-config/avatar_not_found_path="res://addons/vsk_avatar/avatars/error_handlers/avatar_not_found.tscn"
-config/avatar_error_path="res://addons/vsk_avatar/avatars/error_handlers/avatar_error.tscn"
-config/teapot_path="res://addons/vsk_avatar/avatars/error_handlers/teapot.tscn"
-config/loading_avatar_path="res://addons/vsk_avatar/avatars/loading/loading_orb.tscn"
+config/avatar_forbidden_path="res://addons/vsk_game_framework/scenes/avatars/error_handlers/avatar_forbidden.tscn"
+config/avatar_not_found_path="res://addons/vsk_game_framework/scenes/avatars/error_handlers/avatar_not_found.tscn"
+config/avatar_error_path="res://addons/vsk_game_framework/scenes/avatars/error_handlers/avatar_error.tscn"
+config/teapot_path="res://addons/vsk_game_framework/scenes/avatars/error_handlers/teapot.tscn"
+config/loading_avatar_path="res://addons/vsk_game_framework/scenes/avatars/loading/loading_orb.tscn"
+config/avatar_whitelist=PackedStringArray()
+config/prop_whitelist=PackedStringArray()
+config/map_whitelist=PackedStringArray()
+config/game_mode_whitelist=PackedStringArray()
+config/avatar_allow_list=PackedStringArray()
+config/prop_allow_list=PackedStringArray()
+config/map_allow_list=PackedStringArray()
+config/game_mode_allow_list=PackedStringArray()
 
 [audio]
 
-buses/default_bus_layout="res://vsk_default/art/audio/default_bus_layout.tres"
+buses/default_bus_layout="res://addons/vsk_game_framework/config/vsk_bus_layout.tres"
 driver/enable_input=true
-enable_audio_input=true
-mix_rate=48000
-resonance_audio_bus="Spatializer"
-config/xr_input_device="Default"
-config/xr_output_device="Default"
-config/flat_input_device="Default"
-config/flat_output_device="Default"
-config/muted=false
-config/ignore_network_voice_packets=false
-config/voice_output_volume=1.0
-config/mic_input_volume=1.0
-config/ignore_voice_packets=false
-config/gate_threshold=0.003
-config/gate_timeout=1.0
 
 [autoload]
 
-BackgroundLoader="*res://addons/background_loader/background_loader.gd"
-FlatViewport="*res://addons/flat_viewport/flat_viewport.gd"
-GodotSpeech="*res://addons/godot_speech/godot_speech.gd"
-FadeManager="*res://addons/fade_manager/fade_manager.gd"
-InputManager="*res://addons/input_manager/input_manager.gd"
-GodotUroData="*res://addons/godot_uro/godot_uro_data.gd"
-GodotUro="*res://addons/godot_uro/godot_uro.gd"
-GodotMathExtension="*res://addons/math_util/math_funcs.gd"
-VSKExporter="*res://addons/vsk_importer_exporter/vsk_exporter.gd"
-VSKEditor="*res://addons/vsk_editor/vsk_editor.gd"
-VSKImporter="*res://addons/vsk_importer_exporter/vsk_importer.gd"
-SpatialGameViewportManager="*res://addons/spatial_game_viewport_manager/spatial_game_viewport_manager.gd"
-SnappingSingleton="*res://addons/sar1_vr_manager/components/lasso_snapping/snapping_singleton.gd"
-VRManager="*res://addons/sar1_vr_manager/vr_manager.gd"
-VSKNetworkManager="*res://addons/vsk_manager/vsk_network_manager.gd"
-VSKMultiplayerManager="*res://addons/vsk_manager/vsk_multiplayer_manager.gd"
-VSKAccountManager="*res://addons/vsk_manager/vsk_account_manager.gd"
-NetworkLogger="*res://addons/network_manager/network_logger.gd"
-EntityManager="*res://addons/entity_manager/entity_manager.gd"
-VSKUserPreferencesManager="*res://addons/vsk_manager/vsk_user_preferences_manager.gd"
-VSKDebugManager="*res://addons/vsk_manager/vsk_debug_manager.gd"
-VSKServiceManager="*res://addons/vsk_manager/vsk_service_manager.gd"
-VSKCreditsManager="*res://addons/vsk_manager/vsk_credits_manager.gd"
-VSKAssetManager="*res://addons/vsk_manager/vsk_asset_manager.gd"
-VSKResourceManager="*res://addons/vsk_manager/vsk_resource_manager.gd"
-VSKAvatarManager="*res://addons/vsk_manager/vsk_avatar_manager.gd"
-VSKMapManager="*res://addons/vsk_manager/vsk_map_manager.gd"
-VSKPlayerManager="*res://addons/vsk_manager/vsk_player_manager.gd"
-VSKShardManager="*res://addons/vsk_manager/vsk_shard_manager.gd"
-VSKGameModeManager="*res://addons/vsk_manager/vsk_game_mode_manager.gd"
-VSKMenuManager="*res://addons/vsk_manager/vsk_menu_manager.gd"
-VSKGameFlowManager="*res://addons/vsk_manager/vsk_game_flow_manager.gd"
-VSKFadeManager="*res://addons/vsk_manager/vsk_fade_manager.gd"
-VSKAudioManager="*res://addons/vsk_manager/vsk_audio_manager.gd"
-VSKPreloadManager="*res://addons/vsk_manager/vsk_preload_manager.gd"
-VSKStartupManager="*res://addons/vsk_manager/vsk_startup_manager.gd"
-VSKEntityManager="*res://addons/entity_manager/entity_manager.gd"
-NetworkManager="*res://addons/network_manager/network_manager.gd"
-ScreenshotManager="*res://addons/sar1_screenshot_manager/screenshot_manager.gd"
-ConnectionUtil="*res://addons/gd_util/connection_util.gd"
-VSKVersion="*res://addons/vsk_version/vsk_version.gd"
-
-[compression]
-
-formats/zstd/long_distance_matching=true
+VSKGameSettingsManagerSingleton="*res://addons/vsk_game_framework/scripts/managers/vsk_game_settings_manager.gd"
+VSKGameSessionManagerSingleton="*res://addons/vsk_game_framework/scripts/managers/vsk_game_session_manager.gd"
+VSKGameAssetManagerSingleton="*res://addons/vsk_game_framework/scripts/managers/vsk_game_asset_manager.gd"
+VSKGameServiceManagerSingleton="*res://addons/vsk_game_framework/scripts/managers/vsk_game_service_manager.gd"
+VSKXRManagerSingleton="*res://addons/vsk_game_framework/scripts/managers/vsk_game_xr_manager.gd"
+XRToolsUserSettings="*res://addons/godot-xr-tools/user_settings/user_settings.gd"
+XRToolsRumbleManager="*res://addons/godot-xr-tools/rumble/rumble_manager.gd"
+VSKEditorSingleton="*res://addons/vsk_editor/vsk_editor.gd"
 
 [debug]
 
 gdscript/warnings/exclude_addons=false
-gdscript/warnings/unreachable_code=false
-gdscript/warnings/static_called_on_instance=0
-gdscript/warnings/redundant_await=false
-gdscript/warnings/assert_always_false=0
-gdscript/warnings/integer_division=false
-gdscript/warnings/native_method_override=0
-settings/performance/show_performance_monitor=false
-settings/performance/performance_label_update_rate=0.5
-settings/enabled=true
 
 [display]
 
 window/size/viewport_width=1280
 window/size/viewport_height=800
-window/size/resizable=false
-window/size/extend_to_title=true
-window/energy_saving/keep_screen_on=false
-window/stretch/mode="canvas_items"
-window/stretch/aspect="keep_height"
-window/vsync/vsync_mode=2
-window/vsync/vsync_via_compositor=true
-window/vsync/vsync_mode.macos=1
 
 [editor]
 
-movie_writer/mjpeg_quality=1.0
-movie_writer/movie_file="../export.avi"
-run/main_run_args="--xr-mode off --verbose"
-import/use_multiple_threads=false
-run/main_run_args.macos="--xr-mode off"
+movie_writer/movie_file="D:/contents/videos/godot_movies/movie.png"
+run/main_run_args="--xr-mode off"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/Godot-MToon-Shader/plugin.cfg", "res://addons/background_loader/plugin.cfg", "res://addons/canvas_plane/plugin.cfg", "res://addons/emote_theme/plugin.cfg", "res://addons/entity_manager/plugin.cfg", "res://addons/extended_kinematic_body/plugin.cfg", "res://addons/fade_manager/plugin.cfg", "res://addons/flat_viewport/plugin.cfg", "res://addons/gd_util/plugin.cfg", "res://addons/godot_speech/plugin.cfg", "res://addons/godot_state_charts/plugin.cfg", "res://addons/godot_uro/plugin.cfg", "res://addons/input_manager/plugin.cfg", "res://addons/line_renderer/plugin.cfg", "res://addons/math_util/plugin.cfg", "res://addons/navigation_controller/plugin.cfg", "res://addons/network_manager/plugin.cfg", "res://addons/sar1_mocap_manager/plugin.cfg", "res://addons/sar1_screenshot_manager/plugin.cfg", "res://addons/sar1_vr_manager/plugin.cfg", "res://addons/smoothing/plugin.cfg", "res://addons/spatial_game_viewport_manager/plugin.cfg", "res://addons/textureRectUrl/plugin.cfg", "res://addons/vrm/plugin.cfg", "res://addons/vsk_avatar/plugin.cfg", "res://addons/vsk_editor/plugin.cfg", "res://addons/vsk_entities/plugin.cfg", "res://addons/vsk_importer_exporter/plugin.cfg", "res://addons/vsk_manager/plugin.cfg", "res://addons/vsk_map/plugin.cfg", "res://addons/vsk_menu/plugin.cfg", "res://addons/vsk_version/plugin.cfg", "res://addons/vsk_vrm_avatar_tool/plugin.cfg", "res://addons/xr_vignette/plugin.cfg")
+enabled=PackedStringArray("res://addons/Godot-MToon-Shader/plugin.cfg", "res://addons/animation_tree_driver/plugin.cfg", "res://addons/godot-xr-tools/plugin.cfg", "res://addons/godot_uro/plugin.cfg", "res://addons/sar_game_framework/plugin.cfg", "res://addons/textureRectUrl/plugin.cfg", "res://addons/vrm/plugin.cfg", "res://addons/vsk_editor/plugin.cfg", "res://addons/vsk_game_framework/plugin.cfg", "res://addons/vsk_importer_exporter/plugin.cfg")
 
-[entities]
+[file_customization]
 
-config/process_priority=128
+folder_colors={
+"res://addons/sar_game_framework/": "green",
+"res://addons/vsk_editor/": "blue",
+"res://addons/vsk_game_framework/": "red",
+"res://addons/vsk_game_framework/scenes/entities/vsk_game_entity_player_3d.tscn": "green",
+"res://addons/vsk_importer_exporter/": "red",
+"res://addons/vsk_ui/": "red",
+"res://vsk_default/": "red"
+}
 
 [filesystem]
 
-import/blender/enabled=false
+import/fbx2gltf/enabled=false
 
-[gameplay]
+[game]
 
-invert_look_x=false
-invert_look_y=false
-mouse_sensitivity=50.0
+session/player_vessel_scene_path="uid://iym64t583x3o"
+session/player_soul_scene_path="uid://6ohhdebb5pjr"
+session/show_window_title_debug_info=true
 
-[gdnative]
+[global_group]
 
-singletons=[]
-singletons_disabled=[]
+player_scene_tree_state_notification_receivers="Nodes to be informed when a player has entered the scene."
 
 [gui]
 
-theme/custom="res://addons/emote_theme/emote_theme.tres"
-theme/custom_font="res://addons/emote_theme/fonts/default_regular_font.tres"
-theme/default_font_multichannel_signed_distance_field=true
-theme/default_font_generate_mipmaps=true
-theme/use_hidpi=true
-
-[importer_defaults]
-
-texture={
-"compress/mode": 4,
-"mipmaps/generate": true,
-"process/size_limit": 2048
-}
-image={}
-wav={
-"compress/mode": 1,
-"edit/loop_begin": 0,
-"edit/loop_end": -1,
-"edit/loop_mode": 0,
-"edit/normalize": false,
-"edit/trim": false,
-"force/8_bit": false,
-"force/max_rate": false,
-"force/max_rate_hz": 44100,
-"force/mono": false
-}
-scene={
-"_subresources": {},
-"animation/fps": 30,
-"animation/import": true,
-"animation/import_rest_as_RESET": false,
-"animation/remove_immutable_tracks": true,
-"animation/trimming": false,
-"fbx/allow_geometry_helper_nodes": false,
-"fbx/embedded_image_handling": 1,
-"fbx/importer": 0,
-"gltf/embedded_image_handling": 1,
-"gltf/naming_version": 1,
-"import_script/path": "",
-"meshes/create_shadow_meshes": true,
-"meshes/ensure_tangents": true,
-"meshes/force_disable_compression": false,
-"meshes/generate_lods": true,
-"meshes/light_baking": 1,
-"meshes/lightmap_texel_size": 0.2,
-"nodes/apply_root_scale": true,
-"nodes/import_as_skeleton_bones": false,
-"nodes/root_name": "",
-"nodes/root_scale": 1.0,
-"nodes/root_type": "",
-"skins/use_named_skins": true
-}
-cubemap_texture={
-"compress/mode": 4
-}
-cubemap_array_texture={
-"compress/mode": 4
-}
-2d_array_texture={
-"compress/mode": 4
-}
-3d_texture={
-"compress/mode": 4
-}
-animation_library={
-"animation/trimming": true,
-"gltf/embedded_image_handling": 2
-}
+theme/custom="uid://s05juvtforjo"
 
 [input]
 
-ui_accept={
-"deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":16777221,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
-, Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"button_index":0,"pressure":0.0,"pressed":false,"script":null)
-, Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":16777222,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
-]
-}
-ui_select={
-"deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":32,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
-, Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"button_index":3,"pressure":0.0,"pressed":false,"script":null)
-]
-}
-ui_cancel={
-"deadzone": 0.5,
-"events": [Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"button_index":1,"pressure":0.0,"pressed":false,"script":null)
-, Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194305,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
-]
-}
-ui_focus_next={
-"deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":16777218,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
-]
-}
-ui_focus_prev={
-"deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":true,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":16777218,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
-]
-}
-ui_left={
-"deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":16777231,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
-, Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":0,"button_index":14,"pressure":0.0,"pressed":false,"script":null)
-]
-}
-ui_right={
-"deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":16777233,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
-, Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":0,"button_index":15,"pressure":0.0,"pressed":false,"script":null)
-]
-}
-ui_up={
-"deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":16777232,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
-, Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"button_index":12,"pressure":0.0,"pressed":false,"script":null)
-]
-}
-ui_down={
-"deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":16777234,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
-, Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"button_index":13,"pressure":0.0,"pressed":false,"script":null)
-]
-}
-ui_page_up={
-"deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":16777235,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
-]
-}
-ui_page_down={
-"deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":16777236,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
-]
-}
-ui_home={
-"deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":16777229,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
-]
-}
-ui_end={
-"deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":16777230,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
-]
-}
-ui_menu={
-"deadzone": 0.5,
-"events": [Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"button_index":11,"pressure":0.0,"pressed":false,"script":null)
-]
-}
 move_forwards={
-"deadzone": 0.1,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":87,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":87,"key_label":0,"unicode":119,"location":0,"echo":false,"script":null)
 , Object(InputEventJoypadMotion,"resource_local_to_scene":false,"resource_name":"","device":-1,"axis":1,"axis_value":-1.0,"script":null)
-, Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":16777232,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
 ]
 }
 move_backwards={
-"deadzone": 0.1,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":83,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":83,"key_label":0,"unicode":115,"location":0,"echo":false,"script":null)
 , Object(InputEventJoypadMotion,"resource_local_to_scene":false,"resource_name":"","device":-1,"axis":1,"axis_value":1.0,"script":null)
-, Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":16777234,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
 ]
 }
 move_left={
-"deadzone": 0.1,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":65,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":65,"key_label":0,"unicode":97,"location":0,"echo":false,"script":null)
 , Object(InputEventJoypadMotion,"resource_local_to_scene":false,"resource_name":"","device":-1,"axis":0,"axis_value":-1.0,"script":null)
-, Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":16777231,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
 ]
 }
 move_right={
-"deadzone": 0.1,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":68,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":68,"key_label":0,"unicode":100,"location":0,"echo":false,"script":null)
 , Object(InputEventJoypadMotion,"resource_local_to_scene":false,"resource_name":"","device":-1,"axis":0,"axis_value":1.0,"script":null)
-, Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":16777233,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
 ]
 }
-look_up={
-"deadzone": 0.1,
+move_up={
+"deadzone": 0.2,
+"events": []
+}
+move_down={
+"deadzone": 0.2,
+"events": []
+}
+jump={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":32,"key_label":0,"unicode":32,"location":0,"echo":false,"script":null)
+]
+}
+rotate_camera_up={
+"deadzone": 0.2,
 "events": [Object(InputEventJoypadMotion,"resource_local_to_scene":false,"resource_name":"","device":-1,"axis":3,"axis_value":-1.0,"script":null)
 ]
 }
-look_down={
-"deadzone": 0.1,
+rotate_camera_down={
+"deadzone": 0.2,
 "events": [Object(InputEventJoypadMotion,"resource_local_to_scene":false,"resource_name":"","device":-1,"axis":3,"axis_value":1.0,"script":null)
 ]
 }
-look_left={
-"deadzone": 0.1,
+rotate_camera_left={
+"deadzone": 0.2,
 "events": [Object(InputEventJoypadMotion,"resource_local_to_scene":false,"resource_name":"","device":-1,"axis":2,"axis_value":-1.0,"script":null)
+, Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":81,"key_label":0,"unicode":113,"location":0,"echo":false,"script":null)
 ]
 }
-look_right={
-"deadzone": 0.1,
+rotate_camera_right={
+"deadzone": 0.2,
 "events": [Object(InputEventJoypadMotion,"resource_local_to_scene":false,"resource_name":"","device":-1,"axis":2,"axis_value":1.0,"script":null)
+, Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":69,"key_label":0,"unicode":101,"location":0,"echo":false,"script":null)
 ]
 }
-text_chat={
-"deadzone": 0.5,
+toggle_mute={
+"deadzone": 0.2,
 "events": []
 }
-mute={
-"deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":86,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
-]
-}
-jump={
-"deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":32,"physical_keycode":0,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
-]
-}
 grab={
-"deadzone": 0.5,
+"deadzone": 0.2,
 "events": []
 }
 grab_left={
-"deadzone": 0.5,
+"deadzone": 0.2,
 "events": []
 }
 grab_right={
-"deadzone": 0.5,
+"deadzone": 0.2,
 "events": []
 }
 toggle_performance_monitor={
-"deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194332,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
-]
+"deadzone": 0.2,
+"events": []
 }
 toggle_camera_mode={
-"deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":16777220,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
-]
-}
-snap_right={
-"deadzone": 0.5,
+"deadzone": 0.2,
 "events": []
 }
 snap_left={
-"deadzone": 0.5,
+"deadzone": 0.2,
+"events": []
+}
+snap_right={
+"deadzone": 0.2,
 "events": []
 }
 request_vr_calibration={
-"deadzone": 0.5,
+"deadzone": 0.2,
 "events": []
 }
 confirm_vr_calibration={
-"deadzone": 0.5,
+"deadzone": 0.2,
 "events": []
 }
-respawn={
-"deadzone": 0.5,
+request_respawn={
+"deadzone": 0.2,
 "events": []
 }
-screenshot={
-"deadzone": 0.5,
+request_screenshot={
+"deadzone": 0.2,
 "events": []
-}
-fly_up={
-"deadzone": 0.5,
-"events": []
-}
-fly_down={
-"deadzone": 0.5,
-"events": []
-}
-console={
-"deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":96,"key_label":0,"unicode":96,"location":0,"echo":false,"script":null)
-]
 }
 crouch={
-"deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":16777238,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
-]
+"deadzone": 0.2,
+"events": []
 }
 shoot={
-"deadzone": 0.5,
-"events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":0,"position":Vector2(0, 0),"global_position":Vector2(0, 0),"factor":1.0,"button_index":1,"canceled":false,"pressed":false,"double_click":false,"script":null)
-]
-}
-left_hand_pose_open={
-"deadzone": 0.5,
-"events": []
-}
-left_hand_pose_neutral={
-"deadzone": 0.5,
-"events": []
-}
-left_hand_pose_point={
-"deadzone": 0.5,
-"events": []
-}
-left_hand_pose_gun={
-"deadzone": 0.5,
-"events": []
-}
-left_hand_pose_thumbs_up={
-"deadzone": 0.5,
-"events": []
-}
-left_hand_pose_fist={
-"deadzone": 0.5,
-"events": []
-}
-left_hand_pose_victory={
-"deadzone": 0.5,
-"events": []
-}
-left_hand_pose_ok_sign={
-"deadzone": 0.5,
-"events": []
-}
-right_hand_pose_open={
-"deadzone": 0.5,
-"events": []
-}
-right_hand_pose_neutral={
-"deadzone": 0.5,
-"events": []
-}
-right_hand_pose_point={
-"deadzone": 0.5,
-"events": []
-}
-right_hand_pose_gun={
-"deadzone": 0.5,
-"events": []
-}
-right_hand_pose_thumbs_up={
-"deadzone": 0.5,
-"events": []
-}
-right_hand_pose_fist={
-"deadzone": 0.5,
-"events": []
-}
-right_hand_pose_victory={
-"deadzone": 0.5,
-"events": []
-}
-right_hand_pose_ok_sign={
-"deadzone": 0.5,
+"deadzone": 0.2,
 "events": []
 }
 toggle_vr={
-"deadzone": 0.5,
-"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":16777254,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+"deadzone": 0.2,
+"events": []
+}
+reset_character_body_position={
+"deadzone": 0.2,
+"events": [Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"button_index":3,"pressure":0.0,"pressed":true,"script":null)
 ]
 }
-physics_reset={
-"deadzone": 0.5,
-"events": []
-}
-block_physics_send={
-"deadzone": 0.5,
-"events": []
+menu={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194305,"key_label":0,"unicode":0,"location":0,"echo":false,"script":null)
+]
 }
 
 [input_devices]
 
 pointing/emulate_touch_from_mouse=true
-pointing/emulate_mouse_from_touch=false
 
 [internationalization]
 
-locale/translations=PackedStringArray("res://addons/vsk_menu/localisation/menu_strings.en.translation", "res://addons/sar1_vr_manager/localisation/vr_manager_strings.en.translation", "res://addons/vsk_menu/localisation/menu_strings.es.translation")
-locale/include_text_server_data=true
-
-[layer_names]
-
-3d_render/layer_1="World"
-3d_render/layer_2="Reflection"
-3d_render/layer_3="Model"
-3d_physics/layer_1="World"
-3d_physics/layer_2="UI"
-3d_physics/layer_3="LocalPlayer"
-3d_physics/layer_4="OtherPlayer"
-3d_physics/layer_5="Props"
-3d_physics/layer_6="Pickup"
-
-[locale]
-
-translations=PackedStringArray("res://addons/vsk_menu/localisation/menu_strings.en.translation", "res://addons/sar1_vr_manager/localisation/vr_manager_strings.en.translation")
-
-[multiplayer]
-
-config/use_multiplayer_manager=false
-
-[network]
-
-config/player_scene="res://addons/vsk_entities/vsk_player_old.tscn"
-config/networked_scenes=PackedStringArray("res://addons/vsk_entities/vsk_player_old.tscn")
-config/max_networked_entities=4096
-config/simulate_network_conditions=false
-config/entity_root_node=NodePath("")
-config/compression_mode=4
-config/shard_heartbeat_frequency=10.0
-config/default_port=7777
-config/network_fps=60
-config/default_map_path="uro://dddf8154-60a3-4c9f-888b-fb70c3e2655f"
-config/default_map_path.web=""
-config/default_autohost=false
-config/use_threaded_host_state_initalisation_func=true
-config/use_threaded_received_server_state_func=true
+locale/translations=PackedStringArray("res://addons/vsk_game_framework/localization/vsk_game_strings.de.translation", "res://addons/vsk_game_framework/localization/vsk_game_strings.en.translation", "res://addons/vsk_game_framework/localization/vsk_game_strings.es.translation")
+locale/locale_filter_mode=1
 
 [physics]
 
+3d/run_on_separate_thread=true
+common/physics_ticks_per_second=30
+common/physics_jitter_fix=0.0
 3d/physics_engine="Jolt Physics"
+common/physics_interpolation=true
 
 [rendering]
 
-textures/canvas_textures/default_texture_filter=2
-textures/vram_compression/import_etc2_astc=true
-lights_and_shadows/use_physical_light_units=true
-reflections/reflection_atlas/reflection_size=1024
-global_illumination/sdfgi/probe_ray_count=0
-anti_aliasing/quality/msaa_2d=1
-anti_aliasing/quality/msaa_3d=1
-viewport/transparent_background=true
-anti_aliasing/quality/use_debanding=true
+lights_and_shadows/directional_shadow/soft_shadow_filter_quality=5
+lights_and_shadows/positional_shadow/soft_shadow_filter_quality=5
+global_illumination/voxel_gi/quality=1
+anti_aliasing/quality/msaa_3d=3
 occlusion_culling/use_occlusion_culling=true
-mesh_lod/lod_change/threshold_pixels=0.8
-vrs/mode=2
-vrs/texture="res://vsk_default/core/vrs_texture.png"
-textures/vram_compression/import_bptc=true
-anti_aliasing/quality/msaa=1
-batching/options/use_batching=true
-batching/options/use_batching_in_editor=true
-quality/shadows/filter_mode=2
-quality/depth_prepass/disable_for_vendors="PowerVR,Mali,Apple"
-quality/godrays/sample_number=50
-quality/godrays/use_pcf5=false
-quality/godrays/dither_amount=1.0
-driver/threads/thread_model.web=1
-driver/threads/thread_model.macos=1
-
-[services]
-
-uro/use_localhost=false
-uro/host="https://uro.v-sekai.cloud"
-uro/port=443
-services/services=PackedStringArray("res://addons/vsk_manager/services/uro_service.gd")
-services/required_host_notify_services=PackedStringArray("res://addons/vsk_manager/services/uro_service.gd")
-uro/use_ssl=true
 
 [ugc]
 
-config/sanitize_avatar_export=true
-config/sanitize_map_export=true
-config/sanitize_avatar_import=true
-config/sanitize_map_import=true
-
-[vr]
-
-config/interfaces=PackedStringArray("OpenXR")
-config/process_priority=255
+config/clean_avatar_export=true
+config/clean_map_export=true
+config/clean_avatar_import=true
+config/clean_map_import=true
 
 [xr]
 
 openxr/enabled=true
-openxr/default_action_map="res://vsk_default/core/openxr_action_map.tres"
-openxr/startup_alert=false
+openxr/default_action_map="res://addons/vsk_game_framework/config/vsk_openxr_action_map.tres"
+openxr/extensions/hand_tracking=true
+openxr/extensions/hand_interaction_profile=true
+openxr/extensions/eye_gaze_interaction=true
 shaders/enabled=true

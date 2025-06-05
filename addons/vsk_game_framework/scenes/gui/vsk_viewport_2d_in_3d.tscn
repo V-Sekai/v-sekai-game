@@ -1,0 +1,30 @@
+[gd_scene load_steps=6 format=3 uid="uid://bk6ynr82osrft"]
+
+[ext_resource type="PackedScene" uid="uid://clujaf3u776a3" path="res://addons/godot-xr-tools/objects/viewport_2d_in_3d.tscn" id="1_8u1i3"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_lppo5"]
+resource_local_to_scene = true
+size = Vector2(3, 2)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_45bs7"]
+viewport_path = NodePath("Viewport")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6j1up"]
+transparency = 1
+cull_mode = 2
+albedo_texture = SubResource("ViewportTexture_45bs7")
+texture_filter = 1
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_gieoq"]
+resource_local_to_scene = true
+size = Vector3(3, 2, 0.02)
+
+[node name="Viewport2Din3D" instance=ExtResource("1_8u1i3")]
+scene_properties_keys = PackedStringArray()
+
+[node name="Screen" parent="." index="1"]
+mesh = SubResource("QuadMesh_lppo5")
+surface_material_override/0 = SubResource("StandardMaterial3D_6j1up")
+
+[node name="CollisionShape3D" parent="StaticBody3D" index="0"]
+shape = SubResource("BoxShape3D_gieoq")

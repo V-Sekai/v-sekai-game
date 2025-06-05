@@ -1,0 +1,51 @@
+[gd_scene load_steps=5 format=3 uid="uid://md26adjqj58j"]
+
+[ext_resource type="PackedScene" uid="uid://cl2v14xq56f3o" path="res://addons/vsk_editor/dashboard/vsk_editor_user_content_grid.tscn" id="1_8s6hy"]
+[ext_resource type="PackedScene" uid="uid://0ty2fouxwcvm" path="res://addons/vsk_editor/dashboard/vsk_editor_dashboard_tab_body_control.tscn" id="1_n41l1"]
+[ext_resource type="Script" uid="uid://psgu76hn7jok" path="res://addons/vsk_editor/dashboard/vsk_editor_dashboard_content_control.gd" id="2_po0i5"]
+[ext_resource type="PackedScene" uid="uid://cjnca8e1nn0i0" path="res://addons/vsk_editor/vsk_editor_progress_dialog.tscn" id="4_ou7q8"]
+
+[node name="Content" node_paths=PackedStringArray("fetch_button", "content_grid", "upload_file_dialog", "upload_progress_dialog") instance=ExtResource("1_n41l1")]
+script = ExtResource("2_po0i5")
+fetch_button = NodePath("VBoxContainer/FetchButton")
+content_grid = NodePath("VBoxContainer/ContentGrid")
+upload_file_dialog = NodePath("UploadFileDialog")
+upload_progress_dialog = NodePath("UploadProgressDialog")
+
+[node name="ContentViewer" type="Panel" parent="." index="0"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." index="1"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="FetchButton" type="Button" parent="VBoxContainer" index="0"]
+layout_mode = 2
+text = "Refresh"
+
+[node name="ContentGrid" parent="VBoxContainer" index="1" instance=ExtResource("1_8s6hy")]
+layout_mode = 2
+size_flags_vertical = 3
+metadata/_edit_layout_mode = 1
+
+[node name="UploadFileDialog" type="FileDialog" parent="." index="2"]
+title = "Open a File"
+file_mode = 0
+use_native_dialog = true
+
+[node name="UploadProgressDialog" parent="." index="3" instance=ExtResource("4_ou7q8")]
+visible = false
+
+[connection signal="pressed" from="VBoxContainer/FetchButton" to="." method="_on_fetch_button_pressed"]
+[connection signal="vsk_content_button_pressed" from="VBoxContainer/ContentGrid" to="." method="_on_content_button_pressed"]
+[connection signal="cancel_button_pressed" from="UploadProgressDialog" to="." method="_on_upload_progress_dialog_cancel_button_pressed"]

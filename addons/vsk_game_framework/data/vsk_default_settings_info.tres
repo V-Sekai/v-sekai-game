@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="VSKSettingsInfo" load_steps=3 format=3 uid="uid://c8wpjeyytl5pv"]
+
+[ext_resource type="Script" uid="uid://cbronlmogkobw" path="res://addons/vsk_game_framework/scripts/data/vsk_settings_info_category.gd" id="1_8gwv3"]
+[ext_resource type="Script" uid="uid://c5uau2ant2k0x" path="res://addons/vsk_game_framework/scripts/data/vsk_settings_info.gd" id="2_c001v"]
+
+[resource]
+script = ExtResource("2_c001v")
+categories = Array[ExtResource("1_8gwv3")]([])
+metadata/_custom_type_script = "uid://c5uau2ant2k0x"

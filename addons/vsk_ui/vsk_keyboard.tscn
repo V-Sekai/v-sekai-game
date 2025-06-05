@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://ds7kka0eiktbo"]
+
+[ext_resource type="Script" uid="uid://fcaoej7ggygm" path="res://addons/vsk_ui/vsk_keyboard.gd" id="1_ydnmo"]
+[ext_resource type="Resource" uid="uid://bjak3rpcnovx4" path="res://addons/vsk_ui/keyboard/vsk_keyboard_layout_qwerty.tres" id="2_htx7h"]
+
+[node name="Keyboard" type="VBoxContainer"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 216.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_ydnmo")
+keyboard_layout = ExtResource("2_htx7h")

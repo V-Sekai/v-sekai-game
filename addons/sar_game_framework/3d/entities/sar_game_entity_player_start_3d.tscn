@@ -1,0 +1,29 @@
+[gd_scene load_steps=6 format=3 uid="uid://dtmk7xkh8h2sy"]
+
+[ext_resource type="Script" uid="uid://b8xc5h4o67a1" path="res://addons/sar_game_framework/3d/entities/sar_game_entity_player_start_3d.gd" id="1_386g2"]
+[ext_resource type="Script" uid="uid://7o7nkjtvemq8" path="res://addons/sar_game_framework/3d/entities/interfaces/sar_game_entity_interface_3d.gd" id="2_onitd"]
+[ext_resource type="Script" uid="uid://djwvd6mwb200k" path="res://addons/sar_game_framework/generic/entities/component/sar_game_entity_component_player_start_logic.gd" id="4_i6gtv"]
+[ext_resource type="Script" uid="uid://ceo23wpi6lae" path="res://addons/sar_game_framework/3d/entities/components/sar_game_entity_component_editor_only_display_3d.gd" id="5_5wwna"]
+[ext_resource type="PackedScene" uid="uid://kensdx5s1h63" path="res://addons/sar_game_framework/3d/editor_displays/display_player_start_3d.tscn" id="6_kn01a"]
+
+[node name="SarGameEntityPlayerStart3D" type="Node3D" node_paths=PackedStringArray("game_entity_interface")]
+script = ExtResource("1_386g2")
+game_entity_interface = NodePath("SarGameEntityInterface3D")
+
+[node name="SarGameEntityInterface3D" type="Node" parent="." node_paths=PackedStringArray("game_entity", "public_components")]
+script = ExtResource("2_onitd")
+game_entity = NodePath("..")
+public_components = [NodePath("../SarPlayerStartLogicComponent")]
+metadata/_custom_type_script = "uid://cguhwt78rqygx"
+
+[node name="SarPlayerStartLogicComponent" type="Node" parent="." node_paths=PackedStringArray("game_entity")]
+script = ExtResource("4_i6gtv")
+game_entity = NodePath("..")
+metadata/_custom_type_script = "uid://cjmt2uyev1v76"
+
+[node name="SarEditorOnlyDisplayComponent3D" type="Node" parent="." node_paths=PackedStringArray("visual_parent", "game_entity")]
+script = ExtResource("5_5wwna")
+visual_parent = NodePath("..")
+packed_scene = ExtResource("6_kn01a")
+game_entity = NodePath("..")
+metadata/_custom_type_script = "uid://ceo23wpi6lae"

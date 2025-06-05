@@ -1,0 +1,126 @@
+[remap]
+
+importer="scene"
+importer_version=1
+type="PackedScene"
+uid="uid://c76ltxt3hfdu4"
+path="res://.godot/imported/cc0_hut.gltf-7af1f0b80d190282edd8e449fa20cefa.scn"
+
+[deps]
+
+source_file="res://vsk_default/example_ugc/maps/cc0_hut/cc0_hut.gltf"
+dest_files=["res://.godot/imported/cc0_hut.gltf-7af1f0b80d190282edd8e449fa20cefa.scn"]
+
+[params]
+
+nodes/root_type="Node3D"
+nodes/root_name="Scene Root"
+nodes/root_script=null
+nodes/apply_root_scale=true
+nodes/root_scale=1.0
+nodes/import_as_skeleton_bones=false
+nodes/use_name_suffixes=true
+nodes/use_node_type_suffixes=true
+meshes/ensure_tangents=true
+meshes/generate_lods=true
+meshes/create_shadow_meshes=true
+meshes/light_baking=2
+meshes/lightmap_texel_size=0.2
+meshes/force_disable_compression=false
+skins/use_named_skins=true
+animation/import=true
+animation/fps=30
+animation/trimming=false
+animation/remove_immutable_tracks=true
+animation/import_rest_as_RESET=false
+import_script/path=""
+materials/extract=0
+materials/extract_format=0
+materials/extract_path=""
+_subresources={
+"materials": {
+"Glass": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://vsk_default/example_ugc/maps/cc0_hut/Glass.tres",
+"use_external/path": "uid://dec337v2ekxna"
+},
+"Metal": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://vsk_default/example_ugc/maps/cc0_hut/Metal.tres",
+"use_external/path": "uid://dchooubx0ptso"
+},
+"PendantLight": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://vsk_default/example_ugc/maps/cc0_hut/PendantLight.tres",
+"use_external/path": "uid://dkitjiv08qmhs"
+},
+"Wall": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://vsk_default/example_ugc/maps/cc0_hut/Wall.tres",
+"use_external/path": "uid://cpkl1ruqang3b"
+},
+"Wood01": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://vsk_default/example_ugc/maps/cc0_hut/Wood01.tres",
+"use_external/path": "uid://vlp88id67gb8"
+},
+"Wood02": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://vsk_default/example_ugc/maps/cc0_hut/Wood02.tres",
+"use_external/path": "uid://gv00jkao48t1"
+},
+"Wood03": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://vsk_default/example_ugc/maps/cc0_hut/Wood03.tres",
+"use_external/path": "uid://dnct4hxukd0cv"
+},
+"Wood04": {
+"use_external/enabled": true,
+"use_external/fallback_path": "res://vsk_default/example_ugc/maps/cc0_hut/Wood04.tres",
+"use_external/path": "uid://5smagbhppnmm"
+}
+},
+"nodes": {
+"PATH:Door_Base": {
+"generate/physics": true,
+"physics/shape_type": 0
+},
+"PATH:Door_Glass": {
+"generate/physics": true,
+"physics/shape_type": 0,
+"primitive/size": Vector3(0, 0, 0)
+},
+"PATH:Hut": {
+"generate/physics": true,
+"physics/shape_type": 2
+},
+"PATH:HutShell": {
+"generate/physics": true,
+"physics/shape_type": 2
+},
+"PATH:Pendantlight_Long": {
+"physics/shape_type": 2
+},
+"PATH:Stool": {
+"generate/physics": true
+},
+"PATH:Window01_Glass": {
+"generate/physics": true,
+"physics/shape_type": 0
+},
+"PATH:Window02_Base": {
+"generate/physics": true,
+"physics/shape_type": 0
+},
+"PATH:Window02_Glass": {
+"generate/physics": true,
+"physics/shape_type": 0,
+"primitive/size": Vector3(0.75, 1.5, 1.5)
+},
+"PATH:WorkingTable": {
+"generate/physics": true
+}
+}
+}
+gltf/naming_version=0
+gltf/embedded_image_handling=1

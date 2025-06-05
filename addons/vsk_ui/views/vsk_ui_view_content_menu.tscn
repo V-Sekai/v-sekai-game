@@ -1,0 +1,87 @@
+[gd_scene load_steps=6 format=3 uid="uid://b8af2il3sjsc2"]
+
+[ext_resource type="Theme" uid="uid://s05juvtforjo" path="res://addons/vsk_ui/vsk_ui_dark.tres" id="1_p10o1"]
+[ext_resource type="Script" uid="uid://u7t8bjx7bfoo" path="res://addons/vsk_ui/views/vsk_ui_view_content_menu.gd" id="2_ydt4u"]
+[ext_resource type="Script" uid="uid://dnkg28mh25h88" path="res://addons/sar_game_framework/2d/gui/sar_ui_top_level_alignment.gd" id="3_ydt4u"]
+[ext_resource type="PackedScene" uid="uid://c7bhefvtw3l1y" path="res://addons/vsk_ui/views/vsk_ui_view_side_navigation_bar.tscn" id="4_ttfeo"]
+[ext_resource type="PackedScene" uid="uid://bow6jgqyh7d6o" path="res://addons/vsk_ui/views/vsk_ui_view_content_browser.tscn" id="5_ttfeo"]
+
+[node name="ContentMenu" type="Control" node_paths=PackedStringArray("content_browser")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource("1_p10o1")
+script = ExtResource("2_ydt4u")
+content_browser = NodePath("Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer/ContentBrowser")
+
+[node name="Body" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+theme_type_variation = &"ZeroSeperationVBoxContainer"
+
+[node name="Control" type="Control" parent="Body"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="Body/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 13
+size_flags_vertical = 3
+theme_type_variation = &"MenuMarginContainer"
+
+[node name="TopLevelAligner" type="Control" parent="Body/Control/MarginContainer"]
+layout_mode = 2
+script = ExtResource("3_ydt4u")
+
+[node name="TopLevelContent" type="Control" parent="Body/Control/MarginContainer/TopLevelAligner"]
+top_level = true
+clip_contents = true
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 16.0
+offset_top = 8.0
+offset_right = -16.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Body/Control/MarginContainer/TopLevelAligner/TopLevelContent"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Navigation" parent="Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer" instance=ExtResource("4_ttfeo")]
+layout_mode = 2
+
+[node name="VSeparator" type="VSeparator" parent="Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="ContentBrowser" parent="Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer" instance=ExtResource("5_ttfeo")]
+layout_mode = 2
+
+[connection signal="sort_children" from="Body/Control/MarginContainer" to="Body/Control/MarginContainer/TopLevelAligner" method="_on_sorted"]

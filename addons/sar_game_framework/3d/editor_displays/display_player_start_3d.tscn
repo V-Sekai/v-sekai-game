@@ -1,0 +1,38 @@
+[gd_scene load_steps=5 format=3 uid="uid://kensdx5s1h63"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_s1n4b"]
+albedo_color = Color(0, 1, 0, 1)
+disable_receive_shadows = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_s1n4b"]
+size = Vector3(0.25, 1, 0.25)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5ouf8"]
+disable_receive_shadows = true
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_b3147"]
+top_radius = 0.0
+bottom_radius = 0.1
+height = 0.25
+
+[node name="PlayerStart" type="Node3D"]
+
+[node name="Base" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+material_override = SubResource("StandardMaterial3D_s1n4b")
+cast_shadow = 0
+gi_mode = 0
+mesh = SubResource("BoxMesh_s1n4b")
+
+[node name="Arrow" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0.75, 0.3)
+material_override = SubResource("StandardMaterial3D_5ouf8")
+cast_shadow = 0
+gi_mode = 0
+mesh = SubResource("CylinderMesh_b3147")
+
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+billboard = 1
+texture_filter = 0
+text = "Player Start"

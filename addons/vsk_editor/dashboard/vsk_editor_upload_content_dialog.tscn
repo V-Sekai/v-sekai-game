@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://c344vchxjs3mk"]
+
+[ext_resource type="Script" uid="uid://dh55yaq2j6fvj" path="res://addons/vsk_editor/dashboard/vsk_editor_upload_content_dialog.gd" id="1_ekqok"]
+[ext_resource type="PackedScene" uid="uid://0312aaof47jl" path="res://addons/vsk_editor/dashboard/vsk_editor_upload_content_dialog_control.tscn" id="2_ekqok"]
+
+[node name="Upload" type="AcceptDialog"]
+oversampling_override = 1.0
+title = "Upload..."
+size = Vector2i(1200, 600)
+visible = true
+exclusive = false
+minimize_disabled = false
+maximize_disabled = false
+script = ExtResource("1_ekqok")
+
+[node name="Upload" parent="." instance=ExtResource("2_ekqok")]
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -58.0

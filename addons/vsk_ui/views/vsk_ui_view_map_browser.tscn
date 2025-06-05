@@ -1,0 +1,5 @@
+[gd_scene load_steps=2 format=3 uid="uid://cr0mmca6vqrmm"]
+
+[ext_resource type="PackedScene" uid="uid://b8af2il3sjsc2" path="res://addons/vsk_ui/views/vsk_ui_view_content_menu.tscn" id="1_02lur"]
+
+[node name="ContentMenu" instance=ExtResource("1_02lur")]

@@ -1,0 +1,48 @@
+[gd_scene load_steps=3 format=3 uid="uid://pmf2kok86bkp"]
+
+[ext_resource type="Script" uid="uid://dnxa0j541w8tr" path="res://addons/vsk_ui/view_controllers/vsk_ui_view_controller_logging_in.gd" id="1_pbvs5"]
+[ext_resource type="Script" uid="uid://d11kfgsd6jgt" path="res://addons/AutoSizeText/ui/AutoSizeLabel.gd" id="2_kobyp"]
+
+[node name="ViewControllerLoggingIn" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_pbvs5")
+title = "Logging in..."
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"ScreenMarginContainer"
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="MarginContainer/AspectRatioContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/AspectRatioContainer/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 72
+text = "Logging In..."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+clip_text = true
+text_overrun_behavior = 3
+script = ExtResource("2_kobyp")
+max_font_size = 72
+metadata/_custom_type_script = "uid://d11kfgsd6jgt"

@@ -1,0 +1,28 @@
+[gd_scene load_steps=7 format=3 uid="uid://odd3okj7gke6"]
+
+[ext_resource type="Script" uid="uid://comugqt6n1y2q" path="res://addons/vsk_game_framework/scripts/ugc/avatar/vsk_avatar_3d.gd" id="1_4y5uw"]
+[ext_resource type="Material" uid="uid://8qm2hf872nsk" path="res://addons/vsk_game_framework/scenes/avatars/loading/loading_orb.tres" id="2_3707a"]
+[ext_resource type="Script" uid="uid://c6f43jyfapsbv" path="res://addons/vsk_game_framework/scripts/ugc/avatar/vsk_avatar_parameter_table.gd" id="2_a4vag"]
+[ext_resource type="Script" uid="uid://b0llhilgsmt7i" path="res://addons/animation_tree_driver/animation_tree_driver.gd" id="4_windx"]
+
+[sub_resource type="Resource" id="Resource_fc5gb"]
+script = ExtResource("2_a4vag")
+metadata/_custom_type_script = "uid://c6f43jyfapsbv"
+
+[sub_resource type="SphereMesh" id="1"]
+
+[node name="LoadingAvatar" type="Node3D" node_paths=PackedStringArray("animation_tree_driver")]
+script = ExtResource("1_4y5uw")
+parameter_table = SubResource("Resource_fc5gb")
+animation_tree_driver = NodePath("AnimationTreeDriver")
+
+[node name="LoadingOrb" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 1.5, 0)
+layers = 4
+material_override = ExtResource("2_3707a")
+gi_mode = 0
+mesh = SubResource("1")
+
+[node name="AnimationTreeDriver" type="Node" parent="."]
+script = ExtResource("4_windx")
+metadata/_custom_type_script = "uid://b0llhilgsmt7i"

@@ -1,0 +1,22 @@
+[gd_scene load_steps=3 format=3 uid="uid://bbva2sy5g66ek"]
+
+[ext_resource type="Script" uid="uid://dul8sunsu2ul5" path="res://vsk_default/scenes/vsk_main_scene.gd" id="1_5jbau"]
+[ext_resource type="Environment" uid="uid://m516gmllqmfi" path="res://vsk_default/scenes/vsk_main_scene_environment.tres" id="2_d8eg7"]
+
+[node name="MainScene" type="Node3D"]
+script = ExtResource("1_5jbau")
+startup_scene_path = "uid://nj1xfi0elr7"
+
+[node name="XROrigin3D" type="XROrigin3D" parent="."]
+current = true
+
+[node name="XRCamera3D" type="XRCamera3D" parent="XROrigin3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+current = true
+
+[node name="LoadingLabel" type="Label3D" parent="XROrigin3D/XRCamera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2)
+text = "Loading..."
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource("2_d8eg7")

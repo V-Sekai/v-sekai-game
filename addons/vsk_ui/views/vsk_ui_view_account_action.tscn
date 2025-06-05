@@ -1,0 +1,191 @@
+[gd_scene load_steps=6 format=3 uid="uid://3as8qqoehxad"]
+
+[ext_resource type="Theme" uid="uid://s05juvtforjo" path="res://addons/vsk_ui/vsk_ui_dark.tres" id="1_ebs6j"]
+[ext_resource type="Script" uid="uid://c0lrqyqx70j1r" path="res://addons/vsk_ui/views/vsk_ui_view_account_action.gd" id="2_t6fsf"]
+[ext_resource type="Resource" uid="uid://b3nkerk3freuq" path="res://addons/vsk_game_framework/data/vsk_default_homeserver_info.tres" id="3_qmb66"]
+[ext_resource type="FontFile" uid="uid://b66f6a8gfqkrc" path="res://addons/vsk_ui/fonts/ZenKakuGothicNew-Bold.ttf" id="4_cwesk"]
+[ext_resource type="PackedScene" uid="uid://cx3gwjtcd3ona" path="res://addons/vsk_ui/widgets/vsk_check_box.tscn" id="5_0qcc6"]
+
+[node name="AccountActionView" type="Control" node_paths=PackedStringArray("_action_label", "_domain_label", "_sign_in_content", "_register_content", "_sign_in_email_or_username_field", "_sign_in_password_field", "_sign_in_submit_button")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_ebs6j")
+script = ExtResource("2_t6fsf")
+_action_label = NodePath("VBoxContainer/InfoBox/ActionLabel")
+_domain_label = NodePath("VBoxContainer/InfoBox/DomainLabel")
+_sign_in_content = NodePath("VBoxContainer/SignInContent")
+_register_content = NodePath("VBoxContainer/RegisterContent")
+_sign_in_email_or_username_field = NodePath("VBoxContainer/SignInContent/SignInEmailOrUsername")
+_sign_in_password_field = NodePath("VBoxContainer/SignInContent/SignInPassword")
+_sign_in_submit_button = NodePath("VBoxContainer/SignInContent/ButtonsContainer/TopButtons/SignInButton")
+homeserver_info = ExtResource("3_qmb66")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+alignment = 1
+
+[node name="InfoBox" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="ActionLabel" type="Label" parent="VBoxContainer/InfoBox"]
+layout_mode = 2
+theme_type_variation = &"HeaderLarge"
+text = "Signing into:"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DomainLabel" type="Label" parent="VBoxContainer/InfoBox"]
+layout_mode = 2
+theme_type_variation = &"HeaderSmall"
+theme_override_fonts/font = ExtResource("4_cwesk")
+text = "[domain]"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RichTextLabel" type="RichTextLabel" parent="VBoxContainer/InfoBox"]
+visible = false
+layout_mode = 2
+text = "Registering Account on:
+[Domain]"
+fit_content = true
+horizontal_alignment = 1
+
+[node name="SignInContent" type="VBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Spacer" type="Control" parent="VBoxContainer/SignInContent"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SignInEmailOrUsername" type="LineEdit" parent="VBoxContainer/SignInContent"]
+layout_mode = 2
+placeholder_text = "Email or Username"
+virtual_keyboard_type = 5
+
+[node name="Spacer2" type="Control" parent="VBoxContainer/SignInContent"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SignInPassword" type="LineEdit" parent="VBoxContainer/SignInContent"]
+layout_mode = 2
+placeholder_text = "Password"
+virtual_keyboard_type = 6
+secret = true
+
+[node name="Spacer3" type="Control" parent="VBoxContainer/SignInContent"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ButtonsContainer" type="VBoxContainer" parent="VBoxContainer/SignInContent"]
+layout_mode = 2
+
+[node name="TopButtons" type="HBoxContainer" parent="VBoxContainer/SignInContent/ButtonsContainer"]
+layout_mode = 2
+
+[node name="SignInButton" type="Button" parent="VBoxContainer/SignInContent/ButtonsContainer/TopButtons"]
+layout_mode = 2
+size_flags_horizontal = 3
+disabled = true
+text = "Sign-in"
+
+[node name="BottomButtons" type="HBoxContainer" parent="VBoxContainer/SignInContent/ButtonsContainer"]
+layout_mode = 2
+
+[node name="ForgottenPasswordButton" type="Button" parent="VBoxContainer/SignInContent/ButtonsContainer/BottomButtons"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Forgotten Password?"
+
+[node name="SignInButton" type="Button" parent="VBoxContainer/SignInContent/ButtonsContainer/BottomButtons"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Sign Up"
+
+[node name="Spacer4" type="Control" parent="VBoxContainer/SignInContent"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="RegisterContent" type="VBoxContainer" parent="VBoxContainer"]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Spacer" type="Control" parent="VBoxContainer/RegisterContent"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SignUpEmail" type="LineEdit" parent="VBoxContainer/RegisterContent"]
+layout_mode = 2
+placeholder_text = "Email"
+virtual_keyboard_type = 5
+
+[node name="Spacer2" type="Control" parent="VBoxContainer/RegisterContent"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SignUpUsername" type="LineEdit" parent="VBoxContainer/RegisterContent"]
+layout_mode = 2
+placeholder_text = "Username"
+
+[node name="Spacer5" type="Control" parent="VBoxContainer/RegisterContent"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SignUpPassword" type="LineEdit" parent="VBoxContainer/RegisterContent"]
+layout_mode = 2
+placeholder_text = "Password"
+virtual_keyboard_type = 6
+secret = true
+
+[node name="Spacer3" type="Control" parent="VBoxContainer/RegisterContent"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SignUpRepeatPassword" type="LineEdit" parent="VBoxContainer/RegisterContent"]
+layout_mode = 2
+placeholder_text = "Repeat Password"
+virtual_keyboard_type = 6
+secret = true
+
+[node name="Spacer4" type="Control" parent="VBoxContainer/RegisterContent"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VSKCheckBox" parent="VBoxContainer/RegisterContent" instance=ExtResource("5_0qcc6")]
+layout_mode = 2
+text = "Receive Email Notifications?"
+
+[node name="Spacer7" type="Control" parent="VBoxContainer/RegisterContent"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="RegisterButton" type="Button" parent="VBoxContainer/RegisterContent"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Create Account"
+
+[node name="Spacer6" type="Control" parent="VBoxContainer/RegisterContent"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PickAnotherServerButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Pick Another Server"
+
+[connection signal="text_changed" from="VBoxContainer/SignInContent/SignInEmailOrUsername" to="." method="_on_sign_in_email_or_username_text_changed"]
+[connection signal="text_changed" from="VBoxContainer/SignInContent/SignInPassword" to="." method="_on_sign_in_password_text_changed"]
+[connection signal="pressed" from="VBoxContainer/SignInContent/ButtonsContainer/TopButtons/SignInButton" to="." method="_on_sign_in_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/PickAnotherServerButton" to="." method="_pick_other_domain_selected"]

@@ -1,0 +1,272 @@
+[gd_resource type="Resource" script_class="VSKKeyboardLayout" load_steps=62 format=3 uid="uid://bjak3rpcnovx4"]
+
+[ext_resource type="Script" uid="uid://p33vqjwscyl4" path="res://addons/vsk_ui/keyboard/vsk_keyboard_row.gd" id="1_2qt1o"]
+[ext_resource type="Script" uid="uid://b3guxtvqsil6m" path="res://addons/vsk_ui/keyboard/vsk_keyboard_button.gd" id="2_eevic"]
+[ext_resource type="Script" uid="uid://bf3m77hc1vm5g" path="res://addons/vsk_ui/keyboard/vsk_keyboard_button_input.gd" id="2_n57pd"]
+[ext_resource type="Script" uid="uid://6qxs0cxao6ev" path="res://addons/vsk_ui/keyboard/vsk_keyboard_layout.gd" id="3_kf7xv"]
+[ext_resource type="Script" uid="uid://bosea1dgb4rgl" path="res://addons/vsk_ui/keyboard/vsk_keyboard_button_backspace.gd" id="4_qsg3i"]
+[ext_resource type="Script" uid="uid://cbm7p77lt0u34" path="res://addons/vsk_ui/keyboard/vsk_keyboard_button_return.gd" id="5_28y5a"]
+[ext_resource type="Script" uid="uid://rwikh5mbh22v" path="res://addons/vsk_ui/keyboard/vsk_keyboard_button_shift.gd" id="6_oltse"]
+
+[sub_resource type="Resource" id="Resource_77rbe"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "`"
+display_name_uppercase = "~"
+
+[sub_resource type="Resource" id="Resource_c8mxr"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "1"
+display_name_uppercase = "!"
+
+[sub_resource type="Resource" id="Resource_i0hx4"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "2"
+display_name_uppercase = "@"
+
+[sub_resource type="Resource" id="Resource_6x11e"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "3"
+display_name_uppercase = "#"
+
+[sub_resource type="Resource" id="Resource_7levl"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "4"
+display_name_uppercase = "$"
+
+[sub_resource type="Resource" id="Resource_k3nx6"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "5"
+display_name_uppercase = "%"
+
+[sub_resource type="Resource" id="Resource_0i8s5"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "6"
+display_name_uppercase = "^"
+
+[sub_resource type="Resource" id="Resource_5fglk"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "7"
+display_name_uppercase = "&"
+
+[sub_resource type="Resource" id="Resource_2iodq"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "8"
+display_name_uppercase = "*"
+
+[sub_resource type="Resource" id="Resource_rn5fd"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "9"
+display_name_uppercase = "("
+
+[sub_resource type="Resource" id="Resource_udfco"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "0"
+display_name_uppercase = ")"
+
+[sub_resource type="Resource" id="Resource_t3vgn"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "-"
+display_name_uppercase = "_"
+
+[sub_resource type="Resource" id="Resource_ynto7"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "="
+display_name_uppercase = "+"
+
+[sub_resource type="Resource" id="Resource_s7s8b"]
+script = ExtResource("4_qsg3i")
+
+[sub_resource type="Resource" id="Resource_q743t"]
+script = ExtResource("1_2qt1o")
+buttons = Array[ExtResource("2_eevic")]([SubResource("Resource_77rbe"), SubResource("Resource_c8mxr"), SubResource("Resource_i0hx4"), SubResource("Resource_6x11e"), SubResource("Resource_7levl"), SubResource("Resource_k3nx6"), SubResource("Resource_0i8s5"), SubResource("Resource_5fglk"), SubResource("Resource_2iodq"), SubResource("Resource_rn5fd"), SubResource("Resource_udfco"), SubResource("Resource_t3vgn"), SubResource("Resource_ynto7"), SubResource("Resource_s7s8b")])
+
+[sub_resource type="Resource" id="Resource_7wolt"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "q"
+display_name_uppercase = "Q"
+
+[sub_resource type="Resource" id="Resource_hr40b"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "w"
+display_name_uppercase = "W"
+
+[sub_resource type="Resource" id="Resource_abb7o"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "e"
+display_name_uppercase = "E"
+
+[sub_resource type="Resource" id="Resource_e6og3"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "r"
+display_name_uppercase = "R"
+
+[sub_resource type="Resource" id="Resource_0hqpw"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "t"
+display_name_uppercase = "T"
+
+[sub_resource type="Resource" id="Resource_xxhel"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "y"
+display_name_uppercase = "Y"
+
+[sub_resource type="Resource" id="Resource_4u6i5"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "u"
+display_name_uppercase = "U"
+
+[sub_resource type="Resource" id="Resource_npoud"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "i"
+display_name_uppercase = "I"
+
+[sub_resource type="Resource" id="Resource_evg1i"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "o"
+display_name_uppercase = "O"
+
+[sub_resource type="Resource" id="Resource_bggxl"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "p"
+display_name_uppercase = "P"
+
+[sub_resource type="Resource" id="Resource_6d7iw"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "["
+display_name_uppercase = "{"
+
+[sub_resource type="Resource" id="Resource_dpn0l"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "]"
+display_name_uppercase = "}"
+
+[sub_resource type="Resource" id="Resource_ros3b"]
+script = ExtResource("1_2qt1o")
+buttons = Array[ExtResource("2_eevic")]([SubResource("Resource_7wolt"), SubResource("Resource_hr40b"), SubResource("Resource_abb7o"), SubResource("Resource_e6og3"), SubResource("Resource_0hqpw"), SubResource("Resource_xxhel"), SubResource("Resource_4u6i5"), SubResource("Resource_npoud"), SubResource("Resource_evg1i"), SubResource("Resource_bggxl"), SubResource("Resource_6d7iw"), SubResource("Resource_dpn0l")])
+
+[sub_resource type="Resource" id="Resource_ig8xn"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "a"
+display_name_uppercase = "A"
+
+[sub_resource type="Resource" id="Resource_0wk5r"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "s"
+display_name_uppercase = "S"
+
+[sub_resource type="Resource" id="Resource_877ib"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "d"
+display_name_uppercase = "D"
+
+[sub_resource type="Resource" id="Resource_ew2gf"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "f"
+display_name_uppercase = "F"
+
+[sub_resource type="Resource" id="Resource_3y0bm"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "g"
+display_name_uppercase = "G"
+
+[sub_resource type="Resource" id="Resource_enbm7"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "h"
+display_name_uppercase = "H"
+
+[sub_resource type="Resource" id="Resource_v1wo7"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "j"
+display_name_uppercase = "J"
+
+[sub_resource type="Resource" id="Resource_tjmcm"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "k"
+display_name_uppercase = "K"
+
+[sub_resource type="Resource" id="Resource_5pmi0"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "l"
+display_name_uppercase = "L"
+
+[sub_resource type="Resource" id="Resource_7gta4"]
+script = ExtResource("5_28y5a")
+
+[sub_resource type="Resource" id="Resource_kn1kw"]
+script = ExtResource("1_2qt1o")
+buttons = Array[ExtResource("2_eevic")]([SubResource("Resource_ig8xn"), SubResource("Resource_0wk5r"), SubResource("Resource_877ib"), SubResource("Resource_ew2gf"), SubResource("Resource_3y0bm"), SubResource("Resource_enbm7"), SubResource("Resource_v1wo7"), SubResource("Resource_tjmcm"), SubResource("Resource_5pmi0"), SubResource("Resource_7gta4")])
+
+[sub_resource type="Resource" id="Resource_abttk"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "\\"
+display_name_uppercase = "|"
+
+[sub_resource type="Resource" id="Resource_55nud"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "z"
+display_name_uppercase = "Z"
+
+[sub_resource type="Resource" id="Resource_doqfc"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "x"
+display_name_uppercase = "X"
+
+[sub_resource type="Resource" id="Resource_1r60l"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "c"
+display_name_uppercase = "C"
+
+[sub_resource type="Resource" id="Resource_7ean2"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "v"
+display_name_uppercase = "V"
+
+[sub_resource type="Resource" id="Resource_r5e1u"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "b"
+display_name_uppercase = "B"
+
+[sub_resource type="Resource" id="Resource_2apxs"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "n"
+display_name_uppercase = "N"
+
+[sub_resource type="Resource" id="Resource_08ck2"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "m"
+display_name_uppercase = "M"
+
+[sub_resource type="Resource" id="Resource_j7b78"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = ","
+display_name_uppercase = "<"
+
+[sub_resource type="Resource" id="Resource_kaodx"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "."
+display_name_uppercase = ">"
+
+[sub_resource type="Resource" id="Resource_uc4r0"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = "/"
+display_name_uppercase = "?"
+
+[sub_resource type="Resource" id="Resource_grtie"]
+script = ExtResource("6_oltse")
+
+[sub_resource type="Resource" id="Resource_jfg14"]
+script = ExtResource("1_2qt1o")
+buttons = Array[ExtResource("2_eevic")]([SubResource("Resource_abttk"), SubResource("Resource_55nud"), SubResource("Resource_doqfc"), SubResource("Resource_1r60l"), SubResource("Resource_7ean2"), SubResource("Resource_r5e1u"), SubResource("Resource_2apxs"), SubResource("Resource_08ck2"), SubResource("Resource_j7b78"), SubResource("Resource_kaodx"), SubResource("Resource_uc4r0"), SubResource("Resource_grtie")])
+
+[sub_resource type="Resource" id="Resource_3l4lr"]
+script = ExtResource("2_n57pd")
+display_name_lowercase = " "
+display_name_uppercase = " "
+
+[sub_resource type="Resource" id="Resource_1nmfq"]
+script = ExtResource("1_2qt1o")
+buttons = Array[ExtResource("2_eevic")]([null, SubResource("Resource_3l4lr"), null])
+
+[resource]
+script = ExtResource("3_kf7xv")
+rows = Array[ExtResource("1_2qt1o")]([SubResource("Resource_q743t"), SubResource("Resource_ros3b"), SubResource("Resource_kn1kw"), SubResource("Resource_jfg14"), SubResource("Resource_1nmfq")])

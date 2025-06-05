@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://r4mk447560v2"]
+
+[ext_resource type="PackedScene" uid="uid://b8af2il3sjsc2" path="res://addons/vsk_ui/views/vsk_ui_view_content_menu.tscn" id="1_etpiv"]
+
+[node name="AvatarBrowser" instance=ExtResource("1_etpiv")]
+
+[node name="ContentBrowser" parent="Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer" index="2"]
+content_text = "Avatar Browser"

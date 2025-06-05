@@ -192,7 +192,7 @@ func _create_animation(default_values: Dictionary, default_blend_shapes: Diction
 				if smat.next_pass != null:
 					property_path2 = "next_pass:" + property_path1
 			else:
-				push_error("Unknown type for tex transform parameter" + " surface " + node.name + "/" + str(surface_idx))
+				printerr("Unknown type for tex transform parameter" + " surface " + node.name + "/" + str(surface_idx))
 		elif mat is BaseMaterial3D:
 			var smat: BaseMaterial3D = mat
 			property_path1 = "uv1_offset"
@@ -247,7 +247,7 @@ func _create_animation(default_values: Dictionary, default_blend_shapes: Diction
 				if matbind["type"] == "outlineColor":
 					property_path = "next_pass:" + property_path
 			else:
-				push_error("Unknown type for parameter " + matbind["type"] + " surface " + node.name + "/" + str(surface_idx))
+				printerr("Unknown type for parameter " + matbind["type"] + " surface " + node.name + "/" + str(surface_idx))
 		elif mat is BaseMaterial3D:
 			var smat: BaseMaterial3D = mat
 			if matbind["type"] == "color":
@@ -277,7 +277,7 @@ func _create_animation(default_values: Dictionary, default_blend_shapes: Diction
 		var nodeMesh: ImporterMesh = node.mesh
 
 		if nodeMesh == null || bind["index"] < 0 || bind["index"] >= nodeMesh.get_blend_shape_count():
-			push_error("Invalid blend shape index in bind " + str(expression) + " for mesh " + str(node.name))
+			printerr("Invalid blend shape index in bind " + str(expression) + " for mesh " + str(node.name))
 			continue
 		var animtrack: int = anim.add_track(Animation.TYPE_BLEND_SHAPE)
 		# nodeMesh.set_blend_shape_name(int(bind["index"]), shape["name"] + "_" + str(bind["index"]))
@@ -818,6 +818,7 @@ func _export_preflight(gstate: GLTFState, root: Node) -> Error:
 		for ch in skel.find_children("*", "BoneAttachment3D"):
 			var attach: BoneAttachment3D = ch as BoneAttachment3D
 			if attach.bone_name == "Head" or attach.bone_idx == skel.find_bone("Head"):
+				print("test")
 				var look_offset: Node3D = attach.get_node("LookOffset") as Node3D
 				if look_offset != null:
 					gstate.set_meta("look_offset", look_offset.position)

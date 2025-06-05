@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://ckhsf36uq87ex"]
+
+[ext_resource type="Script" uid="uid://dfwj31uo2vxk6" path="res://addons/vsk_ui/view_controllers/vsk_ui_view_controller_session_loading.gd" id="1_m8316"]
+[ext_resource type="PackedScene" uid="uid://dvhvxsybfkg2e" path="res://addons/vsk_ui/views/vsk_ui_view_session_loading.tscn" id="2_yxe0c"]
+
+[node name="ViewControllerSessionLoading" type="Control" node_paths=PackedStringArray("view")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_m8316")
+view = NodePath("SessionLoadingView")
+title = "Loading..."
+
+[node name="SessionLoadingView" parent="." instance=ExtResource("2_yxe0c")]
+layout_mode = 1

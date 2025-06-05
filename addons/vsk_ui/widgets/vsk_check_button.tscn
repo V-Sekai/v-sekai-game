@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://xj5koefjh7cn"]
+
+[node name="CheckBox" type="CheckButton"]
+offset_right = 48.0
+offset_bottom = 32.0

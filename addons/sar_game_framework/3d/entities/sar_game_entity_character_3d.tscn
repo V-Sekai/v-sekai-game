@@ -1,0 +1,33 @@
+[gd_scene load_steps=6 format=3 uid="uid://dl7uoup3v1qby"]
+
+[ext_resource type="PackedScene" uid="uid://r6odwgbvltnf" path="res://addons/sar_game_framework/3d/entities/sar_game_entity_vessel_3d.tscn" id="1_obf0f"]
+[ext_resource type="Script" uid="uid://db4s44ldlyjbt" path="res://addons/sar_game_framework/3d/entities/sar_game_entity_character_3d.gd" id="2_gwiqv"]
+[ext_resource type="Script" uid="uid://b7sqy4kkax8ub" path="res://addons/sar_game_framework/3d/entities/interfaces/sar_game_entity_interface_character_3d.gd" id="3_o6dwe"]
+[ext_resource type="Script" uid="uid://btsmp102dki12" path="res://addons/sar_game_framework/3d/entities/components/sar_game_entity_component_model_3d.gd" id="4_raf7j"]
+[ext_resource type="Script" uid="uid://b2m5rt0b0wymh" path="res://addons/sar_game_framework/3d/entities/components/sar_game_entity_component_vessel_movement_character_3d.gd" id="5_u2n83"]
+
+[node name="SarGameEntityCharacter3D" groups=["SarCharacters"] instance=ExtResource("1_obf0f")]
+script = ExtResource("2_gwiqv")
+model_scene = null
+
+[node name="GameEntityInterface" parent="." index="0" node_paths=PackedStringArray("model_component")]
+script = ExtResource("3_o6dwe")
+model_component = NodePath("../ModelComponent")
+
+[node name="ModelComponent" type="Node" parent="." index="1" node_paths=PackedStringArray("model_parent_node", "game_entity")]
+editor_description = "This component is responsible for loading and displaying a model for this character."
+script = ExtResource("4_raf7j")
+model_parent_node = NodePath("../ThirdPersonModel/ModelParent")
+game_entity = NodePath("..")
+
+[node name="ThirdPersonModel" type="Node3D" parent="." index="2"]
+editor_description = "Container for the third-person representation of this character's model."
+
+[node name="ModelParent" type="Node3D" parent="ThirdPersonModel" index="0"]
+
+[node name="VesselMovementComponent" parent="." index="3" node_paths=PackedStringArray("character_body_3d")]
+script = ExtResource("5_u2n83")
+character_body_3d = NodePath("../CharacterBody3D")
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="." index="6"]
+editor_description = "The character entity's physical body responsible for receiving velocity and perform integration. "

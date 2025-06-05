@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://b86w1wb3ygl70"]
+
+[ext_resource type="Script" uid="uid://bl8nvok5701o1" path="res://addons/vsk_ui/view_controllers/vsk_ui_view_controller_domain_selector.gd" id="1_r3281"]
+[ext_resource type="PackedScene" uid="uid://c5y46r5i8hbr2" path="res://addons/vsk_ui/views/vsk_ui_view_domain_selector.tscn" id="2_r3281"]
+
+[node name="DomainSelectionViewController" type="Control" node_paths=PackedStringArray("view")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_r3281")
+view = NodePath("DomainSelectorView")
+title = "Select Domain"
+
+[node name="DomainSelectorView" parent="." instance=ExtResource("2_r3281")]
+layout_mode = 1
+
+[connection signal="url_selected" from="DomainSelectorView" to="." method="_on_domain_selector_view_url_selected"]
