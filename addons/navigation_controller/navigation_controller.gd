@@ -11,6 +11,10 @@ var view_controller_stack: Array = []
 
 var current_view_node: Control = null
 
+#TODO: Quick fix to provide a global button animation transition time.
+# Needs better handling and should be user-set in Options menu
+static var anim_transition_time: float = 0.2
+
 
 static func is_navigation_controller() -> bool:
 	return true
@@ -44,7 +48,7 @@ func clear_view_node(p_view_node: Control, p_delete: bool) -> void:
 
 func push_view_controller(p_view_controller: Control, p_animated: bool) -> void:
 	if p_animated:
-		pass
+		await get_tree().create_timer(anim_transition_time).timeout
 
 	view_controller_stack.push_front(p_view_controller)
 

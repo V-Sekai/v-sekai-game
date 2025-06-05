@@ -828,7 +828,7 @@ func generate_emote_theme(p_theme_class, p_scale: float) -> Theme:
 	var style_popup_menu = style_popup
 	theme.set_stylebox("panel", "PopupMenu", style_popup_menu)
 	theme.set_stylebox("separator", "PopupMenu", style_popup_separator)
-	theme.set_color("font_color", "PopupMenu", DEFAULT_WIDGET_FONT_COLOR_INVERSE)
+	theme.set_color("font_color", "PopupMenu", DEFAULT_WIDGET_FONT_COLOR)
 	theme.set_color("font_selected_color", "PopupMenu", DEFAULT_WIDGET_FONT_COLOR)
 	theme.set_color("font_color_accel", "PopupMenu", DEFAULT_FONT_COLOR_DISABLED)
 	theme.set_color("font_color_disabled", "PopupMenu", DEFAULT_FONT_COLOR_DISABLED)

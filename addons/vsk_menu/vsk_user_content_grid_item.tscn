@@ -5,12 +5,13 @@
 
 [node name="VSKUserContentItem" type="Button"]
 clip_contents = true
-custom_minimum_size = Vector2(640, 360)
+; 16:9 ratio
+custom_minimum_size = Vector2(368, 207)
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = -640.0
-offset_bottom = -360.0
+offset_right = -368.0
+offset_bottom = -207.0
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(0.333, 0.333)
