@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://un2v3mc5d0so"]
+[gd_scene load_steps=7 format=3 uid="uid://un2v3mc5d0so"]
 
 [ext_resource type="Script" uid="uid://cteq0sibt8no3" path="res://addons/vsk_menu/title_screen.gd" id="1"]
 [ext_resource type="Theme" uid="uid://b04ev0cbgpas" path="res://addons/emote_theme/emote_theme.tres" id="1_qxdo7"]
 [ext_resource type="PackedScene" uid="uid://bxaya8pq2i21c" path="res://addons/vsk_menu/main_menu/session_container.tscn" id="3"]
 [ext_resource type="Texture2D" uid="uid://bfemdvayr8jju" path="res://vsk_default/icon/v_sekai_logo.png" id="3_31etj"]
 [ext_resource type="PackedScene" uid="uid://tt3cnvs3qqlq" path="res://addons/vsk_menu/vsk_large_button.tscn" id="4"]
+[ext_resource type="Script" uid="uid://yxnpkw6lvdb4" path="res://addons/vsk_menu/main_menu/groups_logo_no_bg.gd" id="5"]
 
 [node name="TitleScreen" type="Control"]
 layout_mode = 3
@@ -61,6 +62,7 @@ custom_minimum_size = Vector2(256, 256)
 layout_mode = 2
 texture = ExtResource("3_31etj")
 expand_mode = 3
+script = ExtResource("5")
 
 [node name="ButtonsVerticalContainer" type="VBoxContainer" parent="Panel/Container/Control/CenterContainer"]
 layout_mode = 2
