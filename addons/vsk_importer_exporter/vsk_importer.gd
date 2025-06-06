@@ -8,6 +8,7 @@ extends Node
 
 const validator_const = preload("res://addons/vsk_importer_exporter/vsk_validator.gd")
 const validator_avatar_const = preload("res://addons/vsk_importer_exporter/vsk_avatar_validator.gd")
+const validator_prop_const = preload("res://addons/vsk_importer_exporter/vsk_prop_validator.gd")
 const validator_map_const = preload("res://addons/vsk_importer_exporter/vsk_map_validator.gd")
 const importer_const = preload("res://addons/vsk_importer_exporter/vsk_importer.gd")
 
@@ -667,9 +668,23 @@ func sanitise_packed_scene_for_avatar(p_packed_scene: PackedScene) -> Dictionary
 		return ret
 
 
+func sanitise_packed_scene_for_prop(p_packed_scene: PackedScene) -> Dictionary:
+	if ProjectSettings.get_setting("ugc/config/sanitize_prop_import"):
+		print("Sanitising prop...")
+		var validator = validator_prop_const.new()
+		return importer_const.sanitise_packed_scene(p_packed_scene, validator)
+	else:
+		push_warning("Prop validation is currently disabled.")
+		var result: Dictionary = {"code": ImporterResult.OK, "info": ""}
+		var ret: Dictionary = {"packed_scene": p_packed_scene, "result": result}
+		return ret
+
+
 func _ready() -> void:
 	if !ProjectSettings.has_setting("ugc/config/sanitize_avatar_import"):
 		ProjectSettings.set_setting("ugc/config/sanitize_avatar_import", true)
+	if !ProjectSettings.has_setting("ugc/config/sanitize_prop_import"):
+		ProjectSettings.set_setting("ugc/config/sanitize_prop_import", true)
 	if !ProjectSettings.has_setting("ugc/config/sanitize_map_import"):
 		ProjectSettings.set_setting("ugc/config/sanitize_map_import", true)
 

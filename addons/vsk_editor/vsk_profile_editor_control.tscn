@@ -15,8 +15,10 @@ profile_container = NodePath("TabContainer/Profile/VBoxContainer")
 tab_container = NodePath("TabContainer")
 profile_tab = NodePath("TabContainer/Profile")
 avatars_tab = NodePath("TabContainer/Avatars")
+props_tab = NodePath("TabContainer/Props")
 maps_tab = NodePath("TabContainer/Maps")
 avatars_grid = NodePath("TabContainer/Avatars/AvatarGrid")
+props_grid = NodePath("TabContainer/Props/PropGrid")
 maps_grid = NodePath("TabContainer/Maps/MapGrid")
 
 [node name="TabContainer" type="TabContainer" parent="."]
@@ -54,6 +56,14 @@ visible = false
 layout_mode = 2
 
 [node name="MapGrid" parent="TabContainer/Maps" instance=ExtResource("2")]
+layout_mode = 1
+metadata/_edit_layout_mode = 1
+
+[node name="Props" type="Control" parent="TabContainer"]
+visible = false
+layout_mode = 2
+
+[node name="PropGrid" parent="TabContainer/Props" instance=ExtResource("2")]
 layout_mode = 1
 metadata/_edit_layout_mode = 1
 

@@ -14,6 +14,7 @@ const USER_NAME = "user"
 const SHARD_NAME = "shard"
 const AVATAR_NAME = "avatar"
 const MAP_NAME = "map"
+const PROP_NAME = "prop"
 
 var requester: RefCounted = null
 var godot_uro: Node = null
@@ -271,6 +272,32 @@ func get_map_async(p_id: String) -> Dictionary:
 	return uro_api_const._handle_result(result)
 
 
+func get_props_async() -> Dictionary:
+	var query: Dictionary = godot_uro_helper_const.populate_query(PROP_NAME, {})
+
+	var result = await (requester.request(
+		godot_uro_helper_const.get_api_path() + godot_uro_helper_const.PROPS_PATH,
+		query,
+		godot_uro_requester_const.TokenType.NO_TOKEN,
+		{"method": HTTPClient.METHOD_GET, "encoding": "form"}
+	))
+
+	return uro_api_const._handle_result(result)
+
+
+func get_prop_async(p_id: String) -> Dictionary:
+	var query: Dictionary = {}
+
+	var result = await (requester.request(
+		godot_uro_helper_const.get_api_path() + godot_uro_helper_const.PROPS_PATH + "/" + p_id,
+		query,
+		godot_uro_requester_const.TokenType.ACCESS_TOKEN,
+		{"method": HTTPClient.METHOD_GET, "encoding": "form"}
+	))
+
+	return uro_api_const._handle_result(result)
+
+
 ##
 ## Dashboard Avatar
 ##
@@ -343,6 +370,91 @@ func dashboard_get_avatar_async(p_id: String) -> Dictionary:
 		godot_uro_helper_const.get_api_path()
 		+ godot_uro_helper_const.DASHBOARD_PATH
 		+ godot_uro_helper_const.AVATARS_PATH
+		+ "/"
+		+ str(p_id)
+	)
+
+	var result = await requester.request(
+		path,
+		query,
+		godot_uro_requester_const.TokenType.ACCESS_TOKEN,
+		{"method": HTTPClient.METHOD_GET, "encoding": "form"}
+	)
+
+	return uro_api_const._handle_result(result)
+
+
+##
+## Dashboard Prop
+##
+
+
+func dashboard_get_props_async() -> Dictionary:
+	var query: Dictionary = {}
+
+	var path: String = (
+		godot_uro_helper_const.get_api_path()
+		+ godot_uro_helper_const.DASHBOARD_PATH
+		+ godot_uro_helper_const.PROPS_PATH
+	)
+
+	var result = await requester.request(
+		path,
+		query,
+		godot_uro_requester_const.TokenType.ACCESS_TOKEN,
+		{"method": HTTPClient.METHOD_GET, "encoding": "form"}
+	)
+
+	return uro_api_const._handle_result(result)
+
+
+func dashboard_create_prop_async(p_query: Dictionary) -> Dictionary:
+	var query: Dictionary = godot_uro_helper_const.populate_query(PROP_NAME, p_query)
+
+	var path: String = (
+		godot_uro_helper_const.get_api_path()
+		+ godot_uro_helper_const.DASHBOARD_PATH
+		+ godot_uro_helper_const.PROPS_PATH
+	)
+
+	var result = await requester.request(
+		path,
+		query,
+		godot_uro_requester_const.TokenType.ACCESS_TOKEN,
+		{"method": HTTPClient.METHOD_POST, "encoding": "multipart"}
+	)
+
+	return uro_api_const._handle_result(result)
+
+
+func dashboard_update_prop_async(p_id: String, p_query: Dictionary) -> Dictionary:
+	var query: Dictionary = godot_uro_helper_const.populate_query(PROP_NAME, p_query)
+
+	var path: String = (
+		godot_uro_helper_const.get_api_path()
+		+ godot_uro_helper_const.DASHBOARD_PATH
+		+ godot_uro_helper_const.PROPS_PATH
+		+ "/"
+		+ str(p_id)
+	)
+
+	var result = await requester.request(
+		path,
+		query,
+		godot_uro_requester_const.TokenType.ACCESS_TOKEN,
+		{"method": HTTPClient.METHOD_PUT, "encoding": "multipart"}
+	)
+
+	return uro_api_const._handle_result(result)
+
+
+func dashboard_get_prop_async(p_id: String) -> Dictionary:
+	var query: Dictionary = {}
+
+	var path: String = (
+		godot_uro_helper_const.get_api_path()
+		+ godot_uro_helper_const.DASHBOARD_PATH
+		+ godot_uro_helper_const.PROPS_PATH
 		+ "/"
 		+ str(p_id)
 	)

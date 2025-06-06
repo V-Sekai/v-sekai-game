@@ -15,11 +15,14 @@ const MARGIN_SIZE = 32
 @export var tab_container: NodePath = NodePath()
 @export var profile_tab: NodePath = NodePath()
 @export var avatars_tab: NodePath = NodePath()
+@export var props_tab: NodePath = NodePath()
 @export var maps_tab: NodePath = NodePath()
 @export var avatars_grid: NodePath = NodePath()
+@export var props_grid: NodePath = NodePath()
 @export var maps_grid: NodePath = NodePath()
 
 var avatar_dictionary: Dictionary = {}
+var prop_dictionary: Dictionary = {}
 var map_dictionary: Dictionary = {}
 
 signal session_deletion_successful
@@ -75,6 +78,11 @@ func _ready():
 		if avatars_grid_node.vsk_content_button_pressed.connect(self._avatar_selected) != OK:
 			push_error("Could not connect signal 'vsk_content_button_pressed'")
 
+	var props_grid_node: Control = get_node_or_null(props_grid)
+	if props_grid_node:
+		if props_grid_node.vsk_content_button_pressed.connect(self._prop_selected) != OK:
+			push_error("Could not connect signal 'vsk_content_button_pressed'")
+
 	var maps_grid_node: Control = get_node_or_null(maps_grid)
 	if maps_grid_node:
 		if maps_grid_node.vsk_content_button_pressed.connect(self._map_selected) != OK:
@@ -86,6 +94,13 @@ func _avatar_selected(p_id: String) -> void:
 		DisplayServer.clipboard_set(p_id)
 	else:
 		push_error("Could not select avatar %s" % p_id)
+
+
+func _prop_selected(p_id: String) -> void:
+	if prop_dictionary.has(p_id):
+		DisplayServer.clipboard_set(p_id)
+	else:
+		push_error("Could not select prop %s" % p_id)
 
 
 func _map_selected(p_id: String) -> void:
@@ -121,6 +136,36 @@ func _reload_avatars() -> void:
 		push_error(
 			(
 				"Dashboard avatars returned with error %s"
+				% GodotUro.godot_uro_helper_const.get_full_requester_error_string(async_result)
+			)
+		)
+
+
+func _reload_props() -> void:
+	get_node(props_grid).clear_all()
+
+	var async_result = await GodotUro.godot_uro_api.dashboard_get_props_async()
+	if GodotUro.godot_uro_helper_const.requester_result_is_ok(async_result):
+		var prop_list = async_result["output"]["data"]["props"]
+		prop_dictionary = {}
+
+		for prop in prop_list:
+			var id: String = prop["id"]
+
+			prop_dictionary[id] = {
+				"name": prop["name"],
+				"description": prop["description"],
+				"user_content_preview_url": GodotUro.get_base_url() + prop["user_content_preview"],
+				"user_content_data_url": GodotUro.get_base_url() + prop["user_content_data"]
+			}
+
+			get_node(props_grid).add_item(
+				id, prop["name"], GodotUro.get_base_url() + prop["user_content_preview"]
+			)
+	else:
+		push_error(
+			(
+				"Dashboard props returned with error %s"
 				% GodotUro.godot_uro_helper_const.get_full_requester_error_string(async_result)
 			)
 		)
@@ -162,6 +207,8 @@ func _on_tab_changed(tab):
 		pass
 	elif tab_child == get_node(avatars_tab):
 		await _reload_avatars()
+	elif tab_child == get_node(props_tab):
+		await _reload_props()
 	elif tab_child == get_node(maps_tab):
 		await _reload_maps()
 
