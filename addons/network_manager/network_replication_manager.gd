@@ -224,12 +224,16 @@ func get_network_scene_id_from_path(p_path: String) -> int:
 	var path: String = p_path
 	var network_entity_manager: Node = network_manager.network_entity_manager
 
+	var player_scene_path: String = ""
+	if ProjectSettings.has_setting("network/config/player_scene"):
+		player_scene_path = ProjectSettings.get_setting("network/config/player_scene")
+
 	while 1:
 		var network_scene_id: int = network_entity_manager.networked_scenes.find(path)
 
 		# If a valid packed scene was not found, try next to search for it via its inheritance chain
 		if network_scene_id == -1:
-			if path != "res://addons/vsk_entities/vsk_player.tscn":
+			if path != player_scene_path:
 				push_error(
 					(
 						"SECURITY: "
@@ -434,7 +438,10 @@ func get_scene_path_for_scene_id(p_scene_id: int) -> String:
 
 
 func get_packed_scene_for_path(p_path: String) -> PackedScene:
-	if p_path != "res://addons/vsk_entities/vsk_player.tscn":
+	var network_entity_manager: Node = network_manager.network_entity_manager
+	var network_scene_id: int = network_entity_manager.networked_scenes.find(p_path)
+
+	if network_scene_id == -1:  # Not found
 		push_error(
 			(
 				"SECURITY: "
