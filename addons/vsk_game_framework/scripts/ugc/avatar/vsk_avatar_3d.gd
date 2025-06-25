@@ -34,6 +34,7 @@ func _setup_default_animation_driver() -> void:
 	var main_animation_tree: AnimationTree = AnimationTree.new()
 	main_animation_tree.name = "AnimationTree"
 	main_animation_tree.tree_root = _DEFAULT_ANIMATION_TREE
+	main_animation_tree.root_motion_track = ^"%GeneralSkeleton:Root"
 	main_animation_tree.add_animation_library("locomotion", _DEFAULT_ANIMATION_LOCOMOTION_LIBRARY)
 	
 	root_node.add_child(main_animation_tree)
