@@ -324,7 +324,82 @@ func sign_in(p_service_request: SarGameServiceRequest, p_sign_in_data: Dictionar
 		return processed_result
 
 	return {}
-	
+
+## Attempts to register into the service. A SarGameServiceRequestObject created
+## from the service required to keep track of the individual request,
+## and a Dictionary containing service-specific registering data, should be
+## passed in as a parameters. The method may await a coroutine,
+## but will return a dictionary containing the result, or an empty one if
+## the action failed outright.
+func register(p_service_request: SarGameServiceRequest, p_register_data: Dictionary) -> Dictionary:
+	if _godot_uro and _godot_uro.get_api():
+		if not p_service_request is VSKGameServiceRequestUro:
+			printerr("Did not pass a valid VSKGameServiceRequestUro object to register request.")
+			return {} 
+			
+		_current_account_address = ""
+		
+		var domain: String = (p_service_request as VSKGameServiceRequestUro).domain
+		if domain.is_empty():
+			printerr("Did not pass a valid domain to a register request.")
+			return {}
+		
+		var email: String = p_register_data.get("email", "")
+		if email.is_empty():
+			printerr("Did not pass a valid email to register request.")
+			return {}
+
+		var username: String = p_register_data.get("username", "")
+		if username.is_empty():
+			printerr("Did not pass a valid username to register request.")
+			return {}
+
+		var password: String = p_register_data.get("password", "")
+		if password.is_empty():
+			printerr("Did not pass a valid password to register request.")
+			return {}
+
+		var repeat_password: String = p_register_data.get("repeat_password", "")
+		if repeat_password.is_empty():
+			printerr("Did not pass a valid confirmation password to register request.")
+			return {}
+
+		var _email_notifications_value = p_register_data.get("email_notifications", null)
+		if (typeof(_email_notifications_value) != TYPE_BOOL):
+			printerr("Did not pass a valid email notifications setting to register request.")
+			return {}
+		var email_notifications: bool = _email_notifications_value
+
+		# Add this request to the active request pool.
+		var godot_uro_request: GodotUroRequester = _godot_uro.create_requester(domain, -1)
+		_active_service_requests[p_service_request] = godot_uro_request
+		
+		# Wait for the internal Uro API to respond to our sign in request.
+		var result: Dictionary = await _godot_uro.get_api().register_async(
+			godot_uro_request,
+			username,
+			email,
+			password,
+			repeat_password,
+			email_notifications
+		)
+			
+		# If we cannot stop the request, that means it may have been
+		# externally cancelled and we should cease attempting to update
+		# the session.
+		if not stop_request(p_service_request):
+			return {}
+
+		# I'm not sure if this will ever be empty, but just in case...
+		if result.is_empty():
+			push_error("Failed to register_async: " + str(result))
+			return {}
+
+		var processed_result: Dictionary = _process_result_and_update_session(p_service_request, result)
+		return processed_result
+
+	return {}
+
 ## Attempts to refresh the token.
 func renew_session(p_service_request: SarGameServiceRequest) -> Dictionary:
 	if _godot_uro and _godot_uro.get_api():

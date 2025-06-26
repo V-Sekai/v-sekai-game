@@ -21,13 +21,16 @@ signal session_deletion_complete(p_request: SarGameServiceRequest, p_result: Dic
 static func get_service_name() -> String:
 	return "UnknownGameService"
 	
-## Attempts to sign into the service. A SarGameServiceRequestObject created
+## Attempts to sign-in/register into the service. A SarGameServiceRequestObject created
 ## from the service required to keep track of the individual request,
 ## and a Dictionary containing service-specific sign in data, should be
 ## passed in as a parameters. The method may await a coroutine,
 ## but will return a dictionary containing the result, or an empty one if
 ## the action failed outright.
 func sign_in(_service_request: SarGameServiceRequest, _sign_in_data: Dictionary) -> Dictionary:
+	return {}
+
+func register(_service_request: SarGameServiceRequest, _register_data: Dictionary) -> Dictionary:
 	return {}
 
 ## Creates a service request object. This can then be passed into
