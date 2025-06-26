@@ -47,8 +47,7 @@ size_flags_horizontal = 3
 text = "Sign-in"
 
 [node name="RegisterButton" type="Button" parent="VBoxContainer/Container/HBoxContainer"]
-editor_description = "Need to sort out the API for in-app account creation."
-visible = false
+visible = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Create Account"

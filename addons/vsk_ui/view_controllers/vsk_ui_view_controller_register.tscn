@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://din75qs526m46" path="res://addons/vsk_ui/view_controllers/vsk_ui_view_controller_register.gd" id="1_7twhi"]
 [ext_resource type="PackedScene" uid="uid://3as8qqoehxad" path="res://addons/vsk_ui/views/vsk_ui_view_account_action.tscn" id="2_7twhi"]
 
-[node name="RegisterViewController" type="Control" node_paths=PackedStringArray("view")]
+[node name="RegisterViewController" type="Control" node_paths=PackedStringArray("view_account_action", "view")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -11,6 +11,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_7twhi")
+view_account_action = NodePath("MarginContainer/AspectRatioContainer/View")
 view = NodePath("MarginContainer/AspectRatioContainer/View")
 title = "Register"
 
@@ -32,3 +33,4 @@ account_action = 1
 metadata/_edit_pinned_properties_ = [&"account_action"]
 
 [connection signal="pick_other_domain_selected" from="MarginContainer/AspectRatioContainer/View" to="." method="_on_view_pick_other_domain_selected"]
+[connection signal="sign_up_selected" from="MarginContainer/AspectRatioContainer/View" to="." method="_on_view_sign_up_selected"]

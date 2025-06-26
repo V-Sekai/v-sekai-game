@@ -70,6 +70,7 @@ const DEFAULT_ACCOUNT_USERNAME: String = "UNKNOWN_USERNAME"
 const DEFAULT_ACCOUNT_DISPLAY_NAME: String = "UNKNOWN_DISPLAY_NAME"
 const UNTITLED_SHARD: String = "UNTITLED_SHARD"
 const UNKNOWN_MAP: String = "UNKNOWN_MAP"
+const SIGNUP_API_KEY = "eNoZ4kXHgT0z9ZTYGsq7eE0rQYvR6YBi"
 
 
 static func get_string_for_requester_code(p_requester_code: int) -> String:

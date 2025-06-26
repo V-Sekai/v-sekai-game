@@ -7,11 +7,19 @@ class_name VSKUIViewAccountAction
 @export var _sign_in_content: Control = null
 @export var _register_content: Control = null
 
+@export var _register_email_field: LineEdit = null
+@export var _register_username_field: LineEdit = null
+@export var _register_password_field: LineEdit = null
+@export var _register_repeat_password_field: LineEdit = null
+@export var _register_email_notifications_field: CheckBox = null
+@export var _register_submit_button: BaseButton = null
+
 @export var _sign_in_email_or_username_field: LineEdit = null
 @export var _sign_in_password_field: LineEdit = null
 @export var _sign_in_submit_button: BaseButton = null
 
 signal sign_in_selected
+signal sign_up_selected
 signal pick_other_domain_selected
 
 func _pick_other_domain_selected() -> void:
@@ -56,6 +64,36 @@ func _on_sign_in_password_text_changed(_new_text: String) -> void:
 
 func _on_sign_in_button_pressed() -> void:
 	sign_in_selected.emit()
+
+func _validate_register_submit_button_state() -> void:
+	if not Engine.is_editor_hint():
+		if _register_email_field.text.length() > 0 and \
+		_register_username_field.text.length() > 0 and \
+		_register_password_field.text.length() > 0 and \
+		_register_repeat_password_field.text.length() > 0 and \
+		_register_password_field.text == _register_repeat_password_field.text:
+			_register_submit_button.disabled = false
+		else:
+			_register_submit_button.disabled = true
+
+func _on_register_username_text_changed(_new_text: String) -> void:
+	if not Engine.is_editor_hint():
+		_validate_register_submit_button_state()
+
+func _on_register_email_text_changed(_new_text: String) -> void:
+	if not Engine.is_editor_hint():
+		_validate_register_submit_button_state()
+
+func _on_register_password_text_changed(_new_text: String) -> void:
+	if not Engine.is_editor_hint():
+		_validate_register_submit_button_state()
+
+func _on_register_repeat_password_text_changed(_new_text: String) -> void:
+	if not Engine.is_editor_hint():
+		_validate_register_submit_button_state()
+
+func _on_register_button_pressed() -> void:
+	sign_up_selected.emit()
 
 func _ready() -> void:
 	if not Engine.is_editor_hint():
@@ -108,4 +146,24 @@ func get_sign_in_username_or_email() -> String:
 ## Returns the text in the password sign in field.
 func get_sign_in_password() -> String:
 	return _sign_in_password_field.text
+	
+## Returns the text in the email registration field.
+func get_register_email() -> String:
+	return _register_email_field.text
+	
+## Returns the text in the username registration field.
+func get_register_username() -> String:
+	return _register_username_field.text
+	
+## Returns the text in the password registration field.
+func get_register_password() -> String:
+	return _register_password_field.text
+	
+## Returns the text in the repeat password registration field.
+func get_register_repeat_password() -> String:
+	return _register_repeat_password_field.text
+	
+## Returns the setting in the email notifications registration field.
+func get_email_notifications() -> bool:
+	return _register_email_notifications_field.button_pressed
 	
