@@ -22,6 +22,8 @@ class_name AnimationTreeDriver
 
 var _property_values: Dictionary[String, Variant] = {}
 
+var _editor_interface = null
+
 func _changed() -> void:
 	if Engine.is_editor_hint():
 		if animation_tree:
@@ -123,13 +125,17 @@ func _get_configuration_warnings() -> PackedStringArray:
 	return warnings
 	
 func _property_edited(p_property: String) -> void:
-	if EditorInterface.get_inspector().get_edited_object() is AnimationTree:
+	if _editor_interface and _editor_interface.get_inspector().get_edited_object() is AnimationTree:
 		if p_property == "advance_expression_base_node":
 			update_configuration_warnings()
 	
 func _ready() -> void:
 	if Engine.is_editor_hint():
-		EditorInterface.get_inspector().property_edited.connect(_property_edited)
+		_editor_interface = Engine.get_singleton("EditorInterface")
+		if not _editor_interface:
+			push_error("EditorInterface singleton is not available")
+			return
+		_editor_interface.get_inspector().property_edited.connect(_property_edited)
 ##
 
 ## Reference the AnimationTree this node is meant to drive and

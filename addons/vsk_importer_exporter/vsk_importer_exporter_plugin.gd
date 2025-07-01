@@ -7,7 +7,7 @@
 extends EditorPlugin
 class_name VSKImporterExporterPlugin
 
-var editor_interface: EditorInterface = null
+var editor_interface = null # EditorInterface
 
 
 func _init():
