@@ -16,7 +16,7 @@ func _fetch_content(_p_service: VSKGameServiceUro, _p_username: String, _p_domai
 
 func _reload_content() -> void:
 	if not content_grid:
-		printerr("Not content grid assigned.")
+		push_error("Not content grid assigned.")
 		return
 		
 	if _fetch_request:

@@ -40,7 +40,7 @@ func _add_hand_tracker(p_tracker_name: String, p_pose: String, p_packed_scenes: 
 		
 		return new_hand_controller
 	else:
-		printerr("_add_hand_tracker did not contain a valid XRController3D!")
+		push_error("_add_hand_tracker did not contain a valid XRController3D!")
 		return null
 
 # Callback to add a Vive tracker to the tracking space.
@@ -62,7 +62,7 @@ func _add_vive_tracker(p_tracker_name: String) -> XRController3D:
 		
 		return new_hand_controller
 	else:
-		printerr("_add_hand_tracker did not contain a valid XRController3D!")
+		push_error("_add_hand_tracker did not contain a valid XRController3D!")
 		return null
 
 # Callback to the tracker_added signal in XRServer.
@@ -100,11 +100,11 @@ func _tracker_added(p_tracker_name: String, p_type: int) -> void:
 			elif p_tracker_name == "/user/hand_tracker/right":
 				_right_hand_tracker = _add_hand_tracker("/user/hand_tracker/right", "default", right_hand_skeleton_child_scenes)
 			else:
-				printerr("Hand tracking for not supported yet for " + str(p_tracker_name))
+				push_error("Hand tracking for not supported yet for " + str(p_tracker_name))
 		elif p_type == XRServer.TRACKER_HEAD:
 			pass
 		else:
-			printerr("Unknown tracker type %s added." % str(p_type))
+			push_error("Unknown tracker type %s added." % str(p_type))
 
 # Callback to the tracker_removed signal in XRServer.
 func _tracker_removed(p_tracker_name: String, p_type: int) -> void:
@@ -163,7 +163,7 @@ func _tracker_removed(p_tracker_name: String, p_type: int) -> void:
 		elif p_type == XRServer.TRACKER_HEAD:
 			pass
 		else:
-			printerr("Unknown tracker type %s removed." % str(p_type))
+			push_error("Unknown tracker type %s removed." % str(p_type))
 
 # TODO: Look more into this
 # I would like to find a less awful way of doing this, but it seems

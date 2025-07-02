@@ -82,7 +82,7 @@ func request(
 	p_token: String,
 	p_options: Dictionary = DEFAULT_OPTIONS) -> Result:
 	if http_state:
-		printerr("HTTP state is already active for this request")
+		push_error("HTTP state is already active for this request")
 		return Result.new(GodotUroHelper.RequesterCode.CANT_CONNECT, ERR_CANT_CREATE, -1)
 		
 	http_state = await _http_pool.new_http_state()

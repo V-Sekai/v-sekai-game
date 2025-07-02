@@ -52,7 +52,7 @@ func _on_request_complete(p_asset_err: VSKGameAssetRequest.AssetError) -> void:
 				error_avatar_scene = ResourceLoader.load(error_avatar_path)
 				avatar_component.set_model_scene(error_avatar_scene)
 		else:
-			printerr("Could not access game asset manager")
+			push_error("Could not access game asset manager")
 			avatar_component.set_model_scene(null)
 			
 # Called when a new avatar request is made.
@@ -97,10 +97,10 @@ func _request_avatar_asset() -> void:
 					return
 			else:
 				avatar_component.set_model_scene(game_asset_manager.avatar_error_packed_scene)
-				printerr("Could not create request object for path %s" % _requested_avatar_path)
+				push_error("Could not create request object for path %s" % _requested_avatar_path)
 	else:
 		# This shouldn't happen, if we have the VSKGameAssetManager available as a signal.
-		printerr("Could not locate a valid VSKGameAssetManager. The custom avatar at %s cannot be loaded." % _requested_avatar_path)
+		push_error("Could not locate a valid VSKGameAssetManager. The custom avatar at %s cannot be loaded." % _requested_avatar_path)
 
 # Called when the request avatar path has changed and a new asset
 # request should be made.

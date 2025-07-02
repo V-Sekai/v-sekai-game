@@ -8,7 +8,7 @@ var _services: Dictionary[String, SarGameService] = {}
 
 func add_service(p_service_name: StringName, p_service_class: Script) -> void:
 	if _services.has(p_service_name):
-		printerr("Duplicate service named %s" % p_service_name)
+		push_error("Duplicate service named %s" % p_service_name)
 		return
 		
 	var base_service_script: Script = p_service_class
@@ -25,7 +25,7 @@ func add_service(p_service_name: StringName, p_service_class: Script) -> void:
 		_services[p_service_name] = service
 		
 	else:
-		printerr("Attempted to add a class which does not inherit SarService.")
+		push_error("Attempted to add a class which does not inherit SarService.")
 		
 func remove_service(p_service_name: String) -> void:
 	if _services.has(p_service_name):
@@ -34,7 +34,7 @@ func remove_service(p_service_name: String) -> void:
 			remove_child(service)
 		_services.erase(p_service_name) 
 	else:
-		printerr("There is no active service named %s." % p_service_name)
+		push_error("There is no active service named %s." % p_service_name)
 		
 func get_service(p_service_name: String) -> SarGameService:
 	if _services.has(p_service_name):

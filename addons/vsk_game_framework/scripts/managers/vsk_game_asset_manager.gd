@@ -97,17 +97,17 @@ func _get_or_create_request_object_for_type(p_request_url: String, p_asset_type:
 				if request_obj is VSKGameAssetRequestHTTP:
 					return request_obj
 				else:
-					printerr("Existing asset request for %s is not a valid HTTP request.")
+					push_error("Existing asset request for %s is not a valid HTTP request.")
 			RequestType.LOCAL_FILE_REQUEST:
 				if request_obj is VSKGameAssetRequestLocal:
 					return request_obj
 				else:
-					printerr("Existing asset request for %s is not a valid local file request.")
+					push_error("Existing asset request for %s is not a valid local file request.")
 			RequestType.URO_REQUEST:
 				if request_obj is VSKGameAssetRequestUro:
 					return request_obj
 				else:
-					printerr("Existing asset request for %s is not a valid Uro request.")
+					push_error("Existing asset request for %s is not a valid Uro request.")
 	else:
 		match p_request_type:
 			RequestType.HTTP_REQUEST:
@@ -132,7 +132,7 @@ func _get_or_create_request_object_for_type(p_request_url: String, p_asset_type:
 					"Could not connect signal 'request_obj.request_complete' to '_request_complete.bind(p_request_url)'"):
 					return null
 			_:
-				printerr("Unknown file request type: %s" % str(p_request_url))
+				push_error("Unknown file request type: %s" % str(p_request_url))
 				return null
 			
 	return request_obj
@@ -200,7 +200,7 @@ func _apply_project_settings() -> void:
 			ProjectSettings.set_setting("assets/config/game_mode_allow_list", game_mode_allow_list)
 
 		if ProjectSettings.save() != OK:
-			printerr("VSKAssetManager: could not save project settings!")
+			push_error("VSKAssetManager: could not save project settings!")
 
 func _ready() -> void:
 	if Engine.is_editor_hint():
@@ -209,11 +209,11 @@ func _ready() -> void:
 	else:
 		if not DirAccess.dir_exists_absolute(get_asset_cache_path()):
 			if DirAccess.make_dir_absolute(get_asset_cache_path()) != OK:
-				printerr("Could not create asset cache directory!")
+				push_error("Could not create asset cache directory!")
 
 		if not DirAccess.dir_exists_absolute(get_unvalidated_assets_path()):
 			if DirAccess.make_dir_absolute(get_unvalidated_assets_path()) != OK:
-				printerr("Could not create unvalidated assets directory!")
+				push_error("Could not create unvalidated assets directory!")
 				
 		_get_project_settings()
 		
@@ -294,9 +294,9 @@ func is_in_allow_list(p_url: String, p_asset_type: AssetType) -> bool:
 			return true
 			
 	if p_url.is_empty():
-		printerr("Asset is not in allow list!")
+		push_error("Asset is not in allow list!")
 	else:
-		printerr("Asset %s is not in allow list!" % p_url)
+		push_error("Asset %s is not in allow list!" % p_url)
 		
 	return false
 			
@@ -334,4 +334,4 @@ func clear_cache() -> void:
 	var dir: DirAccess = DirAccess.open(get_asset_cache_path())
 	if dir != null:
 		if SarDirectoryUtilities.delete_dir_and_contents(dir, get_asset_cache_path(), false) != OK:
-			printerr("Could not delete all files in cache!")
+			push_error("Could not delete all files in cache!")

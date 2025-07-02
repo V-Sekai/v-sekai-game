@@ -106,7 +106,7 @@ func _account_id_option_pressed(p_id: int) -> void:
 				dashboard_window.hide()
 				dashboard_window.popup_centered_ratio()
 			else:
-				printerr("Dashboard window is not assigned.")
+				push_error("Dashboard window is not assigned.")
 		# Sign Out Option
 		99:
 			var service: VSKGameServiceUro = _get_uro_service()
@@ -156,7 +156,7 @@ func teardown() -> void:
 	
 func sign_in(p_domain: String, p_username_or_email: String, p_password: String) -> Dictionary:
 	if _request:
-		printerr("A request is already active.")
+		push_error("A request is already active.")
 		return {}
 
 	var service: VSKGameServiceUro = _get_uro_service()
@@ -179,19 +179,19 @@ func cancel_sign_in() -> void:
 				if service.stop_request(_request):
 					_request = null
 				else:
-					printerr("Could not cancel request" % str(_request))
+					push_error("Could not cancel request" % str(_request))
 					
 func renew_session(p_domain: String, p_username: String) -> Dictionary:
 	if _request:
-		printerr("A request is already active.")
+		push_error("A request is already active.")
 		return {}
 		
 	if p_domain.is_empty():
-		printerr("domain is empty")
+		push_error("domain is empty")
 		return {}
 		
 	if p_username.is_empty():
-		printerr("username is empty")
+		push_error("username is empty")
 		return {}
 		
 	var service: VSKGameServiceUro = _get_uro_service()
@@ -205,7 +205,7 @@ func renew_session(p_domain: String, p_username: String) -> Dictionary:
 
 func sign_out(p_domain: String, p_username: String) -> Dictionary:
 	if _request:
-		printerr("A request is already active.")
+		push_error("A request is already active.")
 		return {}
 	
 	var service: VSKGameServiceUro = _get_uro_service()

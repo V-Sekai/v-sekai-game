@@ -36,7 +36,7 @@ func _setup_authority() -> void:
 	if id_string.is_valid_int():
 		game_entity.set_multiplayer_authority(id_string.to_int())
 	else:
-		printerr("Game entity %s does not conform to the naming convention %s required to determine a user authority upon spawn" % [game_entity.name, game_session_manager.get_player_entity_name_prefix()])
+		push_error("Game entity %s does not conform to the naming convention %s required to determine a user authority upon spawn" % [game_entity.name, game_session_manager.get_player_entity_name_prefix()])
 	
 	# The MultiplayerSynchronizerSpawn node always explicitly has its authority
 	# owned by the host.

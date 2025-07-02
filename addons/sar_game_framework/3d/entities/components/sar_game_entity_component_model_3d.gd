@@ -76,7 +76,7 @@ func _update_model_from_scene() -> void:
 			_model_instantiated(instance)
 			_set_model_node(instance)
 		else:
-			printerr("%s does not have a model container node assigned." % get_name())
+			push_error("%s does not have a model container node assigned." % get_name())
 	
 func _ready() -> void:
 	set_physics_process(not Engine.is_editor_hint())

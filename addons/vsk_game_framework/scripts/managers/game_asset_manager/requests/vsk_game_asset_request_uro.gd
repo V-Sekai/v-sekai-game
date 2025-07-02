@@ -18,7 +18,7 @@ func _http_request_complete(p_err: AssetError) -> void:
 		_resource = _http_game_asset_request.get_resource()
 	else:
 		_resource = null
-		printerr("Uro content HTTP request returned with error code %s" % p_err)
+		push_error("Uro content HTTP request returned with error code %s" % p_err)
 	
 	_http_game_asset_request.request_complete.disconnect(_http_request_complete)
 	_http_game_asset_request = null
@@ -27,7 +27,7 @@ func _http_request_complete(p_err: AssetError) -> void:
 
 func _uro_api_request(p_domain: String, p_id: String, p_asset_type: VSKGameAssetManager.AssetType) -> VSKGameAssetRequest:
 	if _uro_service_request:
-		printerr("Uro service requester is already active.")
+		push_error("Uro service requester is already active.")
 		return
 	
 	var game_service_manager: SarGameServiceManager = _game_asset_manager.get_tree().get_first_node_in_group("game_service_managers")

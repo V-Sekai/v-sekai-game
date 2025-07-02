@@ -24,6 +24,6 @@ func get_game_entity_interface() -> SarGameEntityInterfaceCharacter3D:
 ## Assigns the cached reference to the entity's game_entity_interface.
 func assign_game_entity_interface(p_gei: SarGameEntityInterfaceVessel3D) -> void:
 	if p_gei is not SarGameEntityInterfaceCharacter3D:
-		printerr("The game entity interface assigned to a SarSimulationCharacter3D is not valid.")
+		push_error("The game entity interface assigned to a SarSimulationCharacter3D is not valid.")
 	
 	game_entity_interface = p_gei

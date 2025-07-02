@@ -16,15 +16,15 @@ func _on_upload_button_pressed() -> void:
 	if upload_file_dialog:
 		upload_file_dialog.popup_centered()
 	else:
-		printerr("No file dialog assigned.")
+		push_error("No file dialog assigned.")
 
 func _upload_vrm(p_path: String) -> void:
 	if _upload_request:
-		printerr("Upload is already in progress.")
+		push_error("Upload is already in progress.")
 		return
 		
 	if not FileAccess.file_exists(p_path):
-		printerr("File at path %s does not exist." % p_path)
+		push_error("File at path %s does not exist." % p_path)
 		return
 	
 	print("Attempting to upload %s" % p_path)
@@ -62,7 +62,7 @@ func _upload_vrm(p_path: String) -> void:
 				var username_and_domain: Dictionary= GodotUroHelper.get_username_and_domain_from_address(service.get_current_account_address())
 				var upload_dictionary: Dictionary = GodotUroHelper.create_content_upload_dictionary(title, "", p_path, thumbnail_image, false)
 				if upload_dictionary.is_empty():
-					printerr("Upload dictionary for VRM file %s returned empty." % p_path)
+					push_error("Upload dictionary for VRM file %s returned empty." % p_path)
 					return
 				
 				upload_button.disabled = true
@@ -79,13 +79,13 @@ func _upload_vrm(p_path: String) -> void:
 				if GodotUroHelper.requester_result_is_ok(result):
 					print("Upload was successful.")
 				else:
-					printerr("Requester code %s" % str(result.get("requester_code", GodotUroHelper.RequesterCode.UNKNOWN_STATUS_ERROR)))
+					push_error("Requester code %s" % str(result.get("requester_code", GodotUroHelper.RequesterCode.UNKNOWN_STATUS_ERROR)))
 			else:
-				printerr("Could not accquire Uro service.")
+				push_error("Could not accquire Uro service.")
 		else:
-			printerr("VRM file %s JSON is empty" % p_path)
+			push_error("VRM file %s JSON is empty" % p_path)
 	else:
-		printerr("VRM file %s returned with a parse error code: %s" % [p_path, str(error)])
+		push_error("VRM file %s returned with a parse error code: %s" % [p_path, str(error)])
 		
 func _on_upload_file_dialog_files_selected(p_paths: PackedStringArray) -> void:
 	print("Upload multiple")

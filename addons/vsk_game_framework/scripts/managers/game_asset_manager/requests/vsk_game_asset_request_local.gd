@@ -39,7 +39,7 @@ func execute_request() -> void:
 
 		var file_exists: bool = FileAccess.file_exists(stripped_path)
 		if !file_exists:
-			printerr("Local asset not found: %s " % _request_url)
+			push_error("Local asset not found: %s " % _request_url)
 			_resource = _game_asset_manager.avatar_not_found_packed_scene
 			asset_err = AssetError.NOT_FOUND
 	else:

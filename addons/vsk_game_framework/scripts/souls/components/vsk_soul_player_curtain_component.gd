@@ -13,7 +13,7 @@ class_name VSKSoulPlayerCurtainComponent
 func _on_possessed(p_vessel: SarGameEntityVessel3D) -> void:
 	if not Engine.is_editor_hint() and is_multiplayer_authority():
 		if not curtain:
-			printerr("Curtain node was not assigned.")
+			push_error("Curtain node was not assigned.")
 			return
 		
 		if p_vessel:

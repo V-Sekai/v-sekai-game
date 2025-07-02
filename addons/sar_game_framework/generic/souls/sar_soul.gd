@@ -53,13 +53,13 @@ func possess(p_vessel: SarGameEntityVessel3D) -> bool:
 					possessed.emit(possessed_vessel)
 					return true
 				else:
-					printerr("Failed to possess vessel %s." % p_vessel.name)
+					push_error("Failed to possess vessel %s." % p_vessel.name)
 			else:
-				printerr("Tried to possess a %s which is already possessed by another soul." % p_vessel.name)
+				push_error("Tried to possess a %s which is already possessed by another soul." % p_vessel.name)
 		else:
-			printerr("Could not acquire valid entity interface for vessel %s." % p_vessel.name)
+			push_error("Could not acquire valid entity interface for vessel %s." % p_vessel.name)
 	else:
-		printerr("Tried to possess vessel %s which this soul does not currently have authority over." % p_vessel.name)
+		push_error("Tried to possess vessel %s which this soul does not currently have authority over." % p_vessel.name)
 		
 	return false
 	
@@ -72,9 +72,9 @@ func unpossess() -> void:
 			if interface.get_possession_component().set_soul(null):
 				possessed_vessel = null
 			else:
-				printerr("Failed to unpossess vessel %s." % possessed_vessel.name)
+				push_error("Failed to unpossess vessel %s." % possessed_vessel.name)
 		else:
-			printerr("Invalid interface when attempting to unpossess vessel %s." % possessed_vessel.name)
+			push_error("Invalid interface when attempting to unpossess vessel %s." % possessed_vessel.name)
 
 ### Returns the currently possessed vessel, or null if no vessel is possessed.
 func get_possessed_vessel() -> SarGameEntityVessel3D:

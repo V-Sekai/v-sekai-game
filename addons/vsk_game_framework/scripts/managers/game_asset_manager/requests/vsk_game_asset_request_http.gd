@@ -123,7 +123,7 @@ func _send_get_request(p_skip_etag_validation: bool) -> void:
 					custom_headers.append("If-None-Match: " + stored_etag)
 
 	if _http_request.request_completed.connect(self._full_http_request_completed.bind()) != OK:
-		printerr("Could not connect signal 'request_complete'!")
+		push_error("Could not connect signal 'request_complete'!")
 
 	if _http_request.request(_request_url, custom_headers) != OK:
 		_resource = ResourceLoader.load(_game_asset_manager.get_error_path_for_asset_type(_asset_type, VSKGameAssetRequest.AssetError.UNKNOWN_FAILURE))

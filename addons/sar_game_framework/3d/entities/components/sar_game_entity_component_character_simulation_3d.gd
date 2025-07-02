@@ -91,7 +91,7 @@ func _set_simulation_node(p_simulation_node: SarSimulationCharacter3D) -> void:
 			
 			_simulation_node.notify_posession_changed(vessel_posession_component.get_soul())
 	else:
-		printerr("Attempted to assign invalid simulation node. Must inherit SarSimulationCharacter3D")
+		push_error("Attempted to assign invalid simulation node. Must inherit SarSimulationCharacter3D")
 		
 func _update_simulation_from_scene() -> void:
 	if is_node_ready():
@@ -107,7 +107,7 @@ func _update_simulation_from_scene() -> void:
 				else:
 					_set_simulation_node(null)
 			else:
-				printerr("%s does not have a simulation container node assigned." % get_name())
+				push_error("%s does not have a simulation container node assigned." % get_name())
 				
 func _ready() -> void:
 	if not SarUtils.assert_true(simulation_parent_container, "SarGameEntityComponentCharacterSimulation3D: simulation_parent_container is not available"):
