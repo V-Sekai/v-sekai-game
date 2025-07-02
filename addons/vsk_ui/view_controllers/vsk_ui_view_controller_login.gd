@@ -38,4 +38,6 @@ func _on_view_sign_in_selected() -> void:
 	view_controller.sign_in(_get_uro_service(), sign_in_data)
 	get_navigation_controller().push_view_controller(view_controller, true)
 	
-	assert(view_controller.sign_in_complete.connect(_sign_in_complete) == OK)
+	if not SarUtils.assert_ok(view_controller.sign_in_complete.connect(_sign_in_complete),
+		"Could not connect signal 'view_controller.sign_in_complete' to '_sign_in_complete'"):
+		return

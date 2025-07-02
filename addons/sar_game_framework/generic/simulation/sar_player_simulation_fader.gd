@@ -21,7 +21,9 @@ func _request_fade_in() -> void:
 		
 		_tween = create_tween().bind_node(self).set_trans(Tween.TRANS_LINEAR)
 		
-		assert(_tween.finished.connect(_fade_in_complete) == OK)
+		if not SarUtils.assert_ok(_tween.finished.connect(_fade_in_complete),
+			"Could not connect signal '_tween.finished' to '_fade_in_complete'"):
+			return
 		
 		_tween.tween_property(
 			fade_overlay,

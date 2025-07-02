@@ -48,10 +48,12 @@ static func _execute_auxiliary_integration(
 # Callback for the movement component's pre-integration phase.
 func _on_pre_movement(p_delta: float, _velocity: Vector3) -> void:
 	var game_entity_interface: SarGameEntityInterface3D = simulation.get_game_entity_interface()
-	assert(game_entity_interface)
+	if not SarUtils.assert_true(game_entity_interface, "SarSimulationComponentAuxiliaryMotion3D._on_pre_movement: game_entity_interface is not available"):
+		return
 	
 	var movement_component = game_entity_interface.get_movement_component()
-	assert(movement_component)
+	if not SarUtils.assert_true(movement_component, "SarSimulationComponentAuxiliaryMotion3D._on_pre_movement: movement_component is not available"):
+		return
 	
 	var character_body_3d: CharacterBody3D = movement_component.get_physics_body()
 	

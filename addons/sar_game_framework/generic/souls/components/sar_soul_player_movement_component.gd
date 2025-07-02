@@ -12,7 +12,8 @@ func _process(_delta: float) -> void:
 		var vessel: SarGameEntityVessel3D = soul.get_possessed_vessel()
 		if vessel:
 			var input_component: SarGameEntityComponentVesselInput = (vessel.get_game_entity_interface() as SarGameEntityInterfaceVessel3D).get_input_component()
-			assert(input_component)
+			if not SarUtils.assert_true(input_component, "SarSoulPlayerMovementComponent: input_component is not available"):
+				return
 			
 			if InputMap.has_action("move_left") and InputMap.has_action("move_right"):
 				input_component.set_input_value_for_action("horizontal_movement", Input.get_axis("move_left", "move_right"))

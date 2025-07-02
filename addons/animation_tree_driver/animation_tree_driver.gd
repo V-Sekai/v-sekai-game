@@ -149,4 +149,6 @@ func _ready() -> void:
 			property_table = p_property_table
 			
 			if property_table:
-				assert(property_table.changed.connect(_changed) == OK)
+				if not SarUtils.assert_ok(property_table.changed.connect(_changed),
+					"Could not connect signal 'property_table.changed' to '_changed'"):
+					return

@@ -18,8 +18,9 @@ func _on_avatars_content_selected(p_url: String) -> void:
 signal message_box_requested(p_title: String, p_body: String)
 
 func show_messagebox(p_title: String, p_body: String) -> void:
-	assert(message_box_requested.has_connections())
-	
+	if not SarUtils.assert_true(message_box_requested.has_connections(), "Signal 'message_box_requested' has no connected callbacks"):
+		return
+
 	message_box_requested.emit(p_title, p_body)
 
 func show_keyboard() -> void:

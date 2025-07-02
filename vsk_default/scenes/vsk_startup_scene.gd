@@ -27,10 +27,12 @@ func _get_uro_service() -> VSKGameServiceUro:
 func _scene_load_complete(p_packed_scene: Resource) -> void:
 	navigation_controller_2d.pop_view_controller(false)
 	
-	assert(get_tree())
-	
+	if not SarUtils.assert_exists(get_tree()):
+		return
+
 	if p_packed_scene is PackedScene:
-		assert(get_tree())
+		if not SarUtils.assert_exists(get_tree()):
+			return
 		var scene_changed = get_tree().scene_changed
 		get_tree().change_scene_to_packed(p_packed_scene)
 		await scene_changed
@@ -42,17 +44,25 @@ func _show_scene_loading_screen() -> void:
 	var view_controller: VSKUIViewControllerSessionLoading = _SESSION_LOADING_VIEW_CONTROLLER.instantiate()
 	view_controller.content_url = DEFAULT_GAME_SCENE_URL
 	
-	assert(get_tree())
-	
-	assert(view_controller.scene_loaded.connect(_scene_load_complete) == OK)
+	if not SarUtils.assert_exists(get_tree()):
+		return
+
+	if not SarUtils.assert_ok(view_controller.scene_loaded.connect(_scene_load_complete),
+		"Could not connect signal 'view_controller.scene_loaded' to '_scene_load_complete'"):
+		return
+
 	navigation_controller_2d.push_view_controller(view_controller, false)
 	
 func _show_welcome_screen() -> void:
 	var view_controller: VSKUIViewControllerWelcome = _WELCOME_VIEW_CONTROLLER.instantiate()
 	navigation_controller_2d.push_view_controller(view_controller, false)
 	
-	assert(view_controller.signed_in.connect(_sign_in_complete) == OK)
-	assert(view_controller.skipped.connect(_sign_in_complete.bind("")) == OK)
+	if not SarUtils.assert_ok(view_controller.signed_in.connect(_sign_in_complete),
+		"Could not connect signal 'view_controller.signed_in' to '_sign_in_complete'"):
+		return
+	if not SarUtils.assert_ok(view_controller.skipped.connect(_sign_in_complete.bind("")),
+		"Could not connect signal 'view_controller.skipped' to '_sign_in_complete'"):
+		return
 	
 func _show_validate_screen() -> void:
 	var view_controller: VSKUIViewControllerValidating = _VALIDATING_VIEW_CONTROLLER.instantiate()

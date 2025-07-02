@@ -19,6 +19,8 @@ func _changed() -> void:
 			
 			value = p_value
 			if value:
-				assert(value.changed.connect(_changed) == OK)
+				if not SarUtils.assert_ok(value.changed.connect(_changed),
+					"Could not connect signal 'value.changed' to '_changed'"):
+					return
 			
 			_changed()

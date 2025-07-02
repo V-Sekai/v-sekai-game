@@ -94,7 +94,9 @@ func _attempt_service_access() -> void:
 		
 	# No service managers? Register a callback so we can wait for one to be added.
 	if not get_tree().node_added.is_connected(_node_added):
-		assert(get_tree().node_added.connect(_node_added) == OK)
+		if not SarUtils.assert_ok(get_tree().node_added.connect(_node_added),
+			"Could not connect signal 'get_tree().node_added' to '_node_added'"):
+			return
 			
 func _account_id_option_pressed(p_id: int) -> void:
 	match p_id:
@@ -129,7 +131,9 @@ func _account_id_option_pressed(p_id: int) -> void:
 			
 func _ready() -> void:
 	if not get_tree().edited_scene_root:
-		assert(account_options_button.get_popup().id_pressed.connect(_account_id_option_pressed) == OK)
+		if not SarUtils.assert_ok(account_options_button.get_popup().id_pressed.connect(_account_id_option_pressed),
+			"Could not connect signal 'account_options_button.get_popup().id_pressed' to '_account_id_option_pressed'"):
+			return
 		
 		_update_state(State.PENDING)
 		_attempt_service_access()

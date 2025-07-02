@@ -21,7 +21,9 @@ func _add_view_controller_to_content(p_view_controller: SarUIViewController) -> 
 	#var navbar: HBoxContainer = HBoxContainer.new()
 	#var button: Button = Button.new()
 	#button.text = "Back"
-	#assert(button.pressed.connect(_back_button_pressed) == OK)
+	#if not SarUtils.assert_ok(button.pressed.connect(_back_button_pressed),
+	#	"Could not connect signal 'button.pressed' to '_back_button_pressed'"):
+	#	return
 	
 	#navbar.add_child(button)
 	if get_view_controllers().size() > 1:
@@ -42,7 +44,9 @@ func _add_view_controller_to_content(p_view_controller: SarUIViewController) -> 
 func _ready() -> void:
 	if not Engine.is_editor_hint():
 		back_button.hide()
-		assert(back_button.pressed.connect(_back_button_pressed) == OK)
+		if not SarUtils.assert_ok(back_button.pressed.connect(_back_button_pressed),
+			"Could not connect signal 'back_button.pressed' to '_back_button_pressed'"):
+			return
 
 ###
 
@@ -52,7 +56,8 @@ func _ready() -> void:
 signal message_box_requested(p_title: String, p_body: String)
 
 func show_messagebox(p_title: String, p_body: String) -> void:
-	assert(message_box_requested.has_connections())
+	if not SarUtils.assert_true(message_box_requested.has_connections(), "Signal 'message_box_requested' has no connected callbacks"):
+		return
 	
 	block_input()
 	message_box_requested.emit(p_title, p_body)

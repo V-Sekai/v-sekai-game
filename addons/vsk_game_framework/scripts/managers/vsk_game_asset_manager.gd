@@ -114,17 +114,23 @@ func _get_or_create_request_object_for_type(p_request_url: String, p_asset_type:
 				request_obj = VSKGameAssetRequestHTTP.new(self, p_request_url, p_asset_type)
 				request_obj.execute_request.call_deferred()
 				_request_objects[p_request_url] = request_obj
-				assert(request_obj.request_complete.connect(_request_complete.bind(p_request_url)) == OK)
+				if not SarUtils.assert_ok(request_obj.request_complete.connect(_request_complete.bind(p_request_url)),
+					"Could not connect signal 'request_obj.request_complete' to '_request_complete.bind(p_request_url)'"):
+					return null
 			RequestType.LOCAL_FILE_REQUEST:
 				request_obj = VSKGameAssetRequestLocal.new(self, p_request_url, p_asset_type)
 				request_obj.execute_request.call_deferred()
 				_request_objects[p_request_url] = request_obj
-				assert(request_obj.request_complete.connect(_request_complete.bind(p_request_url)) == OK)
+				if not SarUtils.assert_ok(request_obj.request_complete.connect(_request_complete.bind(p_request_url)),
+					"Could not connect signal 'request_obj.request_complete' to '_request_complete.bind(p_request_url)'"):
+					return null
 			RequestType.URO_REQUEST:
 				request_obj = VSKGameAssetRequestUro.new(self, p_request_url, p_asset_type)
 				request_obj.execute_request.call_deferred()
 				_request_objects[p_request_url] = request_obj
-				assert(request_obj.request_complete.connect(_request_complete.bind(p_request_url)) == OK)
+				if not SarUtils.assert_ok(request_obj.request_complete.connect(_request_complete.bind(p_request_url)),
+					"Could not connect signal 'request_obj.request_complete' to '_request_complete.bind(p_request_url)'"):
+					return null
 			_:
 				printerr("Unknown file request type: %s" % str(p_request_url))
 				return null
@@ -212,15 +218,15 @@ func _ready() -> void:
 		_get_project_settings()
 		
 		avatar_forbidden_packed_scene = ResourceLoader.load(avatar_forbidden_path)
-		assert(avatar_forbidden_packed_scene)
+		SarUtils.assert_true(avatar_forbidden_packed_scene, "Could not load %s" % avatar_forbidden_path)
 		avatar_not_found_packed_scene = ResourceLoader.load(avatar_not_found_path)
-		assert(avatar_not_found_packed_scene)
+		SarUtils.assert_true(avatar_not_found_packed_scene, "Could not load %s" % avatar_not_found_path)
 		avatar_error_packed_scene = ResourceLoader.load(avatar_error_path)
-		assert(avatar_error_packed_scene)
+		SarUtils.assert_true(avatar_error_packed_scene, "Could not load %s" % avatar_error_path)
 		teapot_packed_scene = ResourceLoader.load(teapot_path)
-		assert(teapot_packed_scene)
+		SarUtils.assert_true(teapot_packed_scene, "Could not load %s" % teapot_path)
 		loading_avatar_packed_scene = ResourceLoader.load(loading_avatar_path)
-		assert(loading_avatar_packed_scene)
+		SarUtils.assert_true(loading_avatar_packed_scene, "Could not load %s" % loading_avatar_path)
 
 ###
 

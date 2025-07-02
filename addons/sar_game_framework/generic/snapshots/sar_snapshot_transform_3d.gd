@@ -48,7 +48,8 @@ func encode_snapshot(p_stream_peer: StreamPeer, p_bit_offset: int) -> StreamPeer
 	
 	var pba: PackedByteArray
 	var resize_result: int = pba.resize(ceil(float(get_size()) / BITS))
-	assert(resize_result == 0)
+	if not SarUtils.assert_ok(resize_result, "SarTransform3DSnapshot: Could not resize PackedByteArray."):
+		return null
 
 	var packet_idx: int = 0
 	
@@ -76,9 +77,11 @@ func encode_snapshot(p_stream_peer: StreamPeer, p_bit_offset: int) -> StreamPeer
 		packet_idx += HALF_VALUE_SIZE
 	
 	var _result: Array = p_stream_peer.put_partial_data(pba)
-	assert(_result[0] == OK)
-	assert(_result[1] == ceil(float(get_size()) / BITS))
-	
+	if not SarUtils.assert_ok(_result[0], "SarTransform3DSnapshot.encode_snapshot: Unexpected error while sending snapshot data."):
+		return null
+	if not SarUtils.assert_equal(_result[1], ceil(float(get_size()) / BITS), "SarTransform3DSnapshot.encode_snapshot: Did not send expected number of bytes in snapshot."):
+		return null
+
 	return p_stream_peer
 	
 func decode_snapshot(p_stream_peer: StreamPeer, p_bit_offset: int) -> StreamPeer:

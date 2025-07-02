@@ -13,7 +13,9 @@ var container: VBoxContainer = null
 		keyboard_layout = p_keyboard_layout
 		
 		if keyboard_layout:
-			assert(keyboard_layout.changed.connect(_keyboard_layout_updated) == OK)
+			if not SarUtils.assert_ok(keyboard_layout.changed.connect(_keyboard_layout_updated),
+				"Could not connect signal 'keyboard_layout.changed' to '_keyboard_layout_updated'"):
+				return
 		
 		_keyboard_layout_updated()
 

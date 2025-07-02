@@ -90,7 +90,8 @@ func notify_posession_changed(p_soul: SarSoul) -> void:
 
 ## Returns true if the vessel is currently possessed by a soul.
 func is_possessed() -> bool:
-	assert(game_entity_interface)
+	if not SarUtils.assert_true(game_entity_interface, "SarSimulationVessel3D: game_entity_interface is not available"):
+		return false
 	if game_entity_interface.get_possession_component().get_soul():
 		return true
 		

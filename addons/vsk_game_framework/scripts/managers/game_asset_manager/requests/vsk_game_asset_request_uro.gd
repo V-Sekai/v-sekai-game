@@ -79,7 +79,9 @@ func _uro_api_request(p_domain: String, p_id: String, p_asset_type: VSKGameAsset
 							http_url,
 							_asset_type)
 						
-						assert(http_request_obj.request_complete.connect(_http_request_complete) == OK)
+						if not SarUtils.assert_ok(http_request_obj.request_complete.connect(_http_request_complete),
+							"Could not connect signal 'http_request_obj.request_complete' to '_http_request_complete'"):
+							return
 						
 						return http_request_obj
 						

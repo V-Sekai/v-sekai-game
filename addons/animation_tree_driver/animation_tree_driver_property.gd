@@ -36,8 +36,12 @@ func _changed():
 				
 			for controller in controllers:
 				if controller:
-					assert(controller.changed.connect(_changed) == OK)
+					if not SarUtils.assert_ok(controller.changed.connect(_changed),
+						"Could not connect signal 'controller.changed' to '_changed'"):
+						return
 				
 func _init() -> void:
 	for controller in controllers:
-		assert(controller.changed.connect(_changed) == OK)
+		if not SarUtils.assert_ok(controller.changed.connect(_changed),
+			"Could not connect signal 'controller.changed' to '_changed'"):
+			return

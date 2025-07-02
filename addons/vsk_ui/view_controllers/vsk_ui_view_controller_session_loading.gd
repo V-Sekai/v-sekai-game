@@ -33,7 +33,9 @@ func _ready() -> void:
 		var asset_manager: VSKGameAssetManager = get_tree().get_first_node_in_group("game_asset_managers")
 		if asset_manager:
 			_request_object = asset_manager.make_request(content_url, VSKGameAssetManager.AssetType.MAP)
-			assert(_request_object.request_complete.connect(_request_complete) == OK)
+			if not SarUtils.assert_ok(_request_object.request_complete.connect(_request_complete),
+				"Could not connect signal '_request_object.request_complete' to '_request_complete'"):
+				return
 			
 ###
 

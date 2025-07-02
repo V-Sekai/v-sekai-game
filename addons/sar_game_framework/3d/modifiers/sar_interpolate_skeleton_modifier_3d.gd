@@ -9,14 +9,20 @@ class_name SarInterpolateSkeletonModifier3D
 @export var interp_new: Skeleton3D = null
 
 func _copy_skeleton_pose(p_src: Skeleton3D, p_target: Skeleton3D) -> void:
-	assert(p_src.get_bone_count() == p_target.get_bone_count())
-	
+	if not SarUtils.assert_equal(p_src.get_bone_count(), p_target.get_bone_count(),
+		"SarInterpolateSkeletonModifier3D._copy_skeleton_pose: p_src and p_target Skeleton3D have differing bone count."):
+		return
+
 	for i: int in range(0, p_target.get_bone_count()):
 		p_target.set_bone_pose(i, p_src.get_bone_pose(i))
 
 func _interpolate_skeleton_pose(p_src_a: Skeleton3D, p_src_b: Skeleton3D, p_target: Skeleton3D, p_weight: float) -> void:
-	assert(p_src_a.get_bone_count() == p_target.get_bone_count())
-	assert(p_src_b.get_bone_count() == p_target.get_bone_count())
+	if not SarUtils.assert_equal(p_src_a.get_bone_count(), p_target.get_bone_count(),
+		"SarInterpolateSkeletonModifier3D._interpolate_skeleton_pose: p_src_a and p_target Skeleton3D have differing bone count."):
+		return
+	if not SarUtils.assert_equal(p_src_b.get_bone_count(), p_target.get_bone_count(),
+		"SarInterpolateSkeletonModifier3D._interpolate_skeleton_pose: p_src_b and p_target Skeleton3D have differing bone count."):
+		return
 	
 	for i: int in range(0, p_target.get_bone_count()):
 		p_target.set_bone_pose(i, p_src_a.get_bone_pose(i).interpolate_with(p_src_b.get_bone_pose(i), p_weight))

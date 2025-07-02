@@ -13,8 +13,8 @@ func encode_snapshot(p_stream_peer: StreamPeer, p_bit_offset: int) -> StreamPeer
 	
 	var pba: PackedByteArray
 	var resize_result: int = pba.resize(ceil(float(get_size()) / BITS))
-	assert(resize_result == 0)
-	
+	if not SarUtils.assert_ok(resize_result, "SarFixedSizeSnapshot: Could not resize PackedByteArray."):
+		return null
 	var parameter_stream_peer: StreamPeerBuffer = StreamPeerBuffer.new()
 	parameter_stream_peer.data_array = pba
 	parameter_stream_peer.seek(0)
@@ -23,8 +23,10 @@ func encode_snapshot(p_stream_peer: StreamPeer, p_bit_offset: int) -> StreamPeer
 			parameter_stream_peer = child.encode_snapshot(parameter_stream_peer, p_bit_offset)
 		
 	var _result: Array = p_stream_peer.put_partial_data(parameter_stream_peer.data_array)
-	assert(_result[0] == OK)
-	assert(_result[1] == ceil(float(get_size()) / BITS))
+	if not SarUtils.assert_ok(_result[0], "SarFixedSizeSnapshot.encode_snapshot: Unexpected error while sending snapshot data."):
+		return null
+	if not SarUtils.assert_equal(_result[1], ceil(float(get_size()) / BITS), "SarFixedSizeSnapshot.encode_snapshot: Did not send expected number of bytes in snapshot."):
+		return null
 	
 	return p_stream_peer
 	

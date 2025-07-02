@@ -11,8 +11,9 @@ func _physics_process(_delta: float) -> void:
 	if not Engine.is_editor_hint():
 		# Calculate movement basis 
 		var game_entity_interface: SarGameEntityInterface3D = simulation.get_game_entity_interface()
-		assert(game_entity_interface)
-		
+		if not SarUtils.assert_true(game_entity_interface, "SarSimulationComponentJump3D: game_entity_interface is not available"):
+			return
+
 		if _movement_component.is_grounded():
 			if should_jump:
 				_movement_component.set_velocity(_movement_component.get_velocity() + (_movement_component.get_up_direction() * jump_velocity))
@@ -20,10 +21,12 @@ func _physics_process(_delta: float) -> void:
 func _ready() -> void:
 	if not Engine.is_editor_hint():
 		var game_entity_interface: SarGameEntityInterface3D = simulation.get_game_entity_interface()
-		assert(game_entity_interface)
+		if not SarUtils.assert_true(game_entity_interface, "SarSimulationComponentJump3D: game_entity_interface is not available"):
+			return
 		
 		_movement_component = game_entity_interface.get_movement_component()
-		assert(_movement_component)
+		if not SarUtils.assert_true(_movement_component, "SarSimulationComponentJump3D: _movement_component is not available"):
+			return
 		
 ###
 

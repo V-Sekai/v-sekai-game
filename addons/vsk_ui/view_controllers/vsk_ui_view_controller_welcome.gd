@@ -26,13 +26,17 @@ func _on_welcome_menu_sign_in_pressed() -> void:
 	var view_controller: VSKUIViewControllerLogin = _LOGIN_VIEW_CONTROLLER.instantiate()
 	get_navigation_controller().push_view_controller(view_controller, true)
 
-	assert(view_controller.signed_in.connect(_signed_in) == OK)
+	if not SarUtils.assert_ok(view_controller.signed_in.connect(_signed_in),
+		"Could not connect signal 'view_controller.signed_in' to '_signed_in'"):
+		return
 
 func _on_welcome_menu_register_pressed() -> void:
 	var view_controller: VSKUIViewControllerRegister = _REGISTER_VIEW_CONTROLLER.instantiate()
 	get_navigation_controller().push_view_controller(view_controller, true)
 
-	assert(view_controller.signed_up.connect(_signed_up) == OK)
+	if not SarUtils.assert_ok(view_controller.signed_up.connect(_signed_up),
+		"Could not connect signal 'view_controller.signed_up' to '_signed_up'"):
+		return
 
 func _on_welcome_menu_skip_pressed() -> void:
 	get_navigation_controller().pop_view_controller(true)
