@@ -4,12 +4,29 @@ set -e
 export HOME=$HOMEDIR
 cd $HOMEDIR
 
-git clone "https://github.com/${INPUT_REPO}.git" "./source"
+if [ -n "$INPUT_BRANCH" ]; then
+    CLONE_OPTS="--branch $INPUT_BRANCH";
+fi
+
+git clone ${CLONE_OPTS} "https://github.com/${INPUT_REPO}.git" "./source"
 
 if [ -n "$INPUT_GAME_NAME" ]; then
     GAME_NAME=$INPUT_GAME_NAME;
 else
     GAME_NAME=$( echo ${INPUT_REPO} | cut -d '/' -f2 );
+fi
+
+if [ "${INPUT_XR_PLUGINS}" == 'true' ]; then \
+    XR_PLUGIN_URL=$( curl -sS -L \
+        -H "Accept: application/vnd.github+json" \
+        "https://api.github.com/repos/${XR_PLUGIN_REPO}/releases" \
+        | jq -r '.[0].assets.[] | select(.name | startswith("godotopenxrvendorsaddon.zip")).browser_download_url | @sh' | tr -d "\'" \
+    );
+    echo "Downloading XR vendor plugins from ${XR_PLUGIN_URL}";
+    curl -OL ${XR_PLUGIN_URL} \
+    && mkdir ./xr_vendor_plugins \
+    && unzip './godotopenxrvendorsaddon.zip' -d ./xr_vendor_plugins && rm './godotopenxrvendorsaddon.zip' \
+    && ls -a ./xr_vendor_plugins; \
 fi
 
 if [ "${INPUT_DEFAULT_EXPORT}" == 'true' ]; then
@@ -52,6 +69,13 @@ echo -e "Game: ${GAME_NAME}\nVersion: ${GIT_REV}\nGodot ${GODOT_SHORT}"
 for PLATFORM in ${BUILD_PLATFORMS}; do \
     echo "Building ${PLATFORM}..."; \
     BUILD_DIR="./${BIN}"; EXT=''; \
+    GAME_TAG="${GAME_NAME}_${GIT_REV}_${PLATFORM}"; \
+    if [ "${INPUT_XR_PLUGINS}" == 'true' ] && [ "${PLATFORM}" == 'QuestAndroid' ]; then \
+        echo "Installing addons/godotopenxrvendors..."; \
+        mkdir -p ./src/addons/ && cp -v -r ./xr_vendor_plugins/asset/addons/godotopenxrvendors/ ./src/addons/godotopenxrvendors/; \
+        echo "Backing up .godot..."; \
+        cp -r ./src/.godot ./src/.godotbackup; \
+    fi; \
     if [ "${PLATFORM}" == 'Windows' ]; then \
         EXT='.exe'; \
     elif [ "${PLATFORM}" == 'Android' ] \
@@ -60,13 +84,23 @@ for PLATFORM in ${BUILD_PLATFORMS}; do \
     elif [ "${PLATFORM}" == 'Mac' ]; then \
         EXT='.zip'; \
     elif [ "${PLATFORM}" == 'Web' ]; then \
-        BUILD_DIR="${BUILD_DIR}/${GAME_NAME}_${GIT_REV}_${PLATFORM}"; \
+        BUILD_DIR="./${BIN}/${GAME_TAG}"; \
         mkdir -p "./src/${BUILD_DIR}"; \
+        EXT='.html'; \
     fi; \
-    "./${GODOT_EDITOR}" ${BUILD_ARGS} --path './src' --export-release ${PLATFORM} ${BUILD_DIR}/${GAME_NAME}_${GIT_REV}_${PLATFORM}${EXT} || true; \
+    "./${GODOT_EDITOR}" ${BUILD_ARGS} --path './src' --export-release ${PLATFORM} "${BUILD_DIR}/${GAME_TAG}${EXT}" || true; \
     if [ "${PLATFORM}" == 'Web' ]; then \
-         zip -r "./src/${BIN}/${GAME_NAME}_${GIT_REV}_${PLATFORM}.zip" ./src/${BUILD_DIR}; \
-         rm -r ./src/${BUILD_DIR}; \
+         pushd .; \
+         cd "./src/${BIN}/"; \
+         zip -r "${GAME_TAG}.zip" "./${GAME_TAG}"; \
+         popd; \
+         rm -r "./src/${BUILD_DIR}"; \
+    fi; \
+    if [ "${INPUT_XR_PLUGINS}" == 'true' ] && [ "${PLATFORM}" == 'QuestAndroid' ]; then \
+        echo "Removing addons/godotopenxrvendors..."; \
+        rm -r ./src/addons/godotopenxrvendors/; \
+        echo "Restoring .godot..."; \
+        rm -r ./src/.godot && mv ./src/.godotbackup ./src/.godot; \
     fi; \
 done
 

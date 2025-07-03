@@ -1,8 +1,10 @@
-FROM ubuntu:latest
+FROM ubuntu:24.04
 
 ARG INPUT_REPO
+ARG INPUT_BRANCH
 ARG INPUT_GAME_NAME
 ARG INPUT_DEFAULT_EXPORT
+ARG INPUT_XR_PLUGINS
 ARG INPUT_NIGHTLY
 
 # $HOME is overwritten by Github Action at runtime
@@ -18,6 +20,7 @@ ENV GODOT_EDITOR 'godot.linuxbsd.editor.double.x86_64'
 ENV TEMPLATE_DIR "$HOMEDIR/.local/share/godot/export_templates"
 ENV ANDROID_SDK_ROOT "$HOMEDIR/android_sdk"
 ENV ANDROID_HOME "$HOMEDIR/android_sdk"
+ENV XR_PLUGIN_REPO 'V-Sekai/godot_openxr_vendors'
 
 COPY ./build.sh /
 RUN chmod +x /build.sh

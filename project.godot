@@ -68,6 +68,9 @@ window/size/viewport_height=800
 
 movie_writer/movie_file="D:/contents/videos/godot_movies/movie.png"
 run/main_run_args="--xr-mode off"
+; Import Multithreading is disabled due to docker --headless export bug
+; https://github.com/godotengine/godot/issues/103696#issuecomment-3029242943
+import/use_multiple_threads=false
 
 [editor_plugins]
 
@@ -259,6 +262,8 @@ lights_and_shadows/positional_shadow/soft_shadow_filter_quality=5
 global_illumination/voxel_gi/quality=1
 anti_aliasing/quality/msaa_3d=3
 occlusion_culling/use_occlusion_culling=true
+textures/vram_compression/import_etc2_astc=true
+textures/vram_compression/import_s3tc_bptc=true
 
 [ugc]
 

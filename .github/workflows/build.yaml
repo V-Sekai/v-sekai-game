@@ -5,7 +5,7 @@ on:
   repository_dispatch:
     types: ['build-ready']
   push:
-    branches: ['main']
+    branches: ['rx']
     tags:
       - '**'
 
@@ -60,6 +60,7 @@ jobs:
         uses: ./docker/build-project
         with:
           repo: ${{ github.repository }}
+          branch: rx
           nightly: ${{ steps.setenv.outputs.PRERELEASE }}
 
       - name: Upload Build Artifacts
@@ -80,12 +81,15 @@ jobs:
             TAG_NAME="${TAG_NAME}-nightly-${TAG_DATE}-${TAG_VERSION}"; \
           fi
 
+          # Add rx tag
+          TAG_NAME="${TAG_NAME}-rx"
+
           echo "TAG_NAME=${TAG_NAME}" >> $GITHUB_OUTPUT
 
   release:
     runs-on: ubuntu-latest
     needs: build
-    if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/') }}
+    if: ${{ github.ref == 'refs/heads/rx' || startsWith(github.ref, 'refs/tags/') }}
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
@@ -94,7 +98,7 @@ jobs:
         uses: actions/create-release@v1
         with:
           tag_name: ${{ needs.build.outputs.TAG_NAME }}
-          release_name: ${{ needs.build.outputs.TAG_NAME }} V-Sekai Game Release
+          release_name: ${{ needs.build.outputs.TAG_NAME }} V-Sekai Game RX Release
           draft: false
           prerelease: ${{ needs.build.outputs.PRERELEASE }}
 
