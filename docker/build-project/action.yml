@@ -4,6 +4,9 @@ inputs:
   repo:
     description: 'Github project repository id "owner/myrepo"'
     required: true
+  branch:
+    description: 'Github branch name used to build project'
+    required: false
   game_name:
     description: 'Override default repository name in game name'
     required: false
