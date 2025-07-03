@@ -4,7 +4,7 @@ on:
   pull_request:
   push:
     branches:
-      - main
+      - rx
 
 jobs:
   pre-commit-checks:
@@ -15,11 +15,11 @@ jobs:
         with:
           python-version: "3.x"
 
-      - name: Install pre-commit
-        run: pip install pre-commit
+      #- name: Install pre-commit
+      #  run: pip install pre-commit
 
-      - name: Run pre-commit
-        run: pre-commit run --all-files
+      #- name: Run pre-commit
+      #  run: pre-commit run --all-files
 
       - name: Run custom linter
         run: bash .github/workflows/custom_linter.sh

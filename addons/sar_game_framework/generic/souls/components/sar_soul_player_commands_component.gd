@@ -13,7 +13,8 @@ func _input(p_event: InputEvent) -> void:
 		var vessel: SarGameEntityVessel3D = soul.get_possessed_vessel()
 		if vessel:
 			var input_component: SarGameEntityComponentVesselInput = (vessel.get_game_entity_interface() as SarGameEntityInterfaceVessel3D).get_input_component()
-			assert(input_component)
+			if not SarUtils.assert_true(input_component, "SarSoulPlayerCommandsComponent: _input_component is not available"):
+				return
 
 			# Workaround to persist action for one _process() frame in SarGameEntityComponentVesselInput _input_table
 			# This is needed because _input_table is processed with _physics_process() -> _update_input() in VSKPlayerSimulationInputComponent
@@ -23,12 +24,13 @@ func _input(p_event: InputEvent) -> void:
 					active_commands[command] = {"time": Time.get_ticks_usec() / 1_000_000.0, "strength": strength}
 					input_component.set_input_value_for_action(command, strength)
 
-func _physics_process(delta: float):
+func _physics_process(delta: float) -> void:
 	if not Engine.is_editor_hint() and is_multiplayer_authority():
 		var vessel: SarGameEntityVessel3D = soul.get_possessed_vessel()
 		if vessel:
 			var input_component: SarGameEntityComponentVesselInput = (vessel.get_game_entity_interface() as SarGameEntityInterfaceVessel3D).get_input_component()
-			assert(input_component)
+			if not SarUtils.assert_true(input_component, "SarSoulPlayerCommandsComponent: input_component is not available."):
+				return
 			var time = Time.get_ticks_usec() / 1_000_000.0
 			for command in active_commands:
 					var trigger_time = active_commands[command].get("time")

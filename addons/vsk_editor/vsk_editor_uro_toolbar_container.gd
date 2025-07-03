@@ -94,7 +94,9 @@ func _attempt_service_access() -> void:
 		
 	# No service managers? Register a callback so we can wait for one to be added.
 	if not get_tree().node_added.is_connected(_node_added):
-		assert(get_tree().node_added.connect(_node_added) == OK)
+		if not SarUtils.assert_ok(get_tree().node_added.connect(_node_added),
+			"Could not connect signal 'get_tree().node_added' to '_node_added'"):
+			return
 			
 func _account_id_option_pressed(p_id: int) -> void:
 	match p_id:
@@ -104,7 +106,7 @@ func _account_id_option_pressed(p_id: int) -> void:
 				dashboard_window.hide()
 				dashboard_window.popup_centered_ratio()
 			else:
-				printerr("Dashboard window is not assigned.")
+				push_error("Dashboard window is not assigned.")
 		# Sign Out Option
 		99:
 			var service: VSKGameServiceUro = _get_uro_service()
@@ -129,7 +131,9 @@ func _account_id_option_pressed(p_id: int) -> void:
 			
 func _ready() -> void:
 	if not get_tree().edited_scene_root:
-		assert(account_options_button.get_popup().id_pressed.connect(_account_id_option_pressed) == OK)
+		if not SarUtils.assert_ok(account_options_button.get_popup().id_pressed.connect(_account_id_option_pressed),
+			"Could not connect signal 'account_options_button.get_popup().id_pressed' to '_account_id_option_pressed'"):
+			return
 		
 		_update_state(State.PENDING)
 		_attempt_service_access()
@@ -152,7 +156,7 @@ func teardown() -> void:
 	
 func sign_in(p_domain: String, p_username_or_email: String, p_password: String) -> Dictionary:
 	if _request:
-		printerr("A request is already active.")
+		push_error("A request is already active.")
 		return {}
 
 	var service: VSKGameServiceUro = _get_uro_service()
@@ -175,19 +179,19 @@ func cancel_sign_in() -> void:
 				if service.stop_request(_request):
 					_request = null
 				else:
-					printerr("Could not cancel request" % str(_request))
+					push_error("Could not cancel request" % str(_request))
 					
 func renew_session(p_domain: String, p_username: String) -> Dictionary:
 	if _request:
-		printerr("A request is already active.")
+		push_error("A request is already active.")
 		return {}
 		
 	if p_domain.is_empty():
-		printerr("domain is empty")
+		push_error("domain is empty")
 		return {}
 		
 	if p_username.is_empty():
-		printerr("username is empty")
+		push_error("username is empty")
 		return {}
 		
 	var service: VSKGameServiceUro = _get_uro_service()
@@ -201,7 +205,7 @@ func renew_session(p_domain: String, p_username: String) -> Dictionary:
 
 func sign_out(p_domain: String, p_username: String) -> Dictionary:
 	if _request:
-		printerr("A request is already active.")
+		push_error("A request is already active.")
 		return {}
 	
 	var service: VSKGameServiceUro = _get_uro_service()

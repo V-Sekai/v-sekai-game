@@ -14,7 +14,9 @@ func _changed() -> void:
 			a = p_value
 			
 			if a:
-				assert(a.changed.connect(_changed) == OK)
+				if not SarUtils.assert_ok(a.changed.connect(_changed),
+					"Could not connect signal 'a.changed' to '_changed'"):
+					return
 				_changed()
 
 @export var b: AnimationTreeDriverPropertyControllerValue = null:
@@ -26,7 +28,9 @@ func _changed() -> void:
 			b = p_value
 			
 			if b:
-				assert(b.changed.connect(_changed) == OK)
+				if not SarUtils.assert_ok(b.changed.connect(_changed),
+					"Could not connect signal 'b.changed' to '_changed'"):
+					return
 				_changed()
 
 func get_value(p_input: Variant) -> Variant:

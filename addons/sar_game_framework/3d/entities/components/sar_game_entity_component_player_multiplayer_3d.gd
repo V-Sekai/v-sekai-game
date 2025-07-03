@@ -22,10 +22,12 @@ func _sync_filter(_peer_id: int) -> bool:
 # concerning to prematurely writing too much extra bespoke multiplayer
 # code we have to maintain ourselves, so this feels like a decent stopgap.
 func _setup_authority() -> void:
-	assert(game_entity)
+	if not SarUtils.assert_true(game_entity, "SarGameEntityComponentPlayerMultiplayer3D: game_entity is not available"):
+		return
 	
 	var game_session_manager: SarGameSessionManager = get_tree().get_first_node_in_group("game_session_managers")
-	assert(game_session_manager)
+	if not SarUtils.assert_true(game_session_manager, "SarGameEntityComponentPlayerMultiplayer3D: game_session_manager is not available"):
+		return
 	
 	# Use the numbers at the end of the player name to determine the authority.
 	# This allows the player scene to go into an auto-spawn list without having to write
@@ -34,7 +36,7 @@ func _setup_authority() -> void:
 	if id_string.is_valid_int():
 		game_entity.set_multiplayer_authority(id_string.to_int())
 	else:
-		printerr("Game entity %s does not conform to the naming convention %s required to determine a user authority upon spawn" % [game_entity.name, game_session_manager.get_player_entity_name_prefix()])
+		push_error("Game entity %s does not conform to the naming convention %s required to determine a user authority upon spawn" % [game_entity.name, game_session_manager.get_player_entity_name_prefix()])
 	
 	# The MultiplayerSynchronizerSpawn node always explicitly has its authority
 	# owned by the host.

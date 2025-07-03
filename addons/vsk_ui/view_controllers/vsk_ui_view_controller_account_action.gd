@@ -9,7 +9,9 @@ func _domain_selected(p_url: String) -> void:
 
 func _on_view_pick_other_domain_selected() -> void:
 	var view_controller: VSKUIViewControllerDomainSelector = _DOMAIN_SELECTOR_VIEW_CONTROLLER.instantiate()
-	assert(view_controller.domain_selected.connect(_domain_selected) == OK)
+	if not SarUtils.assert_ok(view_controller.domain_selected.connect(_domain_selected),
+		"Could not connect signal 'view_controller.domain_selected' to '_domain_selected'"):
+		return
 	get_navigation_controller().push_view_controller(view_controller, true)
 	view_controller.set_url(view.get_domain())
 
@@ -17,7 +19,8 @@ func _ready() -> void:
 	super._ready()
 	
 	if not Engine.is_editor_hint():
-		assert(view)
+		if not SarUtils.assert_true(view, "VSKUIViewControllerAccountAction: view is not available"):
+			return
 		
 func _get_configuration_warnings() -> PackedStringArray:
 	var warnings: PackedStringArray = []

@@ -9,25 +9,43 @@ func _bind_simulation_node() -> void:
 		_simulation_node.assign_game_entity_interface(game_entity_interface)
 		
 		if not game_entity.transform_changed.is_connected(_simulation_node._on_game_entity_transform_changed):
-			assert(game_entity.transform_changed.connect(_simulation_node._on_game_entity_transform_changed) == OK)
+			if not SarUtils.assert_ok(game_entity.transform_changed.connect(_simulation_node._on_game_entity_transform_changed),
+				"Could not connect signal 'game_entity.transform_changed' to '_simulation_node._on_game_entity_transform_changed'"):
+				return
 		if not game_entity.transform_pre_update.is_connected(_simulation_node._on_game_entity_transform_pre_update):
-			assert(game_entity.transform_pre_update.connect(_simulation_node._on_game_entity_transform_pre_update) == OK)
+			if not SarUtils.assert_ok(game_entity.transform_pre_update.connect(_simulation_node._on_game_entity_transform_pre_update),
+				"Could not connect signal 'game_entity.transform_pre_update' to '_simulation_node._on_game_entity_transform_pre_update'"):
+				return
 		if not game_entity.transform_post_update.is_connected(_simulation_node._on_game_entity_transform_post_update):
-			assert(game_entity.transform_post_update.connect(_simulation_node._on_game_entity_transform_post_update) == OK)
+			if not SarUtils.assert_ok(game_entity.transform_post_update.connect(_simulation_node._on_game_entity_transform_post_update),
+				"Could not connect signal 'game_entity.transform_post_update' to '_simulation_node._on_game_entity_transform_post_update'"):
+				return
 		
 		if not model_component.model_changed.is_connected(_simulation_node._on_character_model_component_model_changed):
-			assert(model_component.model_changed.connect(_simulation_node._on_character_model_component_model_changed) == OK)
+			if not SarUtils.assert_ok(model_component.model_changed.connect(_simulation_node._on_character_model_component_model_changed),
+				"Could not connect signal 'model_component.model_changed' to '_simulation_node._on_character_model_component_model_changed'"):
+				return
 		if not model_component.model_pre_change.is_connected(_simulation_node._on_character_model_component_pre_model_changed):
-			assert(model_component.model_pre_change.connect(_simulation_node._on_character_model_component_pre_model_changed) == OK)
+			if not SarUtils.assert_ok(model_component.model_pre_change.connect(_simulation_node._on_character_model_component_pre_model_changed),
+				"Could not connect signal 'model_component.model_pre_change' to '_simulation_node._on_character_model_component_pre_model_changed'"):
+				return
 		if not vessel_movement_component.pre_movement.is_connected(_simulation_node._on_vessel_movement_component_pre_movement):
-			assert(vessel_movement_component.pre_movement.connect(_simulation_node._on_vessel_movement_component_pre_movement) == OK)
+			if not SarUtils.assert_ok(vessel_movement_component.pre_movement.connect(_simulation_node._on_vessel_movement_component_pre_movement),
+				"Could not connect signal 'vessel_movement_component.pre_movement' to '_simulation_node._on_vessel_movement_component_pre_movement'"):
+				return
 		
 		if not vessel_movement_component.post_movement.is_connected(_simulation_node._on_vessel_movement_component_post_movement):
-			assert(vessel_movement_component.post_movement.connect(_simulation_node._on_vessel_movement_component_post_movement) == OK)
+			if not SarUtils.assert_ok(vessel_movement_component.post_movement.connect(_simulation_node._on_vessel_movement_component_post_movement),
+				"Could not connect signal 'vessel_movement_component.post_movement' to '_simulation_node._on_vessel_movement_component_post_movement'"):
+				return
 		if not vessel_movement_component.movement_complete.is_connected(_simulation_node._on_vessel_movement_component_movement_complete):
-			assert(vessel_movement_component.movement_complete.connect(_simulation_node._on_vessel_movement_component_movement_complete) == OK)
+			if not SarUtils.assert_ok(vessel_movement_component.movement_complete.connect(_simulation_node._on_vessel_movement_component_movement_complete),
+				"Could not connect signal 'vessel_movement_component.movement_complete' to '_simulation_node._on_vessel_movement_component_movement_complete'"):
+				return
 		if not vessel_posession_component.possessed_by_soul.is_connected(_simulation_node._on_vessel_possession_component_soul_changed):
-			assert(vessel_posession_component.possessed_by_soul.connect(_simulation_node._on_vessel_possession_component_soul_changed) == OK)
+			if not SarUtils.assert_ok(vessel_posession_component.possessed_by_soul.connect(_simulation_node._on_vessel_possession_component_soul_changed),
+				"Could not connect signal 'vessel_posession_component.possessed_by_soul' to '_simulation_node._on_vessel_possession_component_soul_changed'"):
+				return
 	
 func _unbind_simulation_node() -> void:
 	if _simulation_node:
@@ -73,7 +91,7 @@ func _set_simulation_node(p_simulation_node: SarSimulationCharacter3D) -> void:
 			
 			_simulation_node.notify_posession_changed(vessel_posession_component.get_soul())
 	else:
-		printerr("Attempted to assign invalid simulation node. Must inherit SarSimulationCharacter3D")
+		push_error("Attempted to assign invalid simulation node. Must inherit SarSimulationCharacter3D")
 		
 func _update_simulation_from_scene() -> void:
 	if is_node_ready():
@@ -89,10 +107,11 @@ func _update_simulation_from_scene() -> void:
 				else:
 					_set_simulation_node(null)
 			else:
-				printerr("%s does not have a simulation container node assigned." % get_name())
+				push_error("%s does not have a simulation container node assigned." % get_name())
 				
 func _ready() -> void:
-	assert(simulation_parent_container)
+	if not SarUtils.assert_true(simulation_parent_container, "SarGameEntityComponentCharacterSimulation3D: simulation_parent_container is not available"):
+		return
 	
 	_update_simulation_from_scene()
 	

@@ -16,7 +16,7 @@ func _set_expression(p_expression_string: String) -> void:
 			
 		var error: Error = _cached_expression.parse(expression, PackedStringArray(["value"]))
 		if error != OK:
-			printerr(_cached_expression.get_error_text())
+			push_error(_cached_expression.get_error_text())
 			_cached_expression = null
 			
 		_changed()
@@ -25,7 +25,7 @@ func get_value(p_input: Variant) -> Variant:
 	if _cached_expression:
 		var result: Variant = _cached_expression.execute([p_input], null, true, true)
 		if _cached_expression.has_execute_failed():
-			printerr(_cached_expression.get_error_text())
+			push_error(_cached_expression.get_error_text())
 		else:
 			return result
 		

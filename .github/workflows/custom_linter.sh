@@ -3,6 +3,8 @@ set -e
 
 # Exclude files/directories with regex
 EXCLUDE="./addons/vrm/.*
+./addons/godot-xr-tools/.*
+./addons/sar_game_framework/generic/helpers/script_utilities.gd
 "
 
 # Start
@@ -22,7 +24,11 @@ echo -e "Exclusion Pattern: $PATTERNS\n"
 matches=$( bash -c "find . -type f -regextype egrep -name '*.gd' -and -not -regex \"${PATTERNS}\" -exec grep -nH 'assert(' {} \;" )
 if [ -n "$matches" ]; then
     echo 'Linter: "assert()" usage is forbidden (assert checks are skipped in release versions causing potential undefined behaviour)';
-    echo 'Linter: use constructs like "if not ...: push_error(...); return" instead';
+    echo 'Linter: use constructs like "if not ___: push_error(___); return" instead';
+    echo 'Linter: or compact constructs like'
+    echo 'Linter: "if not SarUtils.assert_true(___, error_msg): return"';
+    echo 'Linter: "if not SarUtils.assert_ok(___, error_msg): return"';
+    echo 'Linter: "if not SarUtils.assert_equal(___, ___, error_msg): return"';
     echo -e "$matches\n\n";
     match_error=true;
 fi

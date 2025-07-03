@@ -37,9 +37,11 @@ func _on_request_complete(p_asset_err: VSKGameAssetRequest.AssetError) -> void:
 		if _current_asset_request.request_complete.is_connected(_on_request_complete):
 			_current_asset_request.request_complete.disconnect(_on_request_complete)
 		_current_asset_request = null
-	
+
+	if not SarUtils.assert_true(avatar_component, "VSKGameEntityComponentAvatarLoader._on_request_complete: avatar_component is not available"):
+		return
+
 	if p_asset_err == VSKGameAssetRequest.AssetError.OK:
-		assert(avatar_component)
 		avatar_component.set_model_scene(packed_scene)
 	else:
 		var game_asset_manager: VSKGameAssetManager = get_tree().get_first_node_in_group("game_asset_managers")
@@ -50,7 +52,7 @@ func _on_request_complete(p_asset_err: VSKGameAssetRequest.AssetError) -> void:
 				error_avatar_scene = ResourceLoader.load(error_avatar_path)
 				avatar_component.set_model_scene(error_avatar_scene)
 		else:
-			printerr("Could not access game asset manager")
+			push_error("Could not access game asset manager")
 			avatar_component.set_model_scene(null)
 			
 # Called when a new avatar request is made.
@@ -78,7 +80,8 @@ func _request_avatar_asset() -> void:
 			if is_request_path_valid:
 				_current_asset_request = game_asset_manager.make_request(_requested_avatar_path, VSKGameAssetManager.AssetType.AVATAR)
 		
-		assert(avatar_component)
+		if not SarUtils.assert_true(avatar_component, "VSKGameEntityComponentAvatarLoader._request_avatar_asset: avatar_component is not available"):
+			return
 		
 		if not is_request_path_valid:
 			# If the request path is NOT valid, forcefully change the avatar the error placeholder.
@@ -89,13 +92,15 @@ func _request_avatar_asset() -> void:
 			
 			# Finally, wire up the callback signal for when the request is complete.
 			if _current_asset_request:
-				assert(_current_asset_request.request_complete.connect(_on_request_complete) == OK)
+				if not SarUtils.assert_ok(_current_asset_request.request_complete.connect(_on_request_complete),
+					"Could not connect signal '_current_asset_request.request_complete' to '_on_request_complete'"):
+					return
 			else:
 				avatar_component.set_model_scene(game_asset_manager.avatar_error_packed_scene)
-				printerr("Could not create request object for path %s" % _requested_avatar_path)
+				push_error("Could not create request object for path %s" % _requested_avatar_path)
 	else:
 		# This shouldn't happen, if we have the VSKGameAssetManager available as a signal.
-		printerr("Could not locate a valid VSKGameAssetManager. The custom avatar at %s cannot be loaded." % _requested_avatar_path)
+		push_error("Could not locate a valid VSKGameAssetManager. The custom avatar at %s cannot be loaded." % _requested_avatar_path)
 
 # Called when the request avatar path has changed and a new asset
 # request should be made.
@@ -111,7 +116,8 @@ func _ready() -> void:
 	if not Engine.is_editor_hint():
 		var game_asset_manager: VSKGameAssetManager = get_tree().get_first_node_in_group("game_asset_managers")
 		if game_asset_manager:
-			assert(avatar_component)
+			if not SarUtils.assert_true(avatar_component, "VSKGameEntityComponentAvatarLoader: avatar_component is not available"):
+				return
 			avatar_component.set_model_scene(game_asset_manager.loading_avatar_packed_scene)
 		
 		if _requested_avatar_path:

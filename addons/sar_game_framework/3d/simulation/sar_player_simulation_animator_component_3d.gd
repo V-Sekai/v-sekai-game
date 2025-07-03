@@ -45,10 +45,12 @@ func _physics_process(_delta: float) -> void:
 
 func _ready() -> void:
 	if not Engine.is_editor_hint():
-		assert(simulation)
+		if not SarUtils.assert_true(simulation, "SarSimulationComponentAnimator3D: simulation is not available"):
+			return
 		
 		_model_component = simulation.game_entity_interface.get_model_component()
-		assert(_model_component)
+		if not SarUtils.assert_true(_model_component, "SarSimulationComponentAnimator3D: _model_component is not available"):
+			return
 
 func _on_post_movement(_delta: float, p_velocity: Vector3) -> void:
 	_target_velocity = p_velocity * simulation.get_game_entity_interface().get_game_entity().transform.basis

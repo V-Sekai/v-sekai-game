@@ -44,4 +44,6 @@ func _on_view_sign_up_selected() -> void:
 	view_controller.register(_get_uro_service(), register_data)
 	get_navigation_controller().push_view_controller(view_controller, true)
 	
-	assert(view_controller.sign_up_complete.connect(_sign_up_complete) == OK)
+	if not SarUtils.assert_ok(view_controller.sign_up_complete.connect(_sign_up_complete),
+		"Could not connect signal 'view_controller.sign_up_complete' to '_sign_up_complete'"):
+		return

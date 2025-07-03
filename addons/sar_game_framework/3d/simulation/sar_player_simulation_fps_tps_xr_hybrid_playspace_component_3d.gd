@@ -99,7 +99,8 @@ func _physics_process(p_delta: float) -> void:
 
 func _process(_delta: float) -> void:
 	if not Engine.is_editor_hint():
-		assert(camera_base.top_level)
+		if not SarUtils.assert_true(camera_base.top_level, "SarPlayerSimulationFPSTPSXRHybridPlayspaceComponent3D: camera_base.top_level is not available"):
+			return
 		
 		if is_xr_enabled():
 			# If we're in XR mode, disable the interpolation on the camera base.

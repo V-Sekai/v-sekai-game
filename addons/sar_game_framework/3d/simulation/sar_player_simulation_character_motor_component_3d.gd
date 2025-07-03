@@ -14,10 +14,12 @@ var _current_velocity: Vector3 = Vector3()
 	
 func _get_forward_direction() -> Basis:
 	var game_entity_interface: SarGameEntityInterface3D = simulation.get_game_entity_interface()
-	assert(game_entity_interface)
-	
+	if not SarUtils.assert_true(game_entity_interface, "SarSimulationComponentMotor3D._get_forward_direction: game_entity_interface is not available"):
+		return Basis.IDENTITY
+
 	var game_entity: SarGameEntity3D = game_entity_interface.get_game_entity()
-	assert(game_entity)
+	if not SarUtils.assert_true(game_entity, "SarSimulationComponentMotor3D._get_forward_direction: game_entity is not available"):
+		return Basis.IDENTITY
 	
 	return game_entity.global_transform.basis
 
@@ -55,8 +57,9 @@ func _process_movement(p_delta: float, p_movement_vector: Vector2) -> void:
 	var desired_direction: Vector3 = (_get_forward_direction() * movement_dir).normalized()
 	
 	var game_entity_interface: SarGameEntityInterface3D = simulation.get_game_entity_interface()
-	assert(game_entity_interface)
-	
+	if not SarUtils.assert_true(game_entity_interface, "SarSimulationComponentMotor3D._process_movement: game_entity_interface is not available"):
+		return
+
 	_current_velocity = _movement_component.get_velocity()
 	
 	if _movement_component.is_grounded():
@@ -74,10 +77,12 @@ func _physics_process(p_delta: float) -> void:
 func _ready() -> void:
 	if not Engine.is_editor_hint():
 		var game_entity_interface: SarGameEntityInterface3D = simulation.get_game_entity_interface()
-		assert(game_entity_interface)
+		if not SarUtils.assert_true(game_entity_interface, "SarSimulationComponentMotor3D: game_entity_interface is not available"):
+			return
 		
 		_movement_component = game_entity_interface.get_movement_component()
-		assert(_movement_component)
+		if not SarUtils.assert_true(_movement_component, "SarSimulationComponentMotor3D: _movement_component is not available"):
+			return
 		
 		_movement_component.character_body_3d.apply_floor_snap()
 		

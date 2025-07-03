@@ -34,7 +34,7 @@ func _enter_tree() -> void:
 	add_autoload_singleton("VSKEditorSingleton", "./vsk_editor.gd")
 	var vsk_editor: VSKEditor = get_node_or_null("/root/VSKEditorSingleton")
 	if not vsk_editor:
-		printerr("Could not setup VSKEditorSingleton.")
+		push_error("Could not setup VSKEditorSingleton.")
 		
 	_clear_uro_toolbar()
 		

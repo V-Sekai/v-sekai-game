@@ -10,7 +10,8 @@ var _original_skeleton: Skeleton3D = null
 var _interpolated_skeleton: Skeleton3D = null
 	
 func _copy_skeleton_pose(p_src: Skeleton3D, p_target: Skeleton3D) -> void:
-	assert(p_src.get_bone_count() == p_target.get_bone_count())
+	if not SarUtils.assert_equal(p_src.get_bone_count(), p_target.get_bone_count(), "SarGameEntityComponentSkeletonInterpolation._copy_skeleton_pose: src and target have differing bone count"):
+		return
 	
 	for i: int in range(0, p_target.get_bone_count()):
 		p_target.set_bone_pose(i, p_src.get_bone_pose(i))
@@ -78,7 +79,9 @@ func _setup_interpolation_rig_for_node(p_root: Node3D, p_skeleton: Skeleton3D) -
 		secondary.skeleton = secondary.get_path_to(_interpolated_skeleton)
 	
 	_original_skeleton = p_skeleton
-	assert(_original_skeleton.skeleton_updated.connect(_reference_skeleton_updated) == OK)
+	if not SarUtils.assert_ok(_original_skeleton.skeleton_updated.connect(_reference_skeleton_updated),
+		"Could not connect signal '_original_skeleton.skeleton_updated' to '_reference_skeleton_updated'"):
+		return
 
 
 func _on_model_component_model_pre_change(p_new_model: SarModel3D) -> void:

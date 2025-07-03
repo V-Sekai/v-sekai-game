@@ -19,7 +19,7 @@ func _update_model_from_scene() -> void:
 			if model_component:
 				model_component.model_scene = model_scene
 		else:
-			printerr("Game entity character interface is missing.")
+			push_error("Game entity character interface is missing.")
 
 func _nodes_scene_reimported(p_nodes: Array) -> void:
 	for node: Node in p_nodes:

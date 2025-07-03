@@ -28,5 +28,9 @@ func _button_released(p_button: String):
 func _ready() -> void:
 	var controller: XRController3D = get_parent()
 	if controller:
-		assert(controller.button_pressed.connect(_button_pressed) == OK)
-		assert(controller.button_released.connect(_button_released) == OK)
+		if not SarUtils.assert_ok(controller.button_pressed.connect(_button_pressed),
+			"Could not connect signal 'controller.button_pressed' to '_button_pressed'"):
+			return
+		if not SarUtils.assert_ok(controller.button_released.connect(_button_released),
+			"Could not connect signal 'controller.button_released' to '_button_released'"):
+			return

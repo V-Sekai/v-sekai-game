@@ -49,7 +49,8 @@ func _on_shutdown() -> void:
 
 func _ready() -> void:
 	if not Engine.is_editor_hint():
-		assert(simulation)
+		if not SarUtils.assert_true(simulation, "SarSimulationComponentMouseMode: simulation is not available"):
+			return
 		_current_soul = simulation.get_game_entity_interface().get_possession_component().get_soul()
 		if not Engine.is_editor_hint():
 			_update_mouse_mode()

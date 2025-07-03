@@ -147,17 +147,17 @@ func _process_result_and_update_registration(p_service_request: VSKGameServiceRe
 
 func _get_tokens(p_service_request: SarGameServiceRequest) -> Dictionary:
 	if not p_service_request is VSKGameServiceRequestUro:
-		printerr("Did not pass a valid VSKGameServiceRequestUro object to sign in request.")
+		push_error("Did not pass a valid VSKGameServiceRequestUro object to sign in request.")
 		return {} 
 	
 	var domain: String = (p_service_request as VSKGameServiceRequestUro).domain
 	if domain.is_empty():
-		printerr("Did not pass a valid domain to sign in request.")
+		push_error("Did not pass a valid domain to sign in request.")
 		return {}
 		
 	var username: String = (p_service_request as VSKGameServiceRequestUro).username
 	if username.is_empty():
-		printerr("Did not pass a valid username to sign in request.")
+		push_error("Did not pass a valid username to sign in request.")
 		return {}
 	
 	var tokens: Dictionary = _godot_uro.get_tokens(username, domain)
@@ -167,7 +167,7 @@ func _get_tokens(p_service_request: SarGameServiceRequest) -> Dictionary:
 func _get_dashboard_content_async(p_service_request: SarGameServiceRequest, p_callable: Callable) -> Dictionary:
 	if _godot_uro and _godot_uro.get_api():
 		if not p_service_request is VSKGameServiceRequestUro:
-			printerr("Did not pass a valid VSKGameServiceRequestUro object to a sign out request.")
+			push_error("Did not pass a valid VSKGameServiceRequestUro object to a sign out request.")
 			return {} 
 		
 		var domain: String = (p_service_request as VSKGameServiceRequestUro).domain
@@ -195,7 +195,7 @@ func _get_dashboard_content_async(p_service_request: SarGameServiceRequest, p_ca
 func _get_individual_content_async(p_service_request: SarGameServiceRequest, p_id: String, p_callable: Callable):
 	if _godot_uro and _godot_uro.get_api():
 		if not p_service_request is VSKGameServiceRequestUro:
-			printerr("Did not pass a valid VSKGameServiceRequestUro object to a sign out request.")
+			push_error("Did not pass a valid VSKGameServiceRequestUro object to a sign out request.")
 			return {} 
 		
 		var domain: String = (p_service_request as VSKGameServiceRequestUro).domain
@@ -226,7 +226,7 @@ func _upload_content_async(
 		
 	if _godot_uro and _godot_uro.get_api():
 		if not p_service_request is VSKGameServiceRequestUro:
-			printerr("Did not pass a valid VSKGameServiceRequestUro object to a sign out request.")
+			push_error("Did not pass a valid VSKGameServiceRequestUro object to a sign out request.")
 			return {} 
 		
 		var domain: String = (p_service_request as VSKGameServiceRequestUro).domain
@@ -278,24 +278,24 @@ static func get_service_name() -> String:
 func sign_in(p_service_request: SarGameServiceRequest, p_sign_in_data: Dictionary) -> Dictionary:
 	if _godot_uro and _godot_uro.get_api():
 		if not p_service_request is VSKGameServiceRequestUro:
-			printerr("Did not pass a valid VSKGameServiceRequestUro object to sign in request.")
+			push_error("Did not pass a valid VSKGameServiceRequestUro object to sign in request.")
 			return {} 
 			
 		_current_account_address = ""
 		
 		var domain: String = (p_service_request as VSKGameServiceRequestUro).domain
 		if domain.is_empty():
-			printerr("Did not pass a valid domain to a sign in request.")
+			push_error("Did not pass a valid domain to a sign in request.")
 			return {}
 		
 		var username_or_email: String = p_sign_in_data.get("username_or_email", "")
 		if username_or_email.is_empty():
-			printerr("Did not pass a valid username or email to sign in request.")
+			push_error("Did not pass a valid username or email to sign in request.")
 			return {}
 			
 		var password: String = p_sign_in_data.get("password", "")
 		if username_or_email.is_empty():
-			printerr("Did not pass a valid password to sign in request.")
+			push_error("Did not pass a valid password to sign in request.")
 			return {}
 		
 		# Add this request to the active request pool.
@@ -334,39 +334,39 @@ func sign_in(p_service_request: SarGameServiceRequest, p_sign_in_data: Dictionar
 func register(p_service_request: SarGameServiceRequest, p_register_data: Dictionary) -> Dictionary:
 	if _godot_uro and _godot_uro.get_api():
 		if not p_service_request is VSKGameServiceRequestUro:
-			printerr("Did not pass a valid VSKGameServiceRequestUro object to register request.")
+			push_error("Did not pass a valid VSKGameServiceRequestUro object to register request.")
 			return {} 
 			
 		_current_account_address = ""
 		
 		var domain: String = (p_service_request as VSKGameServiceRequestUro).domain
 		if domain.is_empty():
-			printerr("Did not pass a valid domain to a register request.")
+			push_error("Did not pass a valid domain to a register request.")
 			return {}
 		
 		var email: String = p_register_data.get("email", "")
 		if email.is_empty():
-			printerr("Did not pass a valid email to register request.")
+			push_error("Did not pass a valid email to register request.")
 			return {}
 
 		var username: String = p_register_data.get("username", "")
 		if username.is_empty():
-			printerr("Did not pass a valid username to register request.")
+			push_error("Did not pass a valid username to register request.")
 			return {}
 
 		var password: String = p_register_data.get("password", "")
 		if password.is_empty():
-			printerr("Did not pass a valid password to register request.")
+			push_error("Did not pass a valid password to register request.")
 			return {}
 
 		var repeat_password: String = p_register_data.get("repeat_password", "")
 		if repeat_password.is_empty():
-			printerr("Did not pass a valid confirmation password to register request.")
+			push_error("Did not pass a valid confirmation password to register request.")
 			return {}
 
 		var _email_notifications_value = p_register_data.get("email_notifications", null)
 		if (typeof(_email_notifications_value) != TYPE_BOOL):
-			printerr("Did not pass a valid email notifications setting to register request.")
+			push_error("Did not pass a valid email notifications setting to register request.")
 			return {}
 		var email_notifications: bool = _email_notifications_value
 
@@ -404,7 +404,7 @@ func register(p_service_request: SarGameServiceRequest, p_register_data: Diction
 func renew_session(p_service_request: SarGameServiceRequest) -> Dictionary:
 	if _godot_uro and _godot_uro.get_api():
 		if not p_service_request is VSKGameServiceRequestUro:
-			printerr("Did not pass a valid VSKGameServiceRequestUro object to a renew request.")
+			push_error("Did not pass a valid VSKGameServiceRequestUro object to a renew request.")
 			return {} 
 		
 		var domain: String = (p_service_request as VSKGameServiceRequestUro).domain
@@ -432,7 +432,7 @@ func renew_session(p_service_request: SarGameServiceRequest) -> Dictionary:
 func sign_out(p_service_request: SarGameServiceRequest) -> Dictionary:
 	if _godot_uro and _godot_uro.get_api():
 		if not p_service_request is VSKGameServiceRequestUro:
-			printerr("Did not pass a valid VSKGameServiceRequestUro object to a sign out request.")
+			push_error("Did not pass a valid VSKGameServiceRequestUro object to a sign out request.")
 			return {} 
 		
 		var domain: String = (p_service_request as VSKGameServiceRequestUro).domain

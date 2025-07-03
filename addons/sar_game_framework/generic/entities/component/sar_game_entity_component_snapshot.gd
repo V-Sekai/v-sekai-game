@@ -69,7 +69,8 @@ func decode_snapshot(p_stream_peer: StreamPeer, p_bit_offset: int) -> StreamPeer
 			var buf: PackedByteArray = PackedByteArray()
 			var buf_size: int = get_size()
 			var result: int = buf.resize(buf_size)
-			assert(result == OK)
+			if not SarUtils.assert_ok(result, "SarGameEntityComponentSnapshot.sync_net_state.get: Failed to resize buffer"):
+				return PackedByteArray()
 			
 			stream.data_array = buf
 			stream.seek(0)

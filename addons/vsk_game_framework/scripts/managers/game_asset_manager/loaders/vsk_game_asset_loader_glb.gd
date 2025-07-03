@@ -16,7 +16,7 @@ static func _load_from_local_gltf_document_from_path(p_path: String, p_additiona
 	if error == OK:
 		asset_root_node = gltf_document.generate_scene(gltf_state)
 	else:
-		printerr("Failed to load GLTF scene. Returned error code %s" % str(error))
+		push_error("Failed to load GLTF scene. Returned error code %s" % str(error))
 
 	return asset_root_node
 		
@@ -39,7 +39,7 @@ static func load_glb_asset_from_path(p_game_asset_manager: VSKGameAssetManager, 
 			if error == OK:
 				packed_scene_container[0] = packed_scene
 			else:
-				printerr("Failed to pack cached GLTF scene. Returned error code %s" % str(error))
+				push_error("Failed to pack cached GLTF scene. Returned error code %s" % str(error))
 				
 		# Wait until the task completes
 		var glb_saver_task_id: int = WorkerThreadPool.add_task(glb_saver_lambda)
@@ -74,7 +74,7 @@ static func _load_and_cache_asset_from_file_path_internal(
 						
 					var error: Error = ResourceSaver.save(packed_scene, save_path, CACHE_FLAGS)
 					if error != OK:
-						printerr("Failed to save cached GLTF scene. Returned error code %s" % str(error))
+						push_error("Failed to save cached GLTF scene. Returned error code %s" % str(error))
 				
 				# Wait until the task completes
 				var packed_scene_saver_task_id: int = WorkerThreadPool.add_task(packed_scene_saver_lambda)

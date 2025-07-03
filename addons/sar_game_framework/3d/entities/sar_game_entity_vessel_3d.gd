@@ -38,7 +38,7 @@ func _update_transform() -> void:
 				# Match visual position to physics simulation result
 				transform.origin = character_interface.get_movement_component().get_physics_transform().origin
 		else:
-			printerr("Game entity interface is missing.")
+			push_error("Game entity interface is missing.")
 			
 		transform_post_update.emit(transform)
 
@@ -59,7 +59,7 @@ func _update_physics() -> void:
 			movement_component.set_physics_position(global_transform.origin)
 			movement_component.previous_physics_position = global_transform.origin
 	else:
-		printerr("Game entity interface is missing.")
+		push_error("Game entity interface is missing.")
 	
 	# Alert external systems about transform changes
 	transform_changed.emit(global_transform)

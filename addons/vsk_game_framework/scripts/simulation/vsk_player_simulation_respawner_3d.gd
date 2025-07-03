@@ -31,7 +31,7 @@ func _respawn() -> void:
 			# Emit the signal that we have respawned.
 			respawned.emit()
 		else:
-			printerr("Attempted to respawn, but a game session manager could not be found.")
+			push_error("Attempted to respawn, but a game session manager could not be found.")
 
 func request_respawn() -> void:
 	_respawn()

@@ -7,5 +7,6 @@ class_name SarGameEntityComponentPlayerStartLogic
 
 func _enter_tree() -> void:
 	if not Engine.is_editor_hint():
-		assert(game_entity)
+		if not SarUtils.assert_true(game_entity, "SarGameEntityComponentPlayerStartLogic: game_entity is not available"):
+			return
 		game_entity.add_to_group("player_start")

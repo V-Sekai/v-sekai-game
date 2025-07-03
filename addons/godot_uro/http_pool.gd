@@ -70,7 +70,7 @@ class HTTPState:
 
 		var poll_error: Error = http.poll()
 		if poll_error != OK:
-			printerr("poll_error %s" % error_string(poll_error))
+			push_error("poll_error %s" % error_string(poll_error))
 		status = http.get_status()
 
 		if (
@@ -139,7 +139,7 @@ class HTTPState:
 				while status == HTTPClient.STATUS_BODY and exit_result == null:
 					var poll_error: int = http.poll()
 					if poll_error != OK:
-						printerr("poll_error %s" % error_string(poll_error))
+						push_error("poll_error %s" % error_string(poll_error))
 						
 					var chunk = http.read_response_body_chunk()
 					response_code = http.get_response_code()

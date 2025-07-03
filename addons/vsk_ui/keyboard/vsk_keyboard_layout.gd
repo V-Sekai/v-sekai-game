@@ -13,6 +13,8 @@ extends Resource
 		
 		for row: VSKKeyboardRow in rows:
 			if row:
-				assert(row.changed.connect(emit_changed) == OK)
+				if not SarUtils.assert_ok(row.changed.connect(emit_changed),
+					"Could not connect signal 'row.changed' to 'emit_changed'"):
+					return
 				
 		emit_changed()

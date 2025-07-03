@@ -73,8 +73,13 @@ func _update_radio_buttons() -> void:
 					_other_homeserver_line_edit.placeholder_text = "Other Homeserver"
 					_other_homeserver_line_edit.expand_to_text_length = true
 					_other_homeserver_line_edit.virtual_keyboard_type = LineEdit.KEYBOARD_TYPE_URL
-					assert(_other_homeserver_line_edit.editing_toggled.connect(_on_other_homeserver_line_edit_editing_toggled) == OK)
-					assert(_other_homeserver_line_edit.text_changed.connect(_on_other_homeserver_line_edit_text_changed) == OK)
+
+					if not SarUtils.assert_ok(_other_homeserver_line_edit.editing_toggled.connect(_on_other_homeserver_line_edit_editing_toggled),
+						"Could not connect signal '_other_homeserver_line_edit.editing_toggled' to '_on_other_homeserver_line_edit_editing_toggled'"):
+						return
+					if not SarUtils.assert_ok(_other_homeserver_line_edit.text_changed.connect(_on_other_homeserver_line_edit_text_changed),
+						"Could not connect signal '_other_homeserver_line_edit.text_changed' to '_on_other_homeserver_line_edit_text_changed'"):
+						return
 					hbox_container.add_child(_other_homeserver_line_edit)
 					
 					_homeserver_list.add_child(hbox_container)
@@ -93,7 +98,9 @@ func _ready() -> void:
 		homeserver_info = p_homeserver_info
 		
 		if homeserver_info:
-			assert(homeserver_info.changed.connect(_homeserver_info_changed) == OK)
+			if not SarUtils.assert_ok(homeserver_info.changed.connect(_homeserver_info_changed),
+				"Could not connect signal 'homeserver_info.changed' to '_homeserver_info_changed'"):
+				return
 		
 		_update_radio_buttons()
 		

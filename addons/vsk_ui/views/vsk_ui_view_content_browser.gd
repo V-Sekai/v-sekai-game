@@ -23,7 +23,9 @@ func _notification(p_what: int) -> void:
 
 func _ready() -> void:
 	if content_item_container:
-		assert(content_item_container.resized.connect(_content_item_container_resized) == OK)
+		if not SarUtils.assert_ok(content_item_container.resized.connect(_content_item_container_resized),
+			"Could not connect signal 'content_item_container.resized' to '_content_item_container_resized'"):
+			return
 
 ###
 

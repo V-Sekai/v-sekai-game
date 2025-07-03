@@ -64,7 +64,8 @@ func _spawn_player_soul(p_id: int) -> SarSoul:
 	var spawn_parent: Node = _get_player_spawn_parent()
 	
 	var player_soul_instance: SarSoul = _get_player_soul_scene().instantiate()
-	assert(player_soul_instance)
+	if not SarUtils.assert_true(player_soul_instance, "SarGameSessionManager._spawn_player_soul: Could not instantiate player soul scene"):
+		return null
 	player_soul_instance.name = get_player_soul_name_prefix() + str(p_id)
 	player_soul_instance.set_multiplayer_authority(p_id)
 	spawn_parent.add_child(player_soul_instance)
@@ -79,8 +80,9 @@ func _spawn_player_vessel(p_id: int) -> void:
 	var spawn_parent: Node = _get_player_spawn_parent()
 	
 	var player_node_instance: Node = _get_player_vessel_scene().instantiate()
-	assert(player_node_instance)
-	
+	if not SarUtils.assert_true(player_node_instance, "SarGameSessionManager._spawn_player_vessel: Could not instantiate player vessel scene"):
+		return
+
 	if player_node_instance is SarGameEntityVessel3D:
 		(player_node_instance as SarGameEntityVessel3D).global_transform = find_valid_spawn_transform_for_peer_entity_3d(p_id)
 	
@@ -117,13 +119,15 @@ func _setup_project_settings() -> void:
 		if not player_vessel_scene_path.is_empty():
 			_player_vessel_scene = load(player_vessel_scene_path)
 		
-		assert(_player_vessel_scene)
-		
+		if not SarUtils.assert_true(_player_vessel_scene, "SarGameSessionManager._setup_project_settings: Could not load player vessel scene"):
+			return
+	
 		var player_soul_scene_path: String = ProjectSettings.get_setting(_PLAYER_SOUL_SCENE_PROJECT_SETTING_PATH, "")
 		if not player_soul_scene_path.is_empty():
 			_player_soul_scene = load(player_soul_scene_path)
-		
-		assert(_player_soul_scene)
+
+		if not SarUtils.assert_true(_player_soul_scene, "SarGameSessionManager._setup_project_settings: Could not load player soul scene"):
+			return
 	else:
 		# Vessel
 		_create_scene_property(_PLAYER_VESSEL_SCENE_PROJECT_SETTING_PATH)
@@ -178,8 +182,12 @@ func _setup_multiplayer() -> void:
 		_authentication_node.set_name("Authentication")
 		
 		scene_multiplayer.set_auth_callback(_authentication_node.auth_callback)
-		assert(scene_multiplayer.peer_authenticating.connect(_authentication_node.peer_authenticating) == OK)
-		assert(scene_multiplayer.peer_authentication_failed.connect(_authentication_node.peer_authentication_failed) == OK)
+		if not SarUtils.assert_ok(scene_multiplayer.peer_authenticating.connect(_authentication_node.peer_authenticating),
+			"Could not connect signal 'scene_multiplayer.peer_authenticating' to '_authentication_node.peer_authenticating'"):
+			return
+		if not SarUtils.assert_ok(scene_multiplayer.peer_authentication_failed.connect(_authentication_node.peer_authentication_failed),
+			"Could not connect signal 'scene_multiplayer.peer_authentication_failed' to '_authentication_node.peer_authentication_failed'"):
+			return
 		
 		add_child(_authentication_node)
 		
@@ -193,13 +201,23 @@ func _setup_multiplayer() -> void:
 	_update_player_spawn_path()
 
 	# Peer connections
-	assert(multiplayer.connected_to_server.connect(_on_connected_to_server) == OK)
-	assert(multiplayer.connection_failed.connect(_on_connection_failed) == OK)
+	if not SarUtils.assert_ok(multiplayer.connected_to_server.connect(_on_connected_to_server),
+		"Could not connect signal 'multiplayer.connected_to_server' to '_on_connected_to_server'"):
+		return
+	if not SarUtils.assert_ok(multiplayer.connection_failed.connect(_on_connection_failed),
+		"Could not connect signal 'multiplayer.connection_failed' to '_on_connection_failed'"):
+		return
 
-	assert(multiplayer.peer_connected.connect(_on_peer_connect) == OK)
-	assert(multiplayer.peer_disconnected.connect(_on_peer_disconnect) == OK)
+	if not SarUtils.assert_ok(multiplayer.peer_connected.connect(_on_peer_connect),
+		"Could not connect signal 'multiplayer.peer_connected' to '_on_peer_connect'"):
+		return
+	if not SarUtils.assert_ok(multiplayer.peer_disconnected.connect(_on_peer_disconnect),
+		"Could not connect signal 'multiplayer.peer_disconnected' to '_on_peer_disconnect'"):
+		return
 
-	assert(multiplayer.server_disconnected.connect(_on_server_disconnected) == OK)
+	if not SarUtils.assert_ok(multiplayer.server_disconnected.connect(_on_server_disconnected),
+		"Could not connect signal 'multiplayer.server_disconnected' to '_on_server_disconnected'"):
+		return
 
 func _enter_tree() -> void:
 	if not Engine.is_editor_hint():

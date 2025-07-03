@@ -39,13 +39,13 @@ func auth_callback(p_sender_id: int, p_buffer: PackedByteArray) -> void:
 					PackedByteArray([AuthenticationStage.GAME_SCENE_LOADED
 					]))
 				if auth_error_code != OK:
-					printerr("send_auth returned with error code %s" % auth_error_code)
+					push_error("send_auth returned with error code %s" % auth_error_code)
 			AuthenticationStage.COMPLETE:
 				var result: Error = scene_multiplayer.complete_auth(p_sender_id)
 				if result == OK:
 					pass
 				else:
-					printerr("multiplayer complete_auth returned an error code %s" % result)
+					push_error("multiplayer complete_auth returned an error code %s" % result)
 	else:
 		# Messages from the peers.
 		match id:
@@ -57,11 +57,13 @@ func auth_callback(p_sender_id: int, p_buffer: PackedByteArray) -> void:
 				if auth_error_code == OK:
 					var result: Error = scene_multiplayer.complete_auth(p_sender_id)
 					if result == OK:
-						assert(authentication_peers_state_table.erase(p_sender_id) == true)
+						if not SarUtils.assert_true(authentication_peers_state_table.erase(p_sender_id),
+							"SarGameSessionAuthentication.auth_callback: Could not erase p_sender_id %s. Sender id not found in authentication_peers_state_table." % p_sender_id):
+							return
 					else:
-						printerr("multiplayer complete_auth returned an error code %s" % result)
+						push_error("multiplayer complete_auth returned an error code %s" % result)
 				else:
-					printerr("send_auth returned with error code %s" % auth_error_code)
+					push_error("send_auth returned with error code %s" % auth_error_code)
 					
 func create_authentication_buffer() -> PackedByteArray:
 	var buffer: PackedByteArray = PackedByteArray()
@@ -83,9 +85,11 @@ func peer_authenticating(p_peer_id: int) -> void:
 		
 		var result: Error = scene_multiplayer.send_auth(p_peer_id, create_authentication_buffer())
 		if result != OK:
-			printerr("multiplayer send_auth returned an error code %s" % result)
+			push_error("multiplayer send_auth returned an error code %s" % result)
 			
 func peer_authentication_failed(p_peer_id: int) -> void:
 	print("peer_authentication_failed: %s" % p_peer_id)
 	if multiplayer.get_unique_id() == game_session_manager.get_host_peer_id():
-		assert(authentication_peers_state_table.erase(p_peer_id) == true)
+		if not SarUtils.assert_true(authentication_peers_state_table.erase(p_peer_id),
+			"SarGameSessionAuthentication.peer_authentication_failed: Could not erase p_peer_id %s. Peer id not found in authentication_peers_state_table." % p_peer_id):
+			return

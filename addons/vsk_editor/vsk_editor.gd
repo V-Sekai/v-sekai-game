@@ -253,7 +253,7 @@ func _setup_info_panel(p_root: Control) -> void:
 
 			p_root.add_child(_vsk_info_dialog, true)
 		else:
-			printerr("Could not instantiate info dialog.")
+			push_error("Could not instantiate info dialog.")
 
 
 func _setup_upload_panel(p_root: Control) -> void:

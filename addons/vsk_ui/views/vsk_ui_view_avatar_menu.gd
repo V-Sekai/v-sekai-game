@@ -6,7 +6,7 @@ var _request: SarGameServiceRequest = null
 
 func _fetch_content() -> void:
 	if _request:
-		printerr("Request already in progress")
+		push_error("Request already in progress")
 		return
 	
 	_clear_content()
@@ -30,6 +30,8 @@ func _fetch_content() -> void:
 							url)
 							
 						var avatar_url: String = "uro://" + dict.get("domain", "") + "/" + avatar.get("id", "")
-						assert(button.pressed.connect(_content_selected.bind(avatar_url)) == OK)
+						if not SarUtils.assert_ok(button.pressed.connect(_content_selected.bind(avatar_url)),
+							"Could not connect signal 'button.pressed' to '_content_selected.bind(avatar_url)'"):
+							return
 	else:
-		printerr("Could not access Uro service for avatar browser.")
+		push_error("Could not access Uro service for avatar browser.")

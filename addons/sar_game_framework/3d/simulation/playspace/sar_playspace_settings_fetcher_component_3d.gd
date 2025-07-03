@@ -23,7 +23,9 @@ func _ready() -> void:
 	if not Engine.is_editor_hint():
 		var settings_manager: SarGameSettingsManager = get_tree().get_first_node_in_group("settings_managers")
 		if settings_manager:
-			assert(settings_manager.setting_updated.connect(_setting_updated) == OK)
+			if not SarUtils.assert_ok(settings_manager.setting_updated.connect(_setting_updated),
+				"Could not connect signal 'settings_manager.setting_updated' to '_setting_updated'"):
+				return
 
 ###
 

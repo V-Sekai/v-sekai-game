@@ -15,7 +15,8 @@ func _input(p_event: InputEvent) -> void:
 		var vessel: SarGameEntityVessel3D = soul.get_possessed_vessel()
 		if vessel and not _is_xr_enabled():
 			var input_component: SarGameEntityComponentVesselInput = (vessel.get_game_entity_interface() as SarGameEntityInterfaceVessel3D).get_input_component()
-			assert(input_component)
+			if not SarUtils.assert_true(input_component, "SarSoulPlayerCameraRotationComponent: input_component is not available"):
+				return
 			
 			if p_event is InputEventMouseMotion:
 				var rotation_velocity: Vector2 = (p_event as InputEventMouseMotion).relative * MOUSE_SCALE
@@ -27,7 +28,8 @@ func _process(_delta: float) -> void:
 		var vessel: SarGameEntityVessel3D = soul.get_possessed_vessel()
 		if vessel:
 			var input_component: SarGameEntityComponentVesselInput = (vessel.get_game_entity_interface() as SarGameEntityInterfaceVessel3D).get_input_component()
-			assert(input_component)
+			if not SarUtils.assert_true(input_component, "SarSoulPlayerCameraRotationComponent: input_component is not available"):
+				return
 
 			input_component.set_input_value_for_action("camera_rotation_horizontal", Input.get_axis("rotate_camera_left", "rotate_camera_right"))
 			input_component.set_input_value_for_action("camera_rotation_vertical", Input.get_axis("rotate_camera_up", "rotate_camera_down"))
