@@ -274,4 +274,5 @@ openxr/default_action_map="res://addons/vsk_game_framework/config/vsk_openxr_act
 openxr/extensions/hand_tracking=true
 openxr/extensions/hand_interaction_profile=true
 openxr/extensions/eye_gaze_interaction=true
+openxr/startup_alert=false
 shaders/enabled=true

@@ -16,7 +16,7 @@ var _vsk_info_dialog: VSKEditorInfoDialog = null
 
 #const vsk_types_const = preload("res://addons/vsk_importer_exporter/vsk_types.gd")
 
-var _editor_interface: EditorInterface = null
+var _editor_interface = null # EditorInterface
 
 var _uro_toolbar: VSKEditorUroToolbarContainer = null
 
@@ -62,7 +62,7 @@ static func _update_uro_pipeline(
 func user_content_new_uro_id(p_node: Node, p_id: String) -> void:
 	var id: String = ""
 	_update_uro_pipeline(
-		EditorInterface.get_edited_scene_root(), p_node, p_id, true
+		_editor_interface.get_edited_scene_root(), p_node, p_id, true
 	)
 
 	print("user_content_new_uro_id: %s" % id)
@@ -271,7 +271,7 @@ func _setup_upload_panel(p_root: Control) -> void:
 
 
 func setup_editor(
-	p_root: Control, p_uro_toolbar: VSKEditorUroToolbarContainer, p_editor_interface: EditorInterface
+	p_root: Control, p_uro_toolbar: VSKEditorUroToolbarContainer
 ) -> void:
 	print("VSKEditor::setup_editor")
 
@@ -284,7 +284,6 @@ func setup_editor(
 	_setup_progress_panel(p_root)
 	_setup_info_panel(p_root)
 
-	_editor_interface = p_editor_interface
 
 
 ##
@@ -449,7 +448,10 @@ func _packed_scene_upload_failed_callback(p_error_message: String) -> void:
 ##
 
 func _enter_tree():
-	pass
+	_editor_interface = Engine.get_singleton("EditorInterface")
+	if not _editor_interface:
+		push_error("EditorInterface singleton is not available")
+		return
 
 
 func _exit_tree():

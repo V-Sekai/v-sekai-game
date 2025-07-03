@@ -11,6 +11,8 @@ const URO_LOGO = preload("./icon.svg")
 
 var _uro_toolbar: VSKEditorUroToolbarContainer = null
 
+var _editor_interface = null # EditorInterface
+
 func _init():
 	print("Initialising VSKEditor plugin")
 
@@ -41,8 +43,12 @@ func _enter_tree() -> void:
 	_uro_toolbar = preload("vsk_editor_uro_toolbar_container.tscn").instantiate()
 	add_control_to_container(CONTAINER_TOOLBAR, _uro_toolbar)
 
+	_editor_interface = Engine.get_singleton("EditorInterface")
+	if not _editor_interface:
+		push_error("EditorInterface singleton is not available")
+		return
 	vsk_editor.setup_editor(
-		EditorInterface.get_editor_main_screen(), _uro_toolbar, get_editor_interface()
+		_editor_interface.get_editor_main_screen(), _uro_toolbar
 	)
 
 func _exit_tree() -> void:

@@ -105,9 +105,13 @@ func _get_property_list() -> Array[Dictionary]:
 	var interface_path_usage: int = PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_SCRIPT_VARIABLE
 	if Engine.is_editor_hint():
 		var valid_path: String = get_game_entity_valid_scene_path()
-		
+
+		var editor_interface = Engine.get_singleton("EditorInterface")
+		if not editor_interface:
+			push_error("EditorInterface singleton is not available")
+			return properties
 		if not valid_path.is_empty():
-			if not (EditorInterface.get_edited_scene_root() == self and self.scene_file_path == valid_path):
+			if not (editor_interface.get_edited_scene_root() == self and self.scene_file_path == valid_path):
 				interface_path_usage = PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_SCRIPT_VARIABLE
 		
 	# Add interface reference property
