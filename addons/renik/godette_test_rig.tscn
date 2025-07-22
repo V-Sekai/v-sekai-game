@@ -1,0 +1,555 @@
+[gd_scene load_steps=27 format=3 uid="uid://08a3p8axfj1n"]
+
+[ext_resource type="PackedScene" uid="uid://dw41us8jqfwo1" path="res://addons/renik/sample_models/Godette_vrm_v4.vrm" id="1_qnhp5"]
+[ext_resource type="Script" uid="uid://dp4omwn1vbm1f" path="res://addons/vrm/vrm_spring_bone.gd" id="2_i74im"]
+[ext_resource type="Script" uid="uid://cbl72623cko0k" path="res://addons/renik/renik_placement.gd" id="3_slfov"]
+[ext_resource type="Script" uid="uid://3wvx24u740ys" path="res://addons/vrm/vrm_collider_group.gd" id="3_ytbvn"]
+[ext_resource type="Script" uid="uid://b1na47rj7w5uh" path="res://addons/vrm/vrm_collider.gd" id="4_5g6m6"]
+[ext_resource type="Script" uid="uid://cqeoidnhsn75e" path="res://addons/renik2/renik_spine.gd" id="5_mu5of"]
+[ext_resource type="Script" uid="uid://chslcw2ar6ueo" path="res://addons/renik2/renik_limb.gd" id="6_0yan8"]
+[ext_resource type="Script" uid="uid://cf1piomqcwoj5" path="res://addons/renik/renik_placement_gait.gd" id="8_qtuga"]
+
+[sub_resource type="Resource" id="Resource_aydfj"]
+resource_name = "Head"
+script = ExtResource("4_5g6m6")
+node_path = NodePath("")
+bone = "Head"
+offset = Vector3(-1.13273e-09, 0.2, 6.70552e-08)
+tail = Vector3(-1.13273e-09, 0.2, 6.70552e-08)
+radius = 0.15
+is_capsule = false
+gizmo_color = Color(1, 0, 1, 1)
+
+[sub_resource type="Resource" id="Resource_6i5jf"]
+resource_name = "Head"
+script = ExtResource("4_5g6m6")
+node_path = NodePath("")
+bone = "Head"
+offset = Vector3(-1.59839e-09, 1.31, 0.0700001)
+tail = Vector3(-1.59839e-09, 1.31, 0.0700001)
+radius = 1.0
+is_capsule = false
+gizmo_color = Color(1, 0, 1, 1)
+
+[sub_resource type="Resource" id="Resource_cvyfe"]
+script = ExtResource("3_ytbvn")
+colliders = Array[ExtResource("4_5g6m6")]([SubResource("Resource_aydfj"), SubResource("Resource_6i5jf")])
+
+[sub_resource type="Resource" id="Resource_8k8fr"]
+resource_name = "FrontHair_Center_L"
+script = ExtResource("2_i74im")
+comment = ""
+joint_nodes = PackedStringArray("FrontHair_Center_L", "FrontHair_Center_L_End", "")
+stiffness_scale = 2.5
+drag_force_scale = 0.4
+hit_radius_scale = 0.02
+gravity_scale = 0.0
+gravity_dir_default = Vector3(0, -1, 0)
+collider_groups = Array[ExtResource("3_ytbvn")]([SubResource("Resource_cvyfe")])
+stiffness_force = PackedFloat64Array()
+gravity_power = PackedFloat64Array()
+gravity_dir = PackedVector3Array()
+drag_force = PackedFloat64Array()
+hit_radius = PackedFloat64Array()
+center_bone = ""
+center_node = NodePath("")
+
+[sub_resource type="Resource" id="Resource_j8kq8"]
+resource_name = "FrontHair_Center_R"
+script = ExtResource("2_i74im")
+comment = ""
+joint_nodes = PackedStringArray("FrontHair_Center_R", "FrontHair_Center_R_End", "")
+stiffness_scale = 2.5
+drag_force_scale = 0.4
+hit_radius_scale = 0.02
+gravity_scale = 0.0
+gravity_dir_default = Vector3(0, -1, 0)
+collider_groups = Array[ExtResource("3_ytbvn")]([SubResource("Resource_cvyfe")])
+stiffness_force = PackedFloat64Array()
+gravity_power = PackedFloat64Array()
+gravity_dir = PackedVector3Array()
+drag_force = PackedFloat64Array()
+hit_radius = PackedFloat64Array()
+center_bone = ""
+center_node = NodePath("")
+
+[sub_resource type="Resource" id="Resource_i1euc"]
+resource_name = "FrontHair_R"
+script = ExtResource("2_i74im")
+comment = ""
+joint_nodes = PackedStringArray("FrontHair_R", "FrontHair_R_End", "")
+stiffness_scale = 2.5
+drag_force_scale = 0.4
+hit_radius_scale = 0.02
+gravity_scale = 0.0
+gravity_dir_default = Vector3(0, -1, 0)
+collider_groups = Array[ExtResource("3_ytbvn")]([SubResource("Resource_cvyfe")])
+stiffness_force = PackedFloat64Array()
+gravity_power = PackedFloat64Array()
+gravity_dir = PackedVector3Array()
+drag_force = PackedFloat64Array()
+hit_radius = PackedFloat64Array()
+center_bone = ""
+center_node = NodePath("")
+
+[sub_resource type="Resource" id="Resource_hlu28"]
+resource_name = "FrontHair_L"
+script = ExtResource("2_i74im")
+comment = ""
+joint_nodes = PackedStringArray("FrontHair_L", "FrontHair_L_End", "")
+stiffness_scale = 2.5
+drag_force_scale = 0.4
+hit_radius_scale = 0.02
+gravity_scale = 0.0
+gravity_dir_default = Vector3(0, -1, 0)
+collider_groups = Array[ExtResource("3_ytbvn")]([SubResource("Resource_cvyfe")])
+stiffness_force = PackedFloat64Array()
+gravity_power = PackedFloat64Array()
+gravity_dir = PackedVector3Array()
+drag_force = PackedFloat64Array()
+hit_radius = PackedFloat64Array()
+center_bone = ""
+center_node = NodePath("")
+
+[sub_resource type="Resource" id="Resource_vlhjk"]
+resource_name = "Chest"
+script = ExtResource("4_5g6m6")
+node_path = NodePath("")
+bone = "Chest"
+offset = Vector3(-1.60712e-10, 0.0600001, -0.04)
+tail = Vector3(-1.60712e-10, 0.0600001, -0.04)
+radius = 0.1
+is_capsule = false
+gizmo_color = Color(1, 0, 1, 1)
+
+[sub_resource type="Resource" id="Resource_ewyme"]
+resource_name = "Chest"
+script = ExtResource("4_5g6m6")
+node_path = NodePath("")
+bone = "Chest"
+offset = Vector3(7.21188e-11, 0.34, 0.04)
+tail = Vector3(7.21188e-11, 0.34, 0.04)
+radius = 0.217
+is_capsule = false
+gizmo_color = Color(1, 0, 1, 1)
+
+[sub_resource type="Resource" id="Resource_t846x"]
+script = ExtResource("3_ytbvn")
+colliders = Array[ExtResource("4_5g6m6")]([SubResource("Resource_vlhjk"), SubResource("Resource_ewyme")])
+
+[sub_resource type="Resource" id="Resource_oaa0c"]
+resource_name = "Ribbon"
+script = ExtResource("2_i74im")
+comment = ""
+joint_nodes = PackedStringArray("Ribbon", "Ribbon_end", "")
+stiffness_scale = 2.0
+drag_force_scale = 0.4
+hit_radius_scale = 0.02
+gravity_scale = 0.0
+gravity_dir_default = Vector3(0, -1, 0)
+collider_groups = Array[ExtResource("3_ytbvn")]([SubResource("Resource_t846x")])
+stiffness_force = PackedFloat64Array()
+gravity_power = PackedFloat64Array()
+gravity_dir = PackedVector3Array()
+drag_force = PackedFloat64Array()
+hit_radius = PackedFloat64Array()
+center_bone = ""
+center_node = NodePath("")
+
+[sub_resource type="Resource" id="Resource_gtxqm"]
+resource_name = "HairBall_L"
+script = ExtResource("2_i74im")
+comment = ""
+joint_nodes = PackedStringArray("HairBall_L", "HairBall_L_End", "")
+stiffness_scale = 4.0
+drag_force_scale = 0.1
+hit_radius_scale = 0.02
+gravity_scale = 0.0
+gravity_dir_default = Vector3(0, -1, 0)
+collider_groups = Array[ExtResource("3_ytbvn")]([])
+stiffness_force = PackedFloat64Array()
+gravity_power = PackedFloat64Array()
+gravity_dir = PackedVector3Array()
+drag_force = PackedFloat64Array()
+hit_radius = PackedFloat64Array()
+center_bone = ""
+center_node = NodePath("")
+
+[sub_resource type="Resource" id="Resource_kdqtn"]
+resource_name = "HairBall_R"
+script = ExtResource("2_i74im")
+comment = ""
+joint_nodes = PackedStringArray("HairBall_R", "HairBall_R_End", "")
+stiffness_scale = 4.0
+drag_force_scale = 0.1
+hit_radius_scale = 0.02
+gravity_scale = 0.0
+gravity_dir_default = Vector3(0, -1, 0)
+collider_groups = Array[ExtResource("3_ytbvn")]([])
+stiffness_force = PackedFloat64Array()
+gravity_power = PackedFloat64Array()
+gravity_dir = PackedVector3Array()
+drag_force = PackedFloat64Array()
+hit_radius = PackedFloat64Array()
+center_bone = ""
+center_node = NodePath("")
+
+[sub_resource type="Resource" id="Resource_4nc7n"]
+resource_name = "HairBall_Center"
+script = ExtResource("2_i74im")
+comment = ""
+joint_nodes = PackedStringArray("HairBall_Center", "HairBall_Center_End", "")
+stiffness_scale = 4.0
+drag_force_scale = 0.1
+hit_radius_scale = 0.02
+gravity_scale = 0.0
+gravity_dir_default = Vector3(0, -1, 0)
+collider_groups = Array[ExtResource("3_ytbvn")]([])
+stiffness_force = PackedFloat64Array()
+gravity_power = PackedFloat64Array()
+gravity_dir = PackedVector3Array()
+drag_force = PackedFloat64Array()
+hit_radius = PackedFloat64Array()
+center_bone = ""
+center_node = NodePath("")
+
+[sub_resource type="Resource" id="Resource_i74im"]
+resource_name = "ForwardGait"
+script = ExtResource("8_qtuga")
+speed_scalar_min = 1.0
+speed_scalar_max = 0.5
+ground_time = 5.0
+lift_time_base = 10.0
+lift_time_scalar = 5.0
+apex_in_time_base = 10.0
+apex_in_time_scalar = 5.0
+apex_out_time_base = 5.0
+apex_out_time_scalar = 5.0
+drop_time_base = 5.0
+drop_time_scalar = 0.0
+tip_toe_distance_scalar = 1.5708
+tip_toe_speed_scalar = 0.785398
+tip_toe_angle_max = 1.0472
+lift_vertical = 0.0
+lift_vertical_scalar = 0.4
+lift_horizontal_scalar = 0.7
+lift_angle = 1.5708
+apex_vertical = 0.0
+apex_vertical_scalar = 0.1
+apex_angle = 0.392699
+drop_vertical = 0.0
+drop_vertical_scalar = 0.05
+drop_horizontal_scalar = 0.25
+drop_angle = -0.392699
+contact_point_ease = 0.05
+contact_point_ease_scalar = 0.4
+scaling_ease = 0.85
+
+[sub_resource type="Resource" id="Resource_ytbvn"]
+resource_name = "BackwardGait"
+script = ExtResource("8_qtuga")
+speed_scalar_min = 0.5
+speed_scalar_max = 0.75
+ground_time = 5.0
+lift_time_base = 5.0
+lift_time_scalar = 5.0
+apex_in_time_base = 10.0
+apex_in_time_scalar = 5.0
+apex_out_time_base = 10.0
+apex_out_time_scalar = 5.0
+drop_time_base = 5.0
+drop_time_scalar = 5.0
+tip_toe_distance_scalar = 0.0
+tip_toe_speed_scalar = 0.0
+tip_toe_angle_max = 0.0
+lift_vertical = 0.025
+lift_vertical_scalar = 0.1
+lift_horizontal_scalar = 0.33
+lift_angle = -0.392699
+apex_vertical = 0.1
+apex_vertical_scalar = 0.1
+apex_angle = 0.392699
+drop_vertical = 0.0
+drop_vertical_scalar = 0.1
+drop_horizontal_scalar = 0.25
+drop_angle = 0.392699
+contact_point_ease = 0.1
+contact_point_ease_scalar = 0.4
+scaling_ease = 0.85
+
+[sub_resource type="Resource" id="Resource_5g6m6"]
+resource_name = "SidewaysGait"
+script = ExtResource("8_qtuga")
+speed_scalar_min = 0.75
+speed_scalar_max = 0.75
+ground_time = 10.0
+lift_time_base = 5.0
+lift_time_scalar = 5.0
+apex_in_time_base = 10.0
+apex_in_time_scalar = 5.0
+apex_out_time_base = 10.0
+apex_out_time_scalar = 5.0
+drop_time_base = 5.0
+drop_time_scalar = 5.0
+tip_toe_distance_scalar = 0.0
+tip_toe_speed_scalar = 0.0
+tip_toe_angle_max = 0.0
+lift_vertical = 0.05
+lift_vertical_scalar = 0.05
+lift_horizontal_scalar = 0.2
+lift_angle = 0.0
+apex_vertical = 0.01
+apex_vertical_scalar = 0.1
+apex_angle = 0.392699
+drop_vertical = 0.01
+drop_vertical_scalar = 0.05
+drop_horizontal_scalar = 0.25
+drop_angle = 0.0
+contact_point_ease = 0.1
+contact_point_ease_scalar = 0.4
+scaling_ease = 0.85
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_itlrt"]
+size = Vector3(10, 0, 10)
+
+[node name="test_rig" type="Node3D"]
+
+[node name="Godette_vrm_v4" parent="." instance=ExtResource("1_qnhp5")]
+spring_bones = Array[ExtResource("2_i74im")]([SubResource("Resource_8k8fr"), SubResource("Resource_j8kq8"), SubResource("Resource_i1euc"), SubResource("Resource_hlu28"), SubResource("Resource_oaa0c"), SubResource("Resource_gtxqm"), SubResource("Resource_kdqtn"), SubResource("Resource_4nc7n")])
+collider_groups = Array[ExtResource("3_ytbvn")]([SubResource("Resource_cvyfe"), SubResource("Resource_t846x")])
+collider_library = Array[ExtResource("4_5g6m6")]([SubResource("Resource_aydfj"), SubResource("Resource_6i5jf"), SubResource("Resource_vlhjk"), SubResource("Resource_ewyme")])
+
+[node name="GeneralSkeleton" parent="Godette_vrm_v4" index="0"]
+bones/1/position = Vector3(-7.16312e-09, 0.597844, 0.0420817)
+bones/2/rotation = Quaternion(-0.00524529, 0, -3.24421e-09, 0.999986)
+bones/3/rotation = Quaternion(-0.0155223, 0, 3.79901e-10, 0.99988)
+bones/4/rotation = Quaternion(0.0970226, 0, -1.3927e-08, 0.995282)
+bones/5/rotation = Quaternion(-0.076333, 5.14981e-10, 1.67795e-08, 0.997083)
+bones/24/rotation = Quaternion(0.496098, 0.503882, 0.497957, -0.502024)
+bones/25/rotation = Quaternion(0.00808149, 0.996729, 0.0103475, -0.0797483)
+bones/26/rotation = Quaternion(0.0294343, -0.470999, -0.0141158, 0.88153)
+bones/27/rotation = Quaternion(-0.0182103, 0.417993, -2.75605e-05, 0.908268)
+bones/28/rotation = Quaternion(-0.0182093, 0.417993, -2.81081e-05, 0.908268)
+bones/40/rotation = Quaternion(0.496098, -0.503883, -0.497957, -0.502024)
+bones/41/rotation = Quaternion(-0.00808171, 0.996729, 0.0103509, 0.0797482)
+bones/42/rotation = Quaternion(0.0294412, 0.470999, 0.0141191, 0.88153)
+bones/43/rotation = Quaternion(-0.018214, -0.417993, 2.54841e-05, 0.908267)
+bones/44/rotation = Quaternion(-0.0182139, -0.417993, 2.55138e-05, 0.908267)
+bones/60/rotation = Quaternion(2.87945e-06, -0.00374249, 0.999993, -5.03473e-06)
+bones/61/rotation = Quaternion(0, 1, 0, 2.25897e-06)
+bones/62/rotation = Quaternion(7.14629e-06, -0.704455, 0.709748, 1.37437e-08)
+bones/63/rotation = Quaternion(7.15531e-06, -0.704455, 0.709748, 1.07435e-08)
+bones/64/rotation = Quaternion(-2.76743e-06, -0.00363659, 0.999993, 5.0006e-06)
+bones/65/rotation = Quaternion(6.53237e-10, 1, -0.000226315, -2.27138e-06)
+bones/66/rotation = Quaternion(-7.16716e-06, -0.70437, 0.709833, -8.40055e-08)
+bones/67/rotation = Quaternion(-7.17574e-06, -0.704455, 0.709748, -8.05611e-08)
+
+[node name="Head" parent="Godette_vrm_v4/GeneralSkeleton" index="3"]
+transform = Transform3D(1, -2.66454e-15, 4.44089e-16, 1.77636e-15, 1, -2.98023e-08, -8.88178e-16, 2.98023e-08, 1, -3.86749e-09, 0.979287, -0.0151441)
+
+[node name="RenIKSpineModifier3D" type="SkeletonModifier3D" parent="Godette_vrm_v4/GeneralSkeleton" index="4" node_paths=PackedStringArray("head_target", "hip_target")]
+_import_path = NodePath("")
+unique_name_in_owner = false
+process_mode = 0
+process_priority = 0
+process_physics_priority = 0
+process_thread_group = 0
+physics_interpolation_mode = 0
+auto_translate_mode = 0
+editor_description = ""
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+rotation_edit_mode = 0
+rotation_order = 2
+top_level = false
+visible = true
+visibility_parent = NodePath("")
+active = true
+influence = 1.0
+script = ExtResource("5_mu5of")
+head_target = NodePath("HeadTarget")
+hip_target = NodePath("HipsTarget")
+metadata/_custom_type_script = "uid://cqeoidnhsn75e"
+
+[node name="HipsTarget" type="Marker3D" parent="Godette_vrm_v4/GeneralSkeleton/RenIKSpineModifier3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.645653, 0.031926)
+
+[node name="HeadTarget" type="Marker3D" parent="Godette_vrm_v4/GeneralSkeleton/RenIKSpineModifier3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.944517, 0.01)
+
+[node name="LeftHandRenIKLimbModifier3D" type="SkeletonModifier3D" parent="Godette_vrm_v4/GeneralSkeleton" index="5" node_paths=PackedStringArray("target")]
+_import_path = NodePath("")
+unique_name_in_owner = false
+process_mode = 0
+process_priority = 0
+process_physics_priority = 0
+process_thread_group = 0
+physics_interpolation_mode = 0
+auto_translate_mode = 0
+editor_description = ""
+transform = Transform3D(-0.0875318, 0.99283, -0.081399, 0.906461, 0.0454957, -0.419835, -0.413121, -0.110534, -0.903944, 0.360267, 0.884487, -0.101432)
+rotation_edit_mode = 0
+rotation_order = 2
+top_level = false
+visible = true
+visibility_parent = NodePath("")
+active = true
+influence = 1.0
+script = ExtResource("6_0yan8")
+leaf_bone = &"LeftHand"
+lower_bone = &"LeftLowerArm"
+upper_bone = &"LeftUpperArm"
+pole_offset = Quaternion(-0.093576, 0.090998, -0.691201, -0.710777)
+arm_shoulder_pole_offset = Quaternion(0, 0, -0.62932, 0.777146)
+target = NodePath("LeftHandTarget")
+metadata/_custom_type_script = "uid://chslcw2ar6ueo"
+
+[node name="LeftHandTarget" type="Marker3D" parent="Godette_vrm_v4/GeneralSkeleton/LeftHandRenIKLimbModifier3D"]
+transform = Transform3D(1, 0, -2.98023e-08, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="RightHandRenIKLimbModifier3D" type="SkeletonModifier3D" parent="Godette_vrm_v4/GeneralSkeleton" index="6" node_paths=PackedStringArray("target")]
+_import_path = NodePath("")
+unique_name_in_owner = false
+process_mode = 0
+process_priority = 0
+process_physics_priority = 0
+process_thread_group = 0
+physics_interpolation_mode = 0
+auto_translate_mode = 0
+editor_description = ""
+transform = Transform3D(-0.295312, -0.955401, -7.07173e-09, 0.739325, -0.228524, -0.633385, 0.605136, -0.187046, 0.773837, -0.297651, 0.886939, 0.156684)
+rotation_edit_mode = 0
+rotation_order = 2
+top_level = false
+visible = true
+visibility_parent = NodePath("")
+active = true
+influence = 1.0
+script = ExtResource("6_0yan8")
+preset = 1
+leaf_bone = &"RightHand"
+lower_bone = &"RightLowerArm"
+upper_bone = &"RightUpperArm"
+mirror = true
+pole_offset = Quaternion(0.113039, -0.0652631, 0.495722, 0.858616)
+arm_shoulder_pole_offset = Quaternion(0, 0, -0.62932, 0.777146)
+target = NodePath("RightHandTarget")
+metadata/_custom_type_script = "uid://chslcw2ar6ueo"
+
+[node name="RightHandTarget" type="Marker3D" parent="Godette_vrm_v4/GeneralSkeleton/RightHandRenIKLimbModifier3D"]
+
+[node name="LeftFootRenIKLimbModifier3D" type="SkeletonModifier3D" parent="Godette_vrm_v4/GeneralSkeleton" index="7" node_paths=PackedStringArray("target")]
+_import_path = NodePath("")
+unique_name_in_owner = false
+process_mode = 0
+process_priority = 0
+process_physics_priority = 0
+process_thread_group = 0
+physics_interpolation_mode = 0
+auto_translate_mode = 0
+editor_description = ""
+transform = Transform3D(-1, 0, 0, 0, 0, 1, 0, 1, 0, 0.437484, 0.0643737, 0.0080558)
+rotation_edit_mode = 0
+rotation_order = 2
+top_level = false
+visible = true
+visibility_parent = NodePath("")
+active = true
+influence = 1.0
+script = ExtResource("6_0yan8")
+preset = 2
+leaf_bone = &"LeftFoot"
+lower_bone = &"LeftLowerLeg"
+upper_bone = &"LeftUpperLeg"
+upper_twist_offset = 0.0
+lower_twist_offset = 3.14159
+roll_offset = 0.0
+lower_limb_twist = 0.25
+twist_inflection_point_offset = 0.0
+target_rotation_influence = 0.5
+pole_offset = Quaternion(0, 0, 1, -4.37114e-08)
+target_position_influence = Vector3(0, 0, 0)
+has_shoulder = false
+arm_shoulder_pole_offset = Quaternion(0, 0, -0.62932, 0.777146)
+target = NodePath("LeftFootTarget")
+metadata/_custom_type_script = "uid://chslcw2ar6ueo"
+
+[node name="LeftFootTarget" type="Marker3D" parent="Godette_vrm_v4/GeneralSkeleton/LeftFootRenIKLimbModifier3D"]
+
+[node name="RightFootRenIKLimbModifier3D" type="SkeletonModifier3D" parent="Godette_vrm_v4/GeneralSkeleton" index="8" node_paths=PackedStringArray("target")]
+_import_path = NodePath("")
+unique_name_in_owner = false
+process_mode = 0
+process_priority = 0
+process_physics_priority = 0
+process_thread_group = 0
+physics_interpolation_mode = 0
+auto_translate_mode = 0
+editor_description = ""
+transform = Transform3D(-1, 0, 0, 0, 0, 1, 0, 1, 0, -0.161519, 0.0643737, 0.00805575)
+rotation_edit_mode = 0
+rotation_order = 2
+top_level = false
+visible = true
+visibility_parent = NodePath("")
+active = true
+influence = 1.0
+script = ExtResource("6_0yan8")
+preset = 3
+leaf_bone = &"RightFoot"
+lower_bone = &"RightLowerLeg"
+upper_bone = &"RightUpperLeg"
+mirror = true
+upper_twist_offset = 0.0
+lower_twist_offset = 3.14159
+roll_offset = 0.0
+lower_limb_twist = 0.25
+twist_inflection_point_offset = 0.0
+target_rotation_influence = 0.5
+pole_offset = Quaternion(0, 0, 1, -4.37114e-08)
+target_position_influence = Vector3(0, 0, 0)
+has_shoulder = false
+arm_shoulder_pole_offset = Quaternion(0, 0, -0.62932, 0.777146)
+target = NodePath("RightFootTarget")
+metadata/_custom_type_script = "uid://chslcw2ar6ueo"
+
+[node name="RightFootTarget" type="Marker3D" parent="Godette_vrm_v4/GeneralSkeleton/RightFootRenIKLimbModifier3D"]
+
+[node name="ArmTwistIndicator" type="BoneAttachment3D" parent="Godette_vrm_v4/GeneralSkeleton" index="9"]
+transform = Transform3D(0.0288815, 0.648151, -0.760964, 0.348401, -0.72007, -0.600097, -0.936901, -0.247789, -0.246613, 0.121515, 0.930472, -0.0678677)
+bone_name = "LeftUpperArm"
+bone_idx = 25
+
+[node name="secondary" parent="Godette_vrm_v4" index="1"]
+collider_groups = Array[ExtResource("3_ytbvn")]([SubResource("Resource_cvyfe"), SubResource("Resource_t846x")])
+collider_library = Array[ExtResource("4_5g6m6")]([SubResource("Resource_aydfj"), SubResource("Resource_6i5jf"), SubResource("Resource_vlhjk"), SubResource("Resource_ewyme")])
+
+[node name="LogicContainer" type="Node3D" parent="."]
+transform = Transform3D(0.898533, 0.432097, -0.077013, -0.433652, 0.84693, -0.307663, -0.067716, 0.309842, 0.948374, 0, 0, 0)
+
+[node name="RenIKFootPlacement" type="Node3D" parent="LogicContainer"]
+transform = Transform3D(1, 1.11759e-08, 0, -6.70552e-08, 1, 0, -7.45058e-09, 0, 1, 0, 0, 0)
+script = ExtResource("3_slfov")
+live_preview = true
+forward_gait = SubResource("Resource_i74im")
+backward_gait = SubResource("Resource_ytbvn")
+sideways_gait = SubResource("Resource_5g6m6")
+spine_length = 0.27955
+left_leg_length = 0.434713
+right_leg_length = 0.434713
+hip_offset = Vector3(3.84637e-09, -0.33806, 0.0214016)
+left_hip_offset = Vector3(0.109996, -0.149882, -0.0477961)
+right_hip_offset = Vector3(-0.109996, -0.149882, -0.047796)
+armature_skeleton_path = NodePath("../../Godette_vrm_v4/GeneralSkeleton")
+enable_left_foot_placement = false
+enable_right_foot_placement = false
+armature_head_target = NodePath("../../Godette_vrm_v4/GeneralSkeleton/RenIKSpineModifier3D/HeadTarget")
+armature_hip_target = NodePath("../../Godette_vrm_v4/GeneralSkeleton/RenIKSpineModifier3D/HipsTarget")
+armature_left_foot_target = NodePath("../../Godette_vrm_v4/GeneralSkeleton/LeftFootRenIKLimbModifier3D")
+armature_right_foot_target = NodePath("../../Godette_vrm_v4/GeneralSkeleton/RightFootRenIKLimbModifier3D")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("BoxShape3D_itlrt")
+
+[editable path="Godette_vrm_v4"]
