@@ -1,8 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://riyhjc3pjwu7"]
+[gd_scene load_steps=7 format=3 uid="uid://riyhjc3pjwu7"]
 
 [ext_resource type="Script" uid="uid://b17sv8b2cinal" path="res://addons/sar_game_framework/3d/simulation/sar_player_simulation_fps_tps_xr_hybrid_playspace_component_3d.gd" id="1_tx1op"]
 [ext_resource type="Script" uid="uid://cemx2o5bc8hi" path="res://addons/sar_game_framework/3d/simulation/playspace/sar_anchor_pivot_3d.gd" id="2_175ym"]
 [ext_resource type="Script" uid="uid://0bufs02htdx6" path="res://addons/sar_game_framework/3d/simulation/sar_player_simulation_xr_origin_3d.gd" id="2_ks13o"]
+[ext_resource type="Script" uid="uid://bjpu2oyi6qt3g" path="res://addons/xr_rig_calibrator/calibration_orchestrator.gd" id="4_ljf0h"]
+[ext_resource type="PackedScene" uid="uid://bd5ud35o4lhqd" path="res://addons/xr_rig_calibrator/human_reference_rig.tscn" id="4_ypx6w"]
+[ext_resource type="Script" uid="uid://dygwgrqe5vmln" path="res://addons/xr_rig_calibrator/calibrated_tracker.gd" id="5_ypx6w"]
 
 [node name="SarPlayerSimulationFPSTPSXRHybridPlayspaceComponent3D" type="Node3D" node_paths=PackedStringArray("xr_origin", "camera_base", "camera_pivot", "camera_offset", "camera_pivot_reference_node", "camera")]
 editor_description = "A basic playspace which is intended to provide equal measure support for first-person and third-person cameras, as well as being able to operate in both XR and non-XR modes."
@@ -36,6 +39,34 @@ xr_camera = NodePath("XRCamera3D")
 [node name="XRCamera3D" type="XRCamera3D" parent="CameraBase/CameraPivot/CameraOffset/XROrigin3D"]
 physics_interpolation_mode = 0
 editor_description = "The main XRCamera. Despite its name and node type, it is usable in both XR and non-XR modes."
+
+[node name="ReferenceRig" parent="CameraBase/CameraPivot/CameraOffset" instance=ExtResource("4_ypx6w")]
+bones/7/rotation = Quaternion(0.70710677, 0, 0, 0.70710677)
+bones/8/rotation = Quaternion(0.70710677, 0, 0, 0.70710677)
+bones/9/rotation = Quaternion(0, 0.70710677, 0.70710677, 0)
+bones/12/rotation = Quaternion(0, -0.70710677, 0, 0.70710677)
+bones/13/rotation = Quaternion(0, 0.70710677, 0, 0.70710677)
+bones/14/rotation = Quaternion(-0.21418673, 0.67388725, 0.21418673, 0.67388725)
+bones/31/rotation = Quaternion(0, 0.70710677, 0, 0.70710677)
+bones/32/rotation = Quaternion(0, -0.70710677, 0, 0.70710677)
+bones/33/rotation = Quaternion(-0.21418673, -0.67388725, -0.21418673, 0.67388725)
+bones/50/rotation = Quaternion(0, 0.70710677, -0.70710677, 0)
+bones/54/rotation = Quaternion(0, 0.70710677, -0.70710677, 0)
+
+[node name="CalibratedRig" type="Node3D" parent="CameraBase/CameraPivot/CameraOffset" node_paths=PackedStringArray("skel", "raw_tracker_root", "raw_trackers")]
+script = ExtResource("4_ljf0h")
+skel = NodePath("../ReferenceRig")
+raw_tracker_root = NodePath("../XROrigin3D")
+raw_trackers = [NodePath("../XROrigin3D/XRCamera3D")]
+
+[node name="Head" type="Marker3D" parent="CameraBase/CameraPivot/CameraOffset/CalibratedRig"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, -0.04, 0.04)
+visible = false
+script = ExtResource("5_ypx6w")
+position_offset = Vector3(0, -0.04, 0.04)
+rotation_euler_offset = Vector3(0, 3.14159, 0)
+relative_motion_rotation_initial = Quaternion(0, 0, 0, 1)
+relative_motion_rotation_offset = Quaternion(0, 0, 0, 1)
 
 [node name="PivotReferenceTarget" type="Marker3D" parent="CameraBase"]
 editor_description = "Helper node for the camera pivot to interpolate towards for situations where we can't rely on the engine's own interpolation functionality and have to do it ourselves, such as operating in XR mode."

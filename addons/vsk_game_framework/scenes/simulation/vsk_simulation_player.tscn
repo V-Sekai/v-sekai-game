@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://butylt8jwkigr"]
+[gd_scene load_steps=24 format=3 uid="uid://butylt8jwkigr"]
 
 [ext_resource type="Script" uid="uid://b02vyxkiq7wyw" path="res://addons/sar_game_framework/3d/simulation/sar_character_simulation_3d.gd" id="1_titpx"]
 [ext_resource type="PackedScene" uid="uid://crjgg4fi0c0ad" path="res://addons/vsk_game_framework/scenes/simulation/components/vsk_player_simulation_playspace_component_3d.tscn" id="2_av2xa"]
@@ -17,6 +17,7 @@
 [ext_resource type="PackedScene" uid="uid://dykiw8vajp3tc" path="res://addons/vsk_game_framework/scenes/gui/ingame_gui.tscn" id="12_wjp03"]
 [ext_resource type="PackedScene" uid="uid://c2lsahyu64ckk" path="res://addons/vsk_ui/views/vsk_ui_view_quick_menu.tscn" id="14_o2km5"]
 [ext_resource type="Script" uid="uid://bxwvtooweymv2" path="res://addons/vsk_game_framework/scripts/gui/vsk_ingame_menu.gd" id="15_5f7rd"]
+[ext_resource type="Script" uid="uid://cchftsiyjxha3" path="res://addons/vsk_game_framework/scripts/simulation/vsk_player_simulation_skeleton_ik_component_3d.gd" id="15_dujnu"]
 [ext_resource type="Script" uid="uid://duee8kk4yfgq7" path="res://addons/vsk_game_framework/scripts/simulation/vsk_player_simulation_nameplate_assigner_component_3d.gd" id="16_5mnbu"]
 [ext_resource type="Script" uid="uid://gdldgf60cm3j" path="res://addons/sar_game_framework/generic/simulation/sar_player_simulation_fader.gd" id="18_dbj7c"]
 [ext_resource type="PackedScene" uid="uid://b8cq8t2yuydt" path="res://addons/vsk_ui/view_controllers/vsk_ui_view_controller_big_menu.tscn" id="20_cq6gb"]
@@ -118,6 +119,11 @@ simulation = NodePath("..")
 motor = NodePath("../Motor3DComponent")
 velocity_animation_multiplier = 0.2
 metadata/_custom_type_script = "uid://57rusoeu6gsx"
+
+[node name="SkeletonIK3DComponent" type="Node" parent="." node_paths=PackedStringArray("simulation")]
+script = ExtResource("15_dujnu")
+simulation = NodePath("..")
+metadata/_custom_type_script = "uid://dl863vvomk3v6"
 
 [node name="FaderComponent" type="Node" parent="." node_paths=PackedStringArray("fade_overlay")]
 editor_description = "This node is intended to provide a fade-in and fade-out when the simulation space becomes active to provide a less jarring experience for players entering a multiplayer session."

@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://crjgg4fi0c0ad"]
+[gd_scene load_steps=15 format=3 uid="uid://crjgg4fi0c0ad"]
 
 [ext_resource type="PackedScene" uid="uid://riyhjc3pjwu7" path="res://addons/sar_game_framework/3d/simulation/sar_player_simulation_fps_tps_xr_hybrid_playspace_component_3d.tscn" id="1_jvu1v"]
 [ext_resource type="Script" uid="uid://bps4jvd15dpw6" path="res://addons/vsk_game_framework/scripts/simulation/vsk_player_simulation_playspace_component_3d.gd" id="2_00l76"]
@@ -8,6 +8,10 @@
 [ext_resource type="PackedScene" uid="uid://c6536akabfvna" path="res://addons/sar_game_framework/3d/xr/xr_component_hand_rotation.tscn" id="6_5e044"]
 [ext_resource type="Script" uid="uid://d3evp1l2c735g" path="res://addons/sar_game_framework/3d/simulation/playspace/sar_playspace_head_offset_component_3d.gd" id="7_7l3ug"]
 [ext_resource type="Script" uid="uid://csndide20cut0" path="res://addons/sar_game_framework/3d/simulation/playspace/sar_playspace_fps_tps_xr_hybrid_settings_fetcher_component_3d.gd" id="8_jvu1v"]
+[ext_resource type="Script" uid="uid://c4ah4tflvuqjr" path="res://addons/vsk_game_framework/scripts/simulation/vsk_playspace_ik_driver_component_3d.gd" id="9_00l76"]
+[ext_resource type="Script" uid="uid://dygwgrqe5vmln" path="res://addons/xr_rig_calibrator/calibrated_tracker.gd" id="11_mdjmv"]
+[ext_resource type="Script" uid="uid://bke0fqj0b64iy" path="res://addons/vsk_game_framework/scenes/simulation/components/skeleton_updater.gd" id="12_mdjmv"]
+[ext_resource type="Script" uid="uid://dqwdiojv5c1ah" path="res://addons/xr_rig_calibrator/rig_to_rig_calibrator.gd" id="14_k221o"]
 
 [sub_resource type="GDScript" id="GDScript_jvu1v"]
 script/source = "extends Node
@@ -34,6 +38,9 @@ func _process(p_delta: float) -> void:
 					inc = -inc
 "
 
+[sub_resource type="BoxMesh" id="BoxMesh_b76jt"]
+size = Vector3(0.25, 0.25, 0.25)
+
 [node name="VSKPlayerSimulationPlayspaceComponent3D" instance=ExtResource("1_jvu1v")]
 editor_description = "V-Sekai extends the standard FPS, TPS, XR hybrid playspace to provide functionality specific to it, including deriving various parameters from the avatar we have set, head offset accumulation, as well as various settings the user can customize."
 script = ExtResource("2_00l76")
@@ -41,14 +48,25 @@ default_height = 1.8
 maximum_pitch = 60.0
 minimum_pitch = -60.0
 
-[node name="HeadOffsetComponent" type="Node" parent="." index="0" node_paths=PackedStringArray("pivot", "xr_camera", "xr_origin")]
+[node name="SettingsFetcherComponent" type="Node" parent="." index="0" node_paths=PackedStringArray("playspace")]
+editor_description = "We would like to be able to provide user customization to various functions of the playspace, so this node can be thought of as orchestrator for the various parameters the scene can be set to."
+script = ExtResource("8_jvu1v")
+playspace = NodePath("..")
+metadata/_custom_type_script = "uid://bb7ar2kq0iibp"
+
+[node name="RescaleTester" type="Node" parent="." index="1" node_paths=PackedStringArray("xr_origin")]
+editor_description = "This is just here for testing at the moment."
+script = SubResource("GDScript_jvu1v")
+xr_origin = NodePath("../CameraBase/CameraPivot/CameraOffset/XROrigin3D")
+
+[node name="HeadOffsetComponent" type="Node" parent="." index="2" node_paths=PackedStringArray("pivot", "xr_camera", "xr_origin")]
 editor_description = "This node is designed to keep track of the player's head moving from the center of their origin point. Every physics frame, it will calculate an offset and attempt emit signals which are intended to be translated into offset for the simulation's physical body. Once this step has been performed, we should then receive the results to compensate."
 script = ExtResource("7_7l3ug")
 pivot = NodePath("../CameraBase/CameraPivot")
 xr_camera = NodePath("../CameraBase/CameraPivot/CameraOffset/XROrigin3D/XRCamera3D")
 xr_origin = NodePath("../CameraBase/CameraPivot/CameraOffset/XROrigin3D")
 
-[node name="CameraBase" parent="." index="1"]
+[node name="CameraBase" parent="." index="3"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 
 [node name="CameraPivot" parent="CameraBase" index="0"]
@@ -62,26 +80,110 @@ right_hand_default_child_scenes = Array[PackedScene]([ExtResource("6_5e044"), Ex
 [node name="XRCamera3D" parent="CameraBase/CameraPivot/CameraOffset/XROrigin3D" index="0"]
 cull_mask = 3
 
-[node name="LeftHandTest" type="XRController3D" parent="CameraBase/CameraPivot/CameraOffset/XROrigin3D" index="1"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000531018, 0, 0)
-tracker = &"left_hand"
-show_when_tracked = true
+[node name="Debug" type="MeshInstance3D" parent="CameraBase/CameraPivot/CameraOffset/XROrigin3D/XRCamera3D" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.881147)
+visible = false
+mesh = SubResource("BoxMesh_b76jt")
 
-[node name="RightHandTest" type="XRController3D" parent="CameraBase/CameraPivot/CameraOffset/XROrigin3D" index="2"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000531018, 0, 0)
-tracker = &"right_hand"
-show_when_tracked = true
-
-[node name="SettingsFetcherComponent" type="Node" parent="." index="2" node_paths=PackedStringArray("playspace")]
-editor_description = "We would like to be able to provide user customization to various functions of the playspace, so this node can be thought of as orchestrator for the various parameters the scene can be set to."
-script = ExtResource("8_jvu1v")
+[node name="IKDriverComponent" type="Node3D" parent="." index="4" node_paths=PackedStringArray("playspace", "player_calibrated_rig", "avatar_calibrated_rig", "skeleton_updater")]
+editor_description = "Driver for the vessel's SkeletonIK3DComponent"
+script = ExtResource("9_00l76")
 playspace = NodePath("..")
+player_calibrated_rig = NodePath("../CameraBase/CameraPivot/CameraOffset/CalibratedRig")
+avatar_calibrated_rig = NodePath("AvatarCalibratedRig")
+skeleton_updater = NodePath("SkeletonUpdater")
 metadata/_custom_type_script = "uid://bb7ar2kq0iibp"
 
-[node name="RescaleTester" type="Node" parent="." index="3" node_paths=PackedStringArray("xr_origin")]
-editor_description = "This is just here for testing at the moment."
-script = SubResource("GDScript_jvu1v")
-xr_origin = NodePath("../CameraBase/CameraPivot/CameraOffset/XROrigin3D")
+[node name="AvatarCalibratedRig" type="Node3D" parent="IKDriverComponent" index="0" node_paths=PackedStringArray("source_skel", "src_tracker_root")]
+script = ExtResource("14_k221o")
+source_skel = NodePath("../../CameraBase/CameraPivot/CameraOffset/ReferenceRig")
+src_tracker_root = NodePath("../../CameraBase/CameraPivot/CameraOffset/CalibratedRig")
+
+[node name="Hips" type="Marker3D" parent="IKDriverComponent/AvatarCalibratedRig" index="0"]
+transform = Transform3D(0.941326, -0.234855, -0.242381, 0.313989, 0.34606, 0.884112, -0.12376, -0.908342, 0.399497, 2.04891e-08, 0.5, -5.58794e-08)
+visible = false
+script = ExtResource("11_mdjmv")
+position_offset = Vector3(-0.00596371, 0.00912406, 0.111808)
+rotation_euler_offset = Vector3(-1.08459, 2.59625, 0.736847)
+relative_motion_rotation_initial = Quaternion(0, 0, 0, 1)
+relative_motion_rotation_offset = Quaternion(0, 0, 0, 1)
+
+[node name="LeftFoot" type="Marker3D" parent="IKDriverComponent/AvatarCalibratedRig" index="1"]
+transform = Transform3D(-0.907482, -0.405288, 0.110536, -0.0682722, 0.401911, 0.91313, -0.414507, 0.821103, -0.392397, 0.11658, -0.0634995, -0.166894)
+visible = false
+script = ExtResource("11_mdjmv")
+position_offset = Vector3(-0.0378676, -0.125684, -0.147216)
+rotation_euler_offset = Vector3(0.403239, -0.120467, -0.467497)
+relative_motion_rotation_initial = Quaternion(0, 0, 0, 1)
+relative_motion_rotation_offset = Quaternion(0, 0, 0, 1)
+
+[node name="RightFoot" type="Marker3D" parent="IKDriverComponent/AvatarCalibratedRig" index="2"]
+transform = Transform3D(-0.941327, -0.226813, -0.24992, -0.313987, 0.86009, 0.402066, 0.12376, 0.456947, -0.880842, 0.0393565, 0.041858, 0.0206045)
+visible = false
+script = ExtResource("11_mdjmv")
+position_offset = Vector3(-0.0431106, -0.0573453, -0.0123894)
+rotation_euler_offset = Vector3(-0.413772, 0.276463, -0.35003)
+relative_motion_rotation_initial = Quaternion(0, 0, 0, 1)
+relative_motion_rotation_offset = Quaternion(0, 0, 0, 1)
+
+[node name="LeftHand" type="Marker3D" parent="IKDriverComponent/AvatarCalibratedRig" index="3"]
+transform = Transform3D(0.350759, -0.0302339, -0.935978, 0.936466, 0.011813, 0.35056, 0.000457942, -0.999473, 0.0324565, 0.651882, 1.43267, -0.0724315)
+visible = false
+script = ExtResource("11_mdjmv")
+position_offset = Vector3(0.0174856, -0.0322065, -0.0383908)
+rotation_euler_offset = Vector3(1.21103, -3.04928, 1.65677)
+relative_motion_rotation_initial = Quaternion(0, 0, 0, 1)
+relative_motion_rotation_offset = Quaternion(0, 0, 0, 1)
+
+[node name="RightHand" type="Marker3D" parent="IKDriverComponent/AvatarCalibratedRig" index="4"]
+transform = Transform3D(0.965984, 7.19726e-06, 0.258601, -0.258601, 1.54972e-06, 0.965984, 6.54161e-06, -1, 3.33786e-06, -0.68481, 1.4441, -0.013437)
+visible = false
+script = ExtResource("11_mdjmv")
+position_offset = Vector3(0.041509, 0.000721619, -0.0498154)
+rotation_euler_offset = Vector3(0.261577, 3.14159, -1.5708)
+relative_motion_rotation_initial = Quaternion(0, 0, 0, 1)
+relative_motion_rotation_offset = Quaternion(0, 0, 0, 1)
+
+[node name="Head" type="Marker3D" parent="IKDriverComponent/AvatarCalibratedRig" index="5"]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -7.12846e-10, 0.773231, 0.008154)
+visible = false
+script = ExtResource("11_mdjmv")
+position_offset = Vector3(-0.00318214, -0.21786, 0.008154)
+relative_motion_rotation_initial = Quaternion(0, 0, 0, 1)
+relative_motion_rotation_offset = Quaternion(0, 0, 0, 1)
+
+[node name="Chest" type="Marker3D" parent="IKDriverComponent/AvatarCalibratedRig" index="6"]
+visible = false
+script = ExtResource("11_mdjmv")
+relative_motion_rotation_initial = Quaternion(0, 0, 0, 1)
+relative_motion_rotation_offset = Quaternion(0, 0, 0, 1)
+
+[node name="LeftElbow" type="Marker3D" parent="IKDriverComponent/AvatarCalibratedRig" index="7"]
+visible = false
+script = ExtResource("11_mdjmv")
+relative_motion_rotation_initial = Quaternion(0, 0, 0, 1)
+relative_motion_rotation_offset = Quaternion(0, 0, 0, 1)
+
+[node name="RightElbow" type="Marker3D" parent="IKDriverComponent/AvatarCalibratedRig" index="8"]
+visible = false
+script = ExtResource("11_mdjmv")
+relative_motion_rotation_initial = Quaternion(0, 0, 0, 1)
+relative_motion_rotation_offset = Quaternion(0, 0, 0, 1)
+
+[node name="LeftKnee" type="Marker3D" parent="IKDriverComponent/AvatarCalibratedRig" index="9"]
+visible = false
+script = ExtResource("11_mdjmv")
+relative_motion_rotation_initial = Quaternion(0, 0, 0, 1)
+relative_motion_rotation_offset = Quaternion(0, 0, 0, 1)
+
+[node name="RightKnee" type="Marker3D" parent="IKDriverComponent/AvatarCalibratedRig" index="10"]
+visible = false
+script = ExtResource("11_mdjmv")
+relative_motion_rotation_initial = Quaternion(0, 0, 0, 1)
+relative_motion_rotation_offset = Quaternion(0, 0, 0, 1)
+
+[node name="SkeletonUpdater" type="Node3D" parent="IKDriverComponent" index="1"]
+script = ExtResource("12_mdjmv")
 
 [connection signal="external_camera_offset_received" from="." to="HeadOffsetComponent" method="_external_offset_received"]
 [connection signal="teleport" from="." to="HeadOffsetComponent" method="_reset_space"]

@@ -9,12 +9,13 @@ class_name VSKSimulationComponentAnimator3D
 func _tweak_third_person_avatar_position(p_avatar: SarAvatar3D) -> void:
 	# Modify avatar's position to align the look offset to the center point.
 	p_avatar.position = Vector3()
-	if not _is_xr_enabled():
-		var look_offset: Node3D = p_avatar.get_node_or_null("%LookOffset")
-		if look_offset:
-			var diff: Transform3D = p_avatar.get_parent().global_transform.affine_inverse() * look_offset.global_transform
-			p_avatar.position.x -= diff.origin.x
-			p_avatar.position.z -= diff.origin.z
+	### FIXME: This is unstable.
+	#if not _is_xr_enabled():
+	#	var look_offset: Node3D = p_avatar.get_node_or_null("%LookOffset")
+	#	if look_offset:
+	#		var diff: Transform3D = p_avatar.get_parent().global_transform.affine_inverse() * look_offset.global_transform
+	#		p_avatar.position.x -= diff.origin.x
+	#		p_avatar.position.z -= diff.origin.z
 			
 func _get_motion_scale() -> float:
 	var avatar_component: SarGameEntityComponentAvatar3D = simulation.game_entity_interface.get_model_component() as SarGameEntityComponentAvatar3D

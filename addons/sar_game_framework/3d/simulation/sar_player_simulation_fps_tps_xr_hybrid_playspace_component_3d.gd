@@ -33,7 +33,7 @@ func _update_scene_for_current_xr_mode_and_point_of_view() -> void:
 # physical height.
 func _get_camera_height() -> float:
 	if is_xr_enabled():
-		return 0.0
+		return height_offset
 	else:
 		return default_height
 

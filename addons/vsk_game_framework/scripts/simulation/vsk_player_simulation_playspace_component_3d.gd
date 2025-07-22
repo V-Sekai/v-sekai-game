@@ -39,6 +39,13 @@ func _on_model_changed(p_new_model: SarModel3D) -> void:
 		var look_offset: Node3D = _avatar.get_node_or_null("%LookOffset")
 		if look_offset:
 			camera_offset.transform.origin.y = look_offset.transform.origin.y
+	if _avatar:
+		# HACK TO prevent bone jitter for now
+		var vrm_secondary: Node3D = _avatar.get_node_or_null("secondary") as Node3D
+		if vrm_secondary != null and typeof(vrm_secondary.get(&"override_springbone_center")) != TYPE_NIL:
+			vrm_secondary.override_springbone_center = true
+			vrm_secondary.default_springbone_center = _avatar.get_node_or_null("%GeneralSkeleton")
+			vrm_secondary.top_level = true
 
 func _ready() -> void:
 	super._ready()

@@ -5,7 +5,7 @@ class_name SarGameEntityComponentModel3D
 ## This component is responsible for tracking and changing a model
 ## representation of the entity via a PackedScene property.
 
-var _model_node: SarModel3D = null
+@export var _model_node: SarModel3D = null
 
 func _create_model_node() -> SarModel3D:
 	return SarModel3D.new()

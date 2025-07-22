@@ -50,6 +50,9 @@ func _ready() -> void:
 ## The camera associated with this playspace.
 @export var camera: Camera3D = null
 
+## Additional vertical offset to the camera height, for floating or adjusting for avatar legs.
+@export var height_offset: float = 0.0
+
 ## Returns the yaw rotation derived from the camera's yaw.
 func get_yaw_rotation() -> float:
 	return camera.rotation.y

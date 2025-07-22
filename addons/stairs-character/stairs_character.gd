@@ -47,11 +47,13 @@ func _ready() -> void:
 	_collider_margin = $"Collider".shape.margin;
 	if _collider_margin > .01:
 		push_warning("Margin on player's collider shape is over 0.01, may snag on stair steps")
+	collision_layer = 0
 	
 func _physics_process(_delta) -> void:
 	was_grounded = grounded
 	grounded = is_on_floor()
 	desired_velocity = Vector3.ZERO
+	collision_layer = 0
 	
 func stair_step_down() -> void:
 	# Don't step down if we weren't on the ground last physics frame

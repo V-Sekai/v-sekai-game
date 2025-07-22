@@ -20,14 +20,14 @@ script = ExtResource("4_raf7j")
 model_parent_node = NodePath("../ThirdPersonModel/ModelParent")
 game_entity = NodePath("..")
 
-[node name="ThirdPersonModel" type="Node3D" parent="." index="2"]
+[node name="VesselMovementComponent" parent="." index="2" node_paths=PackedStringArray("character_body_3d")]
+script = ExtResource("5_u2n83")
+character_body_3d = NodePath("../CharacterBody3D")
+
+[node name="ThirdPersonModel" type="Node3D" parent="." index="5"]
 editor_description = "Container for the third-person representation of this character's model."
 
 [node name="ModelParent" type="Node3D" parent="ThirdPersonModel" index="0"]
-
-[node name="VesselMovementComponent" parent="." index="3" node_paths=PackedStringArray("character_body_3d")]
-script = ExtResource("5_u2n83")
-character_body_3d = NodePath("../CharacterBody3D")
 
 [node name="CharacterBody3D" type="CharacterBody3D" parent="." index="6"]
 editor_description = "The character entity's physical body responsible for receiving velocity and perform integration. "

@@ -25,6 +25,8 @@ func _find_avatar_skeleton(p_node: Node) -> Skeleton3D:
 func _ready() -> void:
 	if not Engine.is_editor_hint():
 		setup_model(self)
+	if not general_skeleton:
+		general_skeleton = _find_avatar_skeleton(self)
 
 ###
 
