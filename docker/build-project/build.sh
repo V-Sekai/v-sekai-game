@@ -70,7 +70,7 @@ for PLATFORM in ${BUILD_PLATFORMS}; do \
     echo "Building ${PLATFORM}..."; \
     BUILD_DIR="./${BIN}"; EXT=''; \
     GAME_TAG="${GAME_NAME}_${GIT_REV}_${PLATFORM}"; \
-    if [ "${INPUT_XR_PLUGINS}" == 'true' ] && [ "${PLATFORM}" == 'QuestAndroid' ]; then \
+    if [ "${INPUT_XR_PLUGINS}" == 'true' ] && [[ "${PLATFORM}" =~ .+Android ]]; then \
         echo "Installing addons/godotopenxrvendors..."; \
         mkdir -p ./src/addons/ && cp -v -r ./xr_vendor_plugins/asset/addons/godotopenxrvendors/ ./src/addons/godotopenxrvendors/; \
         echo "Backing up .godot..."; \
@@ -78,8 +78,7 @@ for PLATFORM in ${BUILD_PLATFORMS}; do \
     fi; \
     if [ "${PLATFORM}" == 'Windows' ]; then \
         EXT='.exe'; \
-    elif [ "${PLATFORM}" == 'Android' ] \
-        || [ "${PLATFORM}" == 'QuestAndroid' ]; then \
+    elif [[ "${PLATFORM}" =~ .*Android ]]; then \
         EXT='.apk'; \
     elif [ "${PLATFORM}" == 'Mac' ]; then \
         EXT='.zip'; \
@@ -96,7 +95,7 @@ for PLATFORM in ${BUILD_PLATFORMS}; do \
          popd; \
          rm -r "./src/${BUILD_DIR}"; \
     fi; \
-    if [ "${INPUT_XR_PLUGINS}" == 'true' ] && [ "${PLATFORM}" == 'QuestAndroid' ]; then \
+    if [ "${INPUT_XR_PLUGINS}" == 'true' ] && [[ "${PLATFORM}" =~ .+Android ]]; then \
         echo "Removing addons/godotopenxrvendors..."; \
         rm -r ./src/addons/godotopenxrvendors/; \
         echo "Restoring .godot..."; \
