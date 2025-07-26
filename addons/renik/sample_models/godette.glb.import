@@ -1,0 +1,59 @@
+[remap]
+
+importer="scene"
+importer_version=1
+type="PackedScene"
+uid="uid://cox0bfdddkll3"
+path="res://.godot/imported/godette.glb-d2a5067d66e2b6ed3bcf676ca8d363da.scn"
+
+[deps]
+
+source_file="res://addons/renik2/sample_models/godette.glb"
+dest_files=["res://.godot/imported/godette.glb-d2a5067d66e2b6ed3bcf676ca8d363da.scn"]
+
+[params]
+
+nodes/root_type=""
+nodes/root_name=""
+nodes/apply_root_scale=true
+nodes/root_scale=1.0
+nodes/import_as_skeleton_bones=false
+nodes/use_node_type_suffixes=true
+meshes/ensure_tangents=true
+meshes/generate_lods=true
+meshes/create_shadow_meshes=true
+meshes/light_baking=1
+meshes/lightmap_texel_size=0.2
+meshes/force_disable_compression=false
+skins/use_named_skins=true
+animation/import=true
+animation/fps=30
+animation/trimming=false
+animation/remove_immutable_tracks=true
+animation/import_rest_as_RESET=false
+import_script/path=""
+_subresources={
+"meshes": {
+"godette_Body": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 1,
+"lods/normal_merge_angle": 60.0,
+"save_to_file/enabled": false,
+"save_to_file/path": ""
+}
+},
+"nodes": {
+"PATH:Skeleton3D": {
+"rest_pose/external_animation_library": null,
+"retarget/bone_map": Object(BoneMap,"resource_local_to_scene":false,"resource_name":"","profile":Object(SkeletonProfileHumanoid,"resource_local_to_scene":false,"resource_name":"","root_bone":&"Root","scale_base_bone":&"Hips","group_size":4,"bone_size":56,"script":null)
+,"bonemap":null,"bone_map/Root":&"Root","bone_map/Hips":&"Hips","bone_map/Spine":&"Spine","bone_map/Chest":&"Chest","bone_map/UpperChest":&"","bone_map/Neck":&"Neck","bone_map/Head":&"Head","bone_map/LeftEye":&"","bone_map/RightEye":&"","bone_map/Jaw":&"","bone_map/LeftShoulder":&"LeftShoulder","bone_map/LeftUpperArm":&"LeftUpperArm","bone_map/LeftLowerArm":&"LeftLowerArm","bone_map/LeftHand":&"LeftHand","bone_map/LeftThumbMetacarpal":&"LeftThumbMetacarpal","bone_map/LeftThumbProximal":&"LeftThumbProximal","bone_map/LeftThumbDistal":&"LeftThumbDistal","bone_map/LeftIndexProximal":&"LeftIndexProximal","bone_map/LeftIndexIntermediate":&"LeftIndexIntermediate","bone_map/LeftIndexDistal":&"LeftIndexDistal","bone_map/LeftMiddleProximal":&"LeftMiddleProximal","bone_map/LeftMiddleIntermediate":&"LeftMiddleIntermediate","bone_map/LeftMiddleDistal":&"LeftMiddleDistal","bone_map/LeftRingProximal":&"","bone_map/LeftRingIntermediate":&"","bone_map/LeftRingDistal":&"","bone_map/LeftLittleProximal":&"LeftLittleProximal","bone_map/LeftLittleIntermediate":&"LeftLittleIntermediate","bone_map/LeftLittleDistal":&"LeftLittleDistal","bone_map/RightShoulder":&"RightShoulder","bone_map/RightUpperArm":&"RightUpperArm","bone_map/RightLowerArm":&"RightLowerArm","bone_map/RightHand":&"RightHand","bone_map/RightThumbMetacarpal":&"RightThumbMetacarpal","bone_map/RightThumbProximal":&"RightThumbProximal","bone_map/RightThumbDistal":&"RightThumbDistal","bone_map/RightIndexProximal":&"RightIndexProximal","bone_map/RightIndexIntermediate":&"RightIndexIntermediate","bone_map/RightIndexDistal":&"RightIndexDistal","bone_map/RightMiddleProximal":&"RightMiddleProximal","bone_map/RightMiddleIntermediate":&"RightMiddleIntermediate","bone_map/RightMiddleDistal":&"RightMiddleDistal","bone_map/RightRingProximal":&"","bone_map/RightRingIntermediate":&"","bone_map/RightRingDistal":&"","bone_map/RightLittleProximal":&"RightLittleProximal","bone_map/RightLittleIntermediate":&"RightLittleIntermediate","bone_map/RightLittleDistal":&"RightLittleDistal","bone_map/LeftUpperLeg":&"LeftUpperLeg","bone_map/LeftLowerLeg":&"LeftLowerLeg","bone_map/LeftFoot":&"LeftFoot","bone_map/LeftToes":&"LeftToes","bone_map/RightUpperLeg":&"RightUpperLeg","bone_map/RightLowerLeg":&"RightLowerLeg","bone_map/RightFoot":&"RightFoot","bone_map/RightToes":&"RightToes","script":null)
+,
+"retarget/rest_fixer/fix_silhouette/enable": true,
+"retarget/rest_fixer/fix_silhouette/filter": ["LeftFoot", "LeftToes", "RightFoot", "RightToes"],
+"retarget/rest_fixer/fix_silhouette/threshold": 0.0
+}
+}
+}
+gltf/naming_version=0
+gltf/embedded_image_handling=3
