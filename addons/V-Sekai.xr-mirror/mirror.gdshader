@@ -1,6 +1,7 @@
 shader_type spatial;
 render_mode unshaded;
 
+uniform bool flip_x = false;
 uniform bool use_screenspace = false;
 uniform vec4 albedo_color: source_color = vec4(1,1,1,1);
 uniform sampler2D albedo_texture: source_color, hint_default_white;
@@ -18,20 +19,23 @@ vec4 GammaToLinearSpace (vec4 sRGB)
 uniform sampler2D textureL;
 uniform sampler2D textureR;
 void fragment() {
-	vec2 uv;
+	vec2 uv = UV;
+
 	if (use_screenspace) {
-		uv = vec2(1.0 - SCREEN_UV.x, SCREEN_UV.y);
-	} else {
-		uv = vec2(1.0 - UV.x,  UV.y);
+		uv = SCREEN_UV;
+	}
+	if (flip_x) {
+		uv = vec2(1.0 - uv.x, uv.y);
 	}
 	
-	if(uint(VIEW_INDEX)==(0u))
+	if(int(VIEW_INDEX)==0)
 		ALBEDO = texture(textureL,uv).rgb;
 	else
 		ALBEDO = texture(textureR,uv).rgb;
-	ALBEDO = GammaToLinearSpace(vec4(ALBEDO, 1.0)).rgb;
+	if (!OUTPUT_IS_SRGB) {
+		ALBEDO = GammaToLinearSpace(vec4(ALBEDO, 1.0)).rgb;
+	}
 	ALBEDO *= albedo_color.rgb * texture(albedo_texture, UV).rgb;
 	
-	// Disable the fog.
-	FOG = vec4(0.0, 0.0, 0.0, 0.0);
+	// Place fragment code here.
 }
