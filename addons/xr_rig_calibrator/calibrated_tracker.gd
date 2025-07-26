@@ -98,7 +98,7 @@ func _process(_delta: float) -> void:
 			if bone_extension_add_mode:
 				calculated_bone_extension = Transform3D(Basis.from_scale(raw_tracker_transform.basis.get_scale())) * (target_extension + extension_vector.normalized() * bone_extension)
 			else:
-				calculated_bone_extension = bone_extension_target.position + extension_vector / (1.0 - bone_extension) - new_position
+				calculated_bone_extension = bone_extension_target.position + extension_vector * bone_extension - new_position
 			new_position += calculated_bone_extension
 	var new_basis: Quaternion = raw_tracker_node.basis.get_rotation_quaternion() * quat_offset
 	if get_parent().name == 'AvatarCalibratedRig' and name == 'Hips':

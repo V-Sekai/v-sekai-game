@@ -21,6 +21,8 @@ func _on_ik_created():
 	var old_basis: Basis = player_calibrated_rig.global_basis
 
 	# Calculate armspan factor for scaling
+	var hips_player_xform: Transform3D = player_calibrated_rig.skel.get_bone_global_rest(player_calibrated_rig.skel.find_bone("Hips"))
+	var hips_avatar_xform: Transform3D = avatar_calibrated_rig.target_skel.get_bone_global_rest(avatar_calibrated_rig.target_skel.find_bone("Hips"))
 	var left_hand_player_xform: Transform3D = player_calibrated_rig.skel.get_bone_global_rest(player_calibrated_rig.skel.find_bone("LeftHand"))
 	var right_hand_player_xform: Transform3D = player_calibrated_rig.skel.get_bone_global_rest(player_calibrated_rig.skel.find_bone("RightHand"))
 	var left_hand_avatar_xform: Transform3D = avatar_calibrated_rig.target_skel.get_bone_global_rest(avatar_calibrated_rig.target_skel.find_bone("LeftHand"))
@@ -33,9 +35,9 @@ func _on_ik_created():
 
 	# Stilts / adjust y offset of rig.
 	var y_offset_adjust: Vector3 = Vector3(0, blended_height_ratio * player_height - avatar_height, 0)
-	avatar_calibrated_rig.stilts_offset_adjust = y_offset_adjust
-	playspace.height_offset =  -y_offset_adjust.y
-	print(y_offset_adjust)
+	avatar_calibrated_rig.stilts_offset_adjust = -y_offset_adjust * blended_height_ratio
+	playspace.height_offset = (avatar_height / blended_height_ratio - player_height)
+
 	avatar_calibrated_rig.aux_hip_tracker = skeleton_ik_component.foot_placement.hip_target_spatial
 	avatar_calibrated_rig.apply_target_scale = true
 
@@ -72,6 +74,8 @@ func _ready():
 	skeleton_ik_component.ik_created.connect(_on_ik_created)
 
 func _process(p_delta: float):
+	if avatar_calibrated_rig != null and playspace != null:
+		playspace.height_offset = avatar_calibrated_rig.position.y
 	if InputMap.has_action(&"jump") and Input.is_action_just_pressed(&"jump"):
 		player_calibrated_rig.calibrate(true)
 

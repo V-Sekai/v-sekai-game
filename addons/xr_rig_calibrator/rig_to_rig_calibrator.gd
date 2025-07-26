@@ -20,7 +20,7 @@ const calibrated_tracker_script := preload("./calibrated_tracker.gd")
 @export var follow_target_rotation: bool = false
 @export var follow_target_scale: bool = true
 
-@export var fudge_spine_taut := -0.05
+@export var fudge_spine_taut := 0.15
 @export var fudge_scale := 0.89
 
 @export var stilts_offset_adjust := Vector3.ZERO
@@ -136,18 +136,21 @@ func calibrate() -> void:
 	var look_offset := Vector3.ZERO
 	if target_look_offset != null and target_look_offset.position != Vector3.ZERO:
 		look_offset = Vector3(0, 0.0, -0.04) - target_look_offset.position
-	fudge_spine_taut = 0.08
 	var spine_offset_add := (target_spine_len - (source_spine_len) * relative_scale + fudge_spine_taut - look_offset.y)
-	var feet_offset_mul := (target_hip_height) / (source_hip_height * relative_scale - look_offset.y - 0.03) - 1
-	feet_offset_mul += (spine_offset_add / (source_hip_height))
+
 	relative_scale *= fudge_scale
-	
+
 	var head_tracker := existing_tracker_nodes_by_name.get("Head") as calibrated_tracker_script
 	if head_tracker != null and get_child(0) != head_tracker:
 		move_child(head_tracker, 0)
 	var hips_tracker := existing_tracker_nodes_by_name.get("Hips") as calibrated_tracker_script
 	if hips_tracker != null and get_child(1) != hips_tracker:
 		move_child(hips_tracker, 1)
+
+	var floor_offset_ratio: float = 1.0
+	if head_tracker != null:
+		floor_offset_ratio = clampf(head_tracker.raw_tracker_node.position.y / source_skel.get_bone_global_rest(source_skel.find_bone("Head")).origin.y, 0.0, 1.0)
+	var feet_offset_mul := lerpf(1.0, target_hip_height / (source_hip_height * relative_scale - floor_offset_ratio * spine_offset_add*0.5), 1.0)
 
 	var src_skel_head_rest: Transform3D = ((source_skel.get_bone_global_rest(source_skel.find_bone("Head"))).scaled(Vector3.ONE * 1.0 / source_skel.motion_scale))
 	var dst_skel_head_rest: Transform3D = ((target_skel.get_bone_global_rest(target_skel.find_bone("Head"))).scaled(Vector3.ONE * 1.0 / target_skel.motion_scale))
@@ -163,6 +166,7 @@ func calibrate() -> void:
 		source_transform.origin = Vector3.ZERO
 
 	if head_calibrated != null:
+		source_transform *= Transform3D(Basis.IDENTITY, stilts_offset_adjust * floor_offset_ratio)
 		if allow_source_rotation:
 			source_transform *= Transform3D(Basis(Vector3(0,1,0), head_tracker.raw_tracker_node.rotation.y))
 		if allow_source_rotation and head_tracker.raw_tracker_node.get_parent_node_3d() != null:
@@ -176,7 +180,7 @@ func calibrate() -> void:
 
 	head_quat = Basis.looking_at((Vector3(1,0,1) * (head_quat * Vector3(0,0,1))).normalized())
 	head_quat = target_skel.global_basis.orthonormalized() * head_quat
-	var abs_look_offset := Basis.from_scale(Vector3.ONE/target_skel.global_basis.get_scale()) * head_quat * look_offset
+	var abs_look_offset := head_quat * look_offset
 
 	for bone_name in existing_tracker_nodes_by_name:
 		var calibrated_tracker := existing_tracker_nodes_by_name[bone_name] as calibrated_tracker_script
@@ -195,7 +199,7 @@ func calibrate() -> void:
 
 		calibrated_tracker.position_offset = Vector3.ZERO
 
-		calibrated_tracker.outer_position_offset = abs_look_offset
+		calibrated_tracker.outer_position_offset = Vector3.ZERO # abs_look_offset
 		calibrated_tracker.outer_basis = Basis.IDENTITY
 
 		if bone_name == "Head":
@@ -203,7 +207,7 @@ func calibrate() -> void:
 			calibrated_tracker.outer_position_offset = Vector3(0, abs_look_offset.y, 0)
 			calibrated_tracker.position_offset = look_offset - Vector3(0, look_offset.y, 0)
 	
-		calibrated_tracker.outer_position_offset -= stilts_offset_adjust
+		# calibrated_tracker.outer_position_offset -= stilts_offset_adjust
 	
 		if allow_head_offset and not ["LeftFoot","RightFoot","Hips"].has(bone_name):
 			calibrated_tracker.outer_position_offset += -(head_calibrated.raw_tracker_node.position * Vector3(1,0,1)*relative_scale)
@@ -220,8 +224,8 @@ func calibrate() -> void:
 
 		if bone_name == "LeftFoot" or bone_name == "RightFoot":
 			if hips_tracker != null or aux_hip_tracker != null:
-				calibrated_tracker.bone_extension_target = aux_hip_tracker if hips_tracker == null else hips_tracker
-				calibrated_tracker.bone_extension = feet_offset_mul  ## maxf(0, feet_offset_mul)
+				calibrated_tracker.bone_extension_target = hips_tracker
+				calibrated_tracker.bone_extension = feet_offset_mul
 				calibrated_tracker.bone_extension_add_mode = false
 		elif bone_name == "Hips":
 			if head_tracker != null:

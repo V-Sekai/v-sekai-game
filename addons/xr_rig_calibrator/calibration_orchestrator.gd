@@ -105,7 +105,7 @@ func calculate_align_pose_adjustment(connected_tracked_bones: Dictionary[String,
 		var ref_head_forward := ((ref_head_pose.basis * Vector3(0,0,1)) * Vector3(1,0,1)).normalized()
 
 		var eye_tracker: Node3D = connected_tracked_bones["Head"]
-		var eye_pose: Transform3D = (eye_tracker.transform)
+		var eye_pose: Transform3D = (eye_tracker.transform) * Transform3D(Basis.IDENTITY, eye_offset)
 		var head_forward := ((eye_pose.basis * Vector3(0,0,-1)) * Vector3(1,0,1)).normalized()
 		var skel_rotation := Quaternion.IDENTITY
 		var head_dot := head_forward.dot(ref_head_forward)
