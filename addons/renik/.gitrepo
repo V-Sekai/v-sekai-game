@@ -6,7 +6,7 @@
 [subrepo]
 	remote = https://github.com/V-Sekai/renik
 	branch = gdscript
-	commit = 945e701bf3ff804a8b0043191b0b214445a4bc9c
-	parent = c6592f5e6f19c45bafc30da8bc87f636ea6d0321
+	commit = 293b4ebfd664a06861eb9b6ff9519364a9f7b4c2
+	parent = ecf44f501c7324f58b56dec87a1983c1b05755c0
 	method = merge
 	cmdver = 0.4.6
