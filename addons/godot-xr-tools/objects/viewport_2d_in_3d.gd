@@ -130,6 +130,7 @@ func is_xr_class(p_name : String) -> bool:
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	is_ready = true
+	$Viewport.world_2d = get_viewport().find_world_2d()
 
 	# Listen for pointer events on the screen body
 	$StaticBody3D.connect("pointer_event", _on_pointer_event)

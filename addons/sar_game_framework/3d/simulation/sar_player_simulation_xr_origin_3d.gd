@@ -29,7 +29,7 @@ func _add_hand_tracker(p_tracker_name: String, p_pose: String, p_packed_scenes: 
 	var new_hand_controller: XRController3D = XRController3D.new()
 	if new_hand_controller:
 		new_hand_controller.tracker = p_tracker_name
-		new_hand_controller.pose = p_pose
+		new_hand_controller.pose = "aim" if p_pose == "default" else p_pose
 		new_hand_controller.name = p_tracker_name + "_" + p_pose
 		new_hand_controller.show_when_tracked = true
 

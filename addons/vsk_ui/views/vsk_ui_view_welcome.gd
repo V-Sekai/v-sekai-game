@@ -13,3 +13,9 @@ func _register_button_pressed() -> void:
 	
 func _skip_button_pressed() -> void:
 	skip_pressed.emit()
+
+func _ready():
+	if XRServer.primary_interface != null and XRServer.primary_interface.is_initialized():
+		push_error("FIXME XRXRXR HACK: The main menu is being auto-skipped because XR support is not yet implemented!")
+		await get_tree().process_frame
+		_skip_button_pressed()
