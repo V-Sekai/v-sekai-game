@@ -210,10 +210,10 @@ var overflow_state: int = 0 # 0 means no twist overflow. -1 means underflow. 1 m
 			_:
 				return dynamic_pole_head_bone
 
-@export var dynamic_pole_spine_length: float = 0.7
+@export var dynamic_pole_spine_length: float = 0.5
 @export var dynamic_pole_min: float = 0.0
 @export var dynamic_pole_max: float = 0.4
-@export var dynamic_pole_power: float = 1.0
+@export var dynamic_pole_power: float = 1.7
 
 @export var pole_target: Node3D
 
@@ -628,7 +628,7 @@ func _process_modification() -> void:
 			var spine_basis := Basis(right_direction, up_direction, forward_direction).orthonormalized()
 			var arm_midpoint: Vector3 = target_transform.origin.lerp(global_parent.origin, 0.5)
 			var vec_factor: float = (target_transform.origin - global_parent.origin).normalized().dot(target_transform.basis * Vector3(0,0,1))
-			vec_factor = dynamic_pole_spine_length * smoothstep(dynamic_pole_min, dynamic_pole_max, sign(vec_factor) * pow(vec_factor, dynamic_pole_power))
+			vec_factor = dynamic_pole_spine_length * smoothstep(dynamic_pole_min, dynamic_pole_max, sign(vec_factor) * pow(abs(vec_factor), dynamic_pole_power))
 			var vec1: Vector3 = 0.5 * arm_pole_length * (spine_basis * Vector3(mirror_factor * -2.0,0.0,2)).normalized() # Vector3(0,1,0)
 			var vec2: Vector3 = arm_pole_length * (spine_basis * Vector3(mirror_factor * -2.0,1.0,-2)).normalized() #target_pole.normalized()
 			target_pole = (global_pole_root.origin * 2 - global_pole_head.origin + vec1).lerp(global_pole_head.origin + vec2, vec_factor)
