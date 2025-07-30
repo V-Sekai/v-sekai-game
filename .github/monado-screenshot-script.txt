@@ -1,0 +1,35 @@
+## Disable hand tracking
+set left hand_tracking_active false
+set right hand_tracking_active false
+
+## Reset positions
+set head position 0.0 1.5 0.2
+set head rotation 0.0 0.0 0.0 1.0
+set left position -0.2 1.3 -0.3
+set left rotation 0.4 0 0 0.9
+set right position 0.2 1.3 -0.3
+set right rotation 0.4 0 0 0.9
+
+sleep 1
+### First screenshot
+exec grim -g "0,0 ${GAME_VIEW_W}x${GAME_VIEW_H}" "${OUTPUT_DIR}/screenshot-01.png"
+
+sleep 1
+
+### Menu
+## Focus window
+exec swaymsg "[app_id=\"V-Sekai\"] focus"
+## Open menu (doesn't work)
+#set right b_touch true
+#set right b_click true
+#sleep 60
+#print_state
+#set right b_click false
+#set right b_touch false
+
+## Wait frame rendering
+#sleep 100
+
+## Menu Screenshot
+#exec grim -g "0,0 ${GAME_VIEW_W}x${GAME_VIEW_H}" "${OUTPUT_DIR}/screenshot-02-menu.png"
+#sleep 1

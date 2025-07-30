@@ -1,0 +1,252 @@
+name: MonadoXR Test Suite
+
+# Runs Visual Regression Tests with MonadoXR remote driver
+# Results and images can be downloaded in Github Actions workflow artifacts
+# You must update tests with new images on breaking changes
+
+on:
+  pull_request:
+  push:
+    branches:
+      - rx
+
+env:
+  # DSSIM image difference threshold value.
+  # 0 means no difference.
+  DSSIM_THRESHOLD: 1
+
+jobs:
+  run-test:
+    name: Run MonadoXR Tests
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      actions: write
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        
+    - name: Prepare Vulkan SDK
+      uses: humbletim/setup-vulkan-sdk@286ed76c72de45dbf50c515779cf4ca2f6aa3944
+      with:
+        vulkan-query-version: 1.3.283.0
+        vulkan-components: Vulkan-Headers
+        vulkan-use-cache: true
+                
+    - name: Cache Monado CMake build directory
+      uses: actions/cache@v4
+      with:
+        path: ${{github.workspace}}/build-monado
+        key: ${{ runner.os }}-cmake-build-monado
+        restore-keys: |
+          ${{ runner.os }}-cmake-build-monado
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install sway grim libvulkan-dev libcjson-dev libx264-dev libavcodec-dev \
+          libavutil-dev libswscale-dev libavfilter-dev libbsd-dev libavahi-client-dev \
+          libeigen3-dev glslang-tools libudev-dev libwayland-dev libx11-xcb-dev libxrandr-dev \
+          libxcb-randr0-dev libgl-dev libglx-dev mesa-common-dev libgl1-mesa-dev \
+          libglu1-mesa-dev libsystemd-dev libva-dev libxcb-glx0-dev gettext libfontconfig-dev \
+          libboost-all-dev librsvg2-bin libssl-dev mesa-vulkan-drivers wayland-protocols \
+          fonts-noto-cjk fonts-roboto
+
+    - name: Build Monado
+      # Disable XRT_FEATURE_OPENXR_VISIBILITY_MASK because of https://gitlab.freedesktop.org/monado/monado/-/issues/480
+      run: |
+        # Use remotectl driver fork
+        # https://gitlab.freedesktop.org/Meumeu/monado/-/commit/5bdb51697685320e3f5d494210f25fb2967c9fc3
+        
+        # Usage example:
+        # https://github.com/WiVRn/WiVRn/blob/ac2044dffc261daf14b16a2df42a24328e38b138/.github/workflows/Build.yml#L209
+
+        mkdir monado
+        curl https://gitlab.freedesktop.org/Meumeu/monado/-/archive/5bdb51697685320e3f5d494210f25fb2967c9fc3/monado-main.tar.gz | tar -xz -C monado --strip-components=1
+
+        DRIVERS=$(grep -oE "XRT_BUILD_DRIVER_[A-Z0-9_]*" monado/CMakeLists.txt | sort -u  | grep -v XRT_BUILD_DRIVER_REMOTE | sed 's/\(.*\)/-D\1=OFF/')
+        cmake monado -B ${{github.workspace}}/build-monado -DCMAKE_BUILD_TYPE=Release -DXRT_FEATURE_SERVICE_SYSTEMD=OFF -DXRT_FEATURE_SERVICE=OFF -DXRT_BUILD_DRIVER_REMOTE=ON -DXRT_MODULE_COMPOSITOR_MAIN=ON -DXRT_HAVE_WAYLAND=ON $DRIVERS -DXRT_MODULE_MONADO_REMOTECTL=ON -DBUILD_TESTING=OFF -DXRT_FEATURE_OPENXR_VISIBILITY_MASK=OFF
+
+        cmake --build ${{github.workspace}}/build-monado
+
+    - name: Fetch latest game build
+      run: |
+        curl -sS \
+          -H "Accept: application/vnd.github+json" \
+          "https://api.github.com/repos/${{ github.repository }}/releases" \
+          | jq -r '[.[] | select(.tag_name | test("-rx$"))] | sort_by(.updated_at) | .[0]' > releases_json.txt
+        FILE_URL=$( \
+          cat 'releases_json.txt' \
+          | jq -r '.assets.[] | select(.name | test("_Linux$")).browser_download_url' \
+        )
+        echo "Downloading ${FILE_URL}"
+        curl -o game.x64 -L "${FILE_URL}"
+        chmod +x game.x64
+ 
+    - name: Take screenshots
+      env:
+        WLR_BACKENDS: headless
+        WLR_RENDERER: pixman
+        WLR_LIBINPUT_NO_DEVICES: 1
+        XR_RUNTIME_JSON: ${{github.workspace}}/build-monado/openxr_monado-dev.json
+        P_OVERRIDE_ACTIVE_CONFIG: remote
+        XRT_COMPOSITOR_SCALE_PERCENTAGE: '100'
+        # Screenshot viewport size
+        GAME_VIEW_H: 1080
+        GAME_VIEW_W: 960
+      run: |
+        sway -v
+        echo "xwayland disable" > sway-config
+        echo -e "output HEADLESS-1 {\n mode ${GAME_VIEW_H}x${GAME_VIEW_W}@60Hz\n}" >> sway-config
+        sway -c sway-config &
+        sleep 10
+        export SWAYSOCK=$(ls /run/user/$(id -u)/sway-ipc.*.sock | head -n1)
+        export WAYLAND_DISPLAY=$(cd "${XDG_RUNTIME_DIR}" && ls -tr wayland* | tail -1)
+        
+        MONADO_CLIENT_PATH="${{github.workspace}}/build-monado/src/xrt/targets/remotectl/monado-remotectl 127.0.0.1 4242 "
+        ${{github.workspace}}/game.x64 &
+        GAME_PID=$!
+        
+        # Wait game load
+        sleep 200
+
+        # Capture
+        echo "Starting capture..."
+        export OUTPUT_DIR=./screenshots/auto
+        mkdir -p "${OUTPUT_DIR}"
+        ${MONADO_CLIENT_PATH} < ${{github.workspace}}/.github/monado-screenshot-script.txt       
+
+        # Very slow alternative capture (~18min), generates 9 screenshots at set angles
+        # chmod +x .github/monado-script-360.sh
+        # bash .github/monado-script-360.sh "${MONADO_CLIENT_PATH}" ${GAME_VIEW_W} ${GAME_VIEW_H} 100 "${OUTPUT_DIR}"
+
+        killall game.x64
+        wait $GAME_PID || true
+        
+        echo "Capture completed."
+        tree -a "${OUTPUT_DIR}"
+    
+    - name: Upload screenshots
+      uses: actions/upload-artifact@v4
+      with:
+        name: Screenshots
+        path: "screenshots/*"
+
+  compare-screens:
+    name: Compare test
+    runs-on: ubuntu-24.04
+    needs: run-test
+    continue-on-error: true
+    permissions:
+      contents: read
+      actions: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Install ImageMagick 7
+        run: |
+          # Version 7 is required for DSSIM, using AppImage
+          sudo apt-get update && sudo apt-get install fuse
+          sudo modprobe fuse
+          curl -o magick -L https://imagemagick.org/archive/binaries/magick
+          chmod +x magick
+          ./magick --version
+        
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: Screenshots
+          path: new-previews
+
+      - name: Compare
+        run: |
+          DSSIMThreshold=$DSSIM_THRESHOLD
+          BASE="previews/auto"     
+          NEWBASE="new-previews/auto"
+          RESULT_FILE="results.txt"
+          
+          tree -a previews
+          tree -a new-previews
+
+          # Clear any results file
+          > "$RESULT_FILE"
+
+          # Comparison errors flag
+          RESULT_ERR=false
+
+          # Start
+          for NEWBASEFILE in "${NEWBASE}"/*.png; do
+              FILENAME=$(basename "$NEWBASEFILE")
+              BASEFILE="${BASE}/${FILENAME}"
+              echo "Comparing ${BASEFILE} to ${NEWBASEFILE}..."
+
+              # Skip if BASEFILE doesn't exist
+              if [[ ! -f "$BASEFILE" ]]; then
+                  echo "Skipping ${FILENAME} (no match in '$BASE')" >> "$RESULT_FILE"
+                  continue
+              fi
+
+              # AE
+              ./magick compare -metric AE "$BASEFILE" "$NEWBASEFILE" "AE-diff-${FILENAME}" 2> AE-diff.log || true
+              AEValue="$(cat AE-diff.log)"
+              
+              # PSNR
+              ./magick compare -metric PSNR "$BASEFILE" "$NEWBASEFILE" PSNR-diff-${FILENAME}  2> PSNR-diff.log || true
+              PSNRValue="$(cat PSNR-diff.log)"
+              
+              # DSSIM
+              ./magick compare -metric DSSIM "$BASEFILE" "$NEWBASEFILE" DSSIM-diff-${FILENAME} 2> DSSIM-diff.log || true
+              DSSIMValue="$(cat DSSIM-diff.log)"
+
+              {
+                  echo "${BASEFILE}"
+                  echo "AEValue=${AEValue}"
+                  echo "PSNRValue=${PSNRValue}"
+                  echo "DSSIMValue=${DSSIMValue}"
+                  echo ""
+              } >> "$RESULT_FILE"
+
+              DSSIMScore=$(printf '%s' "$DSSIMValue" | cut -d ' ' -f1)
+              echo "DSSIM Score: $DSSIMScore"
+
+              if [ "$(echo "$DSSIMScore > $DSSIMThreshold" | bc -l)" -eq 1 ]; then
+                echo "${BASEFILE}: DSSIM score is above threshold: $DSSIMThreshold"
+                RESULT_ERR=true
+              fi
+
+          done
+
+          echo "RESULT_ERR=$RESULT_ERR" >> $GITHUB_ENV
+          echo "RESULT_FILE=$RESULT_FILE" >> $GITHUB_ENV
+
+          # Create artifact directory
+          mkdir upload-tests
+          mkdir -p upload-tests/diffs
+          mkdir -p upload-tests/images
+          cp "${RESULT_FILE}" upload-tests
+          mv *-diff-* upload-tests/diffs
+          mv "${NEWBASE}"/* upload-tests/images
+
+          echo "Artifact ready for upload:"
+          tree -a upload-tests
+     
+      - name: Upload test result artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: XRImgTestResults
+          path: "upload-tests/*"
+          
+      - name: Result
+        run: |
+          cat "$RESULT_FILE"
+          if [[ "$RESULT_ERR" == true ]]; then
+            echo "Comparison errors found, check artifacts for more details."            
+            exit 1
+          else
+            echo "Comparison test success!"                      
+          fi
+ 
