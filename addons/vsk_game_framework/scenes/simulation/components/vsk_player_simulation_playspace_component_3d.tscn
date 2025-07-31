@@ -10,7 +10,6 @@
 [ext_resource type="Script" uid="uid://csndide20cut0" path="res://addons/sar_game_framework/3d/simulation/playspace/sar_playspace_fps_tps_xr_hybrid_settings_fetcher_component_3d.gd" id="8_jvu1v"]
 [ext_resource type="Script" uid="uid://c4ah4tflvuqjr" path="res://addons/vsk_game_framework/scripts/simulation/vsk_playspace_ik_driver_component_3d.gd" id="9_00l76"]
 [ext_resource type="Script" uid="uid://dygwgrqe5vmln" path="res://addons/xr_rig_calibrator/calibrated_tracker.gd" id="11_mdjmv"]
-[ext_resource type="Script" uid="uid://bke0fqj0b64iy" path="res://addons/vsk_game_framework/scenes/simulation/components/skeleton_updater.gd" id="12_mdjmv"]
 [ext_resource type="Script" uid="uid://dqwdiojv5c1ah" path="res://addons/xr_rig_calibrator/rig_to_rig_calibrator.gd" id="14_k221o"]
 
 [sub_resource type="GDScript" id="GDScript_jvu1v"]
@@ -85,13 +84,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.881147)
 visible = false
 mesh = SubResource("BoxMesh_b76jt")
 
-[node name="IKDriverComponent" type="Node3D" parent="." index="4" node_paths=PackedStringArray("playspace", "player_calibrated_rig", "avatar_calibrated_rig", "skeleton_updater")]
+[node name="IKDriverComponent" type="Node3D" parent="." index="4" node_paths=PackedStringArray("playspace", "player_calibrated_rig", "avatar_calibrated_rig")]
 editor_description = "Driver for the vessel's SkeletonIK3DComponent"
 script = ExtResource("9_00l76")
 playspace = NodePath("..")
 player_calibrated_rig = NodePath("../CameraBase/CameraPivot/CameraOffset/CalibratedRig")
 avatar_calibrated_rig = NodePath("AvatarCalibratedRig")
-skeleton_updater = NodePath("SkeletonUpdater")
 metadata/_custom_type_script = "uid://bb7ar2kq0iibp"
 
 [node name="AvatarCalibratedRig" type="Node3D" parent="IKDriverComponent" index="0" node_paths=PackedStringArray("source_skel", "src_tracker_root")]
@@ -181,9 +179,6 @@ visible = false
 script = ExtResource("11_mdjmv")
 relative_motion_rotation_initial = Quaternion(0, 0, 0, 1)
 relative_motion_rotation_offset = Quaternion(0, 0, 0, 1)
-
-[node name="SkeletonUpdater" type="Node3D" parent="IKDriverComponent" index="1"]
-script = ExtResource("12_mdjmv")
 
 [connection signal="external_camera_offset_received" from="." to="HeadOffsetComponent" method="_external_offset_received"]
 [connection signal="teleport" from="." to="HeadOffsetComponent" method="_reset_space"]

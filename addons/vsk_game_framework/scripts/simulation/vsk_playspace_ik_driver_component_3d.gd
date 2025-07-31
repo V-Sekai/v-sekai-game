@@ -58,9 +58,6 @@ func _on_ik_created():
 		if calibrated != null:
 			_on_tracker_enabled(calibrated)
 
-	if skeleton_updater != null:
-		skeleton_updater.target_skel = skeleton_ik_component._skeleton
-
 func _ready():
 	# FIXME: I don't know how to fix this hardcoded path
 	# because it's referencing a different scene.
@@ -182,8 +179,6 @@ func _on_tracker_disabled(tracker_node: calibrated_tracker):
 @export var player_calibrated_rig: calibration_orchestrator = null
 
 @export var avatar_calibrated_rig: rig_to_rig_calibrator = null
-
-@export var skeleton_updater: Node3D = null
 
 @export var armspan_to_height: float = 0.0
 
