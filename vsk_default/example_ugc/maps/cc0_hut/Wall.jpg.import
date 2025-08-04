@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://daimca464icyb"
 path.s3tc="res://.godot/imported/Wall.jpg-00969c57abe06b8a4c71fdca244d1d36.s3tc.ctex"
+path.etc2="res://.godot/imported/Wall.jpg-00969c57abe06b8a4c71fdca244d1d36.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://vsk_default/example_ugc/maps/cc0_hut/Wall.jpg"
-dest_files=["res://.godot/imported/Wall.jpg-00969c57abe06b8a4c71fdca244d1d36.s3tc.ctex"]
+dest_files=["res://.godot/imported/Wall.jpg-00969c57abe06b8a4c71fdca244d1d36.s3tc.ctex", "res://.godot/imported/Wall.jpg-00969c57abe06b8a4c71fdca244d1d36.etc2.ctex"]
 
 [params]
 

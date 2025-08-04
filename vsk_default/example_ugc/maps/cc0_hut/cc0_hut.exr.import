@@ -4,15 +4,16 @@ importer="2d_array_texture"
 type="CompressedTexture2DArray"
 uid="uid://bwfoenhiaxph6"
 path.bptc="res://.godot/imported/cc0_hut.exr-d062565bdce0e9423cc276335bfaddc4.bptc.ctexarray"
+path.astc="res://.godot/imported/cc0_hut.exr-d062565bdce0e9423cc276335bfaddc4.astc.ctexarray"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://vsk_default/example_ugc/maps/cc0_hut/cc0_hut.exr"
-dest_files=["res://.godot/imported/cc0_hut.exr-d062565bdce0e9423cc276335bfaddc4.bptc.ctexarray"]
+dest_files=["res://.godot/imported/cc0_hut.exr-d062565bdce0e9423cc276335bfaddc4.bptc.ctexarray", "res://.godot/imported/cc0_hut.exr-d062565bdce0e9423cc276335bfaddc4.astc.ctexarray"]
 
 [params]
 

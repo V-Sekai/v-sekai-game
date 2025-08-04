@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://cvea7vaqbfmfe"
 path.s3tc="res://.godot/imported/mic_muted.svg-2252e216f7a59cf80fdd492a4b8ee3ad.s3tc.ctex"
+path.etc2="res://.godot/imported/mic_muted.svg-2252e216f7a59cf80fdd492a4b8ee3ad.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://addons/vsk_game_framework/textures/gui/mic_muted.svg"
-dest_files=["res://.godot/imported/mic_muted.svg-2252e216f7a59cf80fdd492a4b8ee3ad.s3tc.ctex"]
+dest_files=["res://.godot/imported/mic_muted.svg-2252e216f7a59cf80fdd492a4b8ee3ad.s3tc.ctex", "res://.godot/imported/mic_muted.svg-2252e216f7a59cf80fdd492a4b8ee3ad.etc2.ctex"]
 
 [params]
 

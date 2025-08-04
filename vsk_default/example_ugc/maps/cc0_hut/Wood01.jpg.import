@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://b2wgjs3ksxcff"
 path.s3tc="res://.godot/imported/Wood01.jpg-55d211eb196cd510bb8636965eea4f4b.s3tc.ctex"
+path.etc2="res://.godot/imported/Wood01.jpg-55d211eb196cd510bb8636965eea4f4b.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://vsk_default/example_ugc/maps/cc0_hut/Wood01.jpg"
-dest_files=["res://.godot/imported/Wood01.jpg-55d211eb196cd510bb8636965eea4f4b.s3tc.ctex"]
+dest_files=["res://.godot/imported/Wood01.jpg-55d211eb196cd510bb8636965eea4f4b.s3tc.ctex", "res://.godot/imported/Wood01.jpg-55d211eb196cd510bb8636965eea4f4b.etc2.ctex"]
 
 [params]
 

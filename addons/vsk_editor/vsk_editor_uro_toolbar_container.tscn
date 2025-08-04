@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://7d5kuctgk8u3" path="res://addons/vsk_editor/vsk_editor_uro_toolbar_container.gd" id="1_5n13v"]
 [ext_resource type="Texture2D" uid="uid://ddmrcblnd4y4v" path="res://icon.svg" id="2_5xncy"]
-[ext_resource type="Texture2D" uid="uid://dy5smxmxgkbt0" path="res://spash.png" id="3_psp7v"]
+[ext_resource type="Texture2D" uid="uid://dy5smxmxgkbt0" path="res://splash.png" id="3_psp7v"]
 [ext_resource type="PackedScene" uid="uid://bcbndkyamdyof" path="res://addons/vsk_editor/sign_in/vsk_editor_sign_in_dialog.tscn" id="4_so5v1"]
 [ext_resource type="PackedScene" uid="uid://dv8saw5c87lkg" path="res://addons/vsk_editor/dashboard/vsk_editor_dashboard_dialog.tscn" id="5_5xncy"]
 

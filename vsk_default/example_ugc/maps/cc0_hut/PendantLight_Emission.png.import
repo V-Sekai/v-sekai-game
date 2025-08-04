@@ -4,15 +4,16 @@ importer="texture"
 type="CompressedTexture2D"
 uid="uid://cptyhed5513s8"
 path.s3tc="res://.godot/imported/PendantLight_Emission.png-132d2fa676889c6a02b5401a1e9ca4ef.s3tc.ctex"
+path.etc2="res://.godot/imported/PendantLight_Emission.png-132d2fa676889c6a02b5401a1e9ca4ef.etc2.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 
 [deps]
 
 source_file="res://vsk_default/example_ugc/maps/cc0_hut/PendantLight_Emission.png"
-dest_files=["res://.godot/imported/PendantLight_Emission.png-132d2fa676889c6a02b5401a1e9ca4ef.s3tc.ctex"]
+dest_files=["res://.godot/imported/PendantLight_Emission.png-132d2fa676889c6a02b5401a1e9ca4ef.s3tc.ctex", "res://.godot/imported/PendantLight_Emission.png-132d2fa676889c6a02b5401a1e9ca4ef.etc2.ctex"]
 
 [params]
 

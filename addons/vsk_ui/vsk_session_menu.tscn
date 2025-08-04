@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://dcd0ooyvb0nwu" path="res://addons/vsk_ui/vsk_top_header_panel_container.tscn" id="3_004mi"]
 [ext_resource type="PackedScene" uid="uid://6dmf2p00vihh" path="res://addons/vsk_ui/vsk_sub_header_panel_container.tscn" id="3_qf2rp"]
 [ext_resource type="Script" uid="uid://dnkg28mh25h88" path="res://addons/sar_game_framework/2d/gui/sar_ui_top_level_alignment.gd" id="4_anyfg"]
-[ext_resource type="Texture2D" uid="uid://dy5smxmxgkbt0" path="res://spash.png" id="5_qf2rp"]
+[ext_resource type="Texture2D" uid="uid://dy5smxmxgkbt0" path="res://splash.png" id="5_qf2rp"]
 [ext_resource type="PackedScene" uid="uid://bt7nx0jqdlkdu" path="res://addons/vsk_ui/widgets/vsk_button_session.tscn" id="7_q0edg"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ixf25"]

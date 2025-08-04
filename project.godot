@@ -257,13 +257,13 @@ common/physics_interpolation=true
 
 [rendering]
 
+textures/vram_compression/import_s3tc_bptc=true
+textures/vram_compression/import_etc2_astc=true
 lights_and_shadows/directional_shadow/soft_shadow_filter_quality=5
 lights_and_shadows/positional_shadow/soft_shadow_filter_quality=5
 global_illumination/voxel_gi/quality=1
 anti_aliasing/quality/msaa_3d=3
 occlusion_culling/use_occlusion_culling=true
-textures/vram_compression/import_etc2_astc=true
-textures/vram_compression/import_s3tc_bptc=true
 
 [ugc]
 
@@ -276,8 +276,8 @@ config/clean_map_import=true
 
 openxr/enabled=true
 openxr/default_action_map="res://addons/vsk_game_framework/config/vsk_openxr_action_map.tres"
+openxr/startup_alert=false
 openxr/extensions/hand_tracking=true
 openxr/extensions/hand_interaction_profile=true
 openxr/extensions/eye_gaze_interaction=true
-openxr/startup_alert=false
 shaders/enabled=true
