@@ -1,0 +1,78 @@
+[remap]
+
+importer="scene"
+importer_version=1
+type="PackedScene"
+uid="uid://dr50iw4yphhck"
+path="res://.godot/imported/sar1_bot.gltf-4fa500f5e7e71e4010df3cbe1b38d97d.scn"
+
+[deps]
+
+source_file="res://tests/humanoid/sar1_bot.gltf"
+dest_files=["res://.godot/imported/sar1_bot.gltf-4fa500f5e7e71e4010df3cbe1b38d97d.scn"]
+
+[params]
+
+nodes/root_type=""
+nodes/root_name=""
+nodes/root_script=null
+nodes/apply_root_scale=true
+nodes/root_scale=1.0
+nodes/import_as_skeleton_bones=false
+nodes/use_name_suffixes=true
+nodes/use_node_type_suffixes=true
+meshes/ensure_tangents=true
+meshes/generate_lods=true
+meshes/generate_collisions=0
+meshes/physics/shape_type=7
+meshes/physics/physics_material_override=null
+meshes/physics/layer=1
+meshes/physics/mask=1
+meshes/decomposition/advanced=false
+meshes/decomposition/precision=5
+meshes/decomposition/max_concavity=1.0
+meshes/decomposition/symmetry_planes_clipping_bias=0.05
+meshes/decomposition/revolution_axes_clipping_bias=0.05
+meshes/decomposition/min_volume_per_convex_hull=0.0001
+meshes/decomposition/resolution=10000
+meshes/decomposition/max_num_vertices_per_convex_hull=32
+meshes/decomposition/plane_downsampling=4
+meshes/decomposition/convexhull_downsampling=4
+meshes/decomposition/normalize_mesh=false
+meshes/decomposition/mode=0
+meshes/decomposition/convexhull_approximation=true
+meshes/decomposition/max_convex_hulls=1
+meshes/decomposition/project_hull_vertices=true
+meshes/primitive/size=Vector3(2, 2, 2)
+meshes/primitive/height=1.0
+meshes/primitive/radius=1.0
+meshes/primitive/position=Vector3(0, 0, 0)
+meshes/primitive/rotation=Vector3(0, 0, 0)
+meshes/create_shadow_meshes=true
+meshes/light_baking=1
+meshes/lightmap_texel_size=0.2
+meshes/force_disable_compression=false
+skins/use_named_skins=true
+animation/import=true
+animation/fps=30
+animation/trimming=false
+animation/remove_immutable_tracks=true
+animation/import_rest_as_RESET=false
+import_script/path=""
+materials/extract=0
+materials/extract_format=0
+materials/extract_path=""
+_subresources={
+"nodes": {
+"PATH:Armature/Skeleton3D": {
+"retarget/bone_map": Object(BoneMap,"resource_local_to_scene":false,"resource_name":"","profile":Object(SkeletonProfileHumanoid,"resource_local_to_scene":false,"resource_name":"","root_bone":&"Root","scale_base_bone":&"Hips","group_size":4,"bone_size":56,"script":null)
+,"bonemap":null,"bone_map/Root":&"","bone_map/Hips":&"Hips","bone_map/Spine":&"Spine","bone_map/Chest":&"Chest","bone_map/UpperChest":&"UpperChest","bone_map/Neck":&"Neck","bone_map/Head":&"Head","bone_map/LeftEye":&"","bone_map/RightEye":&"","bone_map/Jaw":&"","bone_map/LeftShoulder":&"Shoulder.l","bone_map/LeftUpperArm":&"UpperArm.l","bone_map/LeftLowerArm":&"LowerArm.l","bone_map/LeftHand":&"Hand.l","bone_map/LeftThumbMetacarpal":&"ThumbMetacarpal.l","bone_map/LeftThumbProximal":&"ThumbProximal.l","bone_map/LeftThumbDistal":&"ThumbDistal.l","bone_map/LeftIndexProximal":&"IndexProximal.l","bone_map/LeftIndexIntermediate":&"IndexIntermediate.l","bone_map/LeftIndexDistal":&"IndexDistal.l","bone_map/LeftMiddleProximal":&"MiddleProximal.l","bone_map/LeftMiddleIntermediate":&"MiddleIntermediate.l","bone_map/LeftMiddleDistal":&"MiddleDistal.l","bone_map/LeftRingProximal":&"RingProximal.l","bone_map/LeftRingIntermediate":&"RingIntermediate.l","bone_map/LeftRingDistal":&"RingDistal.l","bone_map/LeftLittleProximal":&"LittleProximal.l","bone_map/LeftLittleIntermediate":&"LittleIntermediate.l","bone_map/LeftLittleDistal":&"LittleDistal.l","bone_map/RightShoulder":&"Shoulder.r","bone_map/RightUpperArm":&"UpperArm.r","bone_map/RightLowerArm":&"LowerArm.r","bone_map/RightHand":&"Hand.r","bone_map/RightThumbMetacarpal":&"ThumbMetacarpal.r","bone_map/RightThumbProximal":&"ThumbProximal.r","bone_map/RightThumbDistal":&"ThumbDistal.r","bone_map/RightIndexProximal":&"IndexProximal.r","bone_map/RightIndexIntermediate":&"IndexIntermediate.r","bone_map/RightIndexDistal":&"IndexDistal.r","bone_map/RightMiddleProximal":&"MiddleProximal.r","bone_map/RightMiddleIntermediate":&"MiddleIntermediate.r","bone_map/RightMiddleDistal":&"MiddleDistal.r","bone_map/RightRingProximal":&"RingProximal.r","bone_map/RightRingIntermediate":&"RingIntermediate.r","bone_map/RightRingDistal":&"RingDistal.r","bone_map/RightLittleProximal":&"LittleProximal.r","bone_map/RightLittleIntermediate":&"LittleIntermediate.r","bone_map/RightLittleDistal":&"LittleDistal.r","bone_map/LeftUpperLeg":&"UpperLeg.l","bone_map/LeftLowerLeg":&"LowerLeg.l","bone_map/LeftFoot":&"Foot.l","bone_map/LeftToes":&"Toes.l","bone_map/RightUpperLeg":&"UpperLeg.r","bone_map/RightLowerLeg":&"LowerLeg.r","bone_map/RightFoot":&"Foot.r","bone_map/RightToes":&"Toes.r","script":null)
+,
+"retarget/rest_fixer/fix_silhouette/enable": true,
+"retarget/rest_fixer/fix_silhouette/filter": [&"LeftFoot", &"RightFoot"],
+"retarget/rest_fixer/fix_silhouette/threshold": 30.0
+}
+}
+}
+gltf/naming_version=1
+gltf/embedded_image_handling=1
