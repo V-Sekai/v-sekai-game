@@ -6,7 +6,7 @@
 [subrepo]
 	remote = https://github.com/V-Sekai/godot-humanoid.git
 	branch = main
-	commit = c8abe8899aa804ee5db035542a5527a32b830634
-	parent = d9fdf6074838785f77a8187b8f6b365f8f391943
+	commit = ab696730362c9e0fa2772fa3f7c453dd8943f81e
+	parent = f8b91515799c823e3492a75edd77cd3bdb1a3cac
 	method = merge
 	cmdver = 0.4.9
