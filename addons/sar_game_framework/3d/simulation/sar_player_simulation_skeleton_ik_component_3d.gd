@@ -55,10 +55,12 @@ func _on_model_changed(p_new_model: SarModel3D):
 
 func _ready() -> void:
 	if not Engine.is_editor_hint():
-		assert(simulation)
-		
-		_model_component = simulation.game_entity_interface.get_model_component()
-		assert(_model_component)
+		if not SarUtils.assert_true(simulation, "SarSimulationComponentSkeletonIK3D: simulation is not available"):
+			return
+
+	_model_component = simulation.game_entity_interface.get_model_component()
+	if not SarUtils.assert_true(_model_component, "SarSimulationComponentSkeletonIK3D: _model_component is not available"):
+		return
 	if _model_component != null:
 		_model_component.model_changed.connect(_on_model_changed)
 		if _model_component.get_model_node() != null:

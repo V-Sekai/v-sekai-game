@@ -448,9 +448,6 @@ const Signs: Array[Vector3] = [
 	Vector3(+1,+1,+1), # UpperChest
 ]
 
-# assert(len(BoneName) === len(MuscleFromBone))
-# assert(len(MuscleName) === len(MuscleDefaultMax))
-# assert(len(MuscleName) === len(MuscleDefaultMin))
 
 # RootQ uses the position, not the rotation, of Left/Right Upper Leg/Arm
 # The position of a bone does not depend on its rotation
@@ -715,4 +712,3 @@ static func muscle_index_to_bone_and_axis() -> Array[Vector2i]: # String -> Vect
 			if muscle_i != -1:
 				ret[muscle_i] = Vector2i(idx, axis_i)
 	return ret
-	
