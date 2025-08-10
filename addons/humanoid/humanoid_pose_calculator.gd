@@ -35,9 +35,9 @@ func precalculate_bone_axis_table() -> void:
 func apply_pose_to_humanoid_driver_coefficents() -> void:
 	if not active and Engine.is_editor_hint():
 		return
-	
+
 	precalculate_bone_axis_table() # Should be efficient enough to call, or optimize to call once
-	
+
 	if not skeleton or not target:
 		return
 
@@ -47,21 +47,30 @@ func apply_pose_to_humanoid_driver_coefficents() -> void:
 			var new_pose: Transform3D = Transform3D(rest_transform.basis.orthonormalized(), rest_transform.origin)
 			skeleton.set_bone_pose(bone_idx, new_pose)
 
+	var source_root_bone_name: String = ""
 	var source_hips_bone_name: String = ""
+	var found_source_for_root_motion: bool = false
 	var found_source_for_hips_transform: bool = false
 
 	for bone_idx: int in range(0, skeleton.get_bone_count()):
 		var bone_name_check: String = skeleton.get_bone_name(bone_idx)
 		var humanoid_id_check: int = human_trait.GodotHumanNames.find(bone_name_check)
-		if humanoid_id_check == human_trait.HumanBodyBones.Hips: # This is the mapped "Hips"
+		if bone_name_check == "Root": # This is the "Root" bone for world-level motion
+			target.root_motion = skeleton.get_bone_pose(bone_idx)
+			source_root_bone_name = bone_name_check
+			found_source_for_root_motion = true
+		elif humanoid_id_check == human_trait.HumanBodyBones.Hips: # This is the mapped "Hips"
 			target.hips_transform = skeleton.get_bone_pose(bone_idx)
 			source_hips_bone_name = bone_name_check # Actual name of the Hips bone
 			found_source_for_hips_transform = true
-			break
-	
+
+	if not found_source_for_root_motion:
+		target.root_motion = Transform3D() # Default to identity if not found
+		push_warning("HumanoidPoseCalculator: 'Root' bone not found in source skeleton.")
+
 	if not found_source_for_hips_transform:
-		target.hips_transform = Transform3D() # Default to identity if neither found
-		push_warning("HumanoidPoseCalculator: 'Hips' bone found in source skeleton.")
+		target.hips_transform = Transform3D() # Default to identity if not found
+		push_warning("HumanoidPoseCalculator: 'Hips' bone not found in source skeleton.")
 
 	# Initialize local leftovers array for inverse_calculate_humanoid_rotation
 	var local_leftovers_array: Array[Quaternion] = []
@@ -84,8 +93,8 @@ func apply_pose_to_humanoid_driver_coefficents() -> void:
 		var bone_name: String = skeleton.get_bone_name(bone_idx)
 		var humanoid_bone_id: int = human_trait.GodotHumanNames.find(bone_name)
 
-		if bone_name == source_hips_bone_name:
-			# This bone's full local transform was used for target.hips_transform.
+		if bone_name == source_hips_bone_name or bone_name == source_root_bone_name:
+			# This bone's full local transform was used for target.hips_transform or target.root_motion.
 			# Clear its potential muscle/leftover values in the target, as it's not driven by them.
 			if humanoid_bone_id >= 0: # If it happens to be a mapped bone (e.g. Hips was used)
 				target.bone_swing_twists[humanoid_bone_id] = Vector3.ZERO
@@ -109,16 +118,16 @@ func apply_pose_to_humanoid_driver_coefficents() -> void:
 					custom_pose_rotation = reference_rotation # Use this rotation for calculation
 				else:
 					push_warning("HumanoidPoseCalculator: Missing preQ/postQ for bone %s (ID: %d) for bicycle pose." % [bone_name, humanoid_bone_id])
-			
+
 			var muscle_triplet_vector: Vector3 = humanoid_transform_util.inverse_calculate_humanoid_rotation(local_leftovers_array, humanoid_bone_id, custom_pose_rotation)
-			
+
 			target.bone_swing_twists[humanoid_bone_id] = muscle_triplet_vector
 			if humanoid_bone_id < local_leftovers_array.size():
 				target.bone_leftovers[humanoid_bone_id] = local_leftovers_array[humanoid_bone_id]
-			
+
 			var muscle_from_bone_map: Array = bone_and_axis_to_coefficent_mapping_table[humanoid_bone_id]
 			var muscle_values_for_bone: Array[float] = [muscle_triplet_vector.x, muscle_triplet_vector.y, muscle_triplet_vector.z]
-			
+
 			for i in range(0, 3):
 				if muscle_from_bone_map[i] is int:
 					var muscle_idx: int = muscle_from_bone_map[i]
