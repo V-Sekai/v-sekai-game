@@ -24,10 +24,6 @@ func _update_session(
 		
 	var token_changed: bool = false
 	
-	# Get a unique OS ID to encrypt the session keys just in case
-	# the file gets stolen.
-	var _os_unique_id = OS.get_unique_id()
-	
 	var renewal_token: String = ""
 	var access_token: String = ""
 	
@@ -42,13 +38,7 @@ func _update_session(
 		access_token = p_access_token
 		token_changed = true
 
-	_godot_uro.cfg.set_value("api", p_username + "@" + p_domain + "/" + "renewal_token", renewal_token)
-	_godot_uro.cfg.set_value("api", p_username + "@" + p_domain + "/" + "access_token", access_token)
-	
-	if _godot_uro.cfg.save_encrypted_pass(_godot_uro.get_uro_editor_config_path(), _os_unique_id) != OK:
-		push_error("Could not save editor token!")
-	if _godot_uro.cfg.save_encrypted_pass(_godot_uro.get_uro_game_config_path(), _os_unique_id) != OK:
-		push_error("Could not save game token!")
+	_godot_uro.store_tokens(p_username, p_domain, access_token, renewal_token)
 	
 	_current_account_address = "%s@%s" % [p_username, p_domain]
 
@@ -260,6 +250,14 @@ func _init() -> void:
 
 ###
 
+## Returns a dictionary containing the current active account username and domain
+## we are signed in with. On failure it will return a dictionary with an empty username
+## and domain.
+func get_current_username_and_domain() -> Dictionary[String, String]:
+	var account_address: String = get_current_account_address()
+	var result_dictionary: Dictionary[String, String] = GodotUroHelper.get_username_and_domain_from_address(account_address)
+	return result_dictionary
+
 ## Returns a string containing the currently active user account and domain
 ## we are signed in with.
 func get_current_account_address() -> String:
@@ -457,7 +455,44 @@ func sign_out(p_service_request: SarGameServiceRequest) -> Dictionary:
 		return processed_result
 		
 	return {}
-	
+
+func get_oauth_redirect(p_service_request: SarGameServiceRequest, p_provider: String) -> Dictionary:		
+	if _godot_uro and _godot_uro.get_api():
+		if not p_service_request is VSKGameServiceRequestUro:
+			push_error("Did not pass a valid VSKGameServiceRequestUro object to sign in request.")
+			return {} 
+				
+		var domain: String = (p_service_request as VSKGameServiceRequestUro).domain
+		if domain.is_empty():
+			push_error("Did not pass a valid domain to a oauth redirect request.")
+			return {}
+
+		var provider: String = p_provider
+		if provider.is_empty():
+			push_error("Did not pass a valid provider to a oauth redirect request.")
+			return {}
+				
+		# Add this request to the active request pool.
+		var godot_uro_request: GodotUroRequester = _godot_uro.create_requester(domain, -1)
+		_active_service_requests[p_service_request] = godot_uro_request
+		
+		# Wait for the internal Uro API to respond to our oauth redirect link request.
+		var result: Dictionary = await _godot_uro.get_api().get_oauth_redirect_async(
+			godot_uro_request,
+			provider
+		)
+		
+		if not stop_request(p_service_request):
+			return {}
+			
+		if result.is_empty():
+			return {}
+
+		return result
+		
+	return {}
+
+
 ## Returns a dictionary containing all the avatar owned by the user assigned to
 ## to the service request.
 func get_dashboard_avatars_async(p_service_request: SarGameServiceRequest) -> Dictionary:

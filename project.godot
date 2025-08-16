@@ -58,6 +58,7 @@ VSKEditorSingleton="*res://addons/vsk_editor/vsk_editor.gd"
 [debug]
 
 gdscript/warnings/exclude_addons=false
+network/disable_ssl=false
 
 [display]
 
@@ -97,6 +98,7 @@ import/fbx2gltf/enabled=false
 session/player_vessel_scene_path="uid://iym64t583x3o"
 session/player_soul_scene_path="uid://6ohhdebb5pjr"
 session/show_window_title_debug_info=true
+session/vroid_api_enabled=true
 
 [global_group]
 

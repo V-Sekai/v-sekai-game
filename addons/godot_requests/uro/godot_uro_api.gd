@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: MIT
 
 @tool
-extends RefCounted
+extends GodotRequestAPI
 class_name GodotUroAPI
 
 const USER_NAME = "user"
@@ -13,9 +13,6 @@ const AVATAR_NAME = "avatar"
 const MAP_NAME = "map"
 
 var _godot_uro: GodotUro = null
-
-func cancel(p_requester: GodotUroRequester) -> void:
-	p_requester.cancel()
 
 func get_profile_async(p_requester: GodotUroRequester, p_access_token: String) -> Dictionary:
 	var query: Dictionary = {}
@@ -126,6 +123,22 @@ func get_identity_proof_async(p_requester: GodotUroRequester, p_access_token: St
 		),
 		query,
 		p_access_token,
+		{"method": HTTPClient.METHOD_GET, "encoding": "form"}
+	))
+	return _handle_result(result)
+
+func get_oauth_redirect_async(p_requester: GodotUroRequester, p_provider: String) -> Dictionary:
+	var query: Dictionary = {}
+
+	var result = await (p_requester.request(
+		(
+			GodotUroHelper.get_api_path()
+			+ GodotUroHelper.NATIVE_OAUTH_PATH
+			+ "/"
+			+ p_provider
+		),
+		query,
+		"",
 		{"method": HTTPClient.METHOD_GET, "encoding": "form"}
 	))
 	return _handle_result(result)
@@ -395,19 +408,6 @@ func dashboard_get_map_async(p_requester: GodotUroRequester, p_access_token: Str
 	)
 
 	return _handle_result(result)
-
-static func _handle_result(result: RefCounted) -> Dictionary:
-	var result_dict: Dictionary = {
-		"requester_code": -1, "generic_code": -1, "response_code": -1, "output": {}
-	}
-
-	if result:
-		result_dict["requester_code"] = result.requester_code
-		result_dict["generic_code"] = result.generic_code
-		result_dict["response_code"] = result.response_code
-		result_dict["output"] = result.data
-
-	return result_dict
 
 
 func _init(p_godot_uro):
