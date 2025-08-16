@@ -115,6 +115,7 @@ class HTTPState:
 		else:
 			if status == HTTPClient.STATUS_REQUESTING:
 				http.poll()
+				status = http.get_status()
 				if status == HTTPClient.STATUS_BODY:
 					response_code = http.get_response_code()
 					response_headers = http.get_response_headers_as_dictionary()
@@ -215,7 +216,9 @@ class HTTPState:
 			http = HTTPClient.new()
 
 		if status != HTTPClient.STATUS_CONNECTED:
-			var tls_options: TLSOptions = TLSOptions.client(null)
+			var tls_options: TLSOptions = null
+			if use_ssl:
+				tls_options = TLSOptions.client(null)
 			connect_err = http.connect_to_host(hostname, port, tls_options)
 			if connect_err != OK:
 				push_error(

@@ -1,35 +1,39 @@
 # Copyright (c) 2018-present. This file is part of V-Sekai https://v-sekai.org/.
 # SaracenOne & K. S. Ernest (Fire) Lee & Lyuma & MMMaellon & Contributors
-# godot_uro_requester.gd
+# godot_requester.gd
 # SPDX-License-Identifier: MIT
 
 @tool
 extends RefCounted
-class_name GodotUroRequester
+class_name GodotRequester
 
-const BOUNDARY_STRING_PREFIX = "UroFileUpload"
-const BOUNDARY_STRING_LENGTH = 32
+const BOUNDARY_UID_LENGTH = 32
 const YIELD_PERIOD_MS = 50
 
 class Result:
 	var requester_code: int = -1
 	var generic_code: int = -1
 	var response_code: int = -1
+	var response_headers: Dictionary = {}
 	var data: Dictionary = {}
 
 	func _init(
-		p_requester_code: int, p_generic_code: int, p_response_code: int, p_data: Dictionary = {}
+		p_requester_code: int, p_generic_code: int, p_response_code: int, p_response_headers: Dictionary = {}, p_data: Dictionary = {}
 	):
 		requester_code = p_requester_code
 		generic_code = p_generic_code
 		response_code = p_response_code
+		response_headers = p_response_headers
 		data = p_data
 
 
 const DEFAULT_OPTIONS: Dictionary = {
 	"method": HTTPClient.METHOD_GET,
 	"encoding": "query",
+	"multipart_boundary_prefix": "",
 	"token": null,
+	"auth_scheme": "Bearer",
+	"extra_headers": null,
 	"download_to": null,
 }
 
@@ -58,17 +62,21 @@ func _init(p_http_pool: HTTPPool, p_hostname: String, p_port: int = -1, p_use_ss
 static func get_status_error_response(p_status: int) -> Result:
 	match p_status:
 		HTTPClient.STATUS_CANT_CONNECT:
-			return Result.new(GodotUroHelper.RequesterCode.CANT_CONNECT, FAILED, -1)
+			return Result.new(GodotRequestHelper.RequesterCode.CANT_CONNECT, FAILED, -1)
 		HTTPClient.STATUS_CANT_RESOLVE:
-			return Result.new(GodotUroHelper.RequesterCode.CANT_RESOLVE, FAILED, -1)
+			return Result.new(GodotRequestHelper.RequesterCode.CANT_RESOLVE, FAILED, -1)
 		HTTPClient.STATUS_TLS_HANDSHAKE_ERROR:
-			return Result.new(GodotUroHelper.RequesterCode.SSL_HANDSHAKE_ERROR, FAILED, -1)
+			return Result.new(GodotRequestHelper.RequesterCode.SSL_HANDSHAKE_ERROR, FAILED, -1)
 		HTTPClient.STATUS_DISCONNECTED:
-			return Result.new(GodotUroHelper.RequesterCode.DISCONNECTED, FAILED, -1)
+			return Result.new(GodotRequestHelper.RequesterCode.DISCONNECTED, FAILED, -1)
 		HTTPClient.STATUS_CONNECTION_ERROR:
-			return Result.new(GodotUroHelper.RequesterCode.CONNECTION_ERROR, FAILED, -1)
+			return Result.new(GodotRequestHelper.RequesterCode.CONNECTION_ERROR, FAILED, -1)
 		_:
-			return Result.new(GodotUroHelper.RequesterCode.UNKNOWN_STATUS_ERROR, FAILED, -1)
+			return Result.new(GodotRequestHelper.RequesterCode.UNKNOWN_STATUS_ERROR, FAILED, -1)
+
+
+func get_default_options() -> Dictionary:
+	return DEFAULT_OPTIONS.duplicate(true)
 
 
 func http_download_progressed(_http_state: RefCounted, _bytes: int, _total_bytes: int):
@@ -80,14 +88,16 @@ func request(
 	p_path: String,
 	p_payload: Dictionary,
 	p_token: String,
-	p_options: Dictionary = DEFAULT_OPTIONS) -> Result:
+	p_options: Dictionary = {}) -> Result:
+	if p_options.is_empty():
+		p_options = get_default_options()
 	if http_state:
 		push_error("HTTP state is already active for this request")
-		return Result.new(GodotUroHelper.RequesterCode.CANT_CONNECT, ERR_CANT_CREATE, -1)
+		return Result.new(GodotRequestHelper.RequesterCode.CANT_CONNECT, ERR_CANT_CREATE, -1)
 		
 	http_state = await _http_pool.new_http_state()
 	if http_state == null:
-		return Result.new(GodotUroHelper.RequesterCode.CANT_CONNECT, ERR_CANT_CREATE, -1)
+		return Result.new(GodotRequestHelper.RequesterCode.CANT_CONNECT, ERR_CANT_CREATE, -1)
 
 	var download_prog_callable = self.http_download_progressed.bind(http_state)
 	if p_options.get("download_to"):
@@ -106,14 +116,19 @@ func request(
 			err = FAILED
 		http_state.release()
 		http_state = null
-		return Result.new(GodotUroHelper.RequesterCode.CANT_CONNECT, err, -1)
+		return Result.new(GodotRequestHelper.RequesterCode.CANT_CONNECT, err, -1)
 
 	var uri: String = p_path
 	var encoded_payload: PackedByteArray = PackedByteArray()
 	var headers: Array = []
 
 	if p_token:
-		headers.push_back("Authorization: %s" % p_token)
+		# TODO: Allow different auth header schemes
+		headers.push_back("Authorization: Bearer %s" % p_token)
+
+	var extra_headers: Array = p_options.get("extra_headers", [])
+	if not extra_headers.is_empty():
+		headers.append_array(extra_headers)
 
 	if p_payload:
 		var encoding: String = _get_option(p_options, "encoding")
@@ -129,12 +144,13 @@ func request(
 				var payload_string: String = _dict_to_query_string(p_payload)
 				encoded_payload = payload_string.to_utf8_buffer()
 			"multipart":
+				var boundary_prefix: String = _get_option(p_options, "multipart_boundary_prefix")
 				var boundary_string: String = (
-					BOUNDARY_STRING_PREFIX
-					+ RandomizationUtilities.generate_insecure_unique_id(BOUNDARY_STRING_LENGTH)
+					boundary_prefix
+					+ RandomizationUtilities.generate_insecure_unique_id(BOUNDARY_UID_LENGTH)
 				)
 				headers.append("Content-Type: multipart/form-data; boundary=%s" % boundary_string)
-				encoded_payload = GodotUroRequester._compose_multipart_body(
+				encoded_payload = GodotRequester._compose_multipart_body(
 					p_payload, boundary_string
 				)
 			_:
@@ -143,7 +159,8 @@ func request(
 
 	var token = _get_option(p_options, "token")
 	if token and token is String:
-		headers.append("Authorization: Bearer %s" % token)
+		var auth_scheme = _get_option(p_options, "auth_scheme")
+		headers.append("Authorization: %s %s" % [auth_scheme, token])
 
 	var request_result = http_client.request_raw(
 		_get_option(p_options, "method"), uri, headers, encoded_payload
@@ -162,6 +179,7 @@ func request(
 		http_state.download_progressed.disconnect(download_prog_callable)
 
 	var data: Dictionary = {}
+	var response_headers: Dictionary = http_state.response_headers
 	var response_body: String = http_state.response_body.get_string_from_utf8()
 	var response_code: int = http_state.response_code
 	http_state.release()
@@ -174,38 +192,43 @@ func request(
 			else:
 				data = {"data": str(json_parse_result.get_data())}
 			if response_code == HTTPClient.RESPONSE_OK:
-				return Result.new(GodotUroHelper.RequesterCode.OK, OK, response_code, data)
+				return Result.new(GodotRequestHelper.RequesterCode.OK, OK, response_code, response_headers, data)
 			else:
 				return Result.new(
-					GodotUroHelper.RequesterCode.HTTP_RESPONSE_NOT_OK,
+					GodotRequestHelper.RequesterCode.HTTP_RESPONSE_NOT_OK,
 					FAILED,
 					response_code,
+					response_headers,
 					data
 				)
 		else:
 			if response_code == HTTPClient.RESPONSE_OK:
 				return Result.new(
-					GodotUroHelper.RequesterCode.JSON_PARSE_ERROR,
+					GodotRequestHelper.RequesterCode.JSON_PARSE_ERROR,
 					FAILED,
 					response_code,
+					response_headers,
 					data
 				)
 			else:
 				return Result.new(
-					GodotUroHelper.RequesterCode.HTTP_RESPONSE_NOT_OK,
+					GodotRequestHelper.RequesterCode.HTTP_RESPONSE_NOT_OK,
 					FAILED,
 					response_code,
+					response_headers,
 					data
 				)
 	else:
-		push_error("GodotUroRequester: No response body!")
+		# TODO: Handle responses codes like 3xx as ok
+		push_error("GodotRequester: No response body!")
 		return Result.new(
-			GodotUroHelper.RequesterCode.UNKNOWN_STATUS_ERROR, FAILED, response_code, data
+			GodotRequestHelper.RequesterCode.UNKNOWN_STATUS_ERROR, FAILED, response_code, response_headers, data
 		)
 
 
 func _get_option(options, key):
-	return options[key] if options.has(key) else DEFAULT_OPTIONS[key]
+	var default_opts: Dictionary = get_default_options()
+	return options[key] if options.has(key) else default_opts[key]
 
 
 static func _compose_multipart_body(
