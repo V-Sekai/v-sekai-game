@@ -10,7 +10,7 @@ static func load_and_cache_asset_from_file_path(
 	p_flags: int) -> PackedScene:
 	var packed_scene_container: Array[PackedScene] = [null]
 	var packed_scene_validator_and_saver_lambda = func():
-		if (p_flags & FLAG_SKIP_VALIDATION) or VSKResourceParser.validate_resource(p_path, {}, {}, true):
+		if (not is_whitelist_enabled()) or (p_flags & FLAG_SKIP_VALIDATION) or VSKResourceParser.validate_resource(p_path, {}, {}, true):
 			var packed_scene: PackedScene = ResourceLoader.load(p_path, "PackedScene", ResourceLoader.CACHE_MODE_REUSE)
 			
 			if not (p_flags & FLAG_SKIP_CACHE):
@@ -25,3 +25,6 @@ static func load_and_cache_asset_from_file_path(
 		await p_game_asset_manager.get_tree().process_frame
 	
 	return packed_scene_container[0]
+
+static func is_whitelist_enabled() -> bool:
+	return ProjectSettings.get_setting("debug/whitelist/godot_scn/enabled", true)

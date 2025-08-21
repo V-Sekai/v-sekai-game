@@ -9,8 +9,25 @@ const _SHOW_WINDOW_TITLE_DEBUG_INFO_PATH: String = "game/session/show_window_tit
 const _PLAYER_SOUL_SCENE_PROJECT_SETTING_PATH: String = "game/session/player_soul_scene_path"
 const _PLAYER_VESSEL_SCENE_PROJECT_SETTING_PATH: String = "game/session/player_vessel_scene_path"
 
+var _DEFAULT_HOST_ARGS: Dictionary = {
+	"map": "",
+	"server_name": "Server",
+	"port": 7777,
+	"address": "127.0.0.1",  # join only
+	"dedicated": false,      # host only
+	"public": false,         # host only
+	"max_players": 64,       # host only
+}
+
+var _startup_network_opts: Dictionary = {}
+
+var _active_map_path: String = ""
 var _is_dedicated: bool = false
+var _is_public: bool = false
+var _current_players: int = 0
 var _max_players: int = 0
+var _port: int = 0
+var _server_name: String = ""
 
 var _player_soul_scene: PackedScene = null
 var _player_vessel_scene: PackedScene = null
@@ -154,11 +171,18 @@ func _on_connection_failed() -> void:
 
 func _on_peer_connect(p_id : int) -> void:
 	if multiplayer.is_server():
+		_current_players += 1
 		_spawn_player_vessel(p_id)
 
 func _on_peer_disconnect(p_id : int) -> void:
+	# TODO: This function is not called if peer crashes
+	# or doesn't disconnect. We should despawn timed out peers.
 	if multiplayer.is_server():
 		_unspawn_player_vessel(p_id)
+		if _current_players < 0:
+			push_error("Unexpected Error _on_peer_disconnect: _current_players value is %s" % _current_players)
+		return
+		_current_players -= 1
 		
 func _on_server_disconnected() -> void:
 	pass
@@ -230,12 +254,47 @@ func _ready() -> void:
 		_setup_multiplayer.call_deferred()
 
 func _parse_commandline_args() -> void:
-	var _commandline_argument_dictionary = SarGameSessionCommandline.parse_commandline_arguments(
+	var cmd_args: Dictionary = SarGameSessionCommandline.parse_commandline_arguments(
 		OS.get_cmdline_args()
 	)
 	
-	if not Engine.is_editor_hint():
-		pass
+	if Engine.is_editor_hint():
+		return
+
+	# Validate
+	if cmd_args.has("host") and cmd_args.has("join"):
+		push_error("Error: conflicting command-line arguments: 'host' and 'join'")
+		get_tree().quit(2)
+	if cmd_args.has("join") and cmd_args.has("dedicated"):
+		push_error("Error: conflicting command-line arguments: 'join' and 'dedicated'")
+		get_tree().quit(2)
+	if cmd_args.has("map"):
+		push_error("Error: command-line argument not implemented: 'map'")
+		get_tree().quit(2)
+
+	# Initialize with defaults
+	_startup_network_opts = get_default_host_args()
+
+	var cmd_value = null
+	for key in cmd_args.keys():
+		# Default parse
+		if cmd_args[key] == []: # No sub-arguments
+			cmd_value = true
+		elif cmd_args[key].size() == 1: # unpack
+			cmd_value = cmd_args[key][0]
+		else:
+			cmd_value = cmd_args[key] # Default to sub-arguments array
+
+		# Network
+		if key == "host" or key == "join":
+			_startup_network_opts[key] = true
+			continue
+		if key == "port" or key == "max_players":
+			cmd_value = cmd_args[key][0].to_int()
+		# Network default
+		if _startup_network_opts.has(key):
+			_startup_network_opts[key] = cmd_value
+			continue
 
 func _init() -> void:
 	_parse_commandline_args()
@@ -248,10 +307,14 @@ func notify_game_scene_changed() -> void:
 		_update_player_spawn_path()
 		var current_scene: Node = get_tree().current_scene
 		if current_scene is SarGameScene3D:
-			if (multiplayer.is_server() and not is_dedicated()) or not multiplayer.is_server():
-				_local_player_soul_instance = _spawn_player_soul(multiplayer.get_unique_id())
-				if multiplayer.is_server():
+			if multiplayer.is_server():
+				if not is_dedicated():
+					_local_player_soul_instance = _spawn_player_soul(multiplayer.get_unique_id())
 					_spawn_player_vessel(get_host_peer_id())
+				set_accept_new_peers(true)
+			else:
+				_local_player_soul_instance = _spawn_player_soul(multiplayer.get_unique_id())
+						
 					
 ## Notifys the game session manager that a player vessel has just entered the game scene.
 func notify_player_vessel_3d_instance_added(p_player_vessel: SarGameEntityVessel3D) -> void:
@@ -289,6 +352,14 @@ func is_dedicated() -> bool:
 func get_session_authority_id() -> int:
 	return get_host_peer_id()
 
+## Returns startup network command-line options.
+func get_startup_network_opts() -> Dictionary:
+	return _startup_network_opts
+
+## Returns default host/join configuration.
+func get_default_host_args() -> Dictionary:
+	return _DEFAULT_HOST_ARGS.duplicate(true)
+
 ## Returns a Transform3D for the peer with current id to spawn on.
 func find_valid_spawn_transform_for_peer_entity_3d(_id: int) -> Transform3D:
 	var player_spawns: Array[Node] = get_tree().get_nodes_in_group(_get_player_start_group_name())
@@ -305,23 +376,42 @@ func find_valid_spawn_transform_for_peer_entity_3d(_id: int) -> Transform3D:
 func get_local_player_soul_instance() -> SarSoul:
 	return _local_player_soul_instance
 
+## Sets current active map path.
+func set_active_map_path(p_map_url: String) -> void:
+	_active_map_path = p_map_url
+	print("Resource %s set as active map path" % p_map_url)
+
+## Sets accept/refuse new peers.
+func set_accept_new_peers(p_is_accepting: bool) -> void:
+	var peer: MultiplayerPeer = get_tree().get_multiplayer().multiplayer_peer
+	if peer:
+		peer.refuse_new_connections = not p_is_accepting
+
 ## Hosts a new multiplayer server:
 ## p_port is the network port to host this server on.
 ## p_max_players is the maximum number of peers permitted to join this server.
 ## p_is_dedicated flags whether this should be a dedicated server and not
+## p_is_public flags whether this should be a public server or not
+## p_server_name is the public name of hosted server instance
 ## to spawn a player entity and soul for the host.
-func host_server(p_port: int, p_max_players: int, p_is_dedicated: bool) -> Error:
+func host_server(p_port: int, p_max_players: int, p_is_dedicated: bool, p_is_public: bool, p_server_name: String) -> Error:
+	_port = p_port
 	_is_dedicated = p_is_dedicated
+	_is_public = p_is_public
 	_max_players = p_max_players
+	_server_name = p_server_name
 	
 	var peer: MultiplayerPeer = _create_multiplayer_peer()
 	
 	var result: Error = FAILED
 	if peer is ENetMultiplayerPeer:
 		result  = (peer as ENetMultiplayerPeer).create_server(p_port, p_max_players)
+		# Disable connections until map notify ready callback
+		peer.refuse_new_connections = true
 		
 	if result == OK:
 		get_tree().get_multiplayer().multiplayer_peer = peer
+		_current_players = 1
 		if _should_use_window_title_debug_behaviour():
 			_update_window_title()
 		
@@ -339,5 +429,5 @@ func join_server(p_address: String, p_port: int) -> Error:
 		
 	if result == OK:
 		multiplayer.set_multiplayer_peer(peer)
-		
+		# TODO: sync _current_players number in clients
 	return result

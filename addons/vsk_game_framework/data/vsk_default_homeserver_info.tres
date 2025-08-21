@@ -4,6 +4,6 @@
 
 [resource]
 script = ExtResource("1_dpdaf")
-homeserver_list = PackedStringArray("vsekai.org", "stage.v-sekai.org")
+homeserver_list = PackedStringArray("uro.v-sekai.cloud", "stage.v-sekai.org")
 allow_custom_homeserver = true
 metadata/_custom_type_script = "uid://b24qp4x5x6qpl"

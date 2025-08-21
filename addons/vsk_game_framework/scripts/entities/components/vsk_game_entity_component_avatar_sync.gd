@@ -37,7 +37,7 @@ signal requested_avatar_path_changed(p_new_path: String)
 			# Validation step: check if we're allowed to change to this particular
 			# avatar path for this game session. Rules can be implemented on
 			# a per-instance basis.
-			var game_session_manager: VSKGameSessionManager = get_tree().get_first_node_in_group("game_session_manager")
+			var game_session_manager: VSKGameSessionManager = get_tree().get_first_node_in_group("game_session_managers")
 			if game_session_manager:
 				if not game_session_manager.is_avatar_path_allowed_for_avatar_sync(self, p_new_path):
 					return

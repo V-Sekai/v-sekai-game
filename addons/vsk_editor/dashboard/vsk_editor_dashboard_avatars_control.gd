@@ -59,7 +59,7 @@ func _upload_vrm(p_path: String) -> void:
 				
 			var service: VSKGameServiceUro = _get_uro_service()
 			if service:
-				var username_and_domain: Dictionary= GodotUroHelper.get_username_and_domain_from_address(service.get_current_account_address())
+				var username_and_domain: Dictionary= service.get_current_username_and_domain()
 				var upload_dictionary: Dictionary = GodotUroHelper.create_content_upload_dictionary(title, "", p_path, thumbnail_image, false)
 				if upload_dictionary.is_empty():
 					push_error("Upload dictionary for VRM file %s returned empty." % p_path)

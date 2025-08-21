@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://cpfjn155vr4f4"]
+
+[ext_resource type="PackedScene" uid="uid://b8af2il3sjsc2" path="res://addons/vsk_ui/views/vsk_ui_view_content_menu.tscn" id="1_qwrtx"]
+[ext_resource type="Script" uid="uid://jocjimlxn14b" path="res://addons/vsk_ui/views/vsk_ui_view_map_menu.gd" id="2_cjvi8"]
+
+[node name="MapMenu" instance=ExtResource("1_qwrtx")]
+script = ExtResource("2_cjvi8")
+
+[node name="ContentBrowser" parent="Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer" index="2"]
+content_text = "Map Browser"

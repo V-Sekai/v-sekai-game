@@ -13,9 +13,9 @@ func _fetch_content() -> void:
 	
 	var uro: VSKGameServiceUro = _get_uro_service()
 	if uro:
-		var dict: Dictionary = GodotUroHelper.get_username_and_domain_from_address(uro.get_current_account_address())
+		var dict: Dictionary = uro.get_current_username_and_domain()
 		_request = uro.create_request(dict)
-		var result: Dictionary = await uro.get_dashboard_avatars_async(_request)
+		var result: Dictionary = await uro.get_avatars_async(_request)
 		_request = null
 		if GodotUroHelper.requester_result_is_ok(result):
 			if content_browser:

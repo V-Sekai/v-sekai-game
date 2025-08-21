@@ -253,3 +253,4 @@ color = Color(0, 0, 0, 1)
 [connection signal="respawn_pressed" from="UserInterface2D/QuickMenuCanvasLayer/IngameQuickMenu/MarginContainer/AspectRatioContainer/QuickMenu" to="Respawner3DComponent" method="request_respawn"]
 [connection signal="respawn_pressed" from="UserInterface2D/QuickMenuCanvasLayer/IngameQuickMenu/MarginContainer/AspectRatioContainer/QuickMenu" to="MenuComponent" method="set_menu_active" binds= [false]]
 [connection signal="avatar_url_selected" from="UserInterface2D/BigMenuCanvasLayer/IngameBigMenu/MarginContainer/BigMenuViewController" to="UserInterface2D/BigMenuCanvasLayer/IngameBigMenu" method="_on_avatar_url_selected"]
+[connection signal="map_url_selected" from="UserInterface2D/BigMenuCanvasLayer/IngameBigMenu/MarginContainer/BigMenuViewController" to="UserInterface2D/BigMenuCanvasLayer/IngameBigMenu" method="_on_map_url_selected"]
