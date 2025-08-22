@@ -2,15 +2,15 @@
 extends SarUIViewController
 class_name VSKUIViewControllerSessionLoading
 
-signal scene_loaded(p_resource: Resource)
+signal scene_loaded(p_resource_url: String, p_resource: Resource)
 
 var _request_object: VSKGameAssetRequest = null
 
-func _request_complete(p_err: VSKGameAssetRequest.AssetError) -> void:
+func _request_complete(p_err: VSKGameAssetRequest.AssetError, p_url: String) -> void:
 	match p_err:
 		VSKGameAssetRequest.AssetError.OK:
 			var packed_scene: PackedScene = _request_object.get_resource()
-			scene_loaded.emit(packed_scene)
+			scene_loaded.emit(p_url, packed_scene)
 			
 	_request_object = null
 	
@@ -33,7 +33,7 @@ func _ready() -> void:
 		var asset_manager: VSKGameAssetManager = get_tree().get_first_node_in_group("game_asset_managers")
 		if asset_manager:
 			_request_object = asset_manager.make_request(content_url, VSKGameAssetManager.AssetType.MAP)
-			if not SarUtils.assert_ok(_request_object.request_complete.connect(_request_complete),
+			if not SarUtils.assert_ok(_request_object.request_complete.connect(_request_complete.bind(content_url)),
 				"Could not connect signal '_request_object.request_complete' to '_request_complete'"):
 				return
 			

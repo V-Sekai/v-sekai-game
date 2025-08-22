@@ -50,6 +50,7 @@ VSKGameSettingsManagerSingleton="*res://addons/vsk_game_framework/scripts/manage
 VSKGameSessionManagerSingleton="*res://addons/vsk_game_framework/scripts/managers/vsk_game_session_manager.gd"
 VSKGameAssetManagerSingleton="*res://addons/vsk_game_framework/scripts/managers/vsk_game_asset_manager.gd"
 VSKGameServiceManagerSingleton="*res://addons/vsk_game_framework/scripts/managers/vsk_game_service_manager.gd"
+VSKShardManagerSingleton="*res://addons/vsk_game_framework/scripts/managers/vsk_game_shard_manager.gd"
 VSKXRManagerSingleton="*res://addons/vsk_game_framework/scripts/managers/vsk_game_xr_manager.gd"
 XRToolsUserSettings="*res://addons/godot-xr-tools/user_settings/user_settings.gd"
 XRToolsRumbleManager="*res://addons/godot-xr-tools/rumble/rumble_manager.gd"
@@ -58,6 +59,8 @@ VSKEditorSingleton="*res://addons/vsk_editor/vsk_editor.gd"
 [debug]
 
 gdscript/warnings/exclude_addons=false
+; WARNING: Disabling this skips resource validation on godot scenes, it's dangerous
+whitelist/godot_scn/enabled=true
 
 [display]
 
@@ -97,6 +100,7 @@ import/fbx2gltf/enabled=false
 session/player_vessel_scene_path="uid://iym64t583x3o"
 session/player_soul_scene_path="uid://6ohhdebb5pjr"
 session/show_window_title_debug_info=true
+session/shard_heartbeat_frequency=10.0
 
 [global_group]
 

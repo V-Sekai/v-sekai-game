@@ -81,6 +81,9 @@ func add_content_item(p_text: String, p_url: String) -> VSKButton:
 			
 			content_item_container.add_child(instance)
 			instance.set_h_size_flags(SIZE_EXPAND_FILL)
+			instance.set_v_size_flags(SIZE_EXPAND_FILL)
+			# TODO: Fix vertical size collapse bug. Setting a default minimum for now.
+			instance.set_custom_minimum_size(Vector2(200, 200))
 			instance.mouse_filter = Control.MOUSE_FILTER_PASS
 			
 			# Wire up focus neighbours.

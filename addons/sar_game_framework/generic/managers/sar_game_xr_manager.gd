@@ -6,6 +6,7 @@ var _xr_interface: XRInterface = null
 
 func _ready() -> void:
 	if not Engine.is_editor_hint():
+		print("Searching OpenXR interface...")
 		_xr_interface = XRServer.find_interface("OpenXR")
 		if _xr_interface and _xr_interface.is_initialized():
 			print("OpenXR initialized successfully.")

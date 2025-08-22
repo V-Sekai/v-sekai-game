@@ -6,9 +6,16 @@
 extends SarGameService
 class_name VSKGameServiceUro
 
+enum SessionType {
+	NONE = 0, # Null state, API calls don't work
+	GUEST = 1,
+	USER = 2
+}
+
 var _godot_uro: GodotUro = null
 var _current_account_address: String = ""
-	
+var _session_mode: SessionType = SessionType.NONE
+
 var _active_service_requests: Dictionary[SarGameServiceRequest, GodotUroRequester] = {}
 
 func _update_session(
@@ -51,6 +58,7 @@ func _update_session(
 		push_error("Could not save game token!")
 	
 	_current_account_address = "%s@%s" % [p_username, p_domain]
+	_session_mode = SessionType.USER
 
 	_godot_uro.store_selected_id(_current_account_address)
 
@@ -70,6 +78,7 @@ func _clear_local_session() -> void:
 	var address_dict: Dictionary = GodotUroHelper.get_username_and_domain_from_address(_current_account_address)
 	
 	_current_account_address = ""
+	_session_mode = SessionType.NONE
 	if _godot_uro and _godot_uro.get_api():
 		_godot_uro.clear_tokens(address_dict.get("username", ""), address_dict.get("domain", ""))
 		_godot_uro.store_selected_id("")
@@ -148,8 +157,12 @@ func _process_result_and_update_registration(p_service_request: VSKGameServiceRe
 func _get_tokens(p_service_request: SarGameServiceRequest) -> Dictionary:
 	if not p_service_request is VSKGameServiceRequestUro:
 		push_error("Did not pass a valid VSKGameServiceRequestUro object to sign in request.")
-		return {} 
-	
+		return {}
+
+	if is_guest():
+		push_warning("GUEST mode has no tokens set")
+		return {}
+
 	var domain: String = (p_service_request as VSKGameServiceRequestUro).domain
 	if domain.is_empty():
 		push_error("Did not pass a valid domain to sign in request.")
@@ -164,50 +177,29 @@ func _get_tokens(p_service_request: SarGameServiceRequest) -> Dictionary:
 	
 	return tokens
 	
-func _get_dashboard_content_async(p_service_request: SarGameServiceRequest, p_callable: Callable) -> Dictionary:
+func _get_content_async(p_service_request: SarGameServiceRequest, p_is_auth_required: bool, p_callable: Callable, p_params: Array = []):
 	if _godot_uro and _godot_uro.get_api():
 		if not p_service_request is VSKGameServiceRequestUro:
 			push_error("Did not pass a valid VSKGameServiceRequestUro object to a sign out request.")
 			return {} 
 		
 		var domain: String = (p_service_request as VSKGameServiceRequestUro).domain
-		var tokens: Dictionary = _get_tokens(p_service_request)
+		var username: String = (p_service_request as VSKGameServiceRequestUro).username
+		var tokens: Dictionary = _godot_uro.get_tokens(username, domain)
+		var access_token = tokens.get("access_token", "")
 		
 		# Add this request to the active request pool.
 		var godot_uro_request: GodotUroRequester = _godot_uro.create_requester(domain, -1)
 		_active_service_requests[p_service_request] = godot_uro_request
-		
-		var result: Dictionary = await p_callable.call(
-			godot_uro_request,
-			tokens.get("access_token", "")
-		)
-		
-		if not stop_request(p_service_request):
-			return {}
-			
-		if result.is_empty():
-			return {}
 
-		return result
-		
-	return {}
-	
-func _get_individual_content_async(p_service_request: SarGameServiceRequest, p_id: String, p_callable: Callable):
-	if _godot_uro and _godot_uro.get_api():
-		if not p_service_request is VSKGameServiceRequestUro:
-			push_error("Did not pass a valid VSKGameServiceRequestUro object to a sign out request.")
-			return {} 
-		
-		var domain: String = (p_service_request as VSKGameServiceRequestUro).domain
-		
-		# Add this request to the active request pool.
-		var godot_uro_request: GodotUroRequester = _godot_uro.create_requester(domain, -1)
-		_active_service_requests[p_service_request] = godot_uro_request
-		
-		var result: Dictionary = await p_callable.call(
-			godot_uro_request,
-			p_id
-		)
+		var args: Array = [godot_uro_request]
+
+		if p_is_auth_required:
+			args.append_array([access_token])
+		if not p_params.is_empty():
+			args.append_array(p_params)
+
+		var result: Dictionary = await p_callable.callv(args)
 		
 		if not stop_request(p_service_request):
 			return {}
@@ -260,15 +252,39 @@ func _init() -> void:
 
 ###
 
+## Returns a dictionary containing the current active account username and domain
+## we are signed in with. On failure it will return a dictionary with an empty username
+## and domain.
+func get_current_username_and_domain() -> Dictionary[String, String]:
+	var account_address: String = get_current_account_address()
+	var result_dictionary: Dictionary[String, String] = GodotUroHelper.get_username_and_domain_from_address(account_address)
+	return result_dictionary
+
 ## Returns a string containing the currently active user account and domain
 ## we are signed in with.
 func get_current_account_address() -> String:
 	return _current_account_address
 
+## Returns current SessionType.
+func get_current_session_mode() -> SessionType:
+	return _session_mode
+
+## Returns true if current session is GUEST.
+func is_guest() -> bool:
+	var result: bool = _session_mode == SessionType.GUEST
+	return result
+
 ## Returns the name of the service.
 static func get_service_name() -> String:
 	return "Uro"
-	
+
+## Creates a guest session. Only domain is set to enable requests when not signed-in.
+func sign_in_guest(p_domain: String) -> void:
+	_current_account_address = "@%s" % p_domain
+	_session_mode = SessionType.GUEST
+	print("Signed in as GUEST")
+	return
+
 ## Attempts to sign into the service. A SarGameServiceRequestObject created
 ## from the service required to keep track of the individual request,
 ## and a Dictionary containing service-specific sign in data, should be
@@ -434,6 +450,11 @@ func sign_out(p_service_request: SarGameServiceRequest) -> Dictionary:
 		if not p_service_request is VSKGameServiceRequestUro:
 			push_error("Did not pass a valid VSKGameServiceRequestUro object to a sign out request.")
 			return {} 
+
+		if is_guest():
+			# Don't sign out in GUEST mode
+			push_warning("Can't sign out of GUEST mode")
+			return {}
 		
 		var domain: String = (p_service_request as VSKGameServiceRequestUro).domain
 		var tokens: Dictionary = _get_tokens(p_service_request)
@@ -454,6 +475,10 @@ func sign_out(p_service_request: SarGameServiceRequest) -> Dictionary:
 			return {}
 
 		var processed_result: Dictionary = _process_result_and_delete_session(result)
+
+		# Ensure a valid _session_mode state using last used domain
+		sign_in_guest(domain)
+
 		return processed_result
 		
 	return {}
@@ -462,7 +487,7 @@ func sign_out(p_service_request: SarGameServiceRequest) -> Dictionary:
 ## to the service request.
 func get_dashboard_avatars_async(p_service_request: SarGameServiceRequest) -> Dictionary:
 	if _godot_uro and _godot_uro.get_api():
-		return await _get_dashboard_content_async(p_service_request, _godot_uro.get_api().dashboard_get_avatars_async)
+		return await _get_content_async(p_service_request, true, _godot_uro.get_api().dashboard_get_avatars_async)
 	
 	return {}
 	
@@ -470,24 +495,39 @@ func get_dashboard_avatars_async(p_service_request: SarGameServiceRequest) -> Di
 ## to the service request.
 func get_dashboard_maps_async(p_service_request: SarGameServiceRequest) -> Dictionary:
 	if _godot_uro and _godot_uro.get_api():
-		return await _get_dashboard_content_async(p_service_request, _godot_uro.get_api().dashboard_get_maps_async)
+		return await _get_content_async(p_service_request, true, _godot_uro.get_api().dashboard_get_maps_async)
 	
 	return {}
 	
 ## Returns a dictionary containing information about a specific avatar id.
 func get_avatar_async(p_service_request: SarGameServiceRequest, p_id: String) -> Dictionary:
 	if _godot_uro and _godot_uro.get_api():
-		return await _get_individual_content_async(p_service_request, p_id, _godot_uro.get_api().get_avatar_async)
+		return await _get_content_async(p_service_request, false, _godot_uro.get_api().get_avatar_async, [p_id])
 	
 	return {}
+
+
+## Returns a dictionary containing public avatars
+func get_avatars_async(p_service_request: SarGameServiceRequest) -> Dictionary:
+	if _godot_uro and _godot_uro.get_api():
+		return await _get_content_async(p_service_request, false, _godot_uro.get_api().get_avatars_async)
 	
+	return {}
+
 ## Returns a dictionary containing information about a specific map id.
 func get_map_async(p_service_request: SarGameServiceRequest, p_id: String) -> Dictionary:
 	if _godot_uro and _godot_uro.get_api():
-		return await _get_individual_content_async(p_service_request, p_id, _godot_uro.get_api().get_map_async)
+		return await _get_content_async(p_service_request, false, _godot_uro.get_api().get_map_async, [p_id])
 	
 	return {}
+
+## Returns a dictionary containing public maps
+func get_maps_async(p_service_request: SarGameServiceRequest) -> Dictionary:
+	if _godot_uro and _godot_uro.get_api():
+		return await _get_content_async(p_service_request, false, _godot_uro.get_api().get_maps_async)
 	
+	return {}
+
 ## Uploads a file to be used as an avatar to the account assigned to SarGameServiceRequest.
 func upload_avatar_async(
 	p_service_request: SarGameServiceRequest,
@@ -495,6 +535,148 @@ func upload_avatar_async(
 	if _godot_uro and _godot_uro.get_api():
 		return await _upload_content_async(p_service_request, p_upload_dictionary, _godot_uro.get_api().dashboard_create_avatar_async)
 	
+	return {}
+
+## Returns a dictionary containing public shard instances
+func get_public_shards(p_service_request: SarGameServiceRequest) -> Dictionary:
+	if _godot_uro and _godot_uro.get_api():
+		return await _get_content_async(p_service_request, false, _godot_uro.get_api().get_shards_async)
+	
+	return {}
+
+## Creates a shard instance on server
+func create_shard(p_service_request: SarGameServiceRequest, p_shard_data: Dictionary) -> Dictionary:
+	if _godot_uro and _godot_uro.get_api():
+		if not p_service_request is VSKGameServiceRequestUro:
+			push_error("Did not pass a valid VSKGameServiceRequestUro object to create shard request.")
+			return {} 
+			
+		var domain: String = (p_service_request as VSKGameServiceRequestUro).domain
+		var tokens: Dictionary = _get_tokens(p_service_request)
+
+		if domain.is_empty():
+			push_error("Did not pass a valid domain to create shard request.")
+			return {}
+
+		var port: int = p_shard_data.get("port", -1)
+		if port < 0:
+			push_error("Did not pass a valid port to create shard request.")
+			return {}
+			
+		var map: String = p_shard_data.get("map", "")
+		if map.is_empty():
+			push_error("Did not pass a valid map to create shard request.")
+			return {}
+
+		var name: String = p_shard_data.get("name", "")
+		if name.is_empty():
+			push_error("Did not pass a valid name to create shard request.")
+			return {}
+
+		var current_users: int = p_shard_data.get("current_users", -1)
+		if current_users < 0:
+			push_error("Did not pass a valid current_users to create shard request.")
+			return {}
+
+		var max_users: int = p_shard_data.get("max_users", -1)
+		if max_users < 0:
+			push_error("Did not pass a valid max_users to create shard request.")
+			return {}
+
+		# Add this request to the active request pool.
+		var godot_uro_request: GodotUroRequester = _godot_uro.create_requester(domain, -1)
+		_active_service_requests[p_service_request] = godot_uro_request
+		
+		# Wait for the internal Uro API to respond to our create shard request.
+		var result: Dictionary = await _godot_uro.get_api().create_shard_async(
+			godot_uro_request,
+			tokens.get("access_token", ""),
+			p_shard_data
+		)
+		
+		if not stop_request(p_service_request):
+			return {}
+			
+		if result.is_empty():
+			return {}
+
+		return result
+		
+	return {}
+
+## Updates properties of a shard instance
+func update_shard(p_service_request: SarGameServiceRequest, p_id: String, p_shard_data: Dictionary) -> Dictionary:
+	if _godot_uro and _godot_uro.get_api():
+		if not p_service_request is VSKGameServiceRequestUro:
+			push_error("Did not pass a valid VSKGameServiceRequestUro object to update shard request.")
+			return {} 
+			
+		var domain: String = (p_service_request as VSKGameServiceRequestUro).domain
+		var tokens: Dictionary = _get_tokens(p_service_request)
+
+		if domain.is_empty():
+			push_error("Did not pass a valid domain to update shard request.")
+			return {}
+
+		# Add this request to the active request pool.
+		var godot_uro_request: GodotUroRequester = _godot_uro.create_requester(domain, -1)
+		_active_service_requests[p_service_request] = godot_uro_request
+		
+		# Wait for the internal Uro API to respond to our update shard request.
+		var result: Dictionary = await _godot_uro.get_api().update_shard_async(
+			godot_uro_request,
+			tokens.get("access_token", ""),
+			p_id,
+			p_shard_data
+		)
+		
+		if not stop_request(p_service_request):
+			return {}
+			
+		if result.is_empty():
+			return {}
+
+		return result
+		
+	return {}
+
+## Deletes a shard instance on server
+func delete_shard(p_service_request: SarGameServiceRequest, p_id: String, p_shard_data: Dictionary) -> Dictionary:
+	if _godot_uro and _godot_uro.get_api():
+		if not p_service_request is VSKGameServiceRequestUro:
+			push_error("Did not pass a valid VSKGameServiceRequestUro object to delete shard request.")
+			return {} 
+			
+		var domain: String = (p_service_request as VSKGameServiceRequestUro).domain
+		var tokens: Dictionary = _get_tokens(p_service_request)
+
+		if domain.is_empty():
+			push_error("Did not pass a valid domain to delete shard request.")
+			return {}
+		
+		if p_id.is_empty():
+			push_error("Did not pass a valid id to delete shard request.")
+			return {}
+
+		# Add this request to the active request pool.
+		var godot_uro_request: GodotUroRequester = _godot_uro.create_requester(domain, -1)
+		_active_service_requests[p_service_request] = godot_uro_request
+		
+		# Wait for the internal Uro API to respond to our delete shard request.
+		var result: Dictionary = await _godot_uro.get_api().delete_shard_async(
+			godot_uro_request,
+			tokens.get("access_token", ""),
+			p_id,
+			p_shard_data
+		)		
+		if not stop_request(p_service_request):
+			return {}
+			
+		if result.is_empty():
+			return {}
+
+		return result
+		
 	return {}
 
 

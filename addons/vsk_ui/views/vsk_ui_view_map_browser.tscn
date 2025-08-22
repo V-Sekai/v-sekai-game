@@ -2,4 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://b8af2il3sjsc2" path="res://addons/vsk_ui/views/vsk_ui_view_content_menu.tscn" id="1_02lur"]
 
-[node name="ContentMenu" instance=ExtResource("1_02lur")]
+[node name="MapBrowser" instance=ExtResource("1_02lur")]
+
+[node name="ContentBrowser" parent="Body/Control/MarginContainer/TopLevelAligner/TopLevelContent/VBoxContainer/HBoxContainer" index="2"]
+content_text = "Map Browser"

@@ -3,9 +3,11 @@ class_name VSKIngameBigMenu
 
 
 func _on_ingame_quick_menu_avatar_menu_requested() -> void:
+	controller.set_current_tab("Avatars")
 	show()
 
 func _on_ingame_quick_menu_explore_menu_requested() -> void:
+	controller.set_current_tab("Explore")
 	show()
 
 func _request_new_avatar(p_path: String) -> void:
@@ -19,6 +21,15 @@ func _on_avatar_url_selected(p_url: String) -> void:
 		menu_compoent.set_menu_active(false)
 	
 	_request_new_avatar(p_url)
+
+func _on_map_url_selected(p_url: String) -> void:
+	if menu_compoent:
+		menu_compoent.set_menu_active(false)
+	
+	# TODO: Implement map change in game managers
+	push_error("Map switching is not implemented!")
+	# _request_new_map(p_url)
+
 
 ###
 
