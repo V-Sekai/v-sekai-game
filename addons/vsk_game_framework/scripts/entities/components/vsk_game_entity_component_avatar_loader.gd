@@ -119,11 +119,16 @@ func _ready() -> void:
 			if not SarUtils.assert_true(avatar_component, "VSKGameEntityComponentAvatarLoader: avatar_component is not available"):
 				return
 			avatar_component.set_model_scene(game_asset_manager.loading_avatar_packed_scene)
-		
+
+		# On first load we pick the default set avatar
+		_requested_avatar_path = default_requested_avatar_path
 		if _requested_avatar_path:
 			_request_avatar_asset()
-			
+		else:
+			push_error("Can't load default avatar: default_requested_avatar_path not found.")			
+
 ###
 
 ## The model component used by this game entity.
 @export var avatar_component: SarGameEntityComponentAvatar3D = null
+@export var default_requested_avatar_path: String = ""

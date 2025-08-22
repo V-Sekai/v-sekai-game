@@ -110,7 +110,7 @@ game_entity = NodePath("../..")
 [node name="AvatarSyncComponent" type="Node" parent="." index="2" node_paths=PackedStringArray("game_entity")]
 editor_description = "Modify the requested_avatar_path here to assign a new avatar to be used. The requested_avatar_path should be delta watched by the MultiplayerSynchronizer so this result should be remote sent to all other peers when a change has occured."
 script = ExtResource("4_5fa3r")
-requested_avatar_path = "https://http.cat/status/418"
+requested_avatar_path = ""
 game_entity = NodePath("..")
 
 [node name="AvatarLoaderComponent" type="Node" parent="." index="3" node_paths=PackedStringArray("avatar_component", "game_entity")]
@@ -120,6 +120,8 @@ Once a result has been received, it will assign the resulting PackedScene direct
 script = ExtResource("8_kkxyr")
 avatar_component = NodePath("../ModelComponent")
 game_entity = NodePath("..")
+default_requested_avatar_path = "res://addons/vsk_game_framework/scenes/avatars/error_handlers/teapot.tscn"
+; default_requested_avatar_path = "https://http.cat/status/418"
 metadata/_custom_type_script = "uid://co513u6fkckn6"
 
 [node name="AvatarParametersComponent" type="Node" parent="." index="4" node_paths=PackedStringArray("avatar_component", "parameters_snapshot", "game_entity")]
