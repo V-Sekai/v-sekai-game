@@ -6,6 +6,7 @@ class_name SarSimulationComponentJump3D
 ## handling basic jumping behaviour.
 
 var _movement_component: SarGameEntityComponentVesselMovementCharacter3D = null
+var _jump_consumed: bool = false
 
 func _physics_process(_delta: float) -> void:
 	if not Engine.is_editor_hint():
@@ -15,8 +16,11 @@ func _physics_process(_delta: float) -> void:
 			return
 
 		if _movement_component.is_grounded():
-			if should_jump:
+			if should_jump and not _jump_consumed:
 				_movement_component.set_velocity(_movement_component.get_velocity() + (_movement_component.get_up_direction() * jump_velocity))
+				_jump_consumed = true
+		else:
+			_jump_consumed = false
 
 func _ready() -> void:
 	if not Engine.is_editor_hint():

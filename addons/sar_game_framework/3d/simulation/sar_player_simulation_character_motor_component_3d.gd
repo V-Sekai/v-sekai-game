@@ -61,13 +61,16 @@ func _process_movement(p_delta: float, p_movement_vector: Vector2) -> void:
 		return
 
 	_current_velocity = _movement_component.get_velocity()
-	
+
+	var vertical_speed: float = _current_velocity.dot(_movement_component.get_up_direction())
+	var horizontal_velocity: Vector3 = _current_velocity - (_movement_component.get_up_direction() * vertical_speed)
+
 	if _movement_component.is_grounded():
-		_current_velocity = _ground_movement(_current_velocity, desired_direction, p_delta)
-		_current_velocity *= (_movement_component.get_horizontal_plane())
+		horizontal_velocity = _ground_movement(horizontal_velocity, desired_direction, p_delta)
 	else:
-		_current_velocity -= (_movement_component.get_up_direction() * _gravity) * p_delta
+		vertical_speed -= _gravity * p_delta
 				
+	_current_velocity = horizontal_velocity + (_movement_component.get_up_direction() * vertical_speed)
 	_movement_component.set_velocity(_current_velocity)
 		
 func _physics_process(p_delta: float) -> void:
