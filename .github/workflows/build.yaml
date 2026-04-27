@@ -24,7 +24,7 @@ jobs:
       TAG_NAME: ${{ steps.tag.outputs.TAG_NAME }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
           fetch-tags: 'true'
@@ -128,7 +128,7 @@ jobs:
     if: needs.build.outputs.ITCH_IO_PUBLISH == 'true' && needs.build.outputs.TAG_PUSH == 'true'
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           sparse-checkout: |
             ./docker/itch-io/
