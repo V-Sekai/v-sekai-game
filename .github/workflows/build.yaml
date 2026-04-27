@@ -99,7 +99,7 @@ jobs:
           prerelease: ${{ needs.build.outputs.PRERELEASE }}
 
       - name: Download Artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           path: v-sekai-release
           name: v-sekai-release
@@ -134,7 +134,7 @@ jobs:
             ./docker/itch-io/
 
       - name: Download Artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           path: ${{ github.workspace }}/v-sekai-release
           name: v-sekai-release
